@@ -1,0 +1,29 @@
+msgid "x_user"
+msgstr "用户"
+
+msgid "x_system_module"
+msgstr "系统"
+
+msgid "x_target"
+msgstr "标靶管理"
+
+msgid "x_scene"
+msgstr "场景编排"
+
+msgid "x_mission"
+msgstr "任务"
+
+msgid "x_traffic"
+msgstr "流量管理"
+
+msgid "x_traffic_event"
+msgstr "流量事件"
+
+msgid "x_monitor"
+msgstr "检测管理"
+
+msgid "x_system_logout"
+msgstr "user[{}] logout system"
+
+msgid "x_system_login"
+msgstr "user[{}] login system"

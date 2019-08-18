@@ -1,0 +1,29 @@
+msgid "x_user"
+msgstr "User"
+
+msgid "x_system_module"
+msgstr "System"
+
+msgid "x_target"
+msgstr "Node Manage"
+
+msgid "x_scene"
+msgstr "Scene Lay Out"
+
+msgid "x_mission"
+msgstr "Mission"
+
+msgid "x_traffic"
+msgstr "Traffic Manage"
+
+msgid "x_traffic_event"
+msgstr "Traffic Event"
+
+msgid "x_monitor"
+msgstr "Monitor Manage"
+
+msgid "x_system_logout"
+msgstr "user[{}] logout system"
+
+msgid "x_system_login"
+msgstr "user[{}] login system"

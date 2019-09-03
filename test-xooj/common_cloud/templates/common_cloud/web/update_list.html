@@ -1,0 +1,62 @@
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title id="platform_title">升级列表</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+
+    <link rel="stylesheet" href="{% static 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-table.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/toastr.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+
+    <script src="{% static 'lib/hplus/js/jquery.min.js' %}"></script>
+    <script src="{% static 'web/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+
+</head>
+<body>
+<div class="ibox float-e-margins">
+    <div class="ibox-title">
+        <h2 class="text-center" >更新日志</h2>
+    </div>
+    <div class="ibox-content no-padding">
+        <div class="panel-body">
+            <div class="panel-group" id="version">
+
+{% for ui in uis %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h5 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#version" href="#{{ ui.id }}">v{{ ui.name }}</a>
+                            {% if ui.zip %}
+                            <a class="pull-right btn btn-success" href="{{ ui.zip.url }}">下载</a>
+                            {% endif %}
+                            <code class="pull-right">{{ ui.create_time }} </code>
+                        </h5>
+                    </div>
+                    <div id="{{ ui.id }}" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <ol>
+                                {% for c in ui.change_log %}
+                                    <li>{{ c }}</li>
+                                {% endfor %}
+
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+{% endfor %}
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

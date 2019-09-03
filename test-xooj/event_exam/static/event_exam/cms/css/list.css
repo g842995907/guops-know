@@ -1,0 +1,18 @@
+
+
+.answer-right {
+    width: 24px;
+    height: 25px;
+    display: inline-block;
+    background: url("../img/correct.png");
+    margin-right: 15px;
+}
+
+.answer-wrong {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background: url("../img/wrong.png");
+    margin-right: 15px;
+}
+

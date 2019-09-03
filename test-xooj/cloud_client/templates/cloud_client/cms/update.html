@@ -1,0 +1,82 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    {% trans 'x_update_history' %}
+{% endblock %}
+
+{% block other_css_js %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="col-md-6 col-sm-6">
+                        <a class="btn btn-primary" href="{% url 'cms_cloud_client:update_detail' 0 %}">
+                            <i class="fa fa-plus"></i>{% trans 'x_new_update' %}
+                        </a>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_cloud_client:api:update-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_cloud_client:api:update-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="update_status" data-formatter="table.updateStatusFormtter">{% trans 'x_update_status' %}</th>
+                <th data-field="change_log">{% trans 'x_update_note' %}</th>
+                <th data-field="create_time" data-formatter="table.datetimeFormatter">{% trans 'x_update_time' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var $table = $('#table');
+        pageWidgets.registerCheckTableRow($table);
+
+        var table = bsTable.getTableModule($table, function () {
+            this.updateStatusFormtter = function (value, row, index) {
+                if (value == 0) {
+                    return gettext("x_comming")
+                }
+                else if (value == 1) {
+                    return gettext("x_start");
+                }
+                else if (value == 2) {
+                    return gettext("x_update_completed")
+                }
+                else if (value == 3) {
+                    return gettext("x_update_failure")
+                }
+            }
+        });
+
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            pageSize: 10
+        });
+
+    </script>
+{% endblock %}

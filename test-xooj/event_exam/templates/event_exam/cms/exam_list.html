@@ -1,0 +1,242 @@
+{% extends 'event/cms/iframe_layout.html' %}
+{% load i18n %}
+<!---->
+{% load static %}
+<!---->
+{% block title %}
+    {% trans 'x_exam' %}
+{% endblock %}
+
+<!---->
+{% block other_css_js %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/sweetalert/sweetalert.css" %}"/>
+    <script src="{% static "lib/hplus/js/plugins/sweetalert/sweetalert.min.js" %}"></script>
+{% endblock %}
+<!---->
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left" style="width:196px">
+{#                    <div class="m-r pull-left">#}
+                        <select class="form-control m-b sticky select_search" id="process">
+                            <option value="">{% trans 'x_all_progress' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ListModelConstant.Event.Process'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b" id="search" placeholder="{% trans 'x_title' %}"
+                               type="text"/>
+                    </div>
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_event_exam:exam_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                        {#                    </div>#}
+                        {#                    <div class="m-r pull-left">#}
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_event_exam:api:event-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                        {#                    </div>#}
+                        {#                    <div class="m-r pull-left">#}
+                        <button class="btn btn-success"
+                                data-url="{% url 'cms_event_exam:api:event-batch-public' %}"
+                                onclick="table.batchPublic(this, 1);">
+                            <i class="fa fa-eye"></i> {% trans 'x_public' %}
+                        </button>
+                        {#                    </div>#}
+                        {#                    <div class="m-r pull-left">#}
+                        <button class="btn btn-warning"
+                                data-url="{% url 'cms_event_exam:api:event-batch-public' %}"
+                                onclick="table.batchPublic(this, 0);">
+                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_event_exam:api:event-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true" data-formatter="titileFormatter" data-sortable="true">{% trans 'x_name' %}</th>
+                <th data-field="task_count">{% trans 'x_total_task_count' %}</th>
+                <th data-field="all_score">{% trans 'x_total_score' %}</th>
+                <th data-field="start_time" data-formatter="table.datetimeFormatter" data-sortable="true">{% trans 'x_start_time' %}</th>
+                <th data-field="end_time" data-formatter="table.datetimeFormatter" data-sortable="true">{% trans 'x_end_time' %}</th>
+                <th data-field="process" data-formatter="table.processFormatter">{% trans 'x_status' %}</th>
+                <th data-field="public" data-formatter="table.publicFormatter" data-sortable="true">{% trans 'x_public' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="share_count" data-formatter="table.shareFormatter">{% trans 'x_authorization_Operation' %}</th>
+                <th data-field="all_auth_count" data-formatter="table.authFormatter">{% trans 'x_authorization_quantity'  %}
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_event_exam:exam_list' %}";
+        var taskListUrl = "{% url 'cms_event_exam:task_list' 0 %}";
+        {#        var scoreUrl = "{% url 'cms_event_exam:event_report_score' %}";#}
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            var fakeEventUrl = '{% url "cms_event_exam:api:event-detail" 0 %}';
+            this.authUrl = '{% url 'cms_event_exam:auth_class' 0 %}';
+            this.shareUrl = '{% url 'cms_event_exam:share_teacher' 0 %}';
+
+            this.pauseEvent = function (event) {
+                http.patch(fakeEventUrl.replace('0', event), {status: ModelConstant.Event.Status.PAUSE}, function (res) {
+                    table.reload();
+                });
+            }
+
+            this.continueEvent = function (event) {
+                http.patch(fakeEventUrl.replace('0', event), {status: ModelConstant.Event.Status.NORMAL}, function (res) {
+                    table.reload();
+                });
+            }
+
+            this.operatorFormatter = function (value, row, index) {
+                var btns = []
+
+                if (row.process != ModelConstant.Event.Process.OVER) {
+                    btns.push({
+                        type: 'button',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        click: 'edit("' + row.process + '","' + value + '")'
+                    });
+                }
+
+                {% comment %}if (row.process != ModelConstant.Event.Process.OVER) {
+                    btns.push({
+                        type: 'button',
+                        class: 'btn-warning',
+                        icon: 'fa-tasks',
+                        text: '{% trans "x_task_manage" %}',
+                        click: 'manage("' + row.process + '","' + value + '")'
+                    })
+                }{% endcomment %}
+
+                btns.push({
+                        type: 'button',
+                        class: 'btn btn-success',
+                        icon: 'fa-file',
+                        text: "{% trans 'x_score_manage' %}",
+                        url: taskListUrl.replace('0', value),
+                        click: 'scoreManage("' + value + '")',
+                    }
+                );
+
+
+                return table.getOperatorHtml(btns);
+            };
+
+            this.processFormatter = function (value, row, index) {
+                /*if (row.process == ModelConstant.Event.Process.INPROGRESS && row.status == ModelConstant.Event.Status.PAUSE) {
+                    return gettext('x_pause');
+                }
+                return DictModelConstant.Event.Process[value];*/
+                var icon;
+                var text;
+                if (row.process == ModelConstant.Event.Process.INPROGRESS && row.status == ModelConstant.Event.Status.PAUSE) {
+                    text = gettext('x_paused');
+                    icon = '<i class="fa fa-hourglass-o"></i>';
+                } else {
+                    text = DictModelConstant.Event.Process[value];
+                    if (row.process == ModelConstant.Event.Process.COMMING) {
+                        icon = '<i class="fa fa-hourglass-start"></i>';
+                    } else if (row.process == ModelConstant.Event.Process.INPROGRESS) {
+                        icon = '<i class="fa fa-hourglass-half"></i>';
+                    } else if (row.process == ModelConstant.Event.Process.OVER) {
+                        icon = '<i class="fa fa-hourglass-end"></i>';
+                    }
+                }
+                return icon + ' ' + text;
+
+            };
+        });
+
+        function edit(state, value) {
+            {#            if (state==0)#}
+            {#                swal({#}
+            {#                    title:"",#}
+            {#                    text: "考试正在进行，不能编辑！",#}
+            {#                    type: "info",#}
+            {#                    confirmButtonText: "{% trans 'x_select_share_teacher' %}",#}
+            {#                    confirmButtonColor: '#DD6B55',#}
+            {#                });#}
+            {#            else#}
+            window.location = listUrl + value;
+        }
+
+        function manage(state, value) {
+            if (state == 0)
+                swal({
+                    title: "",
+                    text: "{% trans 'x_exam_cannot_operation' %}" + "!",
+                    type: "error",
+                    confirmButtonText: gettext('x_confirm'),
+{#                    confirmButtonColor: '#DD6B55',#}
+                });
+            else
+                window.location = taskListUrl.replace('0', value);
+        }
+
+        function scoreManage(pk) {
+            var score_url = "{% url 'cms_event_exam:event_report_score' 0 %}";
+            window.location.href = score_url.replace('0', pk);
+        }
+
+
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.process = $("#process").val();
+                params.search = $("#search").val();
+                return params;
+            },
+        });
+        function titileFormatter(value, row, index) {
+            var nameString = "";
+            if (value.length > 15) {
+                nameString = value.substring(0, 15) + '...';
+            } else {
+                nameString = value;
+            }
+            return [
+                '<span id="thread"  data-toggle="tooltip" title="' + value + '">' + nameString + '</span>',
+            ].join('');
+        }
+    </script>
+{% endblock %}

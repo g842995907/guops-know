@@ -1,0 +1,236 @@
+msgid "x_must_course_name"
+msgstr "名称： 课程名称必填"
+
+msgid "x_choose_course_orientation"
+msgstr "方向： 请选择课程方向"
+
+msgid "x_choose_sourse_sub_orientation"
+msgstr "方向： 请选择课程子方向"
+
+msgid "x_choose_course_difficulty"
+msgstr "请选择课程难度"
+
+msgid "x_class_hours"
+msgstr "课时"
+
+msgid "x_lessons"
+msgstr "课程"
+
+msgid "x_learning_statistics"
+msgstr "学习统计"
+
+msgid "x_no_course_outline"
+msgstr "暂无课程大纲"
+
+msgid "x_learning_status_statistics"
+msgstr "学习情况统计"
+
+msgid "x_staff_performance_map"
+msgstr "人员成绩分布图"
+
+msgid "x_top20_score"
+msgstr "TOP20 成绩"
+
+msgid "x_grade"
+msgstr "成绩"
+
+msgid "x_people"
+msgstr "人"
+
+msgid "x_sign_statistics"
+msgstr "签到统计"
+
+msgid "x_experiment"
+msgstr "实验"
+
+msgid "x_is_pass"
+msgstr "及格"
+
+msgid "x_good"
+msgstr "良好"
+
+msgid "x_verygood"
+msgstr "优秀"
+
+msgid "x_full_score"
+msgstr "满分"
+
+msgid "x_fraction"
+msgstr "分"
+
+msgid "x_average_score"
+msgstr "平均分"
+
+msgid "x_video_is_transcoding"
+msgstr "视频转码中"
+
+msgid "x_video_transcoding_success"
+msgstr "视频转码成功"
+
+msgid "x_video_transcoding_failure"
+msgstr "视频转码失败"
+
+msgid "x_application_environment"
+msgstr "申请环境"
+
+msgid "x_view_the_environment"
+msgstr "查看环境"
+
+msgid "x_NO_nbsp"
+msgstr "第 "
+
+msgid "x_chapter_nbsp"
+msgstr " 章 "
+
+msgid "x_root_node_not_allowed_delete"
+msgstr "根节点不允许删除"
+
+msgid "x_existe_child_node_can_not_delete"
+msgstr "存在子节点，不可删除"
+
+msgid "x_please_select_a_node"
+msgstr "请选择一个节点"
+
+msgid "x_heoretical_lesson"
+msgstr "理论课"
+
+msgid "x_video_monitor"
+msgstr "学习监控"
+
+msgid "x_course_min"
+msgstr "分"
+
+msgid "x_not_pass"
+msgstr "未通过"
+
+msgid "x_not_mark_score"
+msgstr "未评分"
+
+msgid "x_not_submit"
+msgstr "未提交"
+
+msgid "x_lesson"
+msgstr "课时"
+
+msgid "x_one"
+msgstr "个"
+
+msgid "x_lesson_task"
+msgstr "题"
+
+msgid "x_pass"
+msgstr "通过"
+
+msgid "x_report_score"
+msgstr "分"
+
+msgid "x_mark_comment"
+msgstr "评语"
+
+msgid "x_are_you_assistance"
+msgstr "确定请求协助 ?"
+
+msgid "x_not_signed_in"
+msgstr "未签到"
+
+msgid "x_signed_in"
+msgstr "已签到"
+
+msgid "x_remote_assistance"
+msgstr "远程协助"
+
+msgid "x_guide_lecture"
+msgstr "实验指导"
+
+msgid "x_unable_get_details"
+msgstr "无法获取课程详情"
+
+msgid "x_course_directory"
+msgstr "无法获取课程目录。"
+
+msgid "x_has_send"
+msgstr "已发送"
+
+msgid "x_question_all"
+msgstr " 题, 共 "
+
+msgid "x_alls"
+msgstr "共"
+
+msgid "x_today"
+msgstr "今天"
+
+msgid "x_no_guide"
+msgstr "暂无"
+
+msgid "x_enter_class"
+msgstr "进入课堂"
+
+msgid "x_save_seats"
+msgstr "保存座次"
+
+msgid "x_create_scene_onclick"
+msgstr "一键创建场景"
+
+msgid "x_clear_scene_onclick"
+msgstr "一键清除场景"
+
+msgid "x_every"
+msgstr "每"
+
+msgid "x_scene_to_person"
+msgstr "人一个环境"
+
+msgid "x_creating"
+msgstr "正在创建"
+
+msgid "x_seats_conf"
+msgstr "设置座次名称"
+
+msgid "x_import_success"
+msgstr "导入成功"
+
+msgid "x_pagination_info"
+msgstr "显示第 -1 到第 -2 条记录，总共 -3 条记录"
+
+msgid "x_please_choose"
+msgstr "请选择"
+
+msgid "x_importing_please_wait"
+msgstr "正在导入，请等待..."
+
+msgid "x_the_server_processing_please_wait"
+msgstr "后台正在处理中, 请稍候..."
+
+msgid "x_experiment_lesson"
+msgstr "实验课"
+
+msgid "x_not_create"
+msgstr "未创建"
+
+msgid "x_create_env"
+msgstr "创建场景"
+
+msgid "x_in_create"
+msgstr "创建中"
+
+msgid "x_recreate"
+msgstr "重建场景"
+
+msgid "x_in_queue"
+msgstr "队列中"
+
+msgid "x_change_group_tip"
+msgstr "还有小组存在运行的场景，请删除场景后再改变分组"
+
+msgid "x_alls_course"
+msgstr "共 "
+
+msgid "x_elective"
+msgstr "选修"
+
+msgid "x_compulsory"
+msgstr "必修"
+
+msgid "x_not_configured"
+msgstr "未配置"

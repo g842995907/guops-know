@@ -1,0 +1,73 @@
+/*.msg-table>tbody>tr>td {*/
+/*border-top: 1px dashed rgba(176,222,254,.16);*/
+/*}*/
+
+/*.msg-table tr:last-child {*/
+/*border-bottom: 1px dashed rgba(176,222,254,.16);*/
+/*}*/
+
+/*.msg-table tr:nth-child(odd) {*/
+/*background-color: rgba(242, 242, 242, .04);*/
+/*}*/
+.msg-details {
+    display: none;
+    background: rgba(0, 24, 54, .36);
+    padding-left: 56px;
+    padding-right: 50px;
+    /*max-width: 600px;*/
+}
+
+.msg-details p {
+    margin: 0;
+}
+
+.msg li {
+    margin-top: -1px;
+    min-height: 40px;
+    line-height: 40px;
+}
+
+.msg li:nth-child(even) .msg-list {
+    background-color: transparent;
+}
+
+.msg li:nth-child(odd) .msg-list {
+    background-color: rgba(242, 242, 242, .04);
+}
+
+.msg-list {
+    border-top: 1px dashed rgba(176, 222, 254, .16);
+    border-bottom: 1px dashed rgba(176, 222, 254, .16);
+}
+
+.msg-list > div:nth-child(1) {
+    max-width: 40px;
+}
+
+.msg-list > div:nth-child(2) {
+    width: 50%;
+}
+
+.msg-list > div:nth-child(3),
+.msg-list > div:nth-child(4) {
+    width: 20%;
+}
+
+.msg-details li {
+    margin-top: 8px;
+}
+
+input[type=checkbox] + label:before, input[type=checkbox] + label:after {
+    top: -6px;
+}
+
+.btn-msg {
+    color: #fff;
+    background-color: #5996d7;
+    border-color: #5996d7;
+    border-radius: 0;
+}
+
+.pagination {
+    margin: 0;
+}

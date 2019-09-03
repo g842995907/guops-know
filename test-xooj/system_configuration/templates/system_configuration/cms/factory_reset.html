@@ -1,0 +1,90 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    <a href="{% url 'cms_system_configuration:backup_list' %}">{% trans "备份管理" %}</a> >
+    {% trans '恢复出厂设置' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <style type="text/css">
+        #captcha {
+            width: auto;
+            display: inline-block;
+        }
+
+        #captcha_img {
+            height: 34px;
+            border: 1px solid #ddd;
+        }
+
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              action="{% url 'cms_system_configuration:cms_api:factory-reset-factory-reset' %}"
+              method="post"
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="captcha">提示：</label>
+                    <h3 class="col-sm-10" style="color:red">恢复出厂设置,将清空所有内容,您确定这么做吗?</h3>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="captcha">验证码</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" type="text" id="captcha" name="captcha"/>
+                        <img src="{% url 'cms_system_configuration:captcha' %}" id="captcha_img" alt="验证码"/>
+                    </div>
+                </div>
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="alert alert-danger server-error" id="server-error">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-primary" type="submit">{% trans 'x_confirm' %}</button>
+                        <a class="btn btn-white"
+                           href="{% url 'cms_system_configuration:backup_list' %}">{% trans 'x_cancel' %}</a>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_system_configuration:backup_list' %}";
+        var captchaUrl = "{% url 'cms_system_configuration:captcha' %}";
+    </script>
+
+    <script>
+
+        $(function () {
+            $("#validateForm").validate({
+                rules: {
+                    captcha: {
+                        required: true,
+                        maxlength: 30
+                    },
+                }
+            });
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {});
+
+            $('#captcha_img').click(function () {
+                this.src = captchaUrl + '?time=' + Math.random();
+            });
+        })
+    </script>
+{% endblock %}

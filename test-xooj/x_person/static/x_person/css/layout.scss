@@ -1,0 +1,400 @@
+@charset "utf-8";
+
+//我的战队======队长
+$layout-color: #ccc;
+$orange: #ff9900;
+$team-layout-color: #293e66;
+$new-member-apply-close: "../img/apply_close.png";
+$exclamation-mark-icon: "../img/exclamation_mark.png";
+div > h2 {
+  margin-top: 0;
+}
+
+.team-logo > span {
+  display: inline-block;
+  //background: rgba(41, 67, 102, .8);
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.team-logo > span img {
+  display: inline-block;
+}
+
+.team-info-show {
+  padding: 45px 70px;
+  margin-top: 32px;
+  position: relative;
+  a {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 12px;
+    border-bottom: 1px solid;
+  }
+
+  div:nth-child(2) p {
+    color: #76a9df;
+  }
+  div:nth-child(3) {
+    position: relative;
+    margin-top: 20px;
+    .new-member-apply {
+      width: 12px;
+      height: 12px;
+      display: inline-block;
+      background: #fb2f2f;
+      border-radius: 50%;
+      position: absolute;
+      right: 8px;
+      top: 0;
+    }
+  }
+  div:nth-child(3) div {
+    display: inline-block;
+    border-right: 1px solid;
+    padding: 0 20px;
+  }
+  @media screen and (max-width: 1919px) {
+    div:nth-child(3) div {
+      display: inline-block;
+      border-right: 1px solid;
+      padding: 0 4px;
+    }
+  }
+  div:nth-child(3) div:last-child {
+    border-right: none;
+  }
+}
+
+//比赛记录
+.team-record {
+  margin-top: 35px;
+  h3 {
+    border-bottom: 1px solid $team-layout-color;
+    padding-bottom: 5px;
+    margin-top: 0;
+  }
+  row div {
+    min-height: 800px;
+  }
+}
+
+.join-team {
+  tbody tr td span {
+    width: 115px;
+    height: 30px;
+    background-color: #777;
+    line-height: 30px;
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+
+//team-member-list
+.team-member-list {
+  text-align: center;
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+}
+
+//申请入队弹框
+.modal {
+  top: 50%;
+  margin-top: -200px;
+}
+
+.team-deal-modal,
+#new-member-apply-modal,
+#invite-new-members-modal {
+  .modal-content {
+    background: rgba(18, 35, 57, .9);
+  }
+  .modal-header .close {
+    background: url($new-member-apply-close);
+    width: 16px;
+    height: 16px;
+    opacity: 1;
+  }
+  .modal-header {
+    border-bottom: 1px solid $team-layout-color;
+  }
+  .new-member-apply-list {
+    border-bottom: 1px solid $team-layout-color;
+    padding-bottom: 10px;
+    padding-top: 10px;
+  }
+  .new-member-apply-list img {
+    width: 50px;
+    height: 50px;
+    margin-right: 5px;
+  }
+  .new-member-apply-time {
+    color: $team-layout-color;
+    font-size: 14px;
+  }
+  .deal-btn span {
+    width: 60px;
+    height: 30px;
+    margin-top: 5px;
+    display: inline-block;
+    color: #fff;
+    line-height: 30px;
+    text-align: center;
+    margin-right: 10px;
+  }
+  .deal-btn .agree-btn {
+    background: $orange;
+  }
+  .deal-btn .refuse-btn {
+    background: $team-layout-color;
+  }
+}
+
+//invite-new-members-modal
+#invite-new-members-modal {
+  .modal-body form {
+    display: -webkit-box;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+  }
+  .modal-body div {
+    width: 460px;
+    height: 50px;
+    margin-left: 145px;
+    padding-top: 5px;
+    background-color: #081d38;
+
+    span:nth-child(1) {
+      line-height: 40px;
+    }
+    span:nth-child(2) {
+      width: 60px;
+      height: 30px;
+      margin-top: 5px;
+      display: inline-block;
+      color: #fff;
+      line-height: 30px;
+      text-align: center;
+      background: $orange;
+    }
+  }
+
+  input {
+    width: 460px;
+    display: inline-block;
+    background-color: #081d38;
+    border: 1px solid #447bbe;
+  }
+  button.search {
+    width: 95px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: $orange;
+    border: none;
+    margin-left: 20px;
+  }
+  @media screen and (max-width: 1152px) {
+    input,
+    .modal-body div {
+      width: 360px;
+    }
+    .modal-body div {
+      margin-left: 195px;
+    }
+  }
+  @media screen and (max-width: 1024px) {
+    .modal-body div {
+      margin-left: 44px;
+    }
+  }
+}
+
+//.team-info-edit-btn,
+//.team-info-edit-btn:hover,
+//.team-info-edit-btn:link,
+//.team-info-edit-btn:visited,
+//.team-dismiss-btn,
+//.team-dismiss-btn:hover,
+//.team-dismiss-btn:link,
+//.team-dismiss-btn:visited {
+//  width: 120px;
+//  height: 30px;
+//  line-height: 30px;
+//  border: none;
+//  letter-spacing: 12px;
+//  text-indent: 12px;
+//}
+
+.team-dismiss-btn {
+  background-color: #c11217;
+}
+
+.cancel-btn {
+  margin-left: 55px;
+}
+
+.team-member {
+  //span {
+  //  display: inline-block;
+  //  text-align: center;
+  //  width: 50px;
+  //  height: 20px;
+  //  border: 1px solid $orange;
+  //  font-size: 14px;
+  //  border-radius: 4px;
+  //  margin-left: 10px;
+  //  color: $orange;
+  //}
+  h2 {
+    padding: 10px;
+  }
+  margin-top: 70px;
+  > table tbody tr {
+    border-bottom: 1px solid;
+    td {
+      padding: 5px 45px;
+    }
+  }
+
+}
+
+//战队编辑
+.team-edit-box {
+  padding: 30px 100px;
+  margin-top: 32px;
+  .click-upload {
+    color: $orange;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .team-edit-form label {
+    font-weight: normal;
+    vertical-align: top;
+  }
+  .team-edit-form input {
+    height: 40px;
+  }
+  .team-edit-form input::placeholder {
+    padding-left: 5px;
+    color: #999;
+  }
+  .team-edit-form textarea {
+    height: 68px;
+    padding-left: 8px;
+    padding-top: 15px;
+    outline: none;
+    resize: none;
+    padding-bottom: 15px;
+  }
+  .team-edit-form input::placeholder, .team-edit-form textarea::placeholder {
+    padding-left: 5px;
+    color: #999;
+  }
+  #team-set-up-time {
+    input:nth-of-type(1) {
+      width: 165px;
+    }
+    input:nth-of-type(2) {
+      width: 80px;
+      margin-left: 30px;
+    }
+    @media screen and (max-width: 1152px) {
+      input:nth-of-type(1) {
+        width: 155px;
+      }
+      input:nth-of-type(2) {
+        width: 60px;
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
+.invite-members {
+  font-size: 14px;
+  padding-right: 45px;
+  letter-spacing: 4px;
+  cursor: pointer;
+}
+
+//
+//个人信息
+
+.personal-info-box {
+  height: 300px;
+  .head-info {
+    height: 300px;
+    padding: 10px 0;
+    .head-img {
+      .head-img p {
+        text-align: center;
+      }
+    }
+  }
+  .data-info {
+  }
+}
+
+.calendar-icon {
+  text-align: center;
+  line-height: 32px;
+}
+
+@media screen and (max-width: 1919px) {
+  .calendar-icon {
+    font-size: 22px !important;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .calendar-icon {
+    font-size: 13px !important;
+  }
+}
+
+//create team
+h3.title {
+  border-bottom: 1px solid $team-layout-color;
+  padding-bottom: 15px;
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: normal;
+  padding-top: 15px;
+  padding-left: 25px;
+}
+
+.join-team-tool-box {
+  border-bottom: 1px solid $team-layout-color;
+  padding: 0 15px;
+}
+
+.team-hint {
+  height: 48px;
+  line-height: 48px;
+  padding: 0 15px;
+  span:before {
+    content: url($exclamation-mark-icon);
+    vertical-align: -webkit-baseline-middle;
+    margin-right: 5px;
+  }
+  a {
+    color: $orange;
+    text-decoration: underline !important;
+  }
+}
+
+//邀请成员分页样式修改
+.page-bar a {
+  border: 1px solid #447bbe;
+  padding: 4px 10px;
+}
+
+.page-bar a:hover {
+  background-color: transparent;
+  color: #fff;
+}

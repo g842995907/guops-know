@@ -1,0 +1,170 @@
+msgid "x_total_score"
+msgstr "Total Score"
+
+msgid "x_total_task_count"
+msgstr "Total Task(s)"
+
+msgid "x_score_manage"
+msgstr "Performance Management"
+
+msgid "x_writeup_score"
+msgstr "Solution Score"
+
+msgid "x_task"
+msgstr "Challenge"
+
+msgid "x_add_exam"
+msgstr "New exam"
+
+msgid "x_edit_exam"
+msgstr "Edit Exam"
+
+msgid "x_exam_cannot_operation"
+msgstr "Exam is in progress and can not be operated"
+
+msgid "x_answer_show_mode"
+msgstr "Show Answer Mode"
+
+msgid "x_submit_show"
+msgstr "Show Answer After Assignment"
+
+msgid "x_exam_end_show"
+msgstr "Show Answer After  End of The Exam"
+
+msgid "x_no_show"
+msgstr "Never Show Answer"
+
+msgid "x_review_jiancha"
+msgstr "Review"
+
+msgid "x_input_score"
+msgstr "Input Score"
+
+msgid "x_score_not_gt_all_score"
+msgstr "Score can not greater then full score"
+
+msgid "x_confirm_submission"
+msgstr "Confirm Submission?"
+
+msgid "x_end_greater_start"
+msgstr "The exam end time must be greater than the start time"
+
+msgid "x_exams_name_already_exists"
+msgstr "Game name already existed"
+
+msgid "x_exam_name_not_empty"
+msgstr "The exam name can not be empty"
+
+msgid "x_start_time_fields_required"
+msgstr "Start and end time fields are required"
+
+msgid "x_exam_end_greater_current_time"
+msgstr "The exam end time must be greater than the current time"
+
+msgid "x_exam_start_greater_current_time"
+msgstr "The exam start time must be greater than the current time"
+
+msgid "x_edit_exam_start_time"
+msgstr "Editing the exam in progress, the start time must be less than the current time"
+
+msgid "x_edit_not_start_time"
+msgstr "Editing an exam that has not started, the start time must be greater than the current time"
+
+msgid "x_edit_exam_end_time"
+msgstr "Editing the exam in progress, the end time must be greater than the current time"
+
+msgid "x_no_exam_questions"
+msgstr "No exam questions"
+
+msgid "x_not_found_exam"
+msgstr "Not found exam"
+
+msgid "x_open_answer_after_exam"
+msgstr "Open the answer after the end of the exam"
+
+msgid "x_open_answer"
+msgstr "Open answer"
+
+msgid "x_students_handed_after_the_public"
+msgstr "The students handed in after the public"
+
+msgid "x_show_score"
+msgstr "Show score"
+
+msgid "x_show_rankings"
+msgstr "Show rankings"
+
+msgid "x_exam_has_done"
+msgstr "The exam has been used and can not be modified"
+
+msgid "x_question_direction"
+msgstr "Question direction"
+
+msgid "x_question_type"
+msgstr "Question type"
+
+msgid "x_exam_description"
+msgstr "Exam description"
+
+msgid "x_this_task"
+msgstr "This task"
+
+msgid "x_allquestions_allscore"
+msgstr "allqueston {question}, allscore {score}"
+
+msgid "x_alls"
+msgstr "all"
+
+msgid "x_question_all"
+msgstr "questions, all"
+
+msgid "x_choose_test_paper"
+msgstr "Please chose a test paper"
+
+msgid "x_chose_paper"
+msgstr "Chose Paper"
+
+msgid "x_exam_over"
+msgstr "Exam Over"
+
+msgid "x_re_selection"
+msgstr "re selection"
+
+msgid "x_editor_test_paper"
+msgstr "Editor test paper"
+
+msgid "x_successful_delivery"
+msgstr "Successful Delivery"
+
+msgid "x_unknown_mistake"
+msgstr "Unknown Mistake"
+
+msgid "x_whether_review"
+msgstr "Whether to review"
+
+msgid "x_show_score_after"
+msgstr "Whether the score is displayed after the exam is over."
+
+msgid "x_show_answer"
+msgstr "Whether to display the answer"
+
+msgid "x_show_answer_after"
+msgstr "Whether the correct answer is displayed after the exam is over."
+
+msgid "x_is_over_no_sub"
+msgstr "The exam is over and you can't submit an answer!"
+
+msgid "x_dynamic_answer"
+msgstr "Dynamic answer"
+
+msgid "x_answer_not_generated"
+msgstr "The answer is not generated"
+
+msgid "x_answering"
+msgstr "Answering"
+
+msgid "x_submit_over"
+msgstr "Delivered"
+
+msgid "x_testpaper_abnormal"
+msgstr "The test paper is abnormal"

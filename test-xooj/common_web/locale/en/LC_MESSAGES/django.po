@@ -1,0 +1,167 @@
+msgid "x_platform_dynamic"
+msgstr "Info"
+
+msgid "x_messages_center"
+msgstr "Message"
+
+msgid "x_personal_center"
+msgstr "Profile"
+
+msgid "x_events_list"
+msgstr "Event List"
+
+msgid "x_login"
+msgstr "Login"
+
+msgid "x_remember_me"
+msgstr "Remember Me"
+
+msgid "x_forget_password"
+msgstr "Forget Password"
+
+msgid "x_login_immediately"
+msgstr "Login"
+
+msgid "x_registered_account"
+msgstr "Sign Up"
+
+msgid "x_enter_username_password"
+msgstr "Input Username And Password"
+
+msgid "x_enter_username"
+msgstr "Input Username"
+
+msgid "x_enter_password"
+msgstr "Input Password"
+
+msgid "x_incorrect_username_password"
+msgstr "Username Or Password Incorrect"
+
+msgid "x_user_not_active"
+msgstr "User Not Active"
+
+msgid "x_user_non_existent"
+msgstr "User Not Exists"
+
+msgid "x_retrieve_password"
+msgstr "Retrieve Password"
+
+msgid "x_email_been_sent"
+msgstr "Email Sent"
+
+msgid "x_email_not_active"
+msgstr "User Not Active"
+
+msgid "x_system_not_active"
+msgstr "System Not Active"
+
+msgid "x_upload_Licnece_activation"
+msgstr "The system is not activated and can not be used. You need to upload the License file for activation"
+
+msgid "x_upload_Licnence"
+msgstr "Upload License"
+
+msgid "x_submit_comments"
+msgstr "Submit Comments"
+
+msgid "x_reply"
+msgstr "Reply"
+
+msgid "x_already_liked"
+msgstr "Already liked"
+
+msgid "x_comments_cannot_empty"
+msgstr "Comments can not be empty."
+
+msgid "x_new_user_registration"
+msgstr "New user registration"
+
+msgid "x_set_user_name"
+msgstr "Please set the username"
+
+msgid "x_verification_code"
+msgstr "Verification"
+
+msgid "x_password_twice_different"
+msgstr "Two passwords are inconsistent"
+
+msgid "x_username_format_error"
+msgstr "Username format error"
+
+msgid "x_password_format_error"
+msgstr "Invalid password format"
+
+msgid "x_username_already_exists"
+msgstr "Username already existed"
+
+msgid "x_enter_verification_code"
+msgstr "Please enter the verification code"
+
+msgid "x_registration_success"
+msgstr "Registration successful"
+
+msgid "x_verification_code_error"
+msgstr "Verification code error"
+
+msgid "x_registered"
+msgstr "registered"
+
+msgid "x_comment_too_long"
+msgstr "The length of the comment can not exceed 250"
+
+msgid "x_old_password"
+msgstr "Old Password"
+
+msgid "x_new_password"
+msgstr "New Password"
+
+msgid "x_confirm_new_password"
+msgstr "Confirm New Password"
+
+msgid "x_message_list"
+msgstr "Message List"
+
+msgid "x_published"
+msgstr "Published on"
+
+msgid "x_reply_successfully"
+msgstr "Reply successfully"
+
+msgid "x_post_successfully"
+msgstr "Post Successfully"
+
+msgid "x_get_alarm_error"
+msgstr "Get Alarm Error"
+
+msgid "x_user_has_expired"
+msgstr "User Has Expired"
+
+msgid "x_you_have"
+msgstr "You Have"
+
+msgid "x_team_messages"
+msgstr "Team Messages"
+
+msgid "x_post_question"
+msgstr "Post Question"
+
+msgid "x_get_container_error"
+msgstr "Get Container Error"
+
+msgid"x_tip_login"
+msgstr"The latest version of Chrome and 1920*1080 resolution setting are highly recommended "
+
+msgid "x_no_messages"
+msgstr "No messages now."
+
+msgid "x_trial_version"
+msgstr "Trial Version"
+
+msgid "x_get_license_info"
+msgstr "License Info"
+
+msgid "x_password_not_blank"
+msgstr "Password can not be blank"
+
+msgid "x_username_not_blank"
+msgstr "Username can not be blank"

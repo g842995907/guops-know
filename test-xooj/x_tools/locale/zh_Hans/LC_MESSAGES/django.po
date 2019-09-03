@@ -1,0 +1,119 @@
+msgid "x_tool"
+msgstr "工具"
+
+msgid "x_all_platform"
+msgstr "全部平台"
+
+msgid "x_online"
+msgstr "在线"
+
+msgid "x_other"
+msgstr "其他"
+
+msgid "x_all_authorization_mode"
+msgstr "全部授权模式"
+
+msgid "x_free"
+msgstr "免费"
+
+msgid "x_limit"
+msgstr "限制"
+
+msgid "x_charge"
+msgstr "收费"
+
+msgid "x_version"
+msgstr "版本"
+
+msgid "x_support_platfor"
+msgstr "支持平台"
+
+msgid "x_support_language"
+msgstr "支持语言"
+
+msgid "x_edit_tool"
+msgstr "编辑工具"
+
+msgid "x_new_tool"
+msgstr "新建工具"
+
+msgid "x_select_type"
+msgstr "请选择类型"
+
+msgid "x_select_platform"
+msgstr "请选择平台"
+
+msgid "x_select_languag"
+msgstr "请选择语言"
+
+msgid "x_English"
+msgstr "英文"
+
+msgid "x_select_authorization"
+msgstr "请选择授权"
+
+msgid "x_cover"
+msgstr "封面"
+
+msgid "x_del_pic"
+msgstr "删除图片"
+
+msgid "x_whether_online"
+msgstr "是否在线"
+
+msgid "x_file"
+msgstr "文件"
+
+msgid "x_version_Num"
+msgstr "版本号"
+
+msgid "x_introduced"
+msgstr "介绍"
+
+msgid "x_type_select_type"
+msgstr "类型：请选择类型"
+
+msgid "x_platform_select_platform"
+msgstr "平台：请选择平台"
+
+msgid "x_language_select_language"
+msgstr "语言：请选择语言"
+
+msgid "x_authorized_select_authorized"
+msgstr "授权：请选择授权"
+
+msgid "x_related_comments"
+msgstr "关联评论"
+
+msgid "x_praise_number"
+msgstr "点赞次数"
+
+msgid "x_comment_time"
+msgstr "评论时间"
+
+msgid "x_edit_commen"
+msgstr "编辑评论"
+
+msgid "x_new_commen"
+msgstr "新建评论"
+
+msgid "x_parent_comment"
+msgstr "父级评论"
+
+msgid "x_charge_mode"
+msgstr "收费方式"
+
+msgid "x_tool_details"
+msgstr "工具详情"
+
+msgid "x_rlated_tools"
+msgstr "相关工具"
+
+msgid "x_homepage"
+msgstr "主页"
+
+msgid "x_unable_get_tool_details"
+msgstr "无法获取工具详情"
+
+msgid "x_ubable_get_rlated_tools"
+msgstr "无法获取相关工具"

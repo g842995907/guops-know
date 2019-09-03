@@ -1,0 +1,195 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'web/css/home.css' %}"/>
+    <style type="text/css">
+        #eventList {
+            height: 710px;
+        }
+
+        #eventList .event-logo {
+            width: 100px;
+            height: 84px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg130T'>
+        <div class="row" id="home">
+            <div class="col-sm-12 col-md-8 col-lg-8">
+                <div class="row font30 ">
+                    <div class="col-md-6 text-center mrg25B {% if not x_exercise_url %}disableds disabled{% endif %}">
+                        <div class="row mrg0A oj_card card_height pad40T pad40B posRelative homeBlue {% if x_exercise_url %}oj_hover{% endif %}">
+                            <div class='icon-icons-19 font60 mrg40B'></div>
+                            <div>{% trans 'x_practice' %}</div>
+                            {% if x_exercise_url %}
+                                <a href="{{ x_exercise_url }}" class='fill'></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center mrg25B {% if not x_course_url %}disableds disabled{% endif %}">
+                        <div class="row mrg0A oj_card card_height pad40T pad40B posRelative homeBlue  {% if x_course_url %}oj_hover{% endif %}">
+                            <div class='icon-icons-01 font60 mrg40B'></div>
+                            <div>{% trans 'x_course' %}</div>
+                            {% if x_course_url %}
+                            <a href="{{ x_course_url }}" class='fill'></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center mrg25B {% if not x_tools_url %}disableds disabled{% endif %}">
+                        <div class="row mrg0A oj_card card_height pad40T pad40B posRelative homeBlue {% if x_tools_url %}oj_hover{% endif %}">
+                            <div class='icon-briefcase font60 mrg40B'></div>
+                            <div>{% trans 'x_toolbox' %}</div>
+                            {% if x_tools_url %}
+                            <a href="{{ x_tools_url }}" class='fill'></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center mrg25B {% if not x_vulns_url %}disableds disabled{% endif %}">
+                        <div class="row mrg0A oj_card card_height pad40T pad40B posRelative homeBlue {% if x_vulns_url %}oj_hover{% endif %}">
+                            <div class='icon-icons-02 font60 mrg40B'></div>
+                            <div>{% trans 'x_vulnerability' %}</div>
+                            {% if x_vulns_url %}
+                            <a href="{{ x_vulns_url }}" class='fill'></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {#                <div class="col-md-6 text-center mrg25B disableds disabled">#}
+                    {#                    <div class="row mrg0A oj_card pad40T pad40B posRelative homeBlue">#}
+                    {#                        <div class='icon-icons-02 font60 mrg40B'></div>#}
+                    {#                        <div>漏洞知识</div>#}
+                    {#                    </div>#}
+                    {#                </div>#}
+                    <div class="col-md-6 text-center mrg25B ">
+                        <div class="row mrg0A oj_card card_height pad0T pad35B posRelative homeBlue oj_hover">
+                            <h3 class='text-left pad30L whiteC'>{% trans 'x_platform_dynamic' %}</h3>
+                            <ul class='pad30L pad30R lineH20'>
+                                <li class='text-left mrg15B'>
+                                    <span class='dots'></span>
+                                    <span class='font14 whiteC'>{% trans '[公告]实训平台oj3.0版本正式发布! ' %}</span>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                    </div>
+                    <div class="col-md-3 text-center mrg25B ">
+                        <div class="row mrg0A oj_card card_height pad40T pad40B posRelative homeBlue oj_hover">
+                            <div class='icon-icons-13 font60 mrg40B'></div>
+                            <div>{% trans 'x_messages_center' %}</div>
+                            <a href="{% url 'message:list' %}" class='fill'></a>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center mrg25B ">
+                        <div class="row mrg0A oj_card card_height pad40T pad40B posRelative homeBlue oj_hover">
+                            <div class='icon-icons-10 font60 mrg40B'></div>
+                            <div>{% trans 'x_personal_center' %}</div>
+                            <a href="{% url 'x_person:info' %}" class='fill'></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="row mrg0A oj_card pad15A" id="eventList">
+                    <h3 class='borders2 mrg0A pad10B whiteC font24'
+                        style="margin-bottom: 6px!important;">{% trans 'x_events_list' %}</h3>
+                    <ul v-cloak>
+                        {% verbatim %}
+                        <li class='pad15A posRelative clearfix borders2'
+                            :class="{'ing': event.process == 0, 'already': event.process == 1, 'finish': event.process == 2}"
+                            v-for="event in events">
+                            <a v-if="event.process != 1" :href="event | detailUrl" target="_blank" style="display: inline-block;">
+
+                                <img :src="event.logo" alt="" class='event-logo mrg20R fl img-responsive'>
+                                <div class='fl'>
+                                    <div class='mrg10B' style="color: #b2b6bf;">
+                                        {{ event.name }}
+                                    </div>
+                                    <div class='oj_label2'>
+                                        {{ event | processFormat }}
+                                    </div>
+                                </div>
+                            </a>
+                            <a v-else v-on:click="showError" style="display: inline-block;">
+
+                                <img :src="event.logo" alt="" class='event-logo mrg20R fl img-responsive'>
+                                <div class='fl'>
+                                    <div class='mrg10B' style="color: #b2b6bf;">
+                                        {{ event.name }}
+                                    </div>
+                                    <div class='oj_label2'>
+                                        {{ event | processFormat }}
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        {% endverbatim %}
+                    </ul>
+                    <div class='col-md-12 centerDiv mrg5T' v-if="events" v-cloak>
+                        <a href="{% url 'event:list' %}"
+                           class='lookMore text-center font12 oj_card pad10L pad10R pad5T pad5B'>{% trans 'x_see_more' %}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var eventDetailUrl = {
+            '1': '{% url "event_exam:detail" 0 %}',
+            '2': {% if x_jeopardy_url %}"{{ x_jeopardy_url }}"{% else %}""{% endif %},
+            '3': '',
+            '4': '',
+            '5': {% if x_ad_url %}"{{ x_ad_url }}"{% else %}""{% endif %},
+        };
+
+        getEventList();
+        function getEventList() {
+            var data = {
+                offset: 0,
+                limit: 5
+            };
+            http.get('{% url "event:api:event-list" %}', data, function (res) {
+                var events = res.rows;
+                new Vue({
+                    el: '#eventList',
+                    data: {
+                        events: events,
+                    },
+                    methods: {
+                            showError: function () {
+                                $('#hint-msg').html(gettext('x_sorry_not_start'));
+                                $("#hint-msg-warp").attr("data-backdrop","static");
+                                $("#hint-msg-warp").modal();
+                                $("#hint-msg-warp").show();
+                            }
+                    },
+                    filters: {
+                        processFormat: function (event) {
+                            if (event.process == 0) {
+                                if (event.status == 2) {
+                                    return gettext("x_paused");
+                                } else {
+                                    return gettext("x_underway");
+                                }
+                            } else if (event.process == 1) {
+                                return gettext("x_upcoming");
+                            } else if (event.process == 2) {
+                                return gettext("x_archive");
+                            }
+                        },
+                        detailUrl: function (event) {
+                            return eventDetailUrl[event.type].replace('0', event.id);
+                        },
+                    }
+                });
+            });
+        }
+    </script>
+{% endblock %}
+
+<!-- container end-->

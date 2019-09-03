@@ -1,0 +1,254 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans '备份管理' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="col-md-5 col-sm-5">
+                        <button class="btn btn-primary"
+                                data-url="{% url 'cms_system_configuration:cms_api:backup-list' %}"
+                                onclick="CALLBACK.Create(this);">
+                            <i class="fa fa-plus"></i> {% trans '创建备份' %}
+                        </button>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_system_configuration:cms_api:backup-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                        <a class="btn btn-warning" href="{% url 'cms_system_configuration:factory_reset' %}">
+                            <i class="fa fa-exclamation"></i> {% trans '恢复出厂设置' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_system_configuration:cms_api:backup-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="creater_username">{% trans '创建者' %}</th>
+                <th data-field="create_time" data-formatter="table.datetimeFormatter">{% trans '创建时间' %}</th>
+
+                <th data-field="id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_system_configuration:cms_api:backup-list' %}";
+        var backupState = "{% url 'cms_system_configuration:cms_api:backup-query-state' %}";
+
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+        var table = bsTableClass($('#table'));
+        var loopReload = null;
+        var CALLBACK = {
+            Create: function (btn) {
+                var url = $(btn).attr('data-url');
+                swal(
+                    {
+                        title: gettext('x_want_to_continue'),
+                        type: 'warning',
+                        showCancelButton: true,
+                        cancelButtonText: gettext('取消'),
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: gettext('确定'),
+                        closeOnConfirm: false
+                    }, function () {
+                        swal({
+                                title: "备份中,请耐心等待...",
+                                type: "warning",
+                            },
+                            function () {
+                                return
+                            }
+                        );
+                        http.post(url, {}, function () {
+                            CALLBACK.startLoopReload();
+                        });
+                    }
+                );
+
+
+                {#                ajaxDialog.buttonClick(http.post, url, {}, function (data) {#}
+                {#                    swal({#}
+                {#                            title: "备份中,请耐心等待...",#}
+                {#                            type: "warning",#}
+                {#                        },#}
+                {#                        function () {#}
+                {#                            return#}
+                {#                        }#}
+                {#                    );#}
+                {#                    CALLBACK.startLoopReload()#}
+                {#                });#}
+            },
+            Recover: function (url, id) {
+                {#                ajaxDialog.buttonClick(http.post, url, {}, function (data) {#}
+                {#                    swal({#}
+                {#                            title: "恢复中,请耐心等待...",#}
+                {#                            type: "warning",#}
+                {#                        },#}
+                {#                        function () {#}
+                {#                            return#}
+                {#                        }#}
+                {#                    );#}
+                {#                    CALLBACK.startLoadQuery(id)#}
+                {#                });#}
+
+                swal(
+                    {
+                        title: gettext('x_want_to_continue'),
+                        type: 'warning',
+                        showCancelButton: true,
+                        cancelButtonText: gettext('取消'),
+                        confirmButtonColor: '#DD6B55',
+                        confirmButtonText: gettext('确定'),
+                        closeOnConfirm: false
+                    }, function () {
+                        swal({
+                                title: "恢复中,请耐心等待...",
+                                type: "warning",
+                            },
+                            function () {
+                                return
+                            }
+                        );
+                        http.post(url, {}, function () {
+                            CALLBACK.startLoadQuery(id);
+                        });
+
+                    }
+                );
+            },
+            startLoopReload: function () {
+                if (loopReload == null) {
+                    loopReload = setInterval(function () {
+                        http.get(backupState, {}, function (data) {
+                            if (data.status == 2) {
+                                CALLBACK.closeLoopReload();
+                                swal({
+                                        title: "备份成功",
+                                        type: "warning",
+                                        confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: "确定",
+                                        closeOnConfirm: true
+                                    },
+                                    function () {
+                                        table.reload();
+                                    }
+                                );
+
+                            } else if (data.status == 3) {
+                                CALLBACK.closeLoopReload();
+                                swal({
+                                        title: "备份失败",
+                                        type: "warning",
+                                        confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: "确定",
+                                        closeOnConfirm: true
+                                    },
+                                    function () {
+                                        return
+                                    }
+                                );
+                            }
+                        })
+                    }, 3000);
+                }
+            },
+            closeLoopReload: function () {
+                clearInterval(loopReload);
+                loopReload = null;
+            },
+            startLoadQuery: function (id) {
+                var loadState = listUrl + id + '/query_load_state/';
+                if (loopReload == null) {
+                    loopReload = setInterval(function () {
+                        http.get(loadState, {}, function (data) {
+                            if (data.status == 2) {
+                                CALLBACK.closeLoopReload();
+                                table.reload();
+                                swal({
+                                        title: "恢复成功",
+                                        type: "warning",
+                                        confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: "确定",
+                                        closeOnConfirm: true
+                                    },
+                                    function () {
+                                        return
+                                    }
+                                );
+
+                            } else if (data.status == 3) {
+                                CALLBACK.closeLoopReload();
+                                swal({
+                                        title: "恢复失败",
+                                        type: "warning",
+                                        confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: "确定",
+                                        closeOnConfirm: true
+                                    },
+                                    function () {
+                                        return
+                                    }
+                                );
+                            }
+                        })
+                    }, 3000);
+                }
+            }
+
+        };
+
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        function operatorFormatter(value, row, index) {
+            if (row.can_load) {
+                var btns = [
+                    {
+                        type: 'button',
+                        class: 'btn-primary',
+                        icon: 'fa-heart',
+                        text: '恢复',
+                        click: 'CALLBACK.Recover(listUrl + "' + value + '" + "/recover/","' + value + '")',
+
+                    }
+                ]
+                return bsTable.getOperatorHtml(btns);
+            } else {
+                return "数据库已升级,不能恢复"
+            }
+
+
+        }
+
+    </script>
+{% endblock %}

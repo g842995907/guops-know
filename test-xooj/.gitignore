@@ -1,0 +1,12 @@
+.idea/
+/static/
+media/*
+dist/
+*.pyc
+log/
+*/migrations/
+setup.py
+/event_attack_defense/media/task/
+/event_attack_defense/media/team/
+*.mo
+/build/

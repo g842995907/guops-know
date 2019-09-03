@@ -1,0 +1,447 @@
+
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    color: #b2b6bf;
+}
+
+/*背景样式*/
+@keyframes scl {
+    0% {
+        transform: scale(1);
+    }
+    45% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+ul, li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#content-wrap {
+    width: 100%;
+    position: relative;
+}
+
+.bg-wrap {
+    width: 100% !important;
+    position: fixed !important;
+    padding-bottom: 56.25% !important; /*需要用padding来维持16:9比例,也就是9除以16*/
+    height: 100% !important;
+}
+
+.bg-wrap video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.black-bg {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .2);
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.learn-title {
+    position: relative;
+    bottom: 15px;
+}
+
+.learn-content {
+    /*width:98.5%;*/
+    width: 95%;
+/ / height: 86 %;
+    background: rgba(0, 0, 0, .7);
+    border: 14px solid rgba(255, 255, 255, .2);
+    background-clip: padding-box;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+
+}
+
+.inportant-main {
+    width: 100%;
+    height: 100%;
+/ / margin: 0 auto;
+    position: absolute;
+    display: none;
+    left: 0;
+    top: 0;
+    transform: translateX(0);
+    transition: .8s;
+}
+
+.return-btn {
+    background-size: 100% 100%;
+    margin-top: 32px;
+    font-size: 16px;
+    float: left;
+    border-radius: 5px;
+}
+
+.return-btn a {
+    color: white;
+}
+
+.learn-label {
+    float: left;
+}
+
+.dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 7px;
+    background: #b8730c;
+    float: left;
+    margin-right: 7px;
+    margin-top: 11px;
+}
+
+.label-text {
+    height: 38px;
+    line-height: 38px;
+    color: white;
+    float: left;
+}
+
+.action-btn li[media-name="pdf"] .video {
+    background: url(../img/document.png) no-repeat center center;
+    background-size: contain;
+}
+
+.action-btn li[media-name="markdown"] .video {
+    background: url(../img/document.png) no-repeat center center;
+    background-size: contain;
+}
+
+.action-btn li[media-name="video"] .video {
+    background: url(../img/shiping.png) no-repeat center center;
+}
+
+.action-btn li[media-name="attachment"] .video {
+    background: url(../img/fujian.png) no-repeat center center;
+}
+
+.action-btn li[media-name="env"] .video {
+    background: url(../img/shiyan.png) no-repeat center center;
+}
+
+.action-btn li[media-name="practice"] .video {
+    background: url(../img/lianxi.png) no-repeat center center;
+}
+
+.action-btn li[media-name="homework"] .video {
+    background: url(../img/zuoye.png) no-repeat center center;
+}
+
+.action-btn li[media-name="note"] .video {
+    background: url(../img/biji.png) no-repeat center center;
+}
+
+.action-btn li[media-name="report"] .video {
+    background: url(../img/zuoye.png) no-repeat center center;
+}
+
+.course-detailed .s_line {
+    width: 80%;
+    height: 1px;
+    background-color: #2b3f58;
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.action-btn li[media-name="pdf"],
+.action-btn li[media-name="video"],
+.action-btn li[media-name="attachment"],
+.action-btn li[media-name="note"],
+.action-btn li[media-name="env"],
+.action-btn li[media-name="report"],
+.action-btn li[media-name="homework"],
+.action-btn li[media-name="practice"] {
+    margin-top: 5px;
+    padding: 5px 0;
+}
+
+.action-btn li[media-name="pdf"].active,
+.action-btn li[media-name="video"].active,
+.action-btn li[media-name="attachment"].active,
+.action-btn li[media-name="note"].active,
+.action-btn li[media-name="env"].active,
+.action-btn li[media-name="report"].active,
+.action-btn li[media-name="homework"].active,
+.action-btn li[media-name="practice"].active {
+    background: #fda219 !important;
+}
+
+.video {
+    width: 60px;
+    height: 32px;
+    display: block;
+}
+
+.action-btn a {
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+}
+
+.return:hover {
+    text-decoration: none !important;
+    color: white !important;
+}
+
+.course-name {
+    width: 100%;
+    height: 80px;
+    font-size: 32px;
+    color: white;
+    line-height: 80px;
+    padding-left: 58px;
+    border-bottom: 1px solid #414143;
+}
+
+.course-inner {
+    width: 100%;
+    height: 85%;
+    padding: 67px 54px;
+    font-size: 20px;
+    color: #b9b9b9;
+    line-height: 42px;
+}
+
+.course-detailed {
+    width: 420px;
+    height: 100%;
+    position: absolute;
+    top: 0;
+}
+
+.pull-div {
+    width: 60px;
+    /*height:100px;*/
+    /*width:38px;*/
+    /*height:32px;*/
+    /*background:#b8730c;*/
+    background-color: #08213c;
+    color: white;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    top: 16.6%;
+    cursor: pointer;
+    transition: .5s;
+    transform: rotate(0);
+}
+@media screen and (max-width:1366px){
+    .pull-div {
+        top:24.5%;
+    }
+}
+.pull-div > div:nth-child(1) span {
+    width: 24px;
+    height: 24px;
+    background: url(../img/caidan.png) no-repeat;
+    display: inline-block;
+}
+
+.pull {
+    margin-top: 10px;
+}
+
+.detailed-main {
+    width: 360px;
+    height: 100%;
+    background: rgba(19, 37, 60, .95);
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: 1px solid #5985b3;
+    overflow: auto;
+}
+
+.appear {
+    width: 38px;
+    height: 32px;
+    background: url(../img/caidan.png) no-repeat;
+    position: absolute;
+    right: 100px;
+    top: 40px;
+    cursor: pointer;
+    transform: rotate(0);
+    transition: .5s;
+}
+
+.appear:hover {
+    transform: rotate(90deg);
+}
+
+.head-name {
+    width: 100%;
+    height: 100px;
+    padding: 22px;
+    line-height: 42px;
+    font-size: 22px;
+    color: #ffffff;
+}
+
+.inner {
+    width: 100%;
+    height: 86%;
+}
+
+.directory {
+    width: 100%;
+    cursor: pointer;
+}
+
+.directory-list {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    color: white;
+    border-bottom: 1px solid #010101;
+    padding-left: 12px;
+    background: rgba(255, 255, 255, .1);
+}
+
+.directory-list:hover {
+    background: black;
+    box-shadow: 0 0 3px 1px #e0e0e0;
+}
+
+.directory span:nth-of-type(1) {
+    float: left;
+}
+
+.title-list {
+    width: 100%;
+    display: none;
+}
+
+.title-list li {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    color: white;
+}
+
+.title-list li:hover {
+    background: rgba(255, 255, 255, .2);
+}
+
+.title-list li a {
+    color: #fff;
+}
+
+.title-list li a:hover {
+    color: #b8730c !important;
+}
+
+.list-ico {
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 5px;
+    float: left;
+    margin: 5px 10px 0 0;
+}
+
+#lesson-list-div > li {
+    height: 40px;
+    padding-left: 20px;
+}
+
+.schedule {
+    width: 14px;
+    height: 14px;
+    border-radius: 7px;
+    display: inline-block;
+    margin-right: 7px;
+    margin-top: 18px;
+    background: orange;
+}
+
+.doc {
+    width: 90%;
+    position: absolute;
+    left: 5%;
+    top: 0;
+}
+
+.show {
+    display: block;
+}
+
+.roll {
+    width: 16px;
+    height: 100%;
+    background: #181818;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.roll-top, .roll-bottom {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    left: 0;
+}
+
+.roll-top {
+    background: url(../image/roll1.png) center center no-repeat;
+    top: 0;
+}
+
+.roll-bottom {
+    background: url(../image/roll2.png) center center no-repeat;
+    bottom: 0;
+}
+
+.roll-body {
+    width: 100%;
+    height: 95%;
+    background: red;
+    position: absolute;
+    left: 0;
+    top: 18px;
+}
+
+.roll-btn {
+    width: 100%;
+    height: 50px;
+    background: #878787;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 8px;
+}
+
+.study-main {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.gg {
+    width: 100%;
+    height: 100%;
+}

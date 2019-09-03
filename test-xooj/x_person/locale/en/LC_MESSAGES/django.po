@@ -1,0 +1,809 @@
+msgid "x_user_manage"
+msgstr "User Management"
+
+msgid "x_all_class"
+msgstr "All Classes"
+
+msgid "x_all_project_groups"
+msgstr "All Groups"
+
+msgid "x_user_name_email"
+msgstr "Username Email"
+
+msgid "x_user_or_name"
+msgstr "Username"
+
+msgid "x_is_auth"
+msgstr "Have Auth"
+
+msgid "x_batch_import_user"
+msgstr "Batch Import Users"
+
+msgid "x_initial_password"
+msgstr "Initial Password"
+
+msgid "x_faculty_area"
+msgstr "Faculty|Area"
+
+msgid "x_major_dep"
+msgstr "Major|Department"
+
+msgid "x_class_project_team"
+msgstr "Class|Project Team"
+
+msgid "x_user_list"
+msgstr "User List"
+
+msgid "x_user_info"
+msgstr "User Info"
+
+msgid "x_export_user_error_response"
+msgstr "The current user is empty under the organization, please choose from new"
+
+msgid "x_batch_export_user"
+msgstr "Batch Export Users"
+
+msgid "x_total_online_time"
+msgstr "Total Online Time"
+
+msgid "x_user_import"
+msgstr "User Import"
+
+msgid "x_recovery"
+msgstr "Enable"
+
+msgid "x_disable"
+msgstr "Disable"
+
+msgid "x_enhance_teacher"
+msgstr "Enhance Trainer"
+
+msgid "x_down_student"
+msgstr "Reduced to trainee"
+
+msgid "x_name_surname"
+msgstr "Name"
+
+msgid "x_faculties"
+msgstr "Faculty"
+
+msgid "x_area"
+msgstr "Area"
+
+msgid "x_grade"
+msgstr "Grade"
+
+msgid "x_sector"
+msgstr "Department"
+
+msgid "x_class"
+msgstr "Classes"
+
+msgid "x_project_groups"
+msgstr "Project Group"
+
+msgid "x_user_level"
+msgstr "User Level"
+
+msgid "x_reset_password"
+msgstr "Reset Password"
+
+msgid "x_input_password"
+msgstr "Input Password"
+
+msgid "x_all_aegion"
+msgstr "All Area"
+
+msgid "x_all_department"
+msgstr "All Department"
+
+msgid "x_new_user"
+msgstr "New User"
+
+msgid "x_num_new_team"
+msgstr "New Team"
+
+msgid "x_event_answered"
+msgstr "Event Answered"
+
+msgid "x_not_audited"
+msgstr "Unaudited"
+
+msgid "x_new_create_user"
+msgstr "New User"
+
+msgid "x_edit_user"
+msgstr "Edit User"
+
+msgid "x_please_select"
+msgstr "Please select ---"
+
+msgid "x_email"
+msgstr "Email"
+
+msgid "x_verified"
+msgstr "Verified"
+
+msgid "x_unverified"
+msgstr "Unverified"
+
+msgid "x_phone"
+msgstr "Phone"
+
+msgid "x_nickname"
+msgstr "NickName"
+
+msgid "x_photo"
+msgstr "Logo"
+
+msgid "x_id_number"
+msgstr "ID Number"
+
+msgid "x_select_class"
+msgstr "Select Class"
+
+msgid "x_select_department"
+msgstr "Select Department"
+
+msgid "x_select_grade"
+msgstr "Select Grade"
+
+msgid "x_select_character"
+msgstr "Select Role"
+
+msgid "x_email_field_required"
+msgstr "Email Require"
+
+msgid "x_password_field_required"
+msgstr "Password Require"
+
+msgid "x_confirm_password_field_required"
+msgstr "Confirm Password Require"
+
+msgid "x_password_same"
+msgstr "Password Not Same"
+
+msgid "x_name_field_required"
+msgstr "Name Require"
+
+msgid "x_name_too_long"
+msgstr "Name Too Long"
+
+msgid "x_user_name_field_required"
+msgstr "Username Require"
+
+msgid "x_team_manage"
+msgstr "Team Management"
+
+msgid "x_team_logo"
+msgstr "Team Logo"
+
+msgid "x_captain"
+msgstr "Team Leader"
+
+msgid "x_has_deleted"
+msgstr "Deleted"
+
+msgid "x_has_fired"
+msgstr "Disbanded"
+
+msgid "x_forbidden_game"
+msgstr "Forbidden"
+
+msgid "x_abnormal_situation"
+msgstr "Abnormal Condition"
+
+msgid "x_edit_team"
+msgstr "Edit Team"
+
+msgid "x_player"
+msgstr "Player"
+
+msgid "x_organizational_structure_manage"
+msgstr "Organization Management"
+
+msgid "x_said"
+msgstr " "
+
+msgid "x_school"
+msgstr "School"
+
+msgid "x_company"
+msgstr "Company"
+
+msgid "x_enterprise"
+msgstr "Enterprise"
+
+msgid "x_template_file"
+msgstr "Template"
+
+msgid "x_download_file"
+msgstr "Download File"
+
+msgid "x_user_information_import"
+msgstr "User information table import"
+
+msgid "x_configure_organizational_structure"
+msgstr "Please configure the organizational structure in advance!"
+
+msgid "x_role_manage"
+msgstr "Role Permissions"
+
+msgid "x_audit"
+msgstr "Audit"
+
+msgid "x_course_management"
+msgstr "Course Management"
+
+msgid "x_course_schedule"
+msgstr "Course Schedule"
+
+msgid "x_theoretical_basis_management"
+msgstr "Theory Management"
+
+msgid "x_real_vuln_management"
+msgstr "Real Vuln Management"
+
+msgid "x_exercise_management"
+msgstr "Jeopardy Management"
+
+msgid "x_exam_management"
+msgstr "Exam Management"
+
+msgid "x_system_operation_maintenance"
+msgstr "System Operation"
+
+msgid "x_permissions_page"
+msgstr "Permissions Page"
+
+msgid "x_administrator"
+msgstr "Administrator"
+
+msgid "x_teacher"
+msgstr "Trainer"
+
+msgid "x_student"
+msgstr "Trainee"
+
+msgid "x_student_id"
+msgstr "Trainee Id"
+
+msgid "x_my_profile"
+msgstr "Profile Edit"
+
+msgid "x_click_change_avatar"
+msgstr "Update Headshot"
+
+msgid "x_click_verify"
+msgstr "Click To Verify"
+
+msgid "x_phone_num"
+msgstr "Phone"
+
+msgid "x_nickname_cloud_exchange"
+msgstr "NickName(For Leave Message)"
+
+msgid "x_personal_profile"
+msgstr "Personal Introduction(Limited 50 characters)"
+
+msgid "x_my_tram"
+msgstr "My Team"
+
+msgid "x_no_team_create_team"
+msgstr "You are not in a team, you can create a team or select one to join in ..."
+
+msgid "x_create_team"
+msgstr "Create Team"
+
+msgid "x_join_team"
+msgstr "Join Team"
+
+msgid "x_name_captain"
+msgstr "Team Leader"
+
+msgid "x_num_players"
+msgstr "Team Members"
+
+msgid "x_apply_admission"
+msgstr "Apply"
+
+msgid "x_invite_join_team"
+msgstr "Invite"
+
+msgid "x_edit_information"
+msgstr "Edit Information"
+
+msgid "x_click_upload"
+msgstr "Upload"
+
+msgid "x_time_establishment"
+msgstr "Founding Time"
+
+msgid "x_team_profile"
+msgstr "Team Introduction"
+
+msgid "x_tram_time_wrong"
+msgstr "Incorrect team creation time format"
+
+msgid "x_team_not_exist"
+msgstr "Team not exist or dismissed"
+
+msgid "x_method_not_allowed"
+msgstr "Method Not Allowed"
+
+msgid "x_applied_please_patient"
+msgstr "Application in process, please be patient"
+
+msgid "x_invite_please_patient"
+msgstr "Has been invited, please be patient"
+
+msgid "x_user_already_exists"
+msgstr "User has joined Team"
+
+msgid "x_initial_password_wrong"
+msgstr "Initial Password Wrong"
+
+msgid "x_invaild_symbol"
+msgstr "Contain Invalid Symbol"
+
+msgid "x_password_claim"
+msgstr "Password length 8 ~ 20, and must contain uppercase and lowercase alphanumeric characters and special characters"
+
+msgid "x_email_format_wrong"
+msgstr "Invalid Email Format"
+
+msgid "x_phone_format_wrong"
+msgstr "Invalid phone number format"
+
+msgid "x_cannot_del_type"
+msgstr "Category has being used, can not be deleted"
+
+msgid "x_cannot_del_problem_sets"
+msgstr "Problem sets under a Challenges, can not be deleted"
+
+msgid "x_cannot_del_shared_problem_sets"
+msgstr "No permission to delete the shared exercise set of other users"
+
+msgid "x_failed_delete"
+msgstr "Delete Fail"
+
+msgid "x_growth_trajectory"
+msgstr "Track"
+
+msgid "x_my_team"
+msgstr "My Team"
+
+msgid "x_clan_refuse_apply"
+msgstr "Your application has been rejected by clans"
+
+msgid "x_refused_invite"
+msgstr "Rejected your invitation"
+
+msgid "x_members_num"
+msgstr "Members"
+
+msgid "x_entries_num"
+msgstr "Activities"
+
+msgid "x_enrollment_application"
+msgstr "Applications"
+
+msgid "x_modify_information"
+msgstr "Modify Information"
+
+msgid "x_quit_team"
+msgstr "Quit Team"
+
+msgid "x_activity_record"
+msgstr "Activity Record"
+
+msgid "x_skills_six_dimensional_map"
+msgstr "Skills"
+
+msgid "x_team_members"
+msgstr "Team Members"
+
+msgid "x_have_agreed"
+msgstr "Agreed"
+
+msgid "x_have_refused"
+msgstr "Refuses"
+
+msgid "x_fired"
+msgstr "Fired"
+
+msgid "x_invite_members"
+msgstr "Invite Members"
+
+msgid "x_already_invited"
+msgstr "Invited"
+
+msgid "x_invitation"
+msgstr "Invitation"
+
+msgid "x_inviting_success"
+msgstr "Invited Successfully"
+
+msgid "x_agree"
+msgstr "Agree"
+
+msgid "x_refuse"
+msgstr "Refuse"
+
+msgid "x_inviting_information"
+msgstr "Invited Information"
+
+msgid "x_examination_passed"
+msgstr "Audit passed"
+
+msgid "x_examination_user"
+msgstr "Audit user"
+
+msgid "x_user_name_prompt"
+msgstr "Username length 6 ~ 14, numbers, letters and underscores"
+
+msgid "x_time"
+msgstr "Time"
+
+msgid "x_baning"
+msgstr "Suspension"
+
+msgid "x_password_not_match"
+msgstr "Password length is between 8 and 20, and must contain uppercase and lowercase alphanumeric characters and special characters, the password: %(passwd)s does not meet, please modify the password"
+
+msgid "x_Account_not_match"
+msgstr "Account %(name)s format is incorrect, username is 6~14 digit, alphabet and underline"
+
+msgid "x_account_already_exists"
+msgstr "The account is %(name)s, already exists, please modify the user name first"
+
+msgid "x_same_user"
+msgstr "The same user name exists in the user import file as %(name)s, please modify the user name"
+
+msgid "x_email_format_incorrect"
+msgstr "The email is %(email)s, and the email format is incorrect"
+
+msgid "x_email_already_exists"
+msgstr "The email address is %(email)s, already exists. Please modify the email address first"
+
+msgid "x_modify_mailbox"
+msgstr "User import file exists in the same mailbox as %(email)s, please modify the mailbox"
+
+msgid "x_create_class_first"
+msgstr "The %(class)s in the %(major)s of %(faculty)s does not exist, Please create the class first"
+
+msgid "x_create_grade_first"
+msgstr "The grade %(major)s in %(faculty)s does not exist,Please create the grade first"
+
+msgid "x_create_college_first"
+msgstr "Faculty %(faculty)s , does not exist, please create the college first"
+
+msgid "x_success_import"
+msgstr "Total record %(all_count)d Success import %(success_count)d"
+
+msgid "x_user_already"
+msgstr "The user already existed"
+
+msgid "x_rank_dimension"
+msgstr "Rank Dimension"
+
+msgid "x_personal"
+msgstr "Personal"
+
+msgid "x_scoreboard"
+msgstr "Scoreboard"
+
+msgid "x_solved_count"
+msgstr "Total Solved"
+
+msgid "x_theory"
+msgstr "Theoretical Basis"
+
+msgid "x_real_vuln"
+msgstr "Real Vulnerability"
+
+msgid "x_exercise"
+msgstr "CTF Jeopardy"
+
+msgid "x_summary"
+msgstr "Summary"
+
+msgid "x_max_length_50"
+msgstr "Max Length is 50"
+
+msgid "x_cms_max_120"
+msgstr "brief introduction character too long(0~120)"
+
+msgid "x_personal_center_oj"
+msgstr "Profile OJ"
+
+msgid "x_personal_center_ad"
+msgstr "Profile AD"
+
+msgid "x_theory_course"
+msgstr "Course"
+
+msgid "x_occupational_system"
+msgstr "Occupation"
+
+msgid "x_choose_career_goal"
+msgstr "Choosing a career goal"
+
+msgid "x_choose_career"
+msgstr "Please choose a career"
+
+msgid "x_unable_choose_numbers"
+msgstr "Unable to choose a number of careers"
+
+msgid "x_career_has_chosen"
+msgstr "The career has been chosen, please choose another one"
+
+msgid "x_occupation_name"
+msgstr "Occupation Name"
+
+msgid "x_occupation_profile"
+msgstr "Occupation Profile"
+
+msgid "x_occupation_class_hour"
+msgstr "Occupation Class Hour"
+
+msgid "x_revising_personal_data"
+msgstr "Profile Edit"
+
+msgid "x_door"
+msgstr "Courses"
+
+msgid "x_learning_courses"
+msgstr "Learning Courses"
+
+msgid "x_hour"
+msgstr "Hours"
+
+msgid "x_rankings"
+msgstr "Ranking"
+
+msgid "x_practice_scoring"
+msgstr "Practice Scoring"
+
+msgid "x_practice_ranking"
+msgstr "Practice Ranking"
+
+msgid "x_personal_signature"
+msgstr "Personal Signature"
+
+msgid "x_my_question"
+msgstr "My Question"
+
+msgid "x_my_reply"
+msgstr "My Reply"
+
+msgid "x_skills_six_dimensions"
+msgstr "Skills Six Dimensions"
+
+msgid "x_learning_competition_records"
+msgstr "Learning/Competition Records"
+
+msgid "x_task_schedule"
+msgstr "Task Schedule"
+
+msgid "x_current_career_goals"
+msgstr "Present Occupation"
+
+msgid "x_changing_career_goals"
+msgstr "Changing Career Goals"
+
+msgid "x_course_name"
+msgstr "Course Name"
+
+msgid "x_curriculum_progress"
+msgstr "Curriculum progress"
+
+msgid "x_advanced"
+msgstr "Advanced"
+
+msgid "x_senior"
+msgstr "Senior"
+
+msgid "x_basics_nbsp"
+msgstr "Base"
+
+msgid "x_advanced_nbsp"
+msgstr "Advanced "
+
+msgid "x_senior_nbsp"
+msgstr "Senior"
+
+msgid "x_required"
+msgstr "Required"
+
+msgid "x_elective"
+msgstr "Elective"
+
+msgid "x_amend_the_team_information"
+msgstr "Amend the team information"
+
+msgid "x_position"
+msgstr "Occupation"
+
+msgid "x_advanced_position"
+msgstr "Advanced Occupation"
+
+msgid "x_position_description"
+msgstr "Occupation Description"
+
+msgid "x_difficulty_level"
+msgstr "Difficulty Level"
+
+msgid "x_management_course"
+msgstr "Management Course"
+
+msgid "x_lesson_num"
+msgstr "Total Lesson(s)"
+
+msgid "x_stage"
+msgstr "Stage"
+
+msgid "x_is_compulsory"
+msgstr "Is Compulsory"
+
+msgid "x_increase_course"
+msgstr "Increase The course"
+
+msgid "x_new_vocational_system"
+msgstr "New Vocational System"
+
+msgid "x_edit_professional_system"
+msgstr "Professional system of editing"
+
+msgid "x_choose_advance_position"
+msgstr "Choose Advanced Occupation"
+
+msgid "x_primary"
+msgstr "primary"
+
+msgid "x_intermediate"
+msgstr "intermediate"
+
+msgid "x_not_edited_system"
+msgstr "Not edited in this professional system"
+
+msgid "x_not_deleted_system"
+msgstr "The existing system built in the system can't be deleted"
+
+msgid "x_not_executed_system"
+msgstr "The existing system built-in career cannot be executed"
+
+msgid "x_time_error_index_notexist"
+msgstr "Time gets error, index does not exist"
+
+msgid "x_the_user_using_occupaitons"
+msgstr "The user is using occupaitons"
+
+msgid "x_env_type_base"
+msgstr "Base"
+
+msgid "x_profession_does_not_exist"
+msgstr "chosen profession does not exist"
+
+msgid "x_no_occupation_choice"
+msgstr "No Occupation Choice"
+
+msgid "x_rename"
+msgstr "Rename"
+
+msgid "x_expired_time"
+msgstr "Expired Time"
+
+msgid "x_status_expired"
+msgstr "Expired"
+
+msgid "x_select_expired_time"
+msgstr "Select Time"
+
+msgid "x_org"
+msgstr "Organization"
+
+msgid "x_last_login_time"
+msgstr "Last login time"
+
+msgid "x_last_login_ip"
+msgstr "Last login IP"
+
+msgid "x_wel_join"
+msgstr "Welcome to join"
+
+msgid "x_invite_join"
+msgstr "invite you join"
+
+msgid "x_verify_status"
+msgstr "Verify Status"
+
+msgid "x_experimental_time"
+msgstr "Experimental Time"
+
+msgid "x_class_time"
+msgstr "Class Time"
+
+msgid "x_online_status"
+msgstr "Online Status"
+
+msgid "x_recent_operation"
+msgstr "Recent Operations"
+
+msgid "x_operation"
+msgstr "Operation"
+
+msgid "x_operation_time"
+msgstr "Operating Time"
+
+msgid "x_all_roles"
+msgstr "All Roles"
+
+msgid "x_online"
+msgstr "Online"
+
+msgid "x_offline"
+msgstr "Offline"
+
+msgid "x_abnormal"
+msgstr "Abnormal"
+
+msgid "x_no_authority"
+msgstr "No Authority"
+
+msgid "x_already_in_team"
+msgstr "Already In The Team {team_name}"
+
+msgid "x_please_choose_a_team_to_disband"
+msgstr "Please Choose A Team To Disband"
+
+msgid "x_you_are_not_in_the_team_and_cannot_dismiss_any_team"
+msgstr "You Are Not In The Team And Cannot Dismiss Any Team"
+
+msgid "x_can_only_disband_his_team"
+msgstr "Can Only Disband His Team {team_name}"
+
+msgid "x_only_the_captain_can_disband_the_team"
+msgstr "Only The Captain Can Disband The Team"
+
+msgid "x_all_teams"
+msgstr "All Teams"
+
+msgid "x_clear_member"
+msgstr "Clear Member"
+
+msgid "x_team_leader_user_does_not_exist"
+msgstr "Team Leader Does Not Exist"
+
+msgid "x_add_members"
+msgstr "Add Members"
+
+msgid "x_no_guide"
+msgstr "No guide"
+
+msgid "x_please_choose_a_team_leader"
+msgstr "Please Choose A Team Leader"
+
+msgid "x_choose_caption"
+msgstr "Choose Caption"
+
+msgid "x_not_found_user"
+msgstr "Not Found User"
+
+msgid "x_not_found_team"
+msgstr "Not Found Team"
+
+msgid "x_has_joined"
+msgstr "Has Joined"
+
+msgid "x_please_choose_format"
+msgstr "Please choose {}"
+
+msgid "x_not_greater_current_time"
+msgstr "The time of establishment cannot be greater than the current time"
+
+msgid "x_only_pic_file"
+msgstr "Only support uploading images"
+
+msgid "x_this_file_not_allow"
+msgstr "File type is not allowed"

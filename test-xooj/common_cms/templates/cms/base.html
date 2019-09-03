@@ -1,0 +1,349 @@
+{% load staticfiles %}
+{% load i18n %}
+
+{% load static_v %}
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title id="platform_title">{{ request.system_name }}</title>
+
+    <link rel="shortcut icon" href="{% static "favicon.ico" %}">
+
+    <link href="{% static 'lib/hplus/css/bootstrap.min14ed.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/hplus/css/font-awesome.min93e3.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/hplus/css/animate.min.css' %}" rel="stylesheet">
+{#    <link href="{% static 'lib/hplus/css/style.min862f.css' %}" rel="stylesheet">#}
+    <link href="{% static 'lib/hplus/css/style-new.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/hplus/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css' %}"
+          rel="stylesheet">
+    <link href="{% static 'lib/hplus/css/plugins/switchery/switchery.css' %}" rel="stylesheet">
+    <script src="{% static 'lib/hplus/js/jquery.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/metisMenu/jquery.metisMenu.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/layer/laydate.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/pace/pace.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/contabs.min.js' %}"></script>
+    <script src="{% static_v 'lib/hplus/js/hplus.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/switchery/switchery.js' %}"></script>
+    <script src="{% static 'cms/js/ajax.csrf.js' %}"></script>
+    <script src="{% static_v 'cms/js/utils.js' %}"></script>
+    <script src="{% static_v 'web/js/report_online.js' %}"></script>
+    <style>
+        .overflow-show {
+            overflow-y: scroll !important;
+        }
+
+        .iframe-turn {
+            position: absolute;
+            right: 20px;
+            top: 12px;
+            /*display: none;*/
+        }
+
+        .iframe-turn a {
+            color: #999;
+            font-size: 16px;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .iframe-turn a:hover {
+            background-color: #dddddd;
+        }
+
+        body.mini-navbar .nav-label {
+            display: inline-block !important;
+        }
+
+        #content-main {
+            height: calc(100% - 40px) !important;
+        }
+
+        body.fixed-sidebar .navbar-static-side {
+            overflow-y: scroll;
+        }
+        .nav .open>a, .nav .open>a:focus, .nav .open>a:hover{
+            background-color: transparent;
+        }
+        .li_s{
+            width: 100px;
+            line-height: 30px;
+            cursor: pointer;
+        }
+        .item-return-front {
+            margin-top: .4rem;
+            position: relative;
+            top: .5rem;
+            background: #2f62de;
+            padding: .25rem .58rem;
+            border: 1px solid #2f62de;
+            border-radius: .2rem;
+            color: #fff;
+        }
+        .item-logout {
+            margin-top: .4rem;
+            position: relative;
+            top: .5rem;
+            background: #ff0000;
+            padding: .25rem .58rem;
+            border: 1px solid #ff0000;
+            border-radius: .2rem;
+            color: #fff;
+        }
+        .item-return-front-eng {
+            display: inline-block;
+            background: #2f62de;
+            padding: .25rem .58rem;
+            border: 1px solid #2f62de;
+            border-radius: .2rem;
+            color: #fff;
+        }
+        .item-logout-eng {
+            display: inline-block;
+            margin-top: .2rem;
+            background: #ff0000;
+            padding: .25rem .58rem;
+            border: 1px solid #ff0000;
+            border-radius: .2rem;
+            color: #fff;
+        }
+        .user-name {
+            color: #fff;
+            font-size: 1.5rem;
+        }
+        @media screen and (max-width: 768px) {
+            #wrapper .navbar-static-side {
+                  width: 220px!important;
+            }
+        }
+        body.mini-navbar .profile-element {
+            display: block;
+        }
+        #page-wrapper, body.fixed-sidebar.mini-navbar #page-wrapper {
+            margin: 0 0 0 220px;
+        }
+        body.fixed-sidebar.mini-navbar .navbar-static-side {
+            width: 220px;
+        }
+        body .nav-header {
+            padding: 33px 20px!important;
+        }
+        body.mini-navbar .navbar-default .nav>li>a{
+            font-size: 12px;
+        }
+        body.mini-navbar .navbar-default .nav li a span{
+            display: block;
+        }
+        body.mini-navbar .nav-header{
+            background-color: transparent;
+        }
+        #side-menu .active .collapse.in{
+            display: block!important;
+        }
+    </style>
+    <script>
+        function subIframeGo(value) {
+            var dataId = $(".J_menuTab.active").attr("data-id");
+            var iframe = $(".J_iframe[data-id='" + dataId + "']")[0];
+            var subWindow = iframe.contentWindow;
+            if (dataId == "/admin/dashboard/dashboard" || (value == -1 && strUtil.rtrim(subWindow.location.pathname, '/') == strUtil.rtrim(dataId, '/'))) {
+                return;
+            }
+            subWindow.history.go(value);
+        }
+    </script>
+    <script>
+{#        var system_url = "{% url 'system_configuration:api:system-configuration-list' %}"#}
+{#        $(function () {#}
+{#            http.get(system_url, {}, function (data) {#}
+{#                if (data.rows.length > 0) {#}
+{#                    $.each(data.rows, function (index, value, array) {#}
+{#                        if (value.key == "system_name") {#}
+{#                            $("#platform_title").html(value.esc_value);#}
+{#                        }#}
+{#                    });#}
+{#                }#}
+{#            })#}
+{#        })#}
+    </script>
+</head>
+
+{% comment %}<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden;margin-bottom: 10px">{% endcomment %}
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden;">
+<div id="wrapper">
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="nav-close"><i class="fa fa-times-circle"></i>
+        </div>
+        <div class="sidebar-collapse">
+            <ul class="nav" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <div class="clearfix">
+                        <span class="pull-left">
+                        {% if request.user.logo %}
+                            {% if  request.user.logo.url %}
+                                <img alt="image" width="64px" height="64px" class="img-circle"
+                                     src="{{ request.user.logo.url }}">
+                            {% else %}
+                                <img alt="image" width="64px" height="64px" class="img-circle"
+                                     src="{% static 'x_person/img/user_default.jpg' %}">
+                            {% endif %}
+                        {% else %}
+                            <img alt="image" class="img-circle " width="64px" height="64px"
+                                 src="{% static 'x_person/img/user_default.jpg' %}">
+                        {% endif %}
+                            {#                            <img alt="image" class="img-shadow " width="64px" height="64px" v-if="request.user.logo_url"#}
+{#                                 v-bind:src="request.user.logo_url">#}
+{#                            <img alt="image" class="img-shadow " width="64px" height="64px" v-else#}
+{#                                src="{% static 'x_person/img/user_default.jpg' %}">#}
+                            </span>
+                            <div class="pull-left" style="margin-left: 15px; margin-top: .5rem">
+                                <p style="font-weight: 600; color: #a7b1c2;"></p>
+{#                                <div class="dropdown">#}
+{#                                    <a style="color: #a7bec2;" id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">#}
+{#                                    <p style="display: inline-block" style="font-weight: 600; color: #a7b1c2;">{{ request.user.first_name }}</p>#}
+{#                                    <span class="caret"></span>#}
+{#                                    </a>#}
+{#                                    <ul style="min-width: 100px!important;" class="dropdown-menu" aria-labelledby="dLabel">#}
+{#                                        <li class="li_s" style=";border-bottom: 1px solid #e5e5e5;"><a href="/">{% trans "x_return_front" %}</a></li>#}
+{#                                        <li class="li_s"><a href="{% url 'common_web:logout' %}" class="roll-nav">{% trans 'x_exit_login' %}</a></li>#}
+{#                                    </ul>#}
+{#                                </div>#}
+                                <div>
+                                    <span class="user-name">
+                                        {{ request.user.first_name }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {#                        <img alt="image" class="img-shadow" width="64px" height="64px"#}
+                        {#                             src="{% static "avatar/avatar_techchip.gif" %}"/>#}
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="/">
+                                    <span class="clear">
+                                    <span class="block m-t-xs"><strong
+                                            class="font-bold">{{ user_full_name }}</strong></span>
+{#                                    <span class="text-muted text-xs block">{{ groups_name }}<b class="caret"></b></span>#}
+{#                                    </span>#}
+                        </a>
+                        {#                        <ul class="dropdown-menu animated fadeInRight m-t-xs">#}
+                        {#                            <li><a class="J_menuItem" href="http://www.3721.com">{{ i18n_profile }}</a>#}
+                        {#                            </li>#}
+                        {#                            <li><a class="J_menuItem" href="http://www.222.com">{{ i18n_password }}</a>#}
+                        {#                            </li>#}
+                        {#                            <li class="divider"></li>#}
+                        {#                            <li><a href="http://www.126.com">{{ i18n_logout }}</a>#}
+                        {#                            </li>#}
+                        {#                        </ul>#}
+                    </div>
+                    <div class="return-wrapper clearfix">
+                        {% if LANGUAGE_CODE == 'zh-hans' %}
+                            <span class="item-return-front" style="display:inline-block">
+                                <a href="/" style="color: #fff">{% trans "x_return_front" %}</a>
+                            </span>
+                            <span class="item-logout" style="margin-left: 1rem; display:inline-block">
+                                <a href="{% url 'common_web:logout' %}" style="color: #fff">{% trans 'x_exit_login' %}</a>
+                            </span>
+                        {% else %}
+                            <span class="item-return-front-eng" style="display:inline-block">
+                                <a href="/" style="color: #fff">{% trans "x_return_front" %}</a>
+                            </span>
+                            <span class="item-logout-eng" style="margin-left: 1rem; display:inline-block">
+                                <a href="{% url 'common_web:logout' %}" style="color: #fff">{% trans 'x_exit_login' %}</a>
+                            </span>
+                        {% endif %}
+
+                    </div>
+                </li>
+
+                {% for m in menu %}
+                    <li>
+                        <a {% if not m.sub_menu and m.href %}
+                            class='J_menuItem' href="{{ m.href }}"
+                        {% endif %}>
+                            <i
+                                    {% if m.icon %}
+                                        class="{{ m.icon.value }}"
+                                    {% endif %}
+                            ></i>
+                            <span class="nav-label">{{ m.name }}</span>
+                            {% if m.sub_menu %}
+                                <span class="fa arrow"></span>
+                                </a>
+                                <ul class="nav nav-second-level">
+                                    {% for sub in m.sub_menu %}
+                                        <li>
+                                            <a {% if sub.href %}
+                                                class='J_menuItem' href="{{ sub.href }}"
+                                            {% endif %}
+                                            >{{ sub.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                </a>
+                            {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </nav>
+
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        {#        <div class="row border-bottom">#}
+        {#            <nav class="navbar navbar-static-top" role="navigation"#}
+        {#                 style="margin-bottom: 0;position: relative;padding: 15px 0;">#}
+        {#                <div class="navbar-header " style="margin-left:32px; font-size:32px">#}
+        {#                    <a class="btn btn-primary navbar-minimalize minimalize-styl-1" id="bar-switch">#}
+        {#                        <i class="fa fa-bars"></i></a>#}
+        {#                </div>#}
+        {#                <div class="iframe-turn">#}
+        {#                    <a class="glyphicon glyphicon-menu-left" onclick="subIframeGo(-1);"></a>#}
+        {#                    <a class="glyphicon glyphicon-menu-right" onclick="subIframeGo(1);"></a>#}
+        {#                </div>#}
+        {#            </nav>#}
+        {#        </div>#}
+       {% comment %} <div class="row content-tabs">
+            <button class="roll-nav roll-left J_tabLeft navbar-minimalize ">
+                <i class="fa fa-bars"></i>
+            </button>
+            <nav class="page-tabs J_menuTabs" style="width: calc(100% - 200px);">
+                <div class="page-tabs-content">
+                    <a class="active J_menuTab" data-id="/admin/dashboard/dashboard">{% trans 'x_dashboard' %}</a>
+                </div>
+            </nav>
+            <a class="roll-nav roll-right " style="margin-right: 60px;width: 100px;" href="/">
+                <i class="fa fa-reply"></i>
+                {% trans "x_return_front" %}
+            </a>
+            {#            <button class="roll-nav roll-right J_tabRight navbar-minimalize">#}
+            {#                <i class="fa fa-forward"></i>#}
+            {#            </button>#}
+            {#            <div class="btn-group roll-nav roll-right">#}
+            {#                <button class="dropdown J_tabClose " data-toggle="dropdown">{{ i18n_close_tab }}<span#}
+            {#                        class="caret" style="margin-left: 12px;"></span>#}
+            {#                </button>#}
+            {#                <ul role="menu" class="dropdown-menu dropdown-menu-right">#}
+            {#                    <li class="J_tabCloseOther"><a>{{ i18n_close_other_tabs }}</a></li>#}
+            {#                    <li class="J_tabCloseAll"><a>{{ i18n_close_all_tabs }}</a></li>#}
+            {#                </ul>#}
+            {#            </div>#}
+            <a href="{% url 'common_web:logout' %}" class="roll-nav roll-right J_tabExit"><i
+                    class="fa fa fa-sign-out"></i> {% trans 'x_logout' %}</a>
+        </div>{% endcomment %}
+        <div class="row J_mainContent" id="content-main">
+            <iframe class="J_iframe" name="iframe0" data-id="/admin/dashboard/dashboard"
+                    src="{% url 'cms_dashboard:dashboard' %}"
+                    width="100%" height="100%" frameborder="0" seamless>
+            </iframe>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

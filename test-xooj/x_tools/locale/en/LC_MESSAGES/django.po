@@ -1,0 +1,122 @@
+msgid "x_tool"
+msgstr "Tool"
+
+msgid "x_all_platform"
+msgstr "All Platform"
+
+msgid "x_online"
+msgstr "Online"
+
+msgid "x_other"
+msgstr "Other"
+
+msgid "x_all_authorization_mode"
+msgstr "All Auth Mode"
+
+msgid "x_free"
+msgstr "Free"
+
+msgid "x_limit"
+msgstr "Limit"
+
+msgid "x_charge"
+msgstr "Charge"
+
+msgid "x_sys_version"
+msgstr "Version"
+
+msgid "x_support_platfor"
+msgstr "Support Platform"
+
+msgid "x_support_language"
+msgstr "Support Language"
+
+msgid "x_edit_tool"
+msgstr "Edit Tool"
+
+msgid "x_new_tool"
+msgstr "New Tool"
+
+msgid "x_select_type"
+msgstr "Select Category"
+
+msgid "x_select_platform"
+msgstr "Select Platform"
+
+msgid "x_select_languag"
+msgstr "Select Language"
+
+msgid "x_English"
+msgstr "English"
+
+msgid "x_select_authorization"
+msgstr "Select Auth"
+
+msgid "x_cover"
+msgstr "Cover"
+
+msgid "x_del_pic"
+msgstr "Delete"
+
+msgid "x_whether_online"
+msgstr "Online"
+
+msgid "x_file"
+msgstr "File"
+
+msgid "x_version_Num"
+msgstr "Version"
+
+msgid "x_introduced"
+msgstr "Introduction"
+
+msgid "x_type_select_type"
+msgstr "Category Require"
+
+msgid "x_platform_select_platform"
+msgstr "Platform Require"
+
+msgid "x_language_select_language"
+msgstr "Language Require"
+
+msgid "x_authorized_select_authorized"
+msgstr "Auth Require"
+
+msgid "x_related_comments"
+msgstr "Related Comment"
+
+msgid "x_praise_number"
+msgstr "Praise Number"
+
+msgid "x_comment_time"
+msgstr "Comment Time"
+
+msgid "x_edit_commen"
+msgstr "Edit Comment"
+
+msgid "x_new_commen"
+msgstr "New Comment"
+
+msgid "x_parent_comment"
+msgstr "Parent Comment"
+
+msgid "x_charge_mode"
+msgstr "Charge Mode"
+
+msgid "x_tool_details"
+msgstr "Tool Details"
+
+msgid "x_rlated_tools"
+msgstr "Related Tools"
+
+msgid "x_homepage"
+msgstr "Homepage"
+
+msgid "x_unable_get_tool_details"
+msgstr "Unable to get tool details"
+
+msgid "x_ubable_get_rlated_tools"
+msgstr "Unable to get related tools"
+
+msgid "x_version"
+msgstr "Version"

@@ -1,0 +1,236 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/list.css' %}">
+    <script src="{% static 'course/js/course_detail.js' %}"></script>
+    <script src="{% static 'web/summernote/summernote.js' %}"></script>
+{% endblock %}
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+            <span>&gt;&gt;</span>
+            <a href="{% url 'course:experiment_list' %}">{% trans "x_experiment_course" %}</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active font15' name="name"></a>
+        </div>
+        <div class="content pad10T">
+            <div class="row mrg0A mrg30B">
+                <div class="col-md-9 pad20A">
+                    <div class="row default-bg pad25A mrg30B pad40T posRelative oj_course">
+                        <div class="col-md-5">
+                            <img src="" alt="" style="width:100%" name="logo">
+                            {#                            <span name="logo"></span>#}
+                        </div>
+                        <div class="col-md-7 pad40L">
+                            <div class="col-md-12">
+                                <div class="font26 whiteC mrg10B">
+                                    <span name="name"></span>
+                                </div>
+                                <div style="margin-top:5%;margin-bottom:3%">
+                                    <span>{% trans "实验类别" %}：</span>
+                                    <span class="mrg20R" name="direction"></span>
+                                </div>
+                                <div style="margin-bottom:8%">
+                                    <span>{% trans "x_num_hour" %}：</span>
+                                    <span name="count"></span>
+                                </div>
+                                <a href="javascript:void(0);" name="learn" target="_blank">
+                                    <div class="pad5T pad5B pad15L pad15R fl btn btn-warning learn mainBg">
+                                        <span class="studyIco pad15A fl mrg5R oj-icon whiteC"></span>
+                                        <span class="fl lineH30 whiteC">{% trans "练习实验" %}</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="pad5A collect orangeC2" style="display: none;">
+                            <span class="font14 mrg10R">{% trans "x_collection" %}</span>
+                            <i class="oj-icon oj-icon-E90B whiteC"></i>
+                            <a href="#" class="fill inLine collectButton"></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 pad0L pad0R couseDetail">
+                            <ul id="myTab" class="nav nav-tabs pad10T pad10B pad40L font16 default-bg">
+                                <li class="active mrg30L mrg30R">
+                                    <a href="#list" data-toggle="tab" class="pad30L pad30R pad5T pad5B">
+                                        {% trans "实验目录" %}
+                                    </a>
+                                </li>
+                                <li class="mrg30L mrg30R">
+                                    <a href="#note" data-toggle="tab"
+                                       class="pad30L pad30R pad5T pad5B">{% trans "x_my_note" %}</a>
+                                </li>
+                                <li class="mrg30L mrg30R">
+                                    <a href="#forum" data-toggle="tab"
+                                       class="pad30L pad30R pad5T pad5B">{% trans "x_cloud_exchange" %}</a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content pad20T pad20B">
+                                <div class="tab-pane fade in active default-bg pad30T pad30B" id="list">
+                                    <ul class="assess-content pad40R pad40L" style="display: block;"
+                                        id="lesson-list-div">
+                                    </ul>
+                                </div>
+                                <div class="tab-pane fade default-bg pad30T pad30R pad30L pad30B" id="note">
+                                    {% include "web/mynote.html" %}
+                                </div>
+                                <div class="tab-pane fade" id="forum" style="position:relative;">
+                                    {% include "web/comment_template.html" %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 pad20A">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 fr">
+                            <div class="lineH40 mainBg pad20L whiteC">
+                                {% trans "相关实验" %}
+                            </div>
+                            <div class="row default-bg pad25L pad25R mrg0A" id="releated-course-list-div">
+                            </div>
+                            <div class="row text-center lineH40 default-bg grayC font14 mrg0A"
+                                 style="position:relative;margin-top:-1px;">
+                                {% trans "x_see_more" %}
+                                <a href="{% url 'course:experiment_list' %}" class="fill"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lesson-template-div" style="display: none;">
+        <li class="directory" style="">
+            <div class="directory-list pad30L">
+                <span name="orange-dot"></span><span name="lt-name"></span>
+            </div>
+        </li>
+    </div>
+
+    <div id="releated-course-template-div" style="display: none;">
+        <div class="mrg10B pad20A">
+            <a>
+                <img src="" alt="" style="width:100%"
+                     class="mrg20B larger-img">
+                {#                <span name='rc-img'></span>#}
+            </a>
+            <a>
+                <div class="text-center lineH30 orangeC" name="rc-name">
+                </div>
+            </a>
+            {#            <div class="text-center font14 orangeC2" name="rc-direction">#}
+            {#            </div>#}
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function init_course_detail() {
+            $.ajax({
+                url: "{% url 'course:api:course-detail' course_id %}",
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    $("[name='name']").html(data.name);
+                    var logo = data.logo;
+                    if (logo == null || logo == "") {
+                        logo = "{% static 'course/img/kec.png' %}";
+                    }
+                    $("img[name='logo']").attr("src", logo);
+                    {#            $(".oj_course span[name='logo']").css("background-image","url("+logo+")");#}
+                    $("[name='direction']").html(data.direction_i18n_name);
+                    $("[name='count']").html(data.count);
+                    if (Number(data.count) > 0) {
+                        $("[name='learn']").attr("href", "{% url 'course:learn' course_id %}");
+                    } else {
+                        $("[name='learn']").click(function () {
+                            showPopMsg("该实验没有课时。");
+                        })
+                    }
+                    // 初始化用户笔记
+                    init_course_note(data.hash);
+
+                    // 初始化评论列表
+                    init_comment_list(data.hash);
+                },
+                error: function () {
+                    showPopMsg("无法获取实验详情。");
+                }
+            });
+        }
+
+        function init_lesson_list() {
+            var lesson_list_div = $("#lesson-list-div");
+            var lesson_tpl = $("#lesson-template-div");
+            lesson_list_div.empty();
+
+            $.ajax({
+                url: "{% url 'course:api:lesson-list' %}",
+                type: "get",
+                data: {"course_id": {{ course_id }}},
+                datatype: "json",
+                success: function (data) {
+                    if (data.total > 0) {
+                        var lesson_list = data.rows;
+                        for (var i in lesson_list) {
+                            lesson_tpl.find("span[name='lt-name']").html(lesson_list[i].name);
+                            lesson_list_div.append(lesson_tpl.html());
+                        }
+                    }
+                },
+                error: function () {
+                    showPopMsg("无法获取实验目录。");
+                }
+            });
+        }
+
+        function init_releated_course_list() {
+            var rc_list_div = $("#releated-course-list-div");
+            var rc_tpl = $("#releated-course-template-div");
+            rc_list_div.empty();
+
+            $.ajax({
+                url: "{% url 'course:recommand' %}",
+                type: "get",
+                data: {"course_id": {{ course_id }}},
+                datatype: "json",
+                success: function (data) {
+                    var course_list = data;
+                    for (var i in course_list) {
+                        var logo = course_list[i].logo;
+                        if (logo == null || logo == "") {
+                            logo = "{% static 'course/img/kec.png' %}";
+                        }
+                        rc_tpl.find("img").attr("src", logo);
+                        rc_tpl.find("a").attr("href", "{% url 'course:detail' 0 %}".replace("0", course_list[i].id));
+                        {#                rc_tpl.find("span[name='rc-img']").css("background-image","url("+logo+")");#}
+                        rc_tpl.find("div[name='rc-name']").html(course_list[i].name);
+                        rc_tpl.find("div[name='rc-name']").attr('title', course_list[i].name);
+                        {#                    rc_tpl.find("div[name='rc-direction']").html(course_list[i].direction_cn_name);#}
+                        rc_list_div.append(rc_tpl.html());
+                    }
+                },
+                error: function () {
+                    showPopMsg("无法获取实验课程。");
+                }
+            });
+        }
+
+        $(function () {
+            init_course_detail();
+            init_lesson_list();
+            init_releated_course_list();
+        })
+    </script>
+{% endblock %}
+
+<!-- container end-->
+
+
+
+

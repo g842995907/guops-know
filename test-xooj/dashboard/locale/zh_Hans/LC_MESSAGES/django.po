@@ -1,0 +1,396 @@
+msgid "x_data_statistics"
+msgstr "数据统计"
+
+msgid "x_class_hours"
+msgstr "课时"
+
+msgid "x_target"
+msgstr "标靶"
+
+msgid "x_scene"
+msgstr "场景"
+
+msgid "x_course_type"
+msgstr "课程类型"
+
+msgid "x_study_status"
+msgstr "学习状态"
+
+msgid "x_object"
+msgstr "对象"
+
+msgid "X_online_user_monitor"
+msgstr "在线用户监控"
+
+msgid "x_studying_course"
+msgstr "正在学习课程"
+
+msgid "x_virtual_device_name"
+msgstr "虚拟设备名称"
+
+msgid "x_cumulative_learning_time"
+msgstr "累计学习时间"
+
+msgid "x_remote_assistance"
+msgstr "远程协助"
+
+msgid "x_platform_status"
+msgstr "使用情况"
+
+msgid "x_cluster_status"
+msgstr "集群管理"
+
+msgid "x_memory"
+msgstr "内存"
+
+msgid "x_save_data"
+msgstr "保存统计数据"
+
+msgid "x_disk"
+msgstr "磁盘"
+
+msgid "x_dynamic"
+msgstr "动态"
+
+msgid "x_create_scene"
+msgstr "创建了场景"
+
+msgid "x_ago"
+msgstr "前"
+
+msgid "x_no_dynamic"
+msgstr "没有动态"
+
+msgid "x_node_status"
+msgstr "节点管理"
+
+msgid "x_node_IP"
+msgstr "节点IP"
+
+msgid "x_service_status"
+msgstr "服务状态"
+
+msgid "x_CPU"
+msgstr "CPU"
+
+msgid "x_hard_disk"
+msgstr "硬盘"
+
+msgid "x_dashboard"
+msgstr "仪表盘"
+
+msgid "x_subject"
+msgstr "题目"
+
+msgid "x_openstack_api"
+msgstr "资源实例管理"
+
+msgid "x_instance_api"
+msgstr "计算实例 "
+
+msgid "x_image_api"
+msgstr "镜像"
+
+msgid "x_network_api"
+msgstr "网络实例"
+
+msgid "x_firewall_api"
+msgstr "防火墙"
+
+
+msgid "x_instance_api_list"
+msgstr "实例"
+
+msgid "x_image_api_list"
+msgstr "镜像"
+
+msgid "x_network_api_list"
+msgstr "网络"
+
+msgid "x_fwaas_api_list"
+msgstr "防火墙"
+
+
+msgid "x_instances"
+msgstr "虚拟机"
+
+msgid "x_images"
+msgstr "镜像"
+
+msgid "x_docker_instances"
+msgstr "容器"
+
+msgid "x_docker_images"
+msgstr "镜像"
+
+
+msgid "x_id"
+msgstr "ID"
+
+msgid "x_keyname"
+msgstr "密钥对"
+
+msgid "x_instance_name"
+msgstr "实例名称"
+
+msgid "x_ip"
+msgstr "IP地址"
+
+msgid "x_flavor"
+msgstr "实例类型"
+
+msgid "x_created"
+msgstr "创建时间"
+
+msgid "x_instance_id"
+msgstr "实例ID"
+
+msgid "x_instance_flavor_name"
+msgstr "实例类型名称"
+
+msgid "x_instance_flavor_id"
+msgstr "实例类型 Id"
+
+msgid "x_security_group"
+msgstr "安全组"
+
+msgid "x_instance_metadata"
+msgstr "元数据"
+
+msgid "x_instance_volume_attached"
+msgstr "已连接卷"
+
+msgid "x_avail_zone"
+msgstr "可用域"
+
+msgid "x_image_name"
+msgstr "镜像名称"
+
+msgid "x_visable"
+msgstr "可见性"
+
+msgid "x_protected"
+msgstr "是否保护"
+
+msgid "x_image_disk_format"
+msgstr "磁盘格式"
+
+msgid "x_image_container_format"
+msgstr "容器格式"
+
+msgid "x_updated_at"
+msgstr "更新于"
+
+
+msgid "x_image_file"
+msgstr "文件名"
+
+msgid "x_checksum"
+msgstr "校验和"
+
+msgid "x_schema"
+msgstr "Schema"
+
+msgid "x_owner"
+msgstr "所有者"
+
+msgid "x_docker_image_driver"
+msgstr "镜像驱动"
+
+msgid "x_task_state"
+msgstr "任务状态"
+
+msgid "x_uuid"
+msgstr "UUID"
+
+msgid "x_docker_disk"
+msgstr "磁盘"
+
+msgid "x_image_pull_policy"
+msgstr "镜像拉取策略"
+
+msgid "x_docker_hostname"
+msgstr "主机名"
+
+msgid "x_docker_memory"
+msgstr "内存"
+
+msgid "x_docker_user_id"
+msgstr "用户 Id"
+
+
+msgid "x_project_id"
+msgstr "项目 Id "
+
+msgid "x_docker_status_detail"
+msgstr "状态详情"
+
+msgid "x_docker_status_reason"
+msgstr "状态原因"
+
+
+msgid "x_docker_command"
+msgstr "命令 "
+
+msgid "x_docker_runtime"
+msgstr "运行"
+
+msgid "x_docker_ports"
+msgstr "端口"
+
+msgid "x_docker_interactive"
+msgstr "互动性"
+
+msgid "x_docker_image_tag"
+msgstr "镜像标签"
+
+
+msgid "x_docker_image_repo"
+msgstr "镜像仓库 "
+
+msgid "x_docker_image_size"
+msgstr "镜像大小"
+
+
+msgid "x_deleted_successfully"
+msgstr "删除成功"
+
+
+msgid "x_deleted_unsuccessfully"
+msgstr "删除失败"
+
+msgid "x_delete"
+msgstr "删除"
+
+msgid "x_pause"
+msgstr "暂停"
+
+msgid "x_unable_deleted_state"
+msgstr "无法删除"
+
+msgid "x_networks"
+msgstr "网络"
+
+msgid "x_routers"
+msgstr "路由"
+
+msgid "x_float_ip"
+msgstr "弹性IP"
+
+msgid "x_is_external"
+msgstr "外部网络"
+
+msgid "x_mtu"
+msgstr "MTU"
+
+msgid "x_admin_state_up"
+msgstr "管理状态"
+
+msgid "x_subnet"
+msgstr "已连接子网 "
+
+msgid "x_share"
+msgstr "是否共享"
+
+msgid "x_enable_dhcp"
+msgstr "使用DHCP"
+
+msgid "x_gateway_ip"
+msgstr "网关IP"
+
+msgid "x_dns_nameserver"
+msgstr "DNS服务器"
+
+msgid "x_allocation_pools"
+msgstr "IP池"
+
+msgid "x_ip_version"
+msgstr "Ip版本"
+
+msgid "x_cidr"
+msgstr "CIDR"
+
+msgid "x_tenant_id"
+msgstr "租户Id "
+
+
+msgid "x_router_external_gateway_info"
+msgstr "外部网关"
+
+msgid "x_network_id"
+msgstr "网络 Id"
+
+msgid "x_enable_snat"
+msgstr "SNAT"
+
+msgid "x_external_fixed_ips"
+msgstr "额外固定IP"
+
+msgid "x_fix_ip"
+msgstr "固定IP"
+
+msgid "x_fire_groups"
+msgstr "防火墙"
+
+msgid "x_fire_rules"
+msgstr "防火墙规则"
+
+msgid "x_fire_policy"
+msgstr "防火墙策略"
+
+msgid "x_description"
+msgstr "描述"
+
+msgid "x_ingres"
+msgstr "入站策略 "
+
+msgid "x_engress"
+msgstr "出站策略 "
+
+msgid "x_audited"
+msgstr "已审计"
+
+msgid "x_firewall_rules"
+msgstr "防火墙规则 "
+
+msgid "x_protocol"
+msgstr "协议 "
+
+msgid "x_enabled"
+msgstr "激活"
+
+msgid "x_action"
+msgstr "动作"
+
+msgid "x_source_ip"
+msgstr "源IP"
+
+msgid "x_dest_ip"
+msgstr "目的IP "
+
+msgid "x_source_port"
+msgstr "源端口"
+
+msgid "x_destination_port"
+msgstr "目的端口"
+
+msgid "x_policy_rules"
+msgstr "规则"
+
+msgid "x_get_detail_error"
+msgstr "获取详情失败"
+
+msgid "x_confirm_delete"
+msgstr "是否确认删除"
+
+msgid "x_current_class_number"
+msgstr "当前班级数量："
+
+msgid "x_current_online_user"
+msgstr "当前在线人数："
+
+msgid "x_current_active_scene"
+msgstr "当前活动场景："
+
+msgid "x_download_sta_info"
+msgstr "下载统计信息"

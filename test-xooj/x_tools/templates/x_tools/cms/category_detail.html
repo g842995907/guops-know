@@ -1,0 +1,115 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% if category %}
+        {% trans 'x_edit_type' %}
+    {% else %}
+        {% trans 'x_new_type' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if category %}
+              action="{% url 'cms_x_tools:api:tool-category-detail' category.id %}"
+              method="patch"
+                {% else %}
+              action="{% url 'cms_x_tools:api:tool-category-list' %}"
+              method="post"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_zh_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="cn_name" name="cn_name"
+                               value="{{ category.cn_name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_en_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="en_name" name="en_name"
+                               value="{{ category.en_name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_x_tools:category_list' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_x_tools:category_list' %}";
+
+        $(".image_upload_widget").bindLocalImgUpload();
+
+        $('#validateForm').mvalidate({
+            rules: {
+                cn_name: {
+                    required: true
+                },
+                en_name:{
+                    required: true
+                }
+            },
+            messages: {
+                cn_name: {
+                    required: gettext('x_enter_chinese')
+                },
+                en_name: {
+                    required: gettext('x_enter_english')
+                }
+
+            }
+        });
+
+        $(function () {
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            });
+        });
+
+        $().ready(function () {
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+            });
+        });
+    </script>
+{% endblock %}

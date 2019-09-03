@@ -1,0 +1,126 @@
+{% load i18n %}
+
+<div class="form-group upload-progress" style="display: none;">
+    <label class="col-sm-2 control-label"></label>
+    <div class="col-sm-6">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+            <span class="percent"></span>
+          </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('input[type="file"]').prettyFile();
+    });
+
+    function uploadProgress(form_id, param_name, redirect_url) {
+        if (form_id==undefined || form_id==""){
+            form_id = "validateForm";
+        }
+        var myform = $("#"+form_id+"");
+        if (!myform.valid()) {
+            return false;
+        }
+
+        var bar = $('div.progress-bar');
+        var percent = $('span.percent');
+        var error_div = $("#server-error");
+        var ajax_option = {
+            url: myform.attr("action"),
+            type: myform.attr("method"),
+            beforeSubmit: function (contentArray, $form, options) {
+                //alert("表单提交前的操作");
+                error_div.hide();
+                var file_field ;
+                if (param_name==undefined || param_name==""){
+                    file_field = $("input[type='file']")[0];
+                }else{
+                    file_field = $("input[name='"+param_name+"']")[0];
+                }
+                if (file_field != undefined && file_field.files[0] != undefined) {
+                    $('div.upload-progress').show();
+                }
+
+                // 处理文件空值
+                for (var i=0; i<contentArray.length; i++){
+                    var curr_fileld = contentArray[i];
+                    if (curr_fileld.value == "" && curr_fileld.type == "file"){
+                        $("input[name='"+curr_fileld.name+"']").removeAttr("name");
+                        contentArray.splice(i, 1);
+                        i--;
+                    }
+                }
+            },
+            uploadProgress: function (event, position, total, percentComplete) {
+                var percentVal = percentComplete + '%';
+                bar.width(percentVal);
+                percent.html(percentVal);
+            },
+            success: function (json) {
+                if (json.warning != null) {
+                    swal({
+                        title: json.warning,
+                        type: "warning",
+                        confirmButtonText: "{% trans "x_confirm" %}"
+                    }, function () {
+                        $("input[type='button']").attr("disabled", false);
+                    });
+                    return false;
+                }
+                percent.html("{% trans "x_upload_completed" %}");
+                swal({
+                        title: "{% trans "x_saved_successfully" %}",
+                        type: "success",
+                        confirmButtonText: "{% trans "x_confirm" %}"
+                    },function () {
+                        if (redirect_url==undefined || redirect_url==""){
+                            window.location.href = document.referrer;
+                        }else{
+                            window.location.href = redirect_url;
+                        }
+                    }
+                );
+            },
+            error: function (xhr, ts, et, errorCallback) {
+                var errors = JSON.parse(xhr.responseText);
+                var detail_errors, key_label;
+                error_div.html("");
+                error_div.show();
+                if (xhr.status == 400) {
+                    for (var key in errors) {
+                        key_label = $("#" + key).parents("div.form-group").children("label").html();
+                        detail_errors = errors[key];
+                        if (detail_errors instanceof Array) {
+                            detail_errors = detail_errors[0];
+                            if (detail_errors instanceof Object) {
+                                detail_errors = detail_errors['message'];
+                            }
+                        } else if (detail_errors instanceof Object) {
+                            detail_errors = detail_errors['message'];
+                        } else {
+                            detail_errors = JSON.stringify(detail_errors);
+                        }
+                        error_div.append("<div class='error'>" + key_label + " : " + detail_errors + "</div>");
+                    }
+                }else{
+                    error_div.append("<div class='error'>{% trans 'x_server_error' %}</div>");
+                }
+                $("input[type='button']").attr("disabled", false);
+            }
+        };
+
+        myform.ajaxSubmit(ajax_option);
+        return false;
+    }
+
+    function init_progress_bar(form_id, param_name, redirect_url) {
+        $("input[type='button']").on('click', function (e) {
+            $("input[type='button']").attr("disabled", true);
+            $("#server-error").html("");
+            uploadProgress(form_id, param_name, redirect_url);
+        })
+    }
+</script>

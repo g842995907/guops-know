@@ -1,0 +1,1212 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static static_v %}
+
+
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+
+    <script type="text/javascript" src="{% static_v 'common_env/widgets/select_env/js/select_env.js' %}"></script>
+
+    <style>
+        div.type-show-2-3 {
+            display: none;
+        }
+    </style>
+{% endblock %}
+{% block title %}
+    <a href="{% url 'cms_course:course' %}">{% trans "x_course" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_new_courseware' %}
+    {% else %}
+        {% trans 'x_edit_courseware' %}
+    {% endif %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_course:api:lesson-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_course:api:lesson-detail' lesson.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <input type="hidden" name="course" data-form-fixed="1" value="{{ course_id }}"/>
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ lesson.name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_type' %}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="type" id="type" data-form-fixed="1">
+                            <option value="0" {% if lesson.type == 0 %}selected{% endif %}>{% trans "x_heoretical_lesson" %}</option>
+                            <option value="1" {% if lesson.type == 1 %}selected{% endif %}>{% trans "x_experiment_lesson" %}</option>
+{#                            <option value="2" {% if lesson.type == 2 %}selected{% endif %}>{% trans "x_practice_lesson" %}</option>#}
+{#                            <option value="3" {% if lesson.type == 3 %}selected{% endif %}>{% trans "x_exam_lesson" %}</option>#}
+                        </select>
+                    </div>
+                </div>
+                <div class="type-hiden-2-3">
+                <div class="hr-line-dashed"></div>
+                <div class="form-group lesson-label" >
+                    <label class="col-sm-2 control-label">{% trans "x_knowledge_point" %}</label>
+                {% if lesson_data.knowledges_list %}
+                        {% for knowledge in lesson_data.knowledges_list %}
+                        <div name="konwl">
+                            <div class="col-sm-1 know-label toolTipBox" style="position: relative">
+                                <input class="btn btn-info" value="{{ knowledge }}" name="knowledges" data-form-fixed="1"
+                                onkeydown="change_tip(this)">
+                                <div class="toolTip">{{ knowledge }}</div>
+                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                {% endif %}
+                    <div name="second" style="padding-left: 17%;"></div>
+                    <div class="col-sm-1" style="width: 5px;">
+                        <a style="font-size:20px;" class="text-danger" id="faPlus" onclick="add_point()">+</a>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label lesson_pdf">{% trans 'x_handouts' %}</label>
+                    <div class="col-sm-4" id="uploadPdfFile"
+                         style="display: {% if lesson.pdf or lesson.html %}block{% else %}none{% endif %};">
+                        {% if lesson.html %}
+                            <a class="btn btn-success"
+                               href="{{ lesson.html.url }}"
+                               target="_blank">
+                                {% trans "x_pre_show" %}
+                            </a>
+                        {% elif lesson.pdf %}
+                            <a class="btn btn-success"
+                               href="/static/lib/pdfjs-1.8.188/web/viewer.html?file={{ lesson.pdf.url }}" target="_blank">
+                                {% trans "x_preview_PDF" %}
+                            </a>
+                        {% else %}
+                            <a></a>
+                        {% endif %}
+                        {% if lesson.markdownfile %}
+                            <a href="{{ lesson.markdownfile.url }}" download="{{ lesson.name }}">
+                                <button type="button" class="btn btn-info">
+                                    {% trans "x_download" %}
+                                </button>
+                            </a>
+                        {% endif %}
+                        {% if lesson.html %}
+                            <button type="button" class="btn btn-danger" onclick="deletePdfFile('html')">
+                                {% trans "x_delete" %}
+                            </button>
+                        {% else %}
+                            <button type="button" class="btn btn-danger" onclick="deletePdfFile()">
+                            {% trans "x_delete_PDF" %}
+                        </button>
+                        {% endif %}
+                    </div>
+                    {% if not lesson.pdf or not lesson.html %}
+                    <div class="col-sm-4" id="deleteMarkFile"
+                         style="display: {% if lesson.markdown %}block{% else %}none{% endif %};">
+
+                        {% if lesson.markdownfile %}
+                            <a href="{{ lesson.markdownfile.url }}" download="{{ lesson.name }}">
+                                <button type="button" class="btn btn-success">
+                                    <i class="glyphicon glyphicon-download-alt"></i> {% trans 'download_markdown' %}
+                                </button>
+                            </a>
+                        {% endif %}
+                        <button type="button" class="btn btn-danger" onclick="deleteMarkdown()">
+                            <i class="glyphicon glyphicon-trash"></i> {% trans 'delete_markdown' %}
+                        </button>
+                     <div>{% trans 'x_pdf_MK_zip' %} [<a href="/media/markdown/demo.zip">demo.zip</a>]</div>
+                    </div>
+                    {% endif %}
+                    <div class="col-sm-4" id="lessonPdfAttach-div"
+                         style="display: {% if lesson.pdf or lesson.markdown or lesson.html %}none{% else %}block{% endif %};">
+                            <input type="file" class="form-control" id="pdf" name="pdf"
+                                   accept="application/pdf,application/zip">
+{#                            {% if lesson.markdown %}{% trans 'x_re-upload_makrdown_handouts' %}{% endif %}#}
+                        <div>{% trans 'x_pdf_MK_zip' %} [<a href="/media/markdown/demo.zip">demo.zip</a>, <a href="/media/markdown/demo_ppt.zip">demo_ppt.zip</a>]</div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_video' %}</label>
+                        <div class="col-sm-4" id="uploadVideoFile"
+                             style="display: {% if lesson.video or lesson.video_state == 1 %}block{% else %}none{% endif %};">
+                            {% if lesson.video or lesson.video_state == 1 %}
+                                <a class="btn btn-success"
+                                   href="{% url "cms_course:video_show" lesson.id %}" target="_blank">
+                                    {% trans "x_preview_video" %}
+                                </a>
+                            {% else %}
+                                <a></a>
+                            {% endif %}
+                            {% if lesson.video_state == 2 %}
+                                <p>{% trans 'x_video_is_transcoding' %}</p>
+                            {% else %}
+                                <button type="button" class="btn btn-danger" onclick="deleteVideoFile()">
+                                {% trans "x_remove_video" %}
+                            </button>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-4" id="lessonVideoAttach-div"
+                             style="display: {% if lesson.video or lesson.video_state == 1 %}none{% else %}block{% endif %};">
+                            <input type="file" class="form-control" id="video" name="video"
+                                   accept="video/*">
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_annex' %}</label>
+                    <div class="col-sm-4" id="uploadAttachmentFile"
+                         style="display: {% if lesson.attachment %}block{% else %}none{% endif %};">
+                        {% if lesson.attachment %}
+                            <a class="btn btn-success"
+                               href="{{ lesson.attachment.url }}"
+                               target="_blank">
+                                {% trans "x_download_annex" %}
+                            </a>
+                        {% else %}
+                            <a></a>
+                        {% endif %}
+                        <button type="button" class="btn btn-danger" onclick="deleteAttachmentFile()">
+                            {% trans "x_delete_annex" %}
+                        </button>
+                    </div>
+                    <div class="col-sm-4" id="lessonAttachment-div"
+                         style="display: {% if lesson.attachment %}none{% else %}block{% endif %};">
+                        <input type="file" class="form-control" id="attachment" name="attachment">
+                    </div>
+                </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="onlyType1">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_experiment' %}</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" id="lesson_env__env" name="lesson_env__env" value="{% if lesson_data.lesson_env and lesson_data.lesson_env.env %}{{ lesson_data.lesson_env.env }}{% endif %}"/>
+                            <span class="btn btn-primary" onclick="showSelectEnv();">{% trans 'x_choose_scene' %}</span>
+                            <span class="hint">
+                            {% if lesson_data.lesson_env and lesson_data.lesson_env.env %}
+                                <a href="{% url 'cms_common_env:env_detail' lesson_data.lesson_env.env %}"
+                                   target="_blank">{{ lesson_data.lesson_env.title }}</a>
+                            {% endif %}
+                                {#                        </span><span style="font-size:20px" class="text-danger center">&nbsp;&nbsp;*</span>#}
+{#                        <div style="padding-top:1px;font-size:25px">#}
+{#                        <span class="text-danger">*</span>#}
+{#                    </div>#}
+                            </span></div>
+                    </div>
+                    <div id="access_mode" style="display: {% if lesson_data.lesson_env %} block {% else %} none {% endif %}">
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{% trans 'x_access_mode' %}</label>
+                            {% if mode == 0 %}
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="lesson_env__type" data-form-fixed="1"
+                                           value="1">
+                                    {% trans 'x_shared' %}
+                                    <input type="checkbox" class="form-control js-switch" id="lesson_env__type"
+                                           data-name="lesson_env__type" checked>
+                                    {% trans 'x_private' %}
+                                </div>{% else %}
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="lesson_env__type" data-form-fixed="1"
+                                           value="{% if lesson_data.lesson_env %}{{ lesson_data.lesson_env.type }}{% else %}0{% endif %}">
+                                    {% trans 'x_shared' %}
+                                    <input type="checkbox" class="form-control js-switch" id="lesson_env__type"
+                                           data-name="lesson_env__type"
+                                            {% if lesson_data.lesson_env.type == 1 %} checked {% endif %}>
+                                    {% trans 'x_private' %}
+                                </div>
+                            {% endif %}
+
+
+                            <label class="col-sm-2 control-label">{% trans 'x_survival_time' %}</label>
+                            <div class="col-sm-2">
+                                <div class="input-group">
+                                    <input type="number"  min="0" class="form-control"
+                                           data-form-fixed="1"
+                                           id="lesson_env__destroy_delay"
+                                           name="lesson_env__destroy_delay"
+                                           value="{% if lesson_data.lesson_env %}{{ lesson_data.lesson_env.destroy_delay }}{% else %}2{% endif %}"
+                                           style="background-color: transparent;outline: none;cursor: auto;" />
+                                    <div class="input-group-addon">{% trans 'x_hours' %}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                </div>
+                <div class="type-show-2-3">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_task_manage' %}</label>
+                        <div class="col-sm-10">
+                            <input type="hidden" id="capabili_name" name="capabili_name" value=""/>
+                            <span class="btn btn-primary" onclick="showSelectCapability();"
+                                  id="showSelectCapId">{% if mode == 1 %}{% trans 'x_re_selection' %}{% else %}
+                                {% trans 'x_chose_paper' %}{% endif %}</span>
+                            <span class="hint">
+                            {% if lesson.type == 2 or lesson.type == 3 %}
+                                <span class="btn btn-info" style="display: none" onclick="preshowCapability();"
+                                  id="preshowCapabilityId">{% if lesson.lessonpapertask_set.count > 0 %}{% trans 'x_pre_show' %}{% endif %}</span>
+{#                                <span >{{ lesson.testpaper.name }}</span>#}
+                            {% endif %}
+                            </span>
+                            <span class="text-danger" style="padding-top:1px;font-size:25px;vertical-align: -webkit-baseline-middle;">*</span>
+                        </div>
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <label id="capabili_name-error" class="error" for="capabili_name"></label>
+                        </div>
+
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_difficulty' %}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="difficulty" id="difficulty" data-form-fixed="1">
+                            <option value="0"
+                                    {% if 0 == lesson.difficulty %}selected{% endif %}>{% trans "x_easy" %}</option>
+                            <option value="1"
+                                    {% if 1 == lesson.difficulty %}selected{% endif %}>{% trans "x_normal" %}</option>
+                            <option value="2"
+                                    {% if 2 == lesson.difficulty %}selected{% endif %}>{% trans "x_hard" %}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_learning_time' %}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="duration" id="duration" data-form-fixed="1">
+{#                            <option value="0"#}
+{#                                    {% if 0 == lesson.duration %}selected{% endif %}>{% trans "x_choose_duration" %}</option>#}
+                            <option value="5" {% if 5 == lesson.duration %}selected{% endif %}>
+                                5 {% trans "x_minute" %}</option>
+                            <option value="10" {% if 10 == lesson.duration %}selected{% endif %}>
+                                10 {% trans "x_minute" %}</option>
+                            <option value="15" {% if 15 == lesson.duration %}selected{% endif %}>
+                                15 {% trans "x_minute" %}</option>
+                            <option value="30" {% if 30 == lesson.duration %}selected{% endif %}>
+                                30 {% trans "x_minute" %}</option>
+                            <option value="60" {% if 60 == lesson.duration %}selected{% endif %}>
+                                60 {% trans "x_minute" %}</option>
+                            <option value="120" {% if 120 == lesson.duration %}selected{% endif %}>
+                                120 {% trans "x_minute" %}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_study_type' %}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="lesson_type" id="lesson_type" data-form-fixed="1">
+                            <option value="0" {% if lesson.lesson_type == 0 %}selected{% endif %}>{% trans "x_not_configured" %}</option>
+                            <option value="1" {% if lesson.lesson_type == 1 %}selected{% endif %}>{% trans "x_elective" %}</option>
+                            <option value="2" {% if lesson.lesson_type == 2 %}selected{% endif %}>{% trans "x_compulsory" %}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="public" value="{% if lesson.public %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" data-form-fixed="1" id="public"
+                               data-name="public"
+                                {% if lesson.public %} checked {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group upload-progress" style="display: none;">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-6">
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 0%">
+                                <span class="percent"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_course:lesson' course_id %}">{% trans 'x_cancel' %}</a>
+                        <input class="btn btn-primary" type="button" value="{% trans 'x_save' %}">
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+
+
+    <!-- Modal 注释页面没有使用，且数据会出现xss攻击， -->
+{#    <div class="modal fade" id="task-model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"#}
+{#         aria-hidden="true">#}
+{#        <div class="modal-dialog modal-lg">#}
+{#            <div class="modal-content">#}
+{#                <div class="modal-header">#}
+{#                    <button type="button" class="close" data-dismiss="modal"><span#}
+{#                            aria-hidden="true">&times;</span><span#}
+{#                            class="sr-only">Close</span></button>#}
+{#                    <h4 class="modal-title" id="myModalLabel">{% trans "x_practice_exercises" %}</h4>#}
+{#                </div>#}
+{#                <div class="modal-body">#}
+{#                    <div id="tableToolbar">#}
+{#                        <div class="form-group">#}
+{#                            <div class="col-md-2">#}
+{#                                <select class="form-control m-b" id="type_list">#}
+{#                                    <option value="0" selected="selected">{% trans "x_theory" %}</option>#}
+{#                                    <option value="1">{% trans "x_real_vuln" %}</option>#}
+{#                                    <option value="2">{% trans "x_exercise" %}</option>#}
+{#                                    <option value="3">{% trans "x_man_machine" %}</option>#}
+{#                                </select>#}
+{#                            </div>#}
+{#                            <div class="col-md-2">#}
+{#                                <select class="form-control m-b" id="category_list">#}
+{#                                    <option value="" selected="selected">{% trans "x_all_category" %}</option>#}
+{#                                </select>#}
+{#                            </div>#}
+{#                            <div class="col-md-2">#}
+{#                                <select class="form-control m-b" id="event_list">#}
+{#                                    <option value="" selected="selected">{% trans "x_all_task_event" %}</option>#}
+{#                                </select>#}
+{#                            </div>#}
+{#                            <div class="col-md-2">#}
+{#                                <select class="form-control m-b" id="difficulty_rating_list">#}
+{#                                    <option value="" selected="selected">{% trans "x_all_difficulty" %}</option>#}
+{#                                    <option value="1">{% trans "x_easy" %}</option>#}
+{#                                    <option value="2">{% trans "x_normal" %}</option>#}
+{#                                    <option value="3">{% trans "x_hard" %}</option>#}
+{#                                </select>#}
+{#                            </div>#}
+{#                            <div class="col-md-2">#}
+{#                                <input class="form-control m-b" id="title_list" placeholder="{% trans 'x_task_name' %}"#}
+{#                                       type="text"/>#}
+{#                            </div>#}
+{#                            <div class="col-md-2">#}
+{#                                <a class="btn btn-primary" onclick="table.refresh();">#}
+{#                                    <i class="fa fa-search"></i>{% trans 'x_search' %}#}
+{#                                </a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <table id="table"#}
+{#                           data-toggle="table"#}
+{#                           data-toolbar="#tableToolbar"#}
+{#                           data-toolbar-align="center"#}
+{#                           data-show-refresh="false"#}
+{#                           data-search="false"#}
+{#                           data-pagination="true"#}
+{#                           data-side-pagination="server"#}
+{#                           data-url="{% url 'cms_practice_theory:cms_api:choice-task-list' %}"#}
+{#                    >#}
+{#                        <thead>#}
+{#                        <tr>#}
+{#                            <th class="bs-checkbox" data-formatter="operatorFormatter"></th>#}
+{#                            <th data-field="title_dsc">{% trans "x_name" %}</th>#}
+{#                            <th data-field="category">{% trans "x_type" %}</th>#}
+{#                            <th data-field="event_name">{% trans "x_owned_question" %}</th>#}
+{#                            <th data-field="score">{% trans "x_score" %}</th>#}
+{#                            <th data-field="is_dynamic_env" data-formatter="table.boolFormatter">{% trans "x_dynamic_scenes" %}</th>#}
+{#                        </tr>#}
+{#                        </thead>#}
+{#                    </table>#}
+{#                </div>#}
+{#                <div class="modal-footer">#}
+{#                    <button type="button" class="btn btn-primary" data-dismiss="modal"#}
+{#                            style="margin-bottom: 0;">{% trans "x_confirm" %}</button>#}
+{#                    <button type="button" class="btn btn-white" data-dismiss="modal">{% trans "x_cancel" %}</button>#}
+{#                    <button type="button" class="btn btn-danger cancel-choice"#}
+{#                            data-dismiss="modal">{% trans "x_remove" %}</button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+    <!-- 选择场景 -->
+    <div class='modal fade' id='selectEnv' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_choose_scene' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <div data-widget-id='select-env' data-instance-id='t1'></div>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="selectEnv();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <!-- 选择试卷 -->
+    <div class='modal fade' id='selectCap' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_chose_paper' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <div id="tableToolbar">
+                        <div class="form-group">
+                            <div class="clearfix">
+
+                                <div class="col-md-2 col-sm-2">
+                                    <input class="form-control m-b sticky" id="search"
+                                           placeholder="{% trans 'x_title' %}"
+                                           type="text"/>
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <a class="btn btn-primary" onclick="table.refresh();">
+                                        <i class="fa fa-search"></i>{% trans 'x_search' %}
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <table id="table_task"
+                           data-toggle="table"
+                           data-toolbar="#tableToolbar"
+                           data-toolbar-align="center"
+                           data-show-refresh="false"
+                           data-search="false"
+                           data-pagination="true"
+                           data-side-pagination="server"
+                           data-url="{% url 'cms_practice_capability:api:test-paper-list' %}"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="name" data-escape="true"
+                                data-formatter="titileFormatter">{% trans 'x_name' %}</th>
+                            <th data-field="public" data-formatter="table.publicFormatter">{% trans 'x_public' %}</th>
+                            <th data-field="task_number">{% trans 'x_total_task_count' %}</th>
+                            <th data-field="task_all_score">{% trans 'x_total_score' %}</th>
+                            <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="selectCap();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 试卷 预览 -->
+    <div class="modal fade" id="exam-detail-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">试题列表</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h2 class="text-center" id="exam-name">试题名称</h2>
+                        <p id="totla-score">共2题 满分3分</p>
+                        <div class="form-group">
+                            <form id="courseform" target="form-target">
+                                <ol style="padding: 20px;" id="exam_list">
+                                </ol>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_course:lesson' course_id %}";
+        var category_url = "{% url 'cms_course:practice_categories' 0 %}";
+        var event_url = "{% url 'practice:event_list' %}";
+        var theory_task_url = "{% url 'cms_practice_theory:cms_api:choice-task-list' %}";
+        var real_vuln_task_url = "{% url 'cms_practice_real_vuln:cms_api:real-vuln-task-list' %}";
+        var exercise_task_url = "{% url 'cms_practice_exercise:cms_api:practice-exercise-task-list' %}";
+        var mam_machine_task_url = "{% url 'cms_practice_man_machine:cms_api:man-machine-task-list' %}";
+
+        var practice = $("#practice");
+        var practice_name = $("input[name='practice_name']");
+        var homework = $("#homework");
+        var homework_name = $("input[name='homework_name']");
+        var curr_p;
+        var curr_p_name;
+        var mode = {{ mode }};
+        var dic = {
+            rules: {
+                name: {
+                    required: true
+                },
+            },
+            messages: {
+                name: {
+                    required: "{% trans 'x_required_name' %}"
+                }
+            }
+        };
+        var rules_dic = {lesson_env__env: {required: true}};
+        var messages_dic = {lesson_env__env: {required: "{% trans 'x_required_lab_environment' %}"}};
+        $(function () {
+            var dic_extend = function (rules_dic, messages_dic) {
+                $.extend(true, dic['rules'], rules_dic);
+                $.extend(true, dic['messages'], messages_dic);
+            };
+
+            $('#type').click(function () {
+                if ($('#type').val() == '1') {
+                    {#$("#lesson_env__env").rules("add", {required: true, messages:{required: "{% trans 'x_required_lab_environment' %}"}});#}
+                    $("#capabili_name").rules("remove");
+                }else if($("#type").val() == "2" || $("#type").val() == "3"){
+                    $("#capabili_name").rules("add", {required: true, messages:{required: gettext('x_choose_test_paper')}})
+                }else {
+                    $("#capabili_name").rules("remove");
+                }
+            })
+        });
+
+        function operatorFormatter(value, row, index) {
+            return '<input name="task" data-index="0" taskid=' + row.id + ' type="radio" value="0" >';
+        }
+
+        var table = bsTableClass($('#table'));
+        $("#table").bootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.category = $("#category_list").val();
+                params.event = $("#event_list").val();
+                params.search = $("#title_list").val();
+                return params;
+            },
+            onClickRow: function (row, elem) {
+                $(elem).find("input[type=radio]").prop("checked", true);
+                curr_p.val(row.hash);
+                curr_p_name.val(row.title_dsc);
+            }
+        });
+
+        function init_model_select(category_url, event_url, type_id) {
+            $("#event_list").empty();
+            $("#category_list").empty();
+
+            $.ajax({
+                url: category_url.replace("0", type_id),
+                type: "get",
+                datatype: "json",
+                data: {"type_id": type_id},
+                success: function (data) {
+                    var categorys = data.data;
+                    $("#category_list").append("<option value='' selected='selected'>{% trans "x_all_category" %}</option>");
+                    for (var i in categorys) {
+                        $("#category_list").append("<option value='" + categorys[i].id + "'>" + codeUtil.htmlEncode(categorys[i].cn_name) + "</option>");
+                    }
+                }
+            });
+
+            $.ajax({
+                url: event_url,
+                type: "get",
+                datatype: "json",
+                data: {"type_id": type_id, "offset": 0, "limit": 30},
+                success: function (data) {
+                    var event_list = data.rows;
+                    $("#event_list").append("<option value='' selected='selected'>{% trans "x_all_task_event" %}</option>");
+                    for (var i in event_list) {
+                        $("#event_list").append("<option value='" + event_list[i].id + "'>" + codeUtil.htmlEncode(event_list[i].name_dsc) + "</option>");
+                    }
+                }
+            });
+        }
+
+        function init_model_table(url) {
+            $("#table").bootstrapTable('refresh', {url: url});
+        }
+
+        function deletePdfFile() {
+            var tempdata = {'pdf': null};
+            if (arguments.length > 0){
+                tempdata = {'html': null};
+            }
+            swal({
+                    title: "{% trans "x_confirm_delete" %}",
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: "{% trans "x_cancel" %}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{% trans "x_confirm" %}",
+                    closeOnConfirm: true
+                },
+                function () {
+                    {% if lesson %}
+                        $.ajax({
+                            url: "{% url 'cms_course:custom_lesson_detail' lesson.id %}",
+                            type: "PUT",
+                            data: tempdata,
+                            success: function (data) {
+                                $("#uploadPdfFile").css('display', 'none');
+                                $("#lessonPdfAttach-div").css('display', 'block');
+                            }
+                        });
+                    {% else %}
+                        $("input[name='pdf']").val("");
+                    {% endif %}
+                }
+            );
+        }
+
+        function deleteMarkdown() {
+            swal({
+                title: "{% trans "x_confirm_delete" %}",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "{% trans "x_cancel" %}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{% trans "x_confirm" %}",
+                closeOnConfirm: true
+            },
+                function () {
+                    {% if lesson %}
+                        $.ajax({
+                            url: "{% url 'cms_course:custom_lesson_detail' lesson.id %}",
+                            type: "PUT",
+                            data: {"markdown": null},
+                            success: function (data) {
+                                $("#deleteMarkFile").css('display', 'none');
+                                $("#lessonPdfAttach-div").css('display', 'block');
+                            }
+                        });
+                    {% else %}
+                        $("input[name='pdf']").val("");
+                    {% endif %}
+                }
+            )
+        }
+
+        function deleteAttachmentFile() {
+            swal({
+                    title: "{% trans "x_confirm_delete" %}",
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: "{% trans "x_cancel" %}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{% trans "x_confirm" %}",
+                    closeOnConfirm: true
+                },
+                function () {
+                    {% if lesson %}
+                        $.ajax({
+                            url: "{% url 'cms_course:custom_lesson_detail' lesson.id %}",
+                            type: "PUT",
+                            data: {"attachment": null},
+                            success: function (data) {
+                                $("#uploadAttachmentFile").css('display', 'none');
+                                $("#lessonAttachment-div").css('display', 'block');
+                            }
+                        });
+                    {% else %}
+                        $("input[name='attachment']").val("");
+                    {% endif %}
+                }
+            );
+        }
+
+        function deleteVideoFile() {
+            swal({
+                    title: "{% trans "x_confirm_delete" %}",
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: "{% trans "x_cancel" %}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{% trans "x_confirm" %}",
+                    closeOnConfirm: true
+                },
+                function () {
+                    {% if lesson %}
+                        $.ajax({
+                            url: "{% url 'cms_course:custom_lesson_detail' lesson.id %}",
+                            type: "PUT",
+                            data: {"video": null},
+                            success: function (data) {
+                                $("#uploadVideoFile").css('display', 'none');
+                                $("#lessonVideoAttach-div").css('display', 'block');
+                            },
+                        });
+                    {% else %}
+                        $("input[name='video']").val("");
+                    {% endif %}
+                }
+            );
+        }
+
+        function change_type(type) {
+            if (Number(type) == 1) {
+                // update title
+                $("label.lesson_pdf").html("{% trans 'x_guidance' %}");
+                $("div.onlyType0").hide();
+                $("div.onlyType1").show();
+                $("div.type-show-2-3").hide();
+                $("div.type-hiden-2-3").show();
+            }else if(Number(type) == 2 || Number(type) == 3){
+                $("div.type-hiden-2-3").hide();
+                $("div.onlyType0").hide();
+                $("div.onlyType1").hide();
+                $("div.type-show-2-3").show();
+
+                {% if lesson %}
+                    if (Number(type) == {{ lesson.type }}) {
+                        $("#preshowCapabilityId").show()
+                    } else {
+                        $("#preshowCapabilityId").hide()
+                    }
+                {% endif %}
+
+            }else {
+                // update title
+                $("label.lesson_pdf").html("{% trans 'x_handouts' %}");
+                $("div.onlyType0").show();
+                $("div.onlyType1").hide();
+                $("div.type-show-2-3").hide();
+                $("div.type-hiden-2-3").show();
+            }
+        }
+
+        $().ready(function () {
+            $('#validateForm').mvalidate(dic);
+            $("#type").change(function () {
+                change_type($(this).val());
+            });
+
+            {% if lesson %}
+                change_type({{ lesson.type }});
+            {% else %}
+                change_type(0);
+            {% endif %}
+
+{#            $("#pdf").change(function (e) {#}
+{#                var file_input = $(e.target);#}
+{#                var file_input_clone = file_input.clone(true);#}
+{#                var data = file_input.prop('files');#}
+{#                file_input.after(file_input_clone).detach();#}
+{##}
+{#            });#}
+
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+                $(html).change(function () {
+                    var name = $(this).attr('data-name');
+                    if (name) {
+                        var $input = $(this).siblings('[name=' + name + ']');
+                        if ($(this).prop('checked')) {
+                            $input.val(1);
+                        } else {
+                            $input.val(0);
+                        }
+                    }
+                });
+            });
+
+            practice_name.focus(function () {
+                $("#task-model").modal('show');
+                curr_p = practice;
+                curr_p_name = practice_name;
+                init_model_select(category_url, event_url, 0);
+                init_model_table(theory_task_url);
+            });
+            homework_name.focus(function () {
+                $("#task-model").modal('show');
+                curr_p = homework;
+                curr_p_name = homework_name;
+                init_model_select(category_url, event_url, 0);
+                init_model_table(theory_task_url);
+            });
+
+            $("button.cancel-choice").click(function () {
+                curr_p.val("");
+                curr_p_name.val("");
+            });
+
+            init_model_select(category_url, event_url, 0);
+
+            $("#type_list").change(function () {
+                var type_id = Number($(this).val());
+                init_model_select(category_url, event_url, type_id);
+
+                if (type_id == 0) {
+                    init_model_table(theory_task_url);
+                } else if (type_id == 1) {
+                    init_model_table(real_vuln_task_url);
+                } else if (type_id == 2) {
+                    init_model_table(exercise_task_url);
+                } else if (type_id == 3) {
+                    init_model_table(mam_machine_task_url);
+                }
+            });
+
+            $('input[type="file"]').prettyFile();
+            function addLesson() {
+                if (!$("#validateForm").valid()) {
+                    return false;
+                }
+
+                var bar = $('div.progress-bar');
+                var percent = $('span.percent');
+                var ajax_option = {
+                    url: $("form").attr("action"),
+                    type: $("form").attr("method"),
+                    beforeSubmit: function (contentArray, $form, options) {
+                        //alert("表单提交前的操作");
+                        var video_field = $("input[name='video']")[0];
+                        var pdf_field = $("input[name='pdf']")[0];
+                        var attachment_field = $("input[name='attachment']")[0];
+                        if (video_field != undefined && video_field.files[0] != undefined ||
+                            pdf_field != undefined && pdf_field.files[0] != undefined ||
+                            attachment_field != undefined && attachment_field.files[0] != undefined) {
+                            $('div.upload-progress').show();
+                        }
+
+                        // 处理文件空值
+                        {#                        for (var i = 0; i < contentArray.length; i++) {#}
+                        {#                            var curr_fileld = contentArray[i];#}
+                        {#                            if (curr_fileld.value == "" && curr_fileld.type == "file") {#}
+                        {#                                $("input[name='" + curr_fileld.name + "']").removeAttr("name");#}
+                        {#                                contentArray.splice(i, 1);#}
+                        {#                                i--;#}
+                        {#                            }#}
+                        {#                        }#}
+                    },
+                    uploadProgress: function (event, position, total, percentComplete) {
+                        var percentVal = percentComplete + '%';
+                        bar.width(percentVal);
+                        percent.html(percentVal);
+                    },
+                    success: function (json) {
+                        if (json.warning != null) {
+                            swal({
+                                title: json.warning,
+                                type: "warning",
+                                confirmButtonText: "{% trans "x_confirm" %}"
+                            }, function () {
+                                $("input[type='button']").attr("disabled", false);
+                            });
+                            return false;
+                        }
+                        percent.html("{% trans "x_upload_completed" %}");
+                        swal({
+                            title: "{% trans "x_saved_successfully" %}",
+                            type: "success",
+                            confirmButtonText: "{% trans "x_confirm" %}"
+                        }, function () {
+                            window.location.href = document.referrer;
+                        });
+                    },
+                    error: function (event, jqxhr, settings, thrownError) {
+                        var errors = JSON.parse(event.responseText);
+                        var error_div = $("#server-error");
+                        error_div.css("display", "block");
+                        error_div.html("");
+                        for (var key in errors) {
+                            var key_label = $("#" + key).parents("div.form-group").children("label").html();
+
+                            var messages = errors[key];
+                            if (!Array.isArray(messages)) {
+                                messages = [messages];
+                            }
+                            var infos = [];
+                            $.each(messages, function (i, message) {
+                                infos.push(message.message);
+                            });
+                            if (key_label == undefined) {
+                                error_div.append("<div class='error'>" + infos.join('\n') + "</div>");
+                            }
+                            else {
+                                error_div.append("<div class='error'>" + key_label + " : " + infos.join('\n') + "</div>");
+                            }
+                        }
+                        $("input[type='button']").attr("disabled", false);
+                    }
+                };
+
+                $("#validateForm").ajaxSubmit(ajax_option);
+                return false;
+            }
+
+            $("input[type='button']").on('click', function (e) {
+                {#                $('#validateForm').validate(dic);#}
+                if (!$('#validateForm').valid()) return;
+                $("input[type='button']").attr("disabled", true);
+                $("#server-error").html("");
+                addLesson();
+            })
+
+            add_minus();
+        });
+
+
+        function setHasEnvStyle() {
+            if ($('#has_env').prop('checked')) {
+                $('[data-display*=has_env]').show();
+            } else {
+                $('[data-display*=has_env]').hide();
+            }
+        }
+
+        // 选择场景
+        var selectEnvWidgetBindFlag = false;
+        function showSelectEnv() {
+            $SELECTENV(function () {
+                if (!selectEnvWidgetBindFlag) {
+                    $('[data-widget-id=select-env]').bindEnvSelectWidget({type: 1});
+                    selectEnvWidgetBindFlag = true;
+                }
+                $('#selectEnv').modal();
+            });
+        }
+
+        function selectEnv() {
+            var table = envSelectWidgetInstance.t1.table;
+            var ids = table.getCheckedValues();
+            if (ids.length != 1) {
+                popUtil.warningHint(gettext('x_choose_environment'));
+                return;
+            }
+            var envId = ids[0];
+            $('[name=lesson_env__env]').val(envId);
+            var data = table.getData(envId);
+            var editUrl = '{% url "cms_common_env:env_list" %}' + envId;
+            $('[name=lesson_env__env]').siblings('.hint').html('<a href="' + editUrl + '" target="_blank">' + data.name + '</a>');
+            $('#access_mode').show()
+            $('#selectEnv').modal('hide');
+        }
+
+        function showSelectCapability () {
+            $("#selectCap").modal()
+        };
+        var $table = $('#table_task');
+        pageWidgets.registerCheckTableRow($table);
+        var table = bsTable.getTableModule($table, function () {
+            this.operatorFormatter = function (value, row, index) {
+                var btns = [
+                    {
+                        type: 'btn',
+                        class: 'btn-success',
+                        icon: 'fa-file-text-o',
+                        text: '{% trans 'x_pre_show' %}',
+                        url: ('{% url 'cms_course:auth_class' 0 %}').replace(0, value),
+                        click: "examModal(" + value + ")",
+                    }
+                ];
+                return table.getOperatorHtml(btns);
+            }
+        });
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                params.search_direction = $("#search_direction").val();
+                params.search_difficulty = $("#search_difficulty").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        function titileFormatter(value, row, index) {
+            var nameString = "";
+            if (value.length > 15) {
+                nameString = value.substring(0, 15) + '...';
+            } else {
+                nameString = value;
+            }
+            return [
+                '<span id="thread"  data-toggle="tooltip" title="' + value + '">' + nameString + '</span>',
+            ].join('');
+        }
+
+        function examModal(examId) {
+            // console.log(examId)
+            getExamDetail(("{% url 'cms_practice_capability:ret_testpaper_detail' 0 %}").replace(0, examId));
+            $('#exam-detail-Modal').modal('toggle');
+        }
+
+        function preshowCapability() {
+            getExamDetail(("{% url 'cms_course:api:lesson-ret-testpaper-detail' 0 %}?type="+"{{ lesson.type }}").replace(0, "{{ lesson.id }}"));
+            $('#exam-detail-Modal').modal('toggle');
+        }
+
+        function getExamDetail(url) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                async: false,
+                success: function (json) {
+                    // console.log(json);
+                    $('#exam_list').empty();
+                    var data = json.response_data;
+
+                    if (json.error_code == 0) {
+                        if (data.name === undefined){
+                            $('#exam-name').text("")
+                        }else {
+                            $('#exam-name').html(codeUtil.htmlEncode(data.name));
+                        }
+                        $('#totla-score').html('<p>' + (gettext("x_all_have")) + " " + data.number + " " + (gettext("x_task")) + "&nbsp;&nbsp;&nbsp;&nbsp;" + (gettext("x_full_score")) + data.allScore + ' PT</p>')
+                        for (var i = 0; i < data.tasks.length; i++) {
+                            if (data.tasks[i].is_choice_question) {
+                                var questionchoose = $.parseJSON(data.tasks[i].options);
+                                $('#exam_list').append('<li><pre>' + /*(i + 1) + ':' +*/ marked(data.tasks[i].content) + '(' + (gettext("x_this_task")) + data.tasks[i].score + ' PT)</pre>' + getChooseHtml(questionchoose, (data.tasks[i].is_multiple_choice == 1)) + '</li>')
+                            } else if (!data.tasks[i].is_choice_question) {
+                                //console.log(data.tasks[i].file_url.url)
+                                var html = '<li><pre>' + (i + 1) + ':' + marked(data.tasks[i].title) + '(' + (gettext("x_this_task")) + data.tasks[i].score + ' PT)</pre>' + '<p>' + marked(data.tasks[i].content) + '</p>';
+                                if (data.tasks[i].url) {
+                                    html = html + '<p><a href="' + data.tasks[i].url + '">' + data.tasks[i].url + '</a></p>';
+                                }
+                                if (data.tasks[i].file_url) {
+                                    html = html + '<p><a href="' + data.tasks[i].file_url.url + '"> ' + (gettext("x_attachment_download")) + '</a></p>';
+                                }
+                                html = html + "</li>";
+                                $('#exam_list').append(html)
+                            }
+
+                        }
+                        $("#exam_list p").css('display', 'inline');
+                        $("#exam_list p img").addClass('img-responsive');
+
+                    }
+                },
+                error: function () {
+                }
+            })
+        }
+
+
+        function getChooseHtml(chooses, ismulti) {
+            if (ismulti) {
+                itype = 'checkbox';
+            }
+            else {
+                itype = 'radio';
+            }
+            isright = $(this).attr('isright');
+            text = "<ol style='list-style-type:none'>";
+            cmdstr = "";
+            $.each(chooses, function (key, value) {
+                text = text + "<li><input disabled type='" + itype + "' value='" + "'>&nbsp;&nbsp;&nbsp;&nbsp;" + key + "．<label for='" + "'>" + marked(value) + "</label> </li>"
+            });
+            text = text + "</ol>";
+            return text;
+        }
+
+        function selectCap() {
+            var ids = table.getCheckedValues();
+            if (ids.length != 1) {
+                popUtil.warningHint(gettext('x_choose_test_paper'));
+                return;
+            }
+            var capId = ids[0];
+            var data = table.getData(capId);
+            $("#capabili_name").val(capId);
+
+            // 考试id
+            {% if mode == 1 %}
+                {#var editUrl = '{% url "cms_event_exam:task_list" event.id %}?copyCap='+capId+"&return=" + urlparser.getEncodedLocalPath();#}
+                {#$('[name=capabili_name]').siblings('.hint').html('<span class="btn btn-info" onclick="location.href=\''+editUrl+'\'" >{% trans "x_editor_test_paper" %}</span>');#}
+                $('[name=capabili_name]').siblings('.hint').html('<span>' + data.name + '</span>');
+            {% else %}
+                $('[name=capabili_name]').siblings('.hint').html('<span>' + data.name + '</span>');
+            {% endif %}
+            $('#selectCap').modal('hide');
+
+        }
+
+        function add_minus() {
+            $(".know-label").mouseenter(function () {
+                $(this).find(".delete").show();
+
+            });
+            $(".know-label").mouseleave(function () {
+                $(this).find(".delete").hide();
+            });
+        }
+
+        function less_div(elem) {
+            $(elem).parent().parent().remove();
+        }
+
+        function add_point() {
+            var point_div = $("[name='points']").parent();
+            var addHtml = "<div name='points' class='toolTipBox'>" +
+                "                            <div class='col-sm-1 know-label'>" +
+                "                                <input class='btn btn-info' onkeydown='change_tip(this)' name='knowledges'>" +
+                "                                    <div class='toolTip'></div>" +
+                "                                <a class='delete' onclick='less_div(this)'><i class='fa fa-minus-square'></i></a>" +
+                "                            </div>" +
+                "                        </div>";
+
+            $("[name='second']").append(addHtml);
+            add_minus();
+            $('[name="knowledges"]').focus();
+        }
+
+        function change_tip(elem) {
+            var tip = $(elem).parent().find('.toolTip')
+            tip.html($(elem).val())
+        }
+    </script>
+{% endblock %}

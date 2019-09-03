@@ -1,0 +1,645 @@
+#msgid "x_env_manage"
+#msgstr "场景管理"
+
+msgid "x_add_env"
+msgstr "新建场景"
+
+msgid "x_edit_env"
+msgstr "编辑场景"
+
+#msgid "x_std_device_manage"
+#msgstr "标靶管理"
+
+msgid "x_add_std_device"
+msgstr "新建标靶"
+
+msgid "x_edit_std_device"
+msgstr "编辑标靶"
+
+msgid "x_config_doc"
+msgstr "制作指南"
+
+msgid "x_active_env_manage"
+msgstr "活动场景管理"
+
+msgid "x_env_name"
+msgstr "场景名称"
+
+msgid "x_snapshot_status"
+msgstr "快照状态"
+
+msgid "x_expect_time"
+msgstr "预计生成时间"
+
+msgid "x_none_snapshot"
+msgstr "无需快照"
+
+msgid "x_delete_snapshot"
+msgstr "删除快照"
+
+msgid "x_recreate_snapshot"
+msgstr "重新创建快照"
+
+msgid "x_creating_snapshot"
+msgstr "快照创建中"
+
+msgid "x_create_snapshot"
+msgstr "创建快照"
+
+msgid "x_env_huizhi"
+msgstr "场景绘制"
+
+msgid "x_resource_file"
+msgstr "资源文件"
+
+msgid "x_reupload"
+msgstr "重新上传"
+
+msgid "x_upload"
+msgstr "上传"
+
+msgid "x_click_doc"
+msgstr "点击查看详细文档"
+
+msgid "x_manual_set"
+msgstr "可手动配置"
+
+msgid "x_resource_zip"
+msgstr "请将资源文件压缩成zip文件，系统将自动上传至虚拟机中，Windows在C:/Cloud(隐藏目录)，Linux系统在/tmp目录下"
+
+msgid "x_sence_terminator_count"
+msgstr "场景最多只能添加 %(count)d 台终端"
+
+msgid "x_env_vister"
+msgstr "访问者"
+
+msgid "x_oj_node_name"
+msgstr "实训平台"
+
+msgid "x_only_show_unexpect_env"
+msgstr "只显示异常场景"
+
+msgid "x_machine_status"
+msgstr "机器状态"
+
+msgid "x_create_time"
+msgstr "创建时间"
+
+msgid "x_spend_time"
+msgstr "花费时间"
+
+msgid "x_m1.1c-0.5g-8g"
+msgstr "1核/512M内存/8G硬盘"
+
+msgid "x_m1.1c-1g-8g"
+msgstr "1核/1G内存/8G硬盘"
+
+msgid "x_m2.1c-0.5g-10g"
+msgstr "1核/512M内存/10G硬盘"
+
+msgid "x_m2.1c-1g-10g"
+msgstr "1核/1G内存/10G硬盘"
+
+msgid "x_m2.2c-2g-10g"
+msgstr "2核/2G内存/10G硬盘"
+
+msgid "x_m2.2c-4g-10g"
+msgstr "2核/3G内存/10G硬盘"
+
+msgid "x_m3.1c-1g-20g"
+msgstr "1核/1G内存/20G硬盘"
+
+msgid "x_m3.1c-2g-20g"
+msgstr "1核/2G内存/20G硬盘"
+
+msgid "x_m3.2c-4g-20g"
+msgstr "2核/4G内存/20G硬盘"
+
+msgid "x_m3.4c-4g-20g"
+msgstr "4核/4G内存/20G硬盘"
+
+msgid "x_m4.1c-1g-40g"
+msgstr "1核/1G内存/40G硬盘"
+
+msgid "x_m4.2c-2g-40g"
+msgstr "2核/2G内存/40G硬盘"
+
+msgid "x_m4.4c-4g-40g"
+msgstr "4核/4G内存/40G硬盘"
+
+msgid "x_m4.4c-8g-40g"
+msgstr "4核/8G内存/40G硬盘"
+
+msgid "x_m5.4c-4g-80g"
+msgstr "4核/4G内存/80G硬盘"
+
+msgid "x_m5.4c-8g-80g"
+msgstr "4核/8G内存/80G硬盘"
+
+msgid "x_std_device_name"
+msgstr "标靶名称"
+
+msgid "x_system_type"
+msgstr "系统类型"
+
+msgid "x_default_size"
+msgstr "默认大小"
+
+msgid "x_system_visit_type"
+msgstr "系统访问方式"
+
+msgid "x_help"
+msgstr "查看帮助"
+
+msgid "x_system_user_info"
+msgstr "系统用户信息"
+
+msgid "x_show_adv_config"
+msgstr "显示高级设置"
+
+msgid "x_is_support_ci"
+msgstr "是否支持Cloud-init"
+
+msgid "x_hard_control_type"
+msgstr "磁盘控制器类型"
+
+msgid "x_img_status"
+msgstr "镜像状态"
+
+msgid "x_env_edit_node"
+msgstr "编辑元数据"
+
+msgid "x_edit_img"
+msgstr "编辑镜像"
+
+msgid "x_view_img_machine"
+msgstr "查看镜像机器"
+
+msgid "x_restart_img_machine"
+msgstr "重启镜像机器"
+
+msgid "x_free_img_machine"
+msgstr "释放镜像机器"
+
+msgid "x_save_img"
+msgstr "保存镜像"
+
+msgid "x_img_saving"
+msgstr "镜像保存中"
+
+msgid "x_resave_img"
+msgstr "重新保存镜像"
+
+msgid "x_img_machine_creating"
+msgstr "镜像机器创建中"
+
+msgid "x_img_machine_starting"
+msgstr "镜像机器启动中"
+
+msgid "x_invalid_value"
+msgstr "无效的字段值"
+
+msgid "x_no_env_config"
+msgstr "无场景配置"
+
+msgid "x_env_name_exists"
+msgstr "场景名称已存在"
+
+msgid "x_no_tmp_env"
+msgstr "没有可保存的机器"
+
+msgid "x_no_base_image"
+msgstr "请先选择并保存基础镜像"
+
+msgid "x_unsupported_access_mode"
+msgstr "不支持的连接方式"
+
+msgid "x_tmp_env_conflict"
+msgstr "已有镜像机器"
+
+msgid "x_image_saving"
+msgstr "镜像正在保存中 "
+
+msgid "x_standard_device_no_logo"
+msgstr "标靶不能没有logo"
+
+msgid "x_standard_device_type_exists"
+msgstr "分类已存在"
+
+msgid "x_name_have_existed"
+msgstr "该名称已存在"
+
+msgid "x_standard_device_accessmode_error"
+msgstr "标靶访问方式错误"
+
+msgid "x_no_image_file"
+msgstr "无镜像文件"
+
+msgid "x_conflict_with_base_image_name"
+msgstr "不能和基础镜像同名"
+
+msgid "x_required_field"
+msgstr "该字段必填"
+
+msgid "x_no_disk_format"
+msgstr "需要磁盘格式"
+
+msgid "x_select_default_logo"
+msgstr "选择默认logo"
+
+msgid "x_system"
+msgstr "操作系统"
+
+msgid "x_upload_image_hint"
+msgstr "HTTP最大支持10G, 较大文件推荐使用FTP上传"
+
+msgid "x_custom_upload"
+msgstr "自定义上传"
+
+msgid "x_img_format"
+msgstr "镜像格式"
+
+msgid "x_img_info"
+msgstr "镜像信息"
+
+msgid "x_network_card_type"
+msgstr "虚拟网卡型号"
+
+msgid "x_video_device"
+msgstr "视频图像驱动"
+
+msgid "x_custom_img"
+msgstr "自定义镜像"
+
+msgid "x_sys_visit"
+msgstr "系统访问"
+
+msgid "x_login_img_machine"
+msgstr "进入镜像机器"
+
+msgid "x_qcow2"
+msgstr "QCOW2 - QEMU 模拟器"
+
+msgid "x_vmdk"
+msgstr "VMDK - 虚拟机磁盘"
+
+msgid "x_docker_image"
+msgstr "Docker - 容器镜像"
+
+msgid "x_vdi"
+msgstr "VDI - 虚拟磁盘镜像"
+
+msgid "x_vhd"
+msgstr "VHD - 虚拟硬盘"
+
+msgid "x_ami"
+msgstr "AMI - Amazon 机器镜像"
+
+msgid "x_ari"
+msgstr "ARI - Amazon Ramdisk 镜像"
+
+msgid "x_iso"
+msgstr "ISO - 光盘镜像"
+
+msgid "x_ova"
+msgstr "OVA - 开放式虚拟设备"
+
+msgid "x_origin"
+msgstr "原始"
+
+msgid "x_name_len_lt_60"
+msgstr "名称： 字段超长(0~100)"
+
+msgid "x_invalid_network_ID"
+msgstr "无效的网络id: {id}"
+
+msgid "x_duplicate_network_ID"
+msgstr "重复的网络id: {id}"
+
+msgid "x_invalid_gateway_ID"
+msgstr "无效的网关id: {id}"
+
+msgid "x_duplicate_gateway_ID"
+msgstr "重复的网关id: {id}"
+
+msgid "x_gateway_invalid_network"
+msgstr "网关[{gateway_id}]设置了无效的网络: {nets}"
+
+msgid "x_duplicated_terminal_ID"
+msgstr "重复的终端id: {id}"
+
+msgid "x_terminal_invalid_network"
+msgstr "终端[{terminal_id}]设置了无效的网络: {nets}"
+
+msgid "x_terminal_network_more"
+msgstr "终端[{terminal_id}]设置了超过一个网络: {nets}"
+
+msgid "x_checker_terminal_not_exist"
+msgstr "检查执行者{terminal_id}不存在"
+
+msgid "x_attacker_terminal_not_exist"
+msgstr "攻击执行者{terminal_id}不存在"
+
+msgid "x_ad_terminal_number_limit"
+msgstr "攻防场景必须有{target_limit}台靶机和不超过{executer_limit}台执行机"
+
+msgid "x_password_illegal_setup"
+msgstr "密码{password}不合法，必须包含字母、数字、特殊字符，至少8个字符，最多30个字符"
+
+msgid "x_scene_terminal_number"
+msgstr "场景最多只能添加{terminal_number_limit}台终端"
+
+msgid "x_scene_not_configured"
+msgstr "场景还未配置"
+
+msgid "x_deployment_file_not_cinfigured"
+msgstr "场景部署文件还未配置"
+
+msgid "x_invalid_parameters"
+msgstr "无效的参数"
+
+msgid "x_invalid_virtual_state"
+msgstr "无效的虚拟机状态"
+
+msgid "x_scene_not_exist"
+msgstr "场景不存在"
+
+msgid "x_virtual_not_exist"
+msgstr "虚拟机不存在"
+
+msgid "x_update_failure"
+msgstr "更新失败"
+
+msgid "x_no_operation_permissions"
+msgstr "无操作权限"
+
+msgid "x_num_scenes_full"
+msgstr "场景数量已满"
+
+msgid "x_num_personal_scenes_full"
+msgstr "个人场景数量已满"
+
+msgid "x_test_scene_have_existed"
+msgstr "测试场景已存在"
+
+msgid "x_test_scene_not_existed"
+msgstr "测试场景不存在"
+
+msgid "x_create_test_scenario_failure"
+msgstr "创建测试场景失败"
+
+msgid "x_del_test_scenario_failure"
+msgstr "删除测试场景失败"
+
+msgid "x_scene_not_need_create_snapshot"
+msgstr "场景无需创建快照"
+
+msgid "x_repeated_submission"
+msgstr "重复的提交"
+
+msgid "x_icon"
+msgstr "图标"
+
+msgid "x_scene_instance"
+msgstr "场景实例"
+
+msgid "x_sys_user"
+msgstr "系统用户"
+
+msgid "x_sys_user_passwd"
+msgstr "用户密码"
+
+msgid "x_getting_console_access"
+msgstr "获取控制台中"
+
+msgid "x_access_console"
+msgstr "打开控制台"
+
+msgid "x_quick_get_start"
+msgstr "快速入门"
+
+msgid "x_no_attacker_config"
+msgstr "未配置攻击者"
+
+msgid "x_env_attacker_management"
+msgstr "攻击事件"
+
+msgid "x_all_attacker_type"
+msgstr "全部攻击类型"
+
+msgid "x_attacker_name"
+msgstr "攻击事件名称"
+
+msgid "x_attacker_type"
+msgstr "攻击类型"
+
+msgid "x_add_attacker"
+msgstr "添加攻击事件"
+
+msgid "x_edit_attacker"
+msgstr "编辑攻击事件"
+
+msgid "x_attacker_server"
+msgstr "攻击机器"
+
+msgid "x_select_standard_device"
+msgstr "选择标靶"
+
+msgid "x_env_not_prepared"
+msgstr "场景还未准备好"
+
+msgid "x_attack_net_not_found"
+msgstr "未找到攻击附着网络"
+
+msgid "x_select_env_attacker"
+msgstr "选择攻击事件"
+
+msgid "x_flag_index_error"
+msgstr "{val}索引异常"
+
+msgid "x_parse_script_variable_error"
+msgstr "解析脚本变量[{val}]出错"
+
+msgid "x_network_not_exist"
+msgstr "网络不存在"
+
+msgid "x_gateway_not_exist"
+msgstr "网关不存在"
+
+msgid "x_envattacker_not_exist"
+msgstr "攻击事件不存在"
+
+msgid "x_create_envattacker_error"
+msgstr "创建攻击实例失败"
+
+msgid "x_delete_envattacker_error"
+msgstr "删除攻击实例失败"
+
+msgid "x_cannot_access_to_external_net"
+msgstr "{terminal}无法连接外网"
+
+msgid "x_create_env_start"
+msgstr "创建场景开始"
+
+msgid "x_create_env_error"
+msgstr "创建场景错误"
+
+msgid "x_create_env_end"
+msgstr "创建场景结束"
+
+msgid "x_create_network_start"
+msgstr "正在创建网络[{name}]..."
+
+msgid "x_create_network_error"
+msgstr "创建网络[{name}]错误"
+
+msgid "x_create_network_end"
+msgstr "创建网络[{name}]结束"
+
+msgid "x_create_router_start"
+msgstr "正在创建路由[{name}]..."
+
+msgid "x_create_router_error"
+msgstr "创建路由[{name}]错误"
+
+msgid "x_create_router_end"
+msgstr "创建路由[{name}]结束"
+
+msgid "x_create_firewall_start"
+msgstr "正在创建防火墙[{name}]..."
+
+msgid "x_create_firewall_error"
+msgstr "创建防火墙[{name}]错误"
+
+msgid "x_create_firewall_end"
+msgstr "创建防火墙[{name}]结束"
+
+msgid "x_create_qos_start"
+msgstr "正在创建qos<终端[{terminal_name}]-网络[{net_name}]>..."
+
+msgid "x_create_qos_error"
+msgstr "创建qos<终端[{terminal_name}]-网络[{net_name}]>错误"
+
+msgid "x_create_qos_end"
+msgstr "创建qos<终端[{terminal_name}]-网络[{net_name}]>结束"
+
+msgid "x_create_terminal_start"
+msgstr "正在创建终端[{name}]..."
+
+msgid "x_create_terminal_error"
+msgstr "创建终端[{name}]错误"
+
+msgid "x_create_terminal_end"
+msgstr "创建终端[{name}]结束"
+
+msgid "x_bind_floating_ip"
+msgstr "终端[{name}]分配弹性ip..."
+
+msgid "x_port_number"
+msgstr "端口数量"
+
+msgid "x_wan_number"
+msgstr "Wan口网络数量"
+
+msgid "x_lan_number"
+msgstr "Lan口网络数量"
+
+msgid "x_no_enough_floating_ips"
+msgstr "外网ip不足"
+
+msgid "x_image_status"
+msgstr "镜像状态"
+
+msgid "x_desc"
+msgstr "说明"
+
+msgid "x_router_not_prepared"
+msgstr "未找到路由器"
+
+msgid "x_invalid_static_route"
+msgstr "无效的静态路由"
+
+msgid "x_exist_static_route"
+msgstr "静态路由已存在"
+
+msgid "x_firewall_not_prepared"
+msgstr "未找到防火墙"
+
+msgid "x_invalid_firewall_rule"
+msgstr "无效的规则"
+
+msgid "x_exist_firewall_rule"
+msgstr "规则已存在"
+
+msgid "x_standard_device_error"
+msgstr "错误"
+
+msgid "x_node_scale"
+msgstr "节点规模"
+
+msgid "x_attacker_count"
+msgstr "攻击事件数量"
+
+msgid "x_entire_type"
+msgstr "全部类型"
+
+msgid "x_all_image_type"
+msgstr "全部镜像类型"
+
+msgid "x_belong_target"
+msgstr "所属标的"
+
+msgid "x_installer_resource_not_found"
+msgstr "未找到该资源"
+
+msgid "x_create_pool_full"
+msgstr "创建池已满"
+
+msgid "x_node_memory"
+msgstr "总内存"
+
+msgid "x_node_disk"
+msgstr "总磁盘大小"
+
+msgid "x_checker_script_path_null"
+msgstr "checker脚本为空"
+
+
+msgid "x_vm_status_no_state"
+msgstr "无状态"
+
+msgid "x_vm_status_running"
+msgstr "运行中"
+
+msgid "x_vm_status_blocked"
+msgstr "阻塞中"
+
+msgid "x_vm_status_paused"
+msgstr "暂停中"
+
+msgid "x_vm_status_shutdown"
+msgstr "已关闭"
+
+msgid "x_vm_status_shutoff"
+msgstr "已关闭"
+
+msgid "x_vm_status_crashed"
+msgstr "崩溃"
+
+msgid "x_vm_status_suspended"
+msgstr "挂起中"
+
+msgid "x_vm_status_failed"
+msgstr "错误"
+
+msgid "x_vm_status_building"
+msgstr "创建中"
+
+msgid "x_export_env_data"
+msgstr "导出场景数据"
+
+msgid "x_snapshot_ban_upload"
+msgstr "标靶已有快照, 不允许上传"
+
+msgid "x_image_not_found"
+msgstr "镜像未找到"

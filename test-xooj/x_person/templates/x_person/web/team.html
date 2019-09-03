@@ -1,0 +1,383 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static_v %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static_v '/x_person/css/layout.css' %}"/>
+    <script src="{% static "web/artTemplate/template.js" %}"></script>
+    <script src="{% static_v 'x_person/js/team.js' %}"></script>
+    <script src="{% static_v '/x_person/js/uploadPreview.js' %}"></script>
+    <script src="{% static_v '/x_person/js/common.js' %}"></script>
+    <script src="{% static_v '/x_person/js/form.utils.js' %}"></script>
+    <script src="{% static '/x_person/js/jquery.form.js' %}"></script>
+    <script src="{% static '/x_person/js/jquery.md5.js' %}"></script>
+    <script src="{% static 'web/js/autosize.js' %}"></script>
+    <script src="{% static 'web/js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'web/js/messages_zh.min.js' %}"></script>
+    <style>
+    .team-member-list .userMessage{
+        margin: 0 auto;
+        width:60px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+    .team-member-list .tooltips{
+        background-color: #2E2E2E;
+        position: absolute;
+        top: 64%;
+        left: 65%;
+        z-index: 99;
+        padding: 5px;
+        opacity: 0;
+        border-radius: 4px;
+        transition: opacity 1s;
+        white-space:nowrap;
+    }
+    .team-member-list:hover .tooltips{
+        opacity: 1;
+    }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <section class="container layout-color mrg93T">
+        <div class="bread layout-color"><a class="layout-color"
+                                           href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            >> <a href="{% url 'x_person:team' %}"
+                  class="active font15">{% trans 'x_my_tram' %}</a>
+        </div>
+        {#    资料显示框#}
+        <div class="team-info-show default-bg">
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 text-center team-logo">
+                    <span>
+                    <img class="img-responsive img-circle" name="team_logo"
+                         src="{% static 'x_person/img/team_logo.png' %}">
+                    </span>
+                </div>
+                <div class="col-lg-5 col-md-4 col-sm-4 col-xs-6">
+                    <h2 name="team_name"></h2>
+                    <p><span>{% trans 'x_time_establishment' %}: </span><span name="create_time"></span></p>
+                    <p><span>{% trans 'x_entries_num' %}: </span><span name="join_contest_number"></span></p>
+                    <p><span>{% trans 'x_members_num' %}: </span><span name="team_member_number"></span></p>
+                    <p><span>{% trans 'x_team_profile' %}: </span><span name="team_intrduction" style="word-break: break-all"></span></p>
+                </div>
+                <div class="col-lg-5 col-md-6 col-sm-8 col-xs-6 text-center">
+                    <div><span>{% trans 'x_members_num' %}</span><br><span name="team_member_number"
+                                                                           class="orangeC font20"></span>
+                    </div>
+                    <div><span>{% trans 'x_entries_num' %}</span><br><span name="join_contest_number"
+                                                                           class="orangeC font20"></span>
+                    </div>
+                    {% if teamleader %}
+                        <div id='team-apply' style="cursor: pointer;">
+                            <span>{% trans 'x_enrollment_application' %}</span><span class="new-member-apply"></span><br>
+                            <span data-apply_count="" name="apply_count" class="orangeC font20"></span>
+
+                        </div>
+                    {% endif %}
+                </div>
+                {#如果战队队长,显示修改资料#}
+                {% if teamleader %}
+                    <a class="" href="{% url 'x_person:team_edit' teamid %}">{% trans 'x_modify_information' %}&gt;</a>
+                {% endif %}
+                {#如果战队队长,显示修改资料#}
+            </div>
+            {% if not teamleader %}
+                {#                onclick="quit_corps()"#}
+                <div class="dismiss-btn clearfix">
+                    <button type="button" class="team-dismiss-btn text-center center-block whiteC" style="    width: 120px;
+    height: 30px;line-height: 30px; border: none;"
+                            data-toggle="modal" data-target="#hint-msg-confirm"
+                            onclick="CALLBACK.quit_corps()">{% trans 'x_quit_team' %}</button>
+                </div>
+            {% endif %}
+        </div>
+        {#   资料显示框end #}
+        {#   活动记录&六维图 #}
+        {# ===========#}
+        <div class="team-record ">
+            <div class="row mrg30B">
+                <div class="col-md-9">
+                    <div class="row mrg0A default-bg">
+                        <div class="col-md-12 pad20R pad20T mrg0A pad30L wrap">
+                            <h3 class="font18">{% trans 'x_activity_record' %}</h3>
+                        </div>
+                        <div class="col-md-12 pad25T pad40B mrg0A pad15A ">
+                            <table id="activityRecord"
+                                   class="table exam-record default-table-v2"
+                                   data-show-refresh="false"
+                                   data-search="false"
+                                   data-pagination="true"
+                                   data-side-pagination="server">
+                                <thead>
+                                <tr>
+                                    <th data-field='event_name'>{% trans 'x_name' %}</th>
+                                    <th data-field='sum_score'>{% trans 'x_score' %}</th>
+                                    <th data-field='time'
+                                        data-formatter="dateUtil.formatYMDHMS">{% trans 'x_time' %}</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 hidden-xs hidden-sm">
+                    <div class="row default-bg mrg0A mrg20B">
+                        <div class="wrap pad20A mrg0A">
+                            <div class="titles">
+                                <h3 class="font18">{% trans 'x_skills_six_dimensional_map' %}</h3>
+                            </div>
+                        </div>
+                        <div class="row mrg0A">
+                            <div class="col-md-11">
+                                <div class="row center-block">
+                                    <div id='team_chart' style="height: 200px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row default-bg mrg0A mrg20B">
+                        <div class="wrap pad20A mrg0A">
+                            <div class="titles">
+                                <h3 class="font18">{% trans 'x_team_members' %}</h3>
+                            </div>
+                        </div>
+                        <div class="row mrg0A">
+
+                            <div class="col-md-12 news" id="team_user_list">
+{#                                {% verbatim %}#}
+                                <template>
+                                <div v-for="users,index in user_list" class="row mrg10B">
+                                    <div v-for="user,index in users" class="col-md-4 team-member-list" style="cursor: pointer;position: relative">
+                                        <img v-if="user.user_logo_url" v-bind:src="user.user_logo_url">
+                                        <img v-else src="/static/x_person/img/user_default.jpg">
+                                        <div class="userMessage">
+                                            <span style="color: #FF9900 " class="required-v1 mrg5T" v-show="user.team_leader">{% trans 'x_captain' %}
+                                                <span>-</span>
+                                            </span>
+                                            <p style="display: inline" v-html="user.real_name"></p>
+                                            <div class="tooltips" v-html="user.real_name"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                </template>
+{#                                {% endverbatim %}#}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {#    申请入队弹框#}
+    <div class="modal fade team-deal-modal" tabindex="-1" role="dialog" id="new-member-apply-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <h4 class="modal-title font18">{% trans 'x_enrollment_application' %}</h4>
+                </div>
+                <div class="modal-body member-apply-modal">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% verbatim %}
+    <script id="team_apply" type="text/html">
+        {{each teamusers as teamuser}}
+        <div class="new-member-apply-list clearfix">
+            <div class="pull-left">
+                {{ if teamuser.user_logo_url }}<img class="pull-left" src="{{ teamuser.user_logo_url }}">
+                {{ else }}<img class="pull-left" src="/static/x_person/img/team_logo.png">{{ /if }}
+                <p class="pull-left"><span class="new-member-apply-name">{{ teamuser.real_name }}</span><br><span
+                        class="new-member-apply-time"> {{ teamuser.modify_time | date}}</span></p>
+            </div>
+            <div class="pull-right deal-btn" id="button-{{ teamuser.id }}">
+                <span class="agree-btn"
+                      onclick="CALLBACK.team_user_operate('{{ teamuser.id }}',1)"
+                      style="cursor: pointer;">
+    {% endverbatim %}
+                    {% trans 'x_agree' %}
+    {% verbatim %}
+                </span><span
+                    class="refuse-btn"
+                    onclick="CALLBACK.team_user_operate('{{ teamuser.id }}',2)" style="cursor: pointer;">
+    {% endverbatim %}
+                {% trans "x_refuse" %}
+    {% verbatim %}
+            </span>
+            </div>
+        </div>
+            {{/each}}
+    </script>
+    {% endverbatim %}
+    <script>
+        template.helper('date', function (date) {
+            return dateUtil.formatYMD(date)
+        });
+        var teamUserApiList = "{% url 'x_person:api:team-user-list'%}"
+    </script>
+
+    <script>
+        id = {{ recordid }}
+            $(function () {
+                CALLBACK.init_team_detail();
+                CALLBACK.get_team_user();
+            });
+        var app = new Vue({
+            el: '#team_user_list',
+            data: {
+                user_list: '',
+            },
+        });
+        var CALLBACK = {
+            init_team_detail: function () {
+                $.ajax({
+                    url: "{% url 'x_person:api:team-detail' teamid %}",
+                    type: "get",
+                    datatype: "json",
+                    success: function (data) {
+                        if (data.logo_url) {
+                            $("[name='team_logo']").attr('src', data.logo_url);
+                        }
+                        $("[name='team_name']").html(codeUtil.htmlEncode(data.name));
+                        $("[name='team_intrduction']").html(codeUtil.htmlEncode(data.brief_introduction));
+                        $("[name='create_time']").html(data.create_time);
+                        $("[name='join_contest_number']").each(function () {
+                            $(this).html(data.join_contest_number);
+                        });
+                        $("[name='team_member_number']").each(function () {
+                            $(this).html(data.team_member_number);
+                        });
+
+                        if (parseInt(data.apply_count) == 0) {
+                            $('.new-member-apply').addClass('hidden')
+                            $("#team-apply")[0].removeEventListener('click', CALLBACK.handle_team_apply, false);
+                            $("#team-apply").attr('style', 'cursor: auto');
+                        } else {
+                            $("#team-apply")[0].addEventListener('click', CALLBACK.handle_team_apply, false)
+                        }
+
+                        $("[name='apply_count']").html(data.apply_count);
+                        $("[name='apply_count']").data("apply_count", data.apply_count);
+
+
+                    },
+                    error: function () {
+                        console.info("Error");
+                    }
+                });
+            },
+            handle_team_apply: function () {
+                var data = {
+                    teamid:{{ teamid }},
+                    need_join: 1,
+                };
+                $.ajax({
+                    url: teamUserApiList,
+                    type: "get",
+                    data: data,
+                    datatype: "json",
+                    success: function (data) {
+                        $('#new-member-apply-modal').modal();
+                        template.config("escape", false);
+                        var html = template('team_apply', {teamusers: data.rows});
+                        $('.member-apply-modal').html(html);
+                    },
+                    error: function () {
+                        ajaxDialog.dialogErrorCallback(xhr, ts, et)
+                    }
+                });
+            },
+            team_user_operate: function (id, operate) {
+                var formData = new FormData();
+                formData.append('type', operate);
+                $.ajax({
+                    url: teamUserApiList + id.toString() + '/',
+                    type: "PATCH",
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        var text;
+                        if (operate.toString() == '1') {
+                            text = '{% trans 'x_have_agreed' %}'
+                        } else {
+                            text = '{% trans 'x_have_refused' %}'
+                        }
+                        var btn_id = '#button-' + id.toString()
+                        $(btn_id).html(text);
+                        var old_count = $("[name='apply_count']").data("apply_count");
+                        var new_count = parseInt(old_count) - 1;
+                        $("[name='apply_count']").data("apply_count", new_count);
+                        $("[name='apply_count']").html(new_count.toString());
+                        if (new_count == 0) {
+                            $('.new-member-apply').addClass('hidden')
+                        }
+                    },
+                    error: function (xhr, ts, et) {
+                        ajaxDialog.dialogErrorCallback(xhr, ts, et)
+                    }
+                });
+            },
+            get_team_user: function () {
+                var data = {
+                    teamid:{{ teamid }},
+                    join: 1,
+                };
+                http.get(teamUserApiList, data, function (data) {
+                    var user_list = new Array();
+                    var temp_user_list = new Array();
+                    for (var i = 0; i < Number(data.total); i++) {
+                        temp_user_list.push(data.rows[i]);
+                        if (!((i + 1) % 3)) {
+                            user_list.push(temp_user_list)
+                            temp_user_list = []
+                        }
+                        if ((i + 1) == Number(data.total)) {
+                            user_list.push(temp_user_list);
+                            temp_user_list = []
+                        }
+
+                    }
+                    app.user_list = user_list
+                })
+            },
+            quit_corps: function () {
+                $('#confirm-msg').text(gettext('x_want_to_continue'));
+                var confirm_button = $('#hint-msg-confirm .btn-confirm')[0];
+                confirm_button.onclick = function () {
+                    var data = {
+                        'type': 3
+                    };
+                    http.patch(teamUserApiList + id.toString() + '/', data, function (data) {
+                        setTimeout(function () {
+                            window.location.href = '/x_person/team/'
+                        }, ajaxDialog.defaultDelayTime);
+                    }, function (xhr, ts, et) {
+                        $('#error-msg').parent().addClass('wrong-msg')
+                        $('#error-msg').html(JSON.parse(xhr.responseText).detail);
+                        $("#error-msg-warp").modal();
+                        $("#error-msg-warp").show();
+                    });
+                }
+            }
+
+        };
+
+        $('#activityRecord').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            url: '{% url "event:api:event-signup-team-activity-list" %}',
+        });
+    </script>
+
+{% endblock %}
+

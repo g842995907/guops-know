@@ -1,0 +1,119 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_bureau_management' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+
+                    <div class="col-md-2 col-sm-2">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_bureau_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+
+                </div>
+                <div class="clearfix">
+                    <div class="col-md-6 col-sm-6">
+                        <a class="btn btn-primary" href="{% url 'cms_common_cloud:department_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_common_cloud:api:department-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_common_cloud:api:department-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name">{% trans 'x_name' %}</th>
+                <th data-field="ip">{% trans 'ip' %}</th>
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_common_cloud:api:department-list' %}"
+    </script>
+    <script type="text/javascript">
+        var $table = $('#table');
+        pageWidgets.registerCheckTableRow($table);
+
+        var table = bsTable.getTableModule($table, function () {
+            this.operatorFormatter = function (value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        url: "{% url 'cms_common_cloud:department' %}" + value,
+                    },
+                    //{
+                    //    type: 'link',
+                    //    class: 'btn-success',
+                    //    icon: 'fa-download',
+                    //    text: "{% trans 'x_public_key' %}",
+                    //    url: row.public_key,
+                    //},
+                    //{
+                    //    type: 'link',
+                    //    class: 'btn-warning',
+                    //    icon: 'fa-download',
+                    //    text: "{% trans 'x_private_key' %}",
+                    //    url: row.private_key,
+                    //},
+                    {
+                        type: 'button',
+                        class: 'btn-warning',
+                        icon: 'fa-download',
+                        text: "{% trans 'x_download_License_file' %}",
+                        click: 'download_license(listUrl + "' + value + '" + "/license/")'
+                    },
+                ];
+                return table.getOperatorHtml(btns);
+            }
+        });
+
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        function download_license(url) {
+            window.open(url,'_parent')
+        }
+    </script>
+{% endblock %}

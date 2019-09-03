@@ -1,0 +1,129 @@
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{#<div class="right-menu whiteC cursor"><span class="text-center">{% trans 'x_more_operations' %}</span>#}
+{#                <div class="right-submenu cursor">#}
+{#                    <ul class="posRelative catalogue">#}
+{#                        <li>{% trans 'x_table_contents' %}</li>#}
+{#                        <div class="catalogue-list posAbsoulte pad10A">#}
+{#                            <div class="mrg15B"><a>课时1:  基于网络地址的信息内容管控</a></div>#}
+{#                            <div class="mrg15B"><a>课时1:  数字权益管理工具的应用</a></div>#}
+{#                        </div>#}
+{#                    </ul>#}
+{#                    <ul class="screen-tab">#}
+{#                        <li>{% trans 'x_handouts' %}</li>#}
+{#                        <li style="display: none;">{% trans 'x_experiment_scene' %}</li>#}
+{#                        <li style="display: none;">{% trans 'x_study_video' %}</li>#}
+{#                    </ul>#}
+{#                    <ul class="note-tabs">#}
+{#                        <li>{% trans 'x_note' %}</li>#}
+{#                        <li style="display: none;">{% trans 'x_experimental_report' %}</li>#}
+{#                        <li>{% trans 'x_Q_A' %}</li>#}
+{#                         <li style="display: none;"><a href="" data-name="attachment_new" download="" class="whiteC">{% trans 'x_download_annex' %}</a></li>#}
+{#                         <li style="display: none;"><a href="{% url 'course:exam_paper_detail' course_id lesson_id %}" class="whiteC">{% trans 'x_lesson_exercises' %}</a></li>#}
+{#                    </ul>#}
+{#                    <ul>#}
+{#                        <li><a class="whiteC" href="{% url 'course:markdown_new' %}?lesson_id={{ lesson_id }}">{% trans 'x_single_screen_display' %}</a></li>#}
+{#                    </ul>#}
+{#                </div>#}
+{#            </div>#}
+
+{#侧边栏版本统一#}
+<div class="sidebar-menu whiteC cursor default-bg">
+{#    <span class="text-center">{% trans 'x_more_operations' %}</span>#}
+        <ul class="pre">
+            <li media-name='prev_lesson'><a data-name='prev_lesson'></a><div>{% trans "x_last_section" %}</div></li>
+        </ul>
+        <ul class="screen-tab">
+            <li>
+                <div>{% trans 'x_handouts' %}</div>
+            </li>
+            <li style="display: none;"><div>{% trans 'x_experiment_scene' %}</div></li>
+            <li style="display: none;"><div>{% trans 'x_study_video' %}</div></li>
+        </ul>
+        <ul class="note-tabs">
+            <li><div>{% trans 'x_note' %}</div></li>
+            <li style="display: none;"><div>{% trans 'x_experimental_report' %}</div></li>
+            <li><div>{% trans 'x_Q_A' %}</div></li>
+            <li style="display: none;"><a href="" data-name="attachment_new" download="" media-name="attachment"
+                                          class="whiteC"></a><div>{% trans 'x_download_annex' %}</div></li>
+            <li style="display: none;"><a href="{% url 'course:exam_paper_detail' course_id lesson_id %}"
+                                          class="whiteC"></a><div>{% trans 'x_lesson_exercises' %}</div></li>
+        </ul>
+        <ul class="">
+            <li>
+                <a class="whiteC"
+                   href="{% url 'course:markdown_new' %}?lesson_id={{ lesson_id }}&course_screen=one_screen"></a>
+                <div>{% trans 'x_single_screen_display' %}</div>
+            </li>
+        </ul>
+         <ul class="next">
+            <li media-name='next_lesson'><a data-name='next_lesson'></a><div>{% trans "x_next_section" %}</div></li>
+        </ul>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        prev_next_lesson();
+    });
+     $('.sidebar-menu ul  li').hover(function () {
+            var currentWidth = $(this).find('div').width();
+            $(this).find('div').animate({
+                left: -currentWidth - 20  ,
+                opacity: '1'
+            }, "slow");
+        }, function () {
+              var currentWidth = $(this).find('div').width();
+            $(this).find('div').animate({
+                left: currentWidth + 20 ,
+                opacity: '0'
+            }, "slow");
+        });
+
+     $(".sidebar-menu ul li").click(function(){
+         $(".note-tabs li").css("background-color","rgba(0, 24, 54, 0.35)")
+     });
+
+     function prev_next_lesson() {
+        $.ajax({
+            url: "{% url 'course:api:lesson-jstree-list' %}",
+            type: "get",
+            data: {"course_id": {{ course_id }}, 'filter_type': 'file'},
+            datatype: "json",
+            success: function (data) {
+                // 只有一条数据就不需要进行遍历
+                if (data.total > 1) {
+                    var lessonjstree_list = data.rows;
+                    for (var i in lessonjstree_list) {
+                        var lesson_obj_id = lessonjstree_list[i].lesson.lesson_id;
+                        if (lesson_obj_id == current_lesson_id) {
+                            // 获取当前课程的索引值
+                            if (i == 0) {
+                                // 第一个没有上一页, 显示下一页面
+                                $("li[media-name='prev_lesson']").css('opacity', '0.2');
+                                $("a[data-name='next_lesson']").attr('href', "{% url 'course:html' %}?lesson_id=" + lessonjstree_list[parseInt(i) + 1].lesson.lesson_id);
+
+                            } else if ((parseInt(i) + 1) == lessonjstree_list.length) {
+                                // 最后一个课程没有下一页， 显示上一页
+                                $("li[media-name='next_lesson']").css('opacity', '0.2');
+                                $("a[data-name='prev_lesson']").attr('href', "{% url 'course:html' %}?lesson_id=" + lessonjstree_list[parseInt(i) - 1].lesson.lesson_id);
+                            } else {
+                                // 中间的部分上一页下一页都是显示的
+                                {#$("li[media-name='prev_lesson']").css('opacity', '');#}
+                                {#$("li[media-name='next_lesson']").css('opacity', '');#}
+                                $("a[data-name='prev_lesson']").attr('href', "{% url 'course:html' %}?lesson_id=" + lessonjstree_list[parseInt(i) - 1].lesson.lesson_id);
+                                $("a[data-name='next_lesson']").attr('href', "{% url 'course:html' %}?lesson_id=" + lessonjstree_list[parseInt(i) + 1].lesson.lesson_id);
+                            }
+                            break;
+                        }
+                    }
+                }
+            },
+            error: function () {
+                showPopMsg("{% trans 'x_course_directory' %}");
+            }
+        })
+    }
+</script>

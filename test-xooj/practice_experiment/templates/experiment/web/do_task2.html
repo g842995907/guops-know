@@ -1,0 +1,187 @@
+{% extends 'experiment/web/task.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load static_v %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'web/summernote/summernote.css' %}">
+    <script src="{% static 'web/summernote/summernote.js' %}"></script>
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <script src="{% static 'web/summernote/lang/summernote-zh-CN.js' %}"></script>
+    {% endif %}
+    <script type="text/javascript" src="{% static_v 'practice/widgets/task_env/js/network.js' %}"></script>
+    <script src="{% static 'practice/js/practice.js' %}"></script>
+    <script>
+        {#        $(function () {#}
+        {#            $('#mynote').summernote();#}
+        {#        })#}
+
+        // 场景初始化
+
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="default-bg clearfix mrg30T">
+            <div class="pad100L pad100R">
+                <h3 class="borders pad20B clearfix">
+                    <span class="font18" id="question-number"></span>
+                    <span class="pull-right" id="answer-status"></span>
+                </h3>
+                <div class=" pad20A mrg0A">
+                    <div id="task_content"></div>
+                    <div class="mrg30T">
+                        <a class="download-file" target="_blank" id="task_attach" download="{% trans 'x_download_annex' %}">{% trans 'x_download_attachment' %}</a>
+                        <div>
+
+                        </div>
+                        <a class="download-file hidden" target="_blank" id="task_content_url">{% trans 'x_click_visit_URL' %}</a>
+                    </div>
+                    {# 提交答案input#}
+                    <div class=" clearfix mrg30T" name="submit_answer">
+                        <form action="" method="post" class=" pull-left col-md-8 col-sm-8 col-xs-10"
+                              style="padding-left: 0px">
+                            <div class="form-group clearfix">
+                                <div class="submit-flag">
+                                    <input id="task_answer" name="answer" class="form-control whiteC default-bg"
+                                           placeholder="{% trans '点击输入flag' %}"
+                                           type="text">
+                                </div>
+                            </div>
+                        </form>
+                        <button id="checkbox_submit" type="button" onclick="CALLBACK.submit_answer()"
+                                class="btn-common pad30L pad30R pull-right">{% trans 'x_submit' %}</button>
+                    </div>
+
+                    {# 提交答案input end#}
+                    {# 在线场景#}
+                    <div class="apply-env hidden" id="task_env">
+                        <p class="mrg20B whiteC">{% trans '在线场景:' %}</p>
+                        <div data-widget-id="common-env" data-task-hash="{{ task_hash }}"></div>
+                        <!--                         <button type="submit" class="oj_toolDown mainBg whiteC pad30L pad30R">申请场景
+                                                </button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block document_ready %}
+    <script>
+        var taskUrl = '{% url 'practice:task_detail' %}';
+        var taskRecordUrl = '{% url 'practice:task_record_detail' task_hash %}';
+        var submitTaskAnswer = "{% url 'practice:score_list' %}";
+        var type_name = '';
+        var url_name = '';
+    </script>
+    <script>
+
+        var CALLBACK = {
+            get_task_detail: function () {
+                var data = {
+                    type_id:{{ type_id }},
+                    task_hash: "{{ task_hash }}",
+                };
+                http.get(taskUrl, data, function (data) {
+                    var task_info = data.response_data
+                    var task_content = gettext('x_question_no_title');
+                    if (task_info.content != null & task_info.content != "") {
+                        task_content = task_info.content;
+                    }
+                    $('#question-number').html(task_info.title)
+                    $('#task_content').html(task_content);
+                    if (task_info.file_url) {
+                        $("#task_attach").attr('href', task_info.file_url.url);
+                    };
+                    if (!task_info.file_url) {
+                        $("#task_attach").addClass('hidden');
+                    };
+                    if (task_info.is_dynamic_env) {
+                        $("#task_env").removeClass('hidden');
+                        $ENV(function () {
+                            $('[data-widget-id=common-env]').registerEnvWidget({
+                                common: {
+                                    lang: LANGUAGE_CODE,
+                                    alert: ialert,
+                                    confirm: iconfirm
+                                }
+                            });
+                            $('[data-widget-id=common-env]').getEnv();
+                        });
+                    };
+                    if (task_info.public_official_writeup) {
+                        $('#writeUpBtn').removeClass('hidden');
+                        $("#official-write-up").val(task_info.official_writeup)
+                    }
+                    if (task_info.url != null && task_info.url != "") {
+                        $("#task_content_url").removeClass('hidden');
+                        {#                        $('#task_content_url').html(task_info.url);#}
+                        $('#task_content_url').attr('href', task_info.url);
+                    }
+                    $('.bread').html('<a href="/home/">首页</a>'
+                        + '<span>&gt;&gt;</span>'
+                        + '<a href="' + url_name + '" > ' + type_name + '</a>'
+                        + '<span>&gt;&gt;</span>'
+                        + '<a>'
+                        + task_info.title_dsc
+                        + '</a>'
+                    );
+
+                });
+            },
+            get_task_record: function () {
+                http.get(taskRecordUrl, {}, function (data) {
+                    var errorCode = data.error_code;
+                    if (errorCode == 0) {
+                        var submit_detail = data.response_data;
+                        if (submit_detail != '' && submit_detail != null) {
+                            if (submit_detail.is_solved) {
+                                $("div[name='submit_answer']").addClass('hidden');
+                                $('#answer-status').removeClass('answer-wrong').addClass('answer-right')
+                            }
+                        }
+                    }
+                });
+            },
+            submit_answer: function () {
+                var data = {
+                    answer: $('#task_answer').val(),
+                    type_id:{{ type_id }},
+                    hash: "{{ task_hash }}",
+                };
+                http.post(submitTaskAnswer, data, function (json) {
+                    var errorCode = json.error_code;
+                    var data = json.response_data;
+                    if (errorCode == 0) {
+                        if (data.is_solved) {
+                            $('#answer-status').removeClass('answer-wrong').addClass('answer-right')
+                            if (!$('#checkbox_submit').hasClass('hidden')) {
+                                $('#checkbox_submit').addClass('hidden');
+                            }
+                        } else {
+                            $('#answer-status').removeClass('answer-right').addClass('answer-wrong')
+                        }
+                    } else {
+                        showPopMsg(getErrorMsg(errorCode));
+                    }
+                })
+            },
+        };
+
+
+        $(function () {
+            type_name = typename("{{ type_id }}");
+            var url = urlename("{{ type_id }}");
+            url_name = "/" + url + "/list"
+            CALLBACK.get_task_detail();
+            CALLBACK.get_task_record();
+
+        });
+
+    </script>
+
+{% endblock %}

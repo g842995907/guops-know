@@ -1,0 +1,586 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/list.css' %}">
+    <link rel="stylesheet" href="{% static 'web/jstree/themes/default/style.css' %}"/>
+
+    <script src="{% static 'course/js/course_detail.js' %}"></script>
+    <script src="{% static 'web/jstree/jstree.js' %}"></script>
+    <style>
+        .jstree-default .jstree-node,
+        .jstree-default .jstree-anchor {
+            min-height: 34px;
+            line-height: 34px;
+        }
+
+        .jstree-default .jstree-icon:empty {
+            height: 34px;
+            line-height: 34px;
+        }
+
+        .jstree-default .jstree-open > .jstree-ocl {
+            background-position: -132px -8px;
+        }
+
+        .jstree-default .jstree-leaf > .jstree-ocl {
+            background-position: -68px -8px;
+        }
+
+        .jstree-default .jstree-closed > .jstree-ocl {
+            background-position: -100px -8px;
+        }
+
+        .jstree-default .jstree-hovered, .jstree-default .jstree-clicked {
+            background: transparent;
+            border-radius: inherit;
+            box-shadow: none;
+            color: #FF9900;
+        }
+
+        .jstree-default .jstree-open > .jstree-ocl-new {
+            background-position: 0px -8px;
+        }
+
+    .follow-up-comment{
+        color:#fff;
+        border:1px solid #66afe9 !important;
+
+    }
+    .markdown-new-wrapper ul{
+        margin-left: 10px;
+    }
+    .markdown-new-wrapper p{
+        text-indent: 20px;
+    }
+    .compulsory-course {
+        line-height: .44rem;
+        margin-top: .16rem;
+        padding: 0 .2rem;
+        border: 1px solid #1fa0fb;
+        border-radius: .1rem;
+        color: #1fa0fb
+    }
+    .elective-course {
+        line-height: .44rem;
+        margin-top: .16rem;
+        padding: 0 .2rem;
+        border: 1px solid #ff9300;
+        border-radius: .1rem;
+        color: #ff9300;
+    }
+ .md-preview img{
+        width: 100%;
+        height: 100%;
+ }
+    #markdown-wp p img{
+        width: 100%;
+    }
+    #markdown-wp p{
+        margin-right: 40px;
+    }
+    </style>
+{% endblock %}
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+            <span>&gt;&gt;</span>
+            <a href="{% url 'course:list' %}">{% trans "x_course" %}</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active font15' name="name"></a>
+        </div>
+        <div class="content pad10T">
+            <div class="row mrg0A mrg30B">
+                <div class="col-md-9 pad20A">
+                    <div class="row default-bg pad25A mrg30B pad40T posRelative oj_course">
+                        <div class="col-md-5">
+                            <img src="" alt="" style="width:100%" name="logo">
+                            {#                            <span name="logo"></span>#}
+                        </div>
+                        <div class="col-md-7 pad40L">
+                            <div class="col-md-12">
+                                <div class="font26 whiteC mrg10B">
+                                    <span name="name"></span>
+                                </div>
+                                <div style="margin-top:5%;margin-bottom:3%">
+                                    <span>{% trans "x_category" %}：</span>
+                                    <span class="mrg20R" name="direction"></span>
+                                </div>
+                                <div style="margin-bottom:3%">
+                                    <span>{% trans "x_num_hour" %}：</span>
+                                    <span name="count"></span>
+                                </div>
+                                <div>
+                                    <span class="pull-left">{% trans "x_introduction" %}：</span>
+                                    <span name="introduction"></span>
+                                </div>
+                                {#                                <a href="javascript:void(0);" name="learn" target="_blank">#}
+                                {#                                    <div class="pad5T pad5B pad15L pad15R fl btn btn-warning learn mainBg">#}
+                                {#                                        <span class="studyIco pad15A fl mrg5R oj-icon whiteC"></span>#}
+                                {#                                        <span class="fl lineH30 whiteC">{% trans "学习课程" %}</span>#}
+                                {#                                    </div>#}
+                                {#                                </a>#}
+                            </div>
+                        </div>
+                        <div class="pad5A collect orangeC2" style="display: none;">
+                            <span class="font14 mrg10R">{% trans "x_collection" %}</span>
+                            <i class="oj-icon oj-icon-E90B whiteC"></i>
+                            <a href="#" class="fill inLine collectButton"></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 pad0L pad0R couseDetail">
+                            <ul id="myTab" class="nav nav-tabs pad10T pad10B pad40L font16 default-bg">
+                                {% if is_admin %}
+                                    <li class="active mrg30L mrg30R" id="writeUpBtn" style="text-align:center;overflow:hidden;">
+                                        <a href="#outline" data-toggle="tab" class="pad30L pad30R pad5T pad5B fill whiteC">
+                                            {% trans "x_course_outline" %}
+                                        </a>
+                                    </li>
+                                    <li class="mrg30L mrg30R" id="listBtn" style="text-align:center;overflow:hidden;">
+                                        <a href="#list" data-toggle="tab" class="pad30L pad30R pad5T pad5B">
+                                            {% trans "x_curriculum_catalogues" %}
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="active mrg30L mrg30R" style="text-align:center;overflow:hidden;">
+                                        <a href="#list" data-toggle="tab" class="pad30L pad30R pad5T pad5B">
+                                            {% trans "x_curriculum_catalogues" %}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                <li class="mrg30L mrg30R" style="text-align:center;overflow:hidden;">
+                                    <a href="#note" data-toggle="tab"
+                                       class="pad30L pad30R pad5T pad5B">{% trans "x_my_note" %}</a>
+                                </li>
+                                <li class="mrg30L mrg30R" style="text-align:center;overflow:hidden;">
+                                    <a href="#forum" data-toggle="tab" id="clicka"
+                                       class="pad5T pad5B">{% trans "x_cloud_exchange" %}</a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content pad20T pad20B">
+                                {% if is_admin %}
+                                    <div class="tab-pane fade default-bg in active pad30T pad30R pad30L pad30B" id="outline" style="position:relative;">
+                                        <div class="markdown-new-wrapper" id="markdown-wp"></div>
+                                    </div>
+                                    <div class="tab-pane fade default-bg pad30T pad30B" id="list">
+                                        <div class="tree" id="tree"></div>
+                                        <ul class="assess-content" style="display: block;" id="lesson-list-div">
+                                        </ul>
+                                    </div>
+                                {% else %}
+                                    <div class="tab-pane fade default-bg in active pad30T pad30B" id="list">
+                                        <div class="tree" id="tree"></div>
+                                        <ul class="assess-content" style="display: block;" id="lesson-list-div">
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                                <div class="tab-pane fade default-bg pad30T pad30R pad30L pad30B" id="note">
+                                    {% include "web/mynote.html" %}
+                                </div>
+                                <div class="tab-pane fade" id="forum" style="position:relative;">
+                                    {% include "web/comment_template.html" %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3 pad20A">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 pull-right">
+                            <div class="lineH40 mainBg pad20L whiteC">
+                                {% trans "x_related_good_lesson" %}
+                            </div>
+                            <div class="row default-bg pad25L pad25R mrg0A">
+                                <div id="releated-course-list-div">
+                                </div>
+                                <div class="text-center mrg10B">
+                                    <a class="btn-common" href="{% url 'course:list' %}">
+                                        <div class="left-right-line">
+                                            {% trans "x_see_more" %}
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lesson-template-div" style="display: none;">
+        <li class="directory" style="" data-lesson-id="">
+            <div class="directory-list pad30L pad30R clearfix">
+                <div class="pull-left">
+                    <span data-name="preicon" name=""></span>
+                    <span name="lt-name"></span>
+                </div>
+                <div class="pull-right">
+                    <span class="col-md-2" name="type" style="text-align:center;overflow:hidden;width:86px;"></span>
+                    <span class="col-md-2" name="difficulty"
+                          style="text-align:center;overflow:hidden;width:86px;"></span>
+                    <span class="col-md-2" name="learned" style="text-align:center;overflow:hidden;width:86px;"></span>
+                </div>
+            </div>
+        </li>
+    </div>
+
+    <div id="releated-course-template-div" style="display: none;">
+        <div class="mrg10B pad20A">
+            <a>
+                <img src="" alt="" style="width:100%"
+                     class="mrg20B">
+                {#                <span name='rc-img'></span>#}
+            </a>
+            <a>
+                <div class="text-center lineH30 orangeC" name="rc-name">
+                </div>
+            </a>
+            {#            <div class="text-center font14 orangeC2" name="rc-direction">#}
+            {#            </div>#}
+        </div>
+    </div>
+
+    <div class="btn-tpl hidden">
+        <div class="btn-group">
+            <button class='btn btn-primary create' onclick="node_create()">增加</button>
+            <button class='btn btn-info delete' onclick="node_rename()">修改</button>
+            <button class='btn btn-success rename' onclick="node_delete()">删除</button>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        var language = '{{ LANGUAGE_CODE }}';
+        var course_id = "{{ course_id }}";
+        var lesson_jstree_list_url = "{% url 'course:api:lesson-jstree-list' %}?course_id=" + course_id;
+        var js_data = new Array();
+        var lesson_typ_dic = {
+            0: "{% trans 'x_heoretical_lesson' %}",
+            1: "{% trans 'x_experiment_lesson' %}",
+            2: "{% trans 'x_practice_lesson' %}",
+            3: "{% trans 'x_exam_lesson' %}",
+        };
+        var lesson_study_type_dic = {
+            0: "",
+            1: "{% trans 'x_elective' %}",
+            2: "{% trans 'x_compulsory' %}",
+        };
+        var course_screen = localStorage.course_screen || 'double_screen';
+
+        var CALLBACK = {
+            init_jstree: function () {
+                var $tree = $("#tree").jstree({
+                    'core': {
+                        "check_callback": true,//在对树进行改变时，check_callback是必须设置为true；
+                        "data": js_data,
+                    },
+                    "types": {
+                        "#": {
+                            "max_children": 1,
+                            "max_depth": 4,
+                            "valid_children": ["default"]
+                        },
+                        "default": {
+                            "icon": "fa fa-folder icon-state-warning icon-lg",
+                            "valid_children": ["default", "folder", "file"]
+                        },
+                        "folder": {
+                            "icon": "fa fa-folder icon-state-success jstree-themeicon-custom",
+                            "valid_children": ["file"]
+                        },
+                        "file": {
+                            "icon": "fa fa-file icon-state-warning icon-lg",
+                            "valid_children": []
+                        }
+                    },
+                    //plugins-各种jstree的插件引入，展示树的多样性
+                    "plugins": ["dnd", "wholerow", "types", "unique"]
+
+                });
+
+                $tree.on("load_node.jstree", function (e, d) {
+                    var nodes = d.node.children_d;
+                    for (var i in nodes) {
+                        var node = d.instance.get_node(nodes[i]);
+                        var _node = node.original;
+                        if (_node.lesson == null) {
+                            d.instance.set_icon(nodes[i], false)
+                        }
+                        else if (_node.lesson.learning_status == "0") {//未开始
+                            d.instance.set_icon(nodes[i], "fa fa-circle-o orangeC")
+                        } else if (_node.lesson.learning_status == "1") {//进行中
+                            d.instance.set_icon(nodes[i], "{% static 'course/img/learning.png' %}")
+                        } else if (_node.lesson.learning_status == "2") {//已完成
+                            d.instance.set_icon(nodes[i], "fa fa-circle orangeC")
+                        } else {
+                            d.instance.set_icon(nodes[i], false)
+                        }
+                    }
+                });
+
+                $.get(lesson_jstree_list_url, {}, function (data) {
+                    // 刷新jstree的数据
+                    js_data = data.rows;
+                    var length = js_data.length;
+                    var first_count = 1;
+                    var first_first_count = 1;
+                    var dic_count = {};
+                    for (var i = 0; i < length; i++) {
+                        js_data[i].text = codeUtil.htmlEncode(js_data[i].text);
+                        if (js_data[i].lesson != null) {
+                            if (js_data[i].lesson.lesson_type == '2' || js_data[i].lesson.lesson_type == '3') {
+                                {#var testpaper_id = js_data[i].lesson.testpaper_id;#}
+                                {#if (/^\d+$/.test(testpaper_id)) {#}
+                                js_data[i].a_attr = {"href": "{% url 'course:exam_paper_detail' 1 0 %}".replace(0, js_data[i].lesson.lesson_id)};
+                                {% comment %}}{% endcomment %}
+                            } else {
+                                js_data[i].a_attr = {"href": "{% url 'course:markdown_new'%}" + "?course_screen=" + course_screen + "&lesson_id=" + js_data[i].lesson.lesson_id}
+                            }
+                        }
+                        if (js_data[i].parent != "#") {
+                            // 一级文件 和一级文件夹， 一级文件不做处理
+                            if (js_data[i].parents.length == 2 && js_data[i].type != "file") {// 一级文件夹
+                                js_data[i].text = gettext("x_NO_nbsp") + first_count + gettext("x_chapter_nbsp") + js_data[i].text;
+                                js_data[i].a_attr = {'style': "font-size:16px;font-weight:bold;"};
+                                dic_count[js_data[i].id] = first_count;
+                                dic_count[js_data[i].id + '_count'] = 1;
+                                first_count += 1;
+                            } else if (js_data[i].parents.length == 3 || js_data[i].parents.length == 4) { // 二级文件夹 和二级文件
+                                var chapter_order = dic_count[js_data[i].parents[0]]; // 一级文件夹order
+                                var current_number = dic_count[js_data[i].parents[0] + "_count"];
+                                if (js_data[i].type == "file") {
+                                    var lessonType = lesson_typ_dic[js_data[i].lesson.lesson_type] + " - ";
+                                    var studyType = get_course_type(js_data[i].lesson.study_type);
+                                    js_data[i].text = studyType + chapter_order + "." + current_number + "&nbsp;&nbsp;" + lessonType + js_data[i].text;
+                                } else {
+                                   js_data[i].text = chapter_order + "." + current_number + "&nbsp;&nbsp;" + js_data[i].text;
+                                   js_data[i].hasfolder = true;
+
+
+                                }
+                                dic_count[js_data[i].parents[0] + "_count"] += 1;
+                                if (js_data[i].type != "file") { // 二级文件夹多余的操作
+                                    dic_count[js_data[i].id] = chapter_order + "." + current_number;
+                                    dic_count[js_data[i].id + '_count'] = 1;
+                                }
+                            } else if (js_data[i].parents.length == 5) {
+                                var chapter_order = dic_count[js_data[i].parents[0]]; // 三级文件夹order
+                                var current_number = dic_count[js_data[i].parents[0] + "_count"];
+                                if (js_data[i].type == "file") {
+                                    var lessonType = lesson_typ_dic[js_data[i].lesson.lesson_type] + " - ";
+                                    var studyType = get_course_type(js_data[i].lesson.study_type);
+                                    js_data[i].text = studyType + chapter_order + "." + current_number + "&nbsp;&nbsp;&nbsp;" + lessonType + js_data[i].text;
+                                } else {
+                                    js_data[i].text = chapter_order + "." + current_number + "&nbsp;&nbsp;&nbsp;" + js_data[i].text;
+                                }
+                                dic_count[js_data[i].parents[0] + "_count"] += 1;
+                            } else if (js_data[i].parents.length == 2 && js_data[i].type == "file" || js_data[i].parents.length == 1 && js_data[i].type == "file") { // 处理一级文件
+                                var lessonType = lesson_typ_dic[js_data[i].lesson.lesson_type] + " - ";
+                                var studyType = get_course_type(js_data[i].lesson.study_type);
+                                js_data[i].text = studyType + gettext("x_class_hours") + first_first_count + " " + lessonType + js_data[i].text;
+                                first_first_count += 1
+                            }
+                        }else {
+                            js_data[i].a_attr = {'style': 'font-size:17px;font-weight:bold;'};
+                        }
+                    }
+                    $("#tree").jstree(true).settings.core.data = js_data;
+                    $("#tree").jstree(true).refresh();
+
+                    $tree.bind("refresh.jstree", function (event, data) {
+                        $tree.jstree("open_all");
+
+                        // 隐藏根目录
+                        var model_data = data.instance._model.data;
+                        if (model_data["#"].children.length > 0) {
+                            var course_root_id = model_data["#"].children[0];
+                            var hiden_id = model_data[course_root_id].a_attr.id;
+                            {#$("#"+hiden_id).css("visibility", "hidden")#}
+                        }
+                        $(js_data).each(function (index, element) {
+                            if (element.parent == '#' && $('#' + element.id).hasClass('jstree-open')) {
+                                $('#' + element.id).find('> i').css('background-position', '-34px -8px')
+                            }
+
+                        })
+                        $('.jstree-container-ul > li > i').on('click', function () {
+                            if ($(this).parent().hasClass('jstree-closed')) {
+                                $(this).css('background-position', '-34px -8px');
+                            } else if ($(this).parent().hasClass('jstree-open')) {
+                                $(this).css('background-position', '0 -8px')
+
+                            }
+                        })
+
+                        $('.jstree-container-ul > li > a').on('dblclick', function () {
+                            if ($(this).parent().hasClass('jstree-closed')) {
+                                $(this).prev().css('background-position', '-34px -8px')
+                            } else if ($(this).parent().hasClass('jstree-open')) {
+                                $(this).prev().css('background-position', '0 -8px')
+
+                            }
+                        });
+
+                      {% comment %}$('.jstree-icon').on('click', function (){
+                          if($(this).next().find('i.fa')){
+                              if($(this).parent().hasClass('jstree-open')){
+                                  $(this).next().find('i.fa').removeClass('fa-folder-open').addClass('fa-folder')
+                              }else if($(this).parent().hasClass('jstree-closed')){
+                                  $(this).next().find('i.fa').removeClass('fa-folder').addClass('fa-folder-open')
+                              }
+                          }
+                      }){% endcomment %}
+                    });
+
+
+                });
+                $tree.on("open_node.jstree", function (e, data) {
+                    if (data.node.original.hasfolder){
+                        $("#tree").jstree(true).set_icon(data.node, 'fa-folder-open')
+                    }
+                });
+                $tree.on("close_node.jstree", function (e, data) {
+                    if (data.node.original.hasfolder){
+                        $("#tree").jstree(true).set_icon(data.node, 'fa-folder')
+                    }
+                });
+                $tree.bind("activate_node.jstree", function (obj, e) {
+                    var currentNode = e.node;
+                    if (currentNode.a_attr.href != '#') {
+                        var url = currentNode.a_attr.href;
+                        window.open(url, "_self");
+                    }
+                });
+            },
+        };
+
+        function get_course_type(type) {
+            if (type === 1) {
+                var type = (language == 'zh-hans') ? lesson_study_type_dic[type] : ('&nbsp;&nbsp;&nbsp' + lesson_study_type_dic[type] + '&nbsp;&nbsp;&nbsp;&nbsp')
+                return '<span class="elective-course">' + type + '</span>' + '&nbsp'
+            } else if (type === 2) {
+                return '<span class="compulsory-course">' + lesson_study_type_dic[type] + '</span>' + '&nbsp'
+            } else {
+                return ""
+            }
+        }
+
+        function init_course_detail() {
+            $.ajax({
+                url: "{% url 'course:api:course-detail' course_id %}",
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    $("[name='name']").html(codeUtil.htmlEncode(data.name));
+                    var logo = data.logo;
+                    if (logo == null || logo == "") {
+                        logo = "{% static 'course/img/kec.png' %}";
+                    }
+                    if (data.course_writeup != null && data.course_writeup != "") {
+                        var mark_course_writeup = marked(data.course_writeup);
+                        $('#markdown-wp').html(mark_course_writeup);
+                        $('.markdown-new-wrapper table').addClass('table table-bordered')
+                    } else {
+                        $("#writeUpBtn").addClass('hidden')
+                        $("#writeUpBtn").removeClass('active')
+                        $("#listBtn").addClass('active')
+
+                        $("#outline").addClass('hidden')
+                        $("#outline").removeClass('in active')
+                        $("#list").addClass('in active')
+                    }
+                    $("img[name='logo']").attr("src", logo);
+                    {#            $(".oj_course span[name='logo']").css("background-image","url("+logo+")");#}
+                    $("[name='direction']").html(codeUtil.htmlEncode(data.direction_i18n_name) + " / " + codeUtil.htmlEncode(data.sub_direction_i18n_name));
+                    $("[name='count']").html(data.count);
+                    var intro = data.introduction;
+                    if (intro && intro != "None") {
+                        $("[name='introduction']").html(codeUtil.htmlEncode(intro));
+                        $("[name='introduction']").attr("title", intro);
+                    } else {
+                        $("[name='introduction']").html("");
+                    }
+                    if (Number(data.count) > 0) {
+                        $("[name='learn']").attr("href", "{% url 'course:learn' course_id %}");
+                    } else {
+                        $("[name='learn']").click(function () {
+                            showPopMsg("{% trans 'x_class_not_in_course' %}");
+                        })
+                    }
+                    // 初始化用户笔记
+                    init_course_note(data.hash);
+
+                    // 初始化评论列表
+                    init_comment_list(data.hash);
+                },
+                error: function () {
+                    showPopMsg("{% trans 'x_unable_get_details' %}");
+                }
+            });
+        }
+
+
+        function init_releated_course_list() {
+            var rc_list_div = $("#releated-course-list-div");
+            var rc_tpl = $("#releated-course-template-div");
+            rc_list_div.empty();
+
+            $.ajax({
+                url: "{% url 'course:recommand' %}",
+                type: "get",
+                data: {"course_id": {{ course_id }}},
+                datatype: "json",
+                success: function (data) {
+                    var course_list = data;
+                    for (var i in course_list) {
+                        var logo = course_list[i].logo;
+                        if (logo == null || logo == "") {
+                            logo = "{% static 'course/img/kec.png' %}";
+                        }
+                        rc_tpl.find("img").attr("src", logo).addClass('larger-img');
+                        rc_tpl.find("a").attr("href", "{% url 'course:detail' 0 %}".replace("0", course_list[i].id));
+                        {#                rc_tpl.find("span[name='rc-img']").css("background-image","url("+logo+")");#}
+                        rc_tpl.find("div[name='rc-name']").html(codeUtil.htmlEncode(course_list[i].name));
+                        rc_tpl.find("div[name='rc-name']").attr('title', codeUtil.htmlEncode(course_list[i].name));
+                        {#                    rc_tpl.find("div[name='rc-direction']").html(course_list[i].direction_cn_name);#}
+                        rc_list_div.append(rc_tpl.html());
+                    }
+                },
+                error: function () {
+                    showPopMsg("{% trans 'x_unable_get_courses' %}");
+                }
+            });
+        }
+
+        $(function () {
+            init_course_detail();
+            init_releated_course_list();
+
+            CALLBACK.init_jstree();
+            // 回复锚点跳转
+            var url = window.location.toString();
+            var click_to = url.split("#")[1];
+            if (click_to == "clicka") {
+                $("#"+click_to+"").click()
+            }
+        });
+
+
+        var url = window.location.toString();
+            var click_to = url.split("#")[1];
+            if (click_to == "clicka") {
+                $("#"+click_to+"").click()
+            }
+    </script>
+{% endblock %}
+
+<!-- container end-->
+
+
+
+

@@ -1,0 +1,293 @@
+msgid "x_is_show_rank"
+msgstr "Show Rank"
+
+msgid "x_theme"
+msgstr "Theme"
+
+msgid "x_game_mode"
+msgstr "Game Mode"
+
+msgid "x_integral_mode"
+msgstr "Integral Mode"
+
+msgid "x_exam"
+msgstr "Exam"
+
+msgid "x_ad_game"
+msgstr "AD Competition"
+
+msgid "x_game_trend"
+msgstr "Game Trend"
+
+msgid "x_jeopardy"
+msgstr "Jeopardy Competition"
+
+msgid "x_trial_game"
+msgstr "Trial Competition"
+
+msgid "x_all_progress"
+msgstr "All Progress"
+
+msgid "x_all_game_mode"
+msgstr "All Game Mode"
+
+msgid "x_all_score_mode"
+msgstr "All Integral Mode"
+
+msgid "x_all_reward_mode"
+msgstr "All Reward Mode"
+
+msgid "x_game_setting"
+msgstr "Game Setting"
+
+msgid "x_game_operation"
+msgstr "Maintain"
+
+msgid "x_game_task"
+msgstr "Game Task"
+
+msgid "x_game_player"
+msgstr "Game Player"
+
+msgid "x_game_team"
+msgstr "Game Team"
+
+msgid "x_player_name"
+msgstr "Player Name"
+
+msgid "x_team_name"
+msgstr "Team Name"
+
+msgid "x_rank"
+msgstr "Rank"
+
+msgid "x_test"
+msgstr "Test"
+
+msgid "x_game_notice"
+msgstr "Game Bulletin"
+
+msgid "x_task_tip"
+msgstr "Challenge Hint"
+
+msgid "x_is_top"
+msgstr "Toped"
+
+msgid "x_to_top"
+msgstr "Top"
+
+msgid "x_cancel_top"
+msgstr "Cancel top"
+
+msgid "x_publish_time"
+msgstr "Publish Time"
+
+msgid "x_show_rank"
+msgstr "Show Rank"
+
+msgid "x_no_show_rank"
+msgstr "Hide Rank"
+
+msgid "x_task_deploy"
+msgstr "Challenge Deploy"
+
+msgid "x_task_manage"
+msgstr "Challenge Management"
+
+msgid "x_team_manage"
+msgstr "Team Management"
+
+msgid "x_all_task"
+msgstr "All Task"
+
+msgid "x_tip_for_rank"
+msgstr "Tip: After opening the player can see the leaderboard, closed the player can not see the leaderboard"
+
+msgid "x_contest"
+msgstr "Competition"
+
+msgid "x_reward_mode"
+msgstr "Reward Mode"
+
+msgid "x_add_task"
+msgstr "New Task"
+
+msgid "x_scoreboard"
+msgstr "Scoreboard"
+
+msgid "x_score_trend"
+msgstr "Trend"
+
+msgid "x_vis"
+msgstr "Situation Display"
+
+msgid "x_score_manage"
+msgstr "Performance Management"
+
+msgid "x_game_status"
+msgstr "Game Status"
+
+msgid "x_start_game"
+msgstr "Start"
+
+msgid "x_pause_game"
+msgstr "Pause"
+
+msgid "x_resume_game"
+msgstr "Resume"
+
+msgid "x_stop_game"
+msgstr "Stop"
+
+msgid "x_show"
+msgstr "Show"
+
+msgid "x_answer_report"
+msgstr "Answer Report"
+
+msgid "x_multiple_choice"
+msgstr "Multiple Choice"
+
+msgid "x_questions_answers"
+msgstr "Questions"
+
+msgid "x_click_visit_URL"
+msgstr "Click Visit URL"
+
+msgid "x_fraction_score"
+msgstr "Score"
+
+msgid "x_unknown"
+msgstr "Down"
+
+msgid "x_event_name_length_lt_100"
+msgstr "Name: The length of this field can not exceed 100"
+
+msgid "x_start_time_require"
+msgstr "Start time: This field is required"
+
+msgid "x_end_time_require"
+msgstr "End time: This field is required"
+
+msgid "x_1_blood"
+msgstr "{who} got first blood of [{task}]"
+
+msgid "x_2_blood"
+msgstr "{who} got second blood of [{task}]"
+
+msgid "x_3_blood"
+msgstr "{who} got third blood of [{task}]"
+
+msgid "x_game_over"
+msgstr "Game Over"
+
+msgid "x_vis_ctrl"
+msgstr "Situation Control"
+
+msgid "x_output_result"
+msgstr "Output Result"
+
+msgid "x_see_detail"
+msgstr "See detail"
+
+msgid "x_game_result"
+msgstr "Game Result"
+
+msgid "x_defense_score"
+msgstr "Defense Score"
+
+msgid "x_attack_score"
+msgstr "Attack Score"
+
+msgid "x_attack_times"
+msgstr "Attack Times"
+
+msgid "x_defense_times"
+msgstr "Defense Times"
+
+msgid "x_attack_time"
+msgstr "Attack Time"
+
+msgid "x_input_content"
+msgstr "Input Content"
+
+msgid "x_round_times"
+msgstr "Round Times"
+
+msgid "x_right_answer"
+msgstr "Right Answer"
+
+msgid "x_download_all_wp"
+msgstr "Download solution"
+
+msgid "x_exam_result"
+msgstr "Exam Result"
+
+msgid "x_invalidity_question"
+msgstr "After the game title is imported, independent questions will be generated independently of the original question"
+
+msgid "x_no_right"
+msgstr "No right to do this"
+
+msgid "x_game_not_start"
+msgstr "The game has not started"
+
+msgid "x_not_join_team"
+msgstr "You haven't joined the team, can't participate in the competition"
+
+msgid "x_team_not_registered"
+msgstr "Your team is not yet registered"
+
+msgid "x_not_register"
+msgstr "You have not registered yet"
+
+msgid "x_registered"
+msgstr "Already registered"
+
+msgid "x_submit_fast"
+msgstr "Submit too fast"
+
+msgid "x_not_open_submit_writeup"
+msgstr "Solution Submitting is not permitted in this game "
+
+msgid "x_writeup_cannot_empty"
+msgstr "Solution cannot be empty"
+
+msgid "x_submitted"
+msgstr "You have submitted"
+
+msgid "x_team_submitted"
+msgstr "Your team has already submitted"
+
+msgid "x_unpublished"
+msgstr "Subject unpublished"
+
+msgid "x_subject_abnomal"
+msgstr "Subject abnormality"
+
+msgid "x_situation"
+msgstr "Situation"
+
+msgid "x_event_infiltration"
+msgstr "Infiltration"
+
+msgid "x_operation_problem"
+msgstr "Operation Problem"
+
+msgid "x_judgment_problem"
+msgstr "Judgment Problem"
+
+msgid "x_name_exam"
+msgstr "Name of the exam"
+
+msgid "x_account_number"
+msgstr "Account number"
+
+msgid "x_shared_monitor"
+msgstr "monitoring"
+
+msgid "x_all_teams"
+msgstr "All Teams"
+
+msgid "x_all_players"
+msgstr "All Players"

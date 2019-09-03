@@ -1,0 +1,269 @@
+msgid "x_system_management"
+msgstr "System Manage"
+
+msgid "x_system_name"
+msgstr "System Name"
+
+msgid "x_scene_people"
+msgstr "Scene/people"
+
+msgid "x_scene_limit"
+msgstr "Env Limit"
+
+msgid "x_max_terminal_nodes"
+msgstr "The maximum number of terminal nodes in the scene"
+
+msgid "x_open_registration"
+msgstr "Open Register"
+
+msgid "x_registered_users_review"
+msgstr "Whether registered users need to be audited"
+
+msgid "x_must_input_system"
+msgstr "System Name Require"
+
+msgid "x_input_sysytem_30"
+msgstr "System Name Length(0-30)_"
+
+msgid "x_restart_service"
+msgstr "Restart Service"
+
+msgid "x_all_shut"
+msgstr "Shutdown All"
+
+msgid "x_all_restart"
+msgstr "Restart All"
+
+msgid "x_shut"
+msgstr "Shutdown"
+
+msgid "x_shut_down"
+msgstr "Powered Off"
+
+msgid "x_restart"
+msgstr "Restart"
+
+msgid "x_proportional_description"
+msgstr "Virtual Ratio Instructions"
+
+msgid "x_virtual_proportion"
+msgstr "Virtual Ratio"
+
+msgid "x_operation_service"
+msgstr "Service Operation"
+
+msgid "x_random_flag_prefix"
+msgstr "Dynamic Flag Prefix"
+
+msgid "x_determine_relevant_complete_execution"
+msgstr "Note: This operation will affect all the virtual machine resources in use. Please make sure the relevant task ends"
+
+msgid "x_reboot_5_min"
+msgstr "Restart time is about 5 minutes！！！\\nRestart?"
+
+msgid "x_determine_shutdown"
+msgstr "After starting the shutdown process will not be able to terminate！！！\\nShut down?"
+
+msgid "x_input_1"
+msgstr "Please enter the number 1 to confirm"
+
+msgid "x_wait_patiently"
+msgstr "In the process of processing,Please be patient..."
+
+msgid "x_re_enforced"
+msgstr "Remote link failure,Please reexecute"
+
+msgid "x_input_not_empty"
+msgstr "Input can not be empty！"
+
+msgid "x_backup_failed"
+msgstr "Backup failed"
+
+msgid "x_import_failed"
+msgstr "Import failed"
+
+msgid "x_not_exceed_max"
+msgstr "The number of scenes per person must not exceed the maximum number of scenes"
+
+msgid "x_length_30"
+msgstr "The maximum length of this field is 30"
+
+msgid "x_log_manage"
+msgstr "Log Manage"
+
+msgid "x_logger_level"
+msgstr "Log Level"
+
+msgid "x_log_file_size"
+msgstr "Log File Size"
+
+msgid "x_log_file_count"
+msgstr "Total Log File Backup"
+
+msgid "x_export_log"
+msgstr "Export Log"
+
+msgid "x_log_file_list"
+msgstr "Log File List"
+
+msgid "x_log_size"
+msgstr "Log Size"
+
+msgid "x_log_name"
+msgstr "Log Name"
+
+msgid "x_updated"
+msgstr "Update"
+
+msgid "x_not_limited"
+msgstr "Unlimited"
+
+msgid "x_run_log_manage"
+msgstr "Running Log Manage"
+
+msgid "x_system_log"
+msgstr "System Log"
+
+msgid "x_operate_log"
+msgstr "Operate Log"
+
+msgid "x_all_logger_level"
+msgstr "All Level"
+
+msgid "x_logger_key_word"
+msgstr "Log Key Word"
+
+msgid "x_detail_content"
+msgstr "Detail Content"
+
+msgid "x_all_module"
+msgstr "All Module"
+
+msgid "x_module"
+msgstr "Module"
+
+msgid "x_operation_type"
+msgstr "Operate Type"
+
+msgid "x_operation_str"
+msgstr "Operate Obj"
+
+msgid "x_shenji_log"
+msgstr "Audit Log"
+
+msgid "x_log_detail"
+msgstr "Log Detail"
+
+msgid "x_sys_notice"
+msgstr "System Notice"
+
+msgid "x_edit_time"
+msgstr "Edit Time"
+
+msgid "x_new_sys_notice"
+msgstr "New System Notice"
+
+msgid "x_edit_sys_notice"
+msgstr "Edit System Notice"
+
+msgid "x_notice_title"
+msgstr "Notice Title"
+
+msgid "x_notice_text"
+msgstr "Notice Text"
+
+msgid "x_notice_group"
+msgstr "Group"
+
+msgid "x_select_notice_group"
+msgstr "Select Group"
+
+msgid "x_all_user"
+msgstr "All User"
+
+msgid "x_teacher_group"
+msgstr "Teacher Group"
+
+msgid "x_student_group"
+msgstr "Student Group"
+
+msgid "x_choose_class"
+msgstr "Choose Class"
+
+msgid "x_clearall_scene"
+msgstr "Clear All Scene"
+
+msgid "x_validity"
+msgstr "License Expire Date"
+
+msgid "x_keyword_name"
+msgstr "Log Key Word/Name"
+
+msgid "x_time"
+msgstr "Time"
+
+msgid "x_user"
+msgstr "User"
+
+msgid "x_model"
+msgstr "Model"
+
+msgid"x_sys_con_operation`"
+msgstr"Action"
+
+msgid"x_object"
+msgstr "Object"
+
+msgid"x_loglevel"
+msgstr"Log level"
+
+msgid"x_status"
+msgstr"Status"
+
+msgid "x_detail"
+msgstr "Detail Information"
+
+msgid "x_sys_message"
+msgstr "System Messages"
+
+msgid "x_team_message"
+msgstr "Team Messages"
+
+msgid "x_schedule_message"
+msgstr "Course Schedule Messages"
+
+msgid "x_event_message"
+msgstr "Event Messages"
+
+msgid "x_user_message"
+msgstr "User Messages"
+
+msgid "x_publish_object"
+msgstr "Publish Object"
+
+msgid "x_publisher"
+msgstr "Publisher"
+
+msgid "x_lost_title"
+msgstr "The title is required"
+
+msgid "x_lost_content"
+msgstr "The content is required"
+
+msgid "x_content_length_lt_100"
+msgstr "Content: The length of this field can not exceed 100"
+
+msgid "x_name_length_lt_20"
+msgstr "Name: The length of this field can not exceed 20"
+
+msgid "x_desktop_transmission_quality"
+msgstr "Desktop Transmission Quality"
+
+msgid "x_desktop_transmission_quality_low"
+msgstr "Low"
+
+msgid "x_desktop_transmission_quality_middle"
+msgstr "Middle"
+
+msgid "x_desktop_transmission_quality_high"
+msgstr "High"

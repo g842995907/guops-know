@@ -1,0 +1,659 @@
+msgid "x_all_sub_direction"
+msgstr "All Sub Direction"
+
+msgid "x_first_type_management"
+msgstr "First Category Management"
+
+msgid "x_second_type_management"
+msgstr "Second Category Management"
+
+msgid "x_sub_direction"
+msgstr "Sub Direction"
+
+msgid "x_num_hour"
+msgstr "Classes"
+
+msgid "x_not_configured"
+msgstr "Not Configured"
+
+msgid "x_elective"
+msgstr "Elective"
+
+msgid "x_compulsory"
+msgstr "Compulsory"
+
+msgid "x_study_type"
+msgstr "Study Type"
+
+msgid "x_course_handouts"
+msgstr "Course Handouts"
+
+msgid "x_course_outline"
+msgstr "Course Outline"
+
+msgid "x_no_course_outline"
+msgstr "No Course Outline"
+
+msgid "x_study_num"
+msgstr "Number Of Students"
+
+msgid "x_submit_report_num"
+msgstr "Submit Report Number"
+
+msgid "x_guidance"
+msgstr "Guidance"
+
+msgid "x_class_statistics"
+msgstr "Class Statistics"
+
+msgid "x_expand"
+msgstr "Expand"
+
+msgid "x_collapse"
+msgstr "Collapse"
+
+msgid "x_infiltration"
+msgstr "Infiltration"
+
+msgid "x_theory_exam"
+msgstr "Theory Exam"
+
+msgid "x_person_statistics"
+msgstr "Person Statistics"
+
+msgid "x_course_statistics"
+msgstr "Course Statistics"
+
+msgid "x_class_management"
+msgstr "Class Management"
+
+msgid "x_new_course"
+msgstr "New Course"
+
+msgid "x_edit_course"
+msgstr "Edit Course"
+
+msgid "x_choose_direction"
+msgstr "Choose Direction"
+
+msgid "x_course_difficulty"
+msgstr "Course Difficulty"
+
+msgid "x_course_logo"
+msgstr "Course Logo"
+
+msgid "x_belong_type"
+msgstr "Category"
+
+msgid "x_selection_type"
+msgstr "Select Category"
+
+msgid "x_re-upload_makrdown_handouts"
+msgstr "Tip: markdown format handouts have been uploaded, if necessary, please re-upload!"
+
+msgid "x_learning_time"
+msgstr "Learning Time"
+
+msgid "x_choose_duration"
+msgstr "Choose the duration"
+
+msgid "x_minute"
+msgstr "Minute"
+
+msgid "x_required_lab_environment"
+msgstr "Scene Require"
+
+msgid "x_guidance_manual"
+msgstr "Instruction manual"
+
+msgid "x_class_sorting"
+msgstr "Class time"
+
+msgid "x_sorting"
+msgstr "Arrange"
+
+msgid "x_belong_course"
+msgstr "Course"
+
+msgid "x_test_experimental_environment"
+msgstr "Test Experiment Scene"
+
+msgid "x_directional_type"
+msgstr "Direction Category"
+
+msgid "x_pdf_MK_zip"
+msgstr "Support pdf files and zipdown compressed zip package"
+
+msgid "x_new_courseware"
+msgstr "New Courseware"
+
+msgid "x_edit_courseware"
+msgstr "Edit Courseware"
+
+msgid "x_handouts"
+msgstr "Handout"
+
+msgid "x_preview_PDF"
+msgstr "Preview PDF"
+
+msgid "x_delete_PDF"
+msgstr "Delete PDF"
+
+msgid "x_video"
+msgstr "Video"
+
+msgid "x_preview_video"
+msgstr "Preview Video"
+
+msgid "x_remove_video"
+msgstr "Remove Video"
+
+msgid "x_choose_sub_orientation"
+msgstr "Select Sub Direction"
+
+msgid "x_unable_get_course"
+msgstr "Get Course Error"
+
+msgid "x_click_download_attachments"
+msgstr "Download Attachment"
+
+#msgid "x_category"
+#msgstr "Lesson"
+
+msgid "x_introduction"
+msgstr "Introduction"
+
+msgid "x_curriculum_catalogues"
+msgstr "Classes"
+
+msgid "x_related_good_lesson"
+msgstr "Related Class"
+
+msgid "x_class_not_in_course"
+msgstr "This course has no Class"
+
+msgid "x_unable_get_details"
+msgstr "Get Details Error"
+
+msgid "x_experiment"
+msgstr "Experiment"
+
+msgid "x_learned"
+msgstr "Learned"
+
+msgid "x_learning"
+msgstr "Learning"
+
+msgid "x_unlearned"
+msgstr "Unlearned"
+
+msgid "x_course_directory"
+msgstr "Get Course Contents Error"
+
+msgid "x_unable_get_courses"
+msgstr "Get Course Error"
+
+msgid "x_learning_course"
+msgstr "Learn"
+
+msgid "x_return"
+msgstr "Return"
+
+msgid "x_experimental_guidance"
+msgstr "Experimental Guidance"
+
+msgid "x_table_contents"
+msgstr "Contents"
+
+msgid "x_experiment_course"
+msgstr "Experiment Course"
+
+msgid "x_be_used_notdeleted"
+msgstr "Course Category is being used, can not be deleted"
+
+msgid "x_subtype_below_current_type"
+msgstr "Subtype below the current Category."
+
+msgid "x_missing_scene_information"
+msgstr "Missing Scene Information"
+
+msgid "x_course_already_exists"
+msgstr "This course already exists"
+
+msgid "x_only_zip_pdf"
+msgstr "Handout: Only zipper or PDF file format is accepted"
+
+msgid "x_video_is_transcoding"
+msgstr "Video is transcoding"
+
+msgid "x_view_topology"
+msgstr "View Topology"
+
+msgid "x_use_ctrl_shift_alt_to_copy"
+msgstr "Use Ctrl+Shift+Alt To Copy"
+
+msgid "x_minutes"
+msgstr "Minutes"
+
+msgid "x_guide_lecture"
+msgstr "Experimental Guidance"
+
+msgid "x_note"
+msgstr "My Note"
+
+msgid "x_Q_A"
+msgstr "Leave Message"
+
+msgid "x_no_writeup"
+msgstr "No solution"
+
+msgid "x_application_environment"
+msgstr "Application environment"
+
+msgid "x_view_the_environment"
+msgstr "View the environment"
+
+msgid "x_last_section"
+msgstr "Last Section"
+
+msgid "x_next_section"
+msgstr "Next Section"
+
+msgid "x_seconds"
+msgstr "Seconds"
+
+msgid "x_remaining_time"
+msgstr "Left Time"
+
+msgid "x_return_to_course"
+msgstr "Return To Course"
+
+msgid "download_markdown"
+msgstr "download markdown"
+
+msgid "x_only_allow_mp4"
+msgstr "Only allow.Mp4 format"
+
+msgid "x_no_parent_node_found"
+msgstr "No parent node was found"
+
+msgid "x_exam_lesson"
+msgstr "Exam Lesson"
+
+msgid "x_practice_lesson"
+msgstr "Practice Lesson"
+
+msgid "x_jstree_data_is_empty"
+msgstr "Jstree data is empty"
+
+msgid "x_no_order_rule"
+msgstr "not get order"
+
+msgid "x_lesson_type_wrong"
+msgstr "Lesson Type Not Match"
+
+msgid "x_video_monitor"
+msgstr "Study Monitor"
+
+msgid "x_used_lesson_env_not_exist"
+msgstr "Used Lesson Evn Not Exist"
+
+msgid "x_no_connect_ids"
+msgstr "No Connect Ids"
+
+msgid "x_no_connect_users"
+msgstr "No Connect Users"
+
+msgid "x_automatic_monitor"
+msgstr "Automatic Monitor"
+
+msgid "x_manual_monitor"
+msgstr "Manual Monitor"
+
+msgid "x_show_the_nearest_n"
+msgstr "Show The Nearest"
+
+msgid "x_from_user_selection"
+msgstr "From User Selection"
+
+msgid "x_refresh_time"
+msgstr "Refresh Time"
+
+msgid "x_refresh"
+msgstr "Refresh"
+
+msgid "x_one_minute"
+msgstr "One Minute"
+
+msgid "x_three_minutes"
+msgstr "Three Minutes"
+
+msgid "x_ten_minutes"
+msgstr "Ten Minutes"
+
+msgid "x_not_refresh"
+msgstr "Not Refresh"
+
+msgid "x_experiment_scene"
+msgstr "Experiment Scene"
+
+msgid "x_study_video"
+msgstr "Study Video"
+
+msgid "x_shared_environment"
+msgstr "Shared Environment"
+
+msgid "x_private_environment"
+msgstr "Private Environment"
+
+msgid "x_upload_zip_wrong_format"
+msgstr "Upload Zip Wrong Format"
+
+msgid "x_learning_statistics"
+msgstr "Learning Statistics"
+
+msgid "x_organization"
+msgstr "Organization"
+
+msgid "x_complete_lessons"
+msgstr "Complete Lessons"
+
+msgid "x_class_user_count"
+msgstr "Class Person Number"
+
+msgid "x_exam_type"
+msgstr "Exam Type"
+
+msgid "x_exam_score"
+msgstr "Exam Score"
+
+msgid "x_course_direction_statistics"
+msgstr "Course direction statistics"
+
+msgid "x_number_of_hours_learned"
+msgstr "Number of hours learned"
+
+msgid "x_class_information_statistics"
+msgstr "Class information statistics"
+
+msgid "x_have_taken_test_statistics"
+msgstr "Have taken the test statistics"
+
+msgid "x_timeline_learned"
+msgstr "Timeline information has been learned"
+
+msgid "x_complete_experiment"
+msgstr "Complete Experiment"
+
+msgid "x_complete_practice"
+msgstr "Complete Practice"
+
+msgid "x_experiment_mark_score"
+msgstr "Experiment Mark Score"
+
+msgid "x_mark_score_teacher"
+msgstr "Mark Score Teacher"
+
+msgid "x_lesson_name"
+msgstr "Lesson_name"
+
+msgid "x_please_select_lessons"
+msgstr "Please Select Lessons"
+
+msgid "x_view_report"
+msgstr "View Report"
+
+msgid "x_mark_score"
+msgstr "Mark Score"
+
+msgid "x_mark_comment"
+msgstr "Mark Comment"
+
+msgid "x_is_pass"
+msgstr "Is Pass"
+
+msgid "x_please_enter_your_comment"
+msgstr "Please Enter Your Comment"
+
+msgid "x_custom_add"
+msgstr "Custom Add"
+
+msgid "x_other_lesson_import"
+msgstr "Other Lesson Imported"
+
+msgid "x_lesson"
+msgstr "Lesson"
+
+msgid "x_select_model_add"
+msgstr "Select Model Add"
+
+msgid "x_please_select_lesson"
+msgstr "Please Select Lesson"
+
+msgid "x_no_lesson_selected"
+msgstr "No Lesson Selected"
+
+msgid "x_lesson_exercises"
+msgstr "Lesson Exercises"
+
+msgid "x_no_lesson_questions"
+msgstr "No Lesson Questions"
+
+msgid "x_exercise_has_done"
+msgstr "Exercise Has Be Done"
+
+msgid "x_lesson_manager"
+msgstr "Lesson Manager"
+
+msgid "x_my_lesson_schedule"
+msgstr "My Lesson Schedule"
+
+msgid "x_lesson_monitor"
+msgstr "Lesson Monitor"
+
+msgid "x_environment_distribution"
+msgstr "Environment Distribution"
+
+msgid "x_unit"
+msgstr "Unit"
+
+msgid "x_shared_monitor"
+msgstr "monitoring"
+
+msgid "x_sign_status"
+msgstr "Sign Status"
+
+msgid "x_how_to_upload_files"
+msgstr "How to upload files"
+
+msgid "x_help_assistance"
+msgstr "Help"
+
+msgid "x_student_nums"
+msgstr "Number of people"
+
+msgid "x_sign"
+msgstr "Sign"
+
+msgid "x_not_sign"
+msgstr "Not sign"
+
+msgid "x_course_info_wrong"
+msgstr "Course Information Wrong"
+
+msgid "x_operation_description"
+msgstr "Operation Description"
+
+msgid "x_screen_capture"
+msgstr "Screen Capture"
+
+msgid "x_single_screen_display"
+msgstr "Single screen display"
+
+msgid "x_more_operations"
+msgstr "More Operations"
+
+msgid "x_double_screen_display"
+msgstr "Double Screen Display"
+
+msgid "x_not_found_markdown"
+msgstr "Not Found Markdown"
+
+msgid "x_experiment_average_score"
+msgstr "Average experiment score"
+
+msgid "x_sign_users"
+msgstr "Number of people signing in"
+
+msgid "x_complete_users"
+msgstr "Number of completions"
+
+msgid "x_total_people"
+msgstr "Total people"
+
+msgid "x_all_teacher"
+msgstr "All Teacher"
+
+msgid "x_checked_teacher"
+msgstr "Checked Teacher"
+
+msgid "x_checked_classes"
+msgstr "Checked Classes"
+
+msgid "x_schedule_time_outside"
+msgstr "Time is out of range"
+
+msgid "x_recommended_learning"
+msgstr "Recommended Learning"
+
+msgid "x_learning_content"
+msgstr "Learning Content"
+
+msgid "x_my_course"
+msgstr "My Courses"
+
+msgid "x_system_course"
+msgstr "System Courses"
+
+msgid "x_sharing_course"
+msgstr "Sharing Courses"
+
+msgid "x_pagination_info_left"
+msgstr " "
+
+msgid "x_pagination_info_right"
+msgstr " rows per page"
+
+msgid "x_course_compression_package"
+msgstr "Course Compression Package"
+
+msgid "x_full_screen"
+msgstr "Full Screen"
+
+msgid "x_builtin_not_edit"
+msgstr "Built-in Resource not editable"
+
+msgid "x_copy_paste"
+msgstr "Copy and paste"
+
+msgid "x_open_textarea"
+msgstr "Press on Ctrl+Shitf+Alt to open textbox"
+
+msgid "x_close_textarea"
+msgstr "Paste text with Ctrl+C to the textbox and then press on Ctrl+Shitf+Alt again to close it."
+
+msgid "x_copy_paste_vir"
+msgstr "Paste the text with Ctrl+V in virtual machine(use the right key while pasting with SSH)"
+
+msgid "x_file_copy"
+msgstr "File copy"
+
+msgid "x_first_way"
+msgstr "1st method:pull the file from web page directly.The file pulled is located in the G disk while using Windows.If you are using Linux,the file is located in the directory which is belong to the login user."
+
+msgid "x_second_way"
+msgstr "2nd method:use the transmission mode binded with tools if you are using Remote Desktop,Remmina,Xshell and so on."
+
+msgid "x_file_download"
+msgstr "File download"
+
+msgid "x_trans_move"
+msgstr "Move the file to the directory named 'G:Download' and the browser will download automaticly(please select 'yes' while popping a prompt box)"
+
+msgid "x_trans_ssh"
+msgstr "Use the transmission mode binded with tools if you are using Remote Desktop,Remmina,Xshell and so on."
+
+msgid "x_cautions"
+msgstr "Cautions"
+
+msgid "x_cautions_win"
+msgstr "If using Windows, please remove the file which is uploaded from Gucamole Disk or it would occupy space in server."
+
+msgid "x_cautions_linux"
+msgstr "If using Linux, you should open the SSH server in target machine while uploading files(the password and username of SSH should be the same with RDP)."
+
+msgid "x_caps_and_input"
+msgstr "Case and input method switching method:"
+
+msgid "x_kali_caps"
+msgstr "Kali&Ubuntu(The input method is not installed yet.Choose one of them):"
+
+msgid "x_kali_caps_first_method"
+msgstr "Press shift first, then capslock."
+
+msgid "x_kali_caps_second_method"
+msgstr "Press capslock for at least three seconds."
+
+msgid "x_kali_caps_third_method"
+msgstr "Press capslock first, then refresh the current page."
+
+msgid "x_kali_caps_fourth_method"
+msgstr "Use Shift + alphabetic key to enter capital letters."
+
+msgid "x_kali_caps_fifth_method"
+msgstr "Press capslock at the other input focus of the client system, and then go back to the remote page input focus."
+
+msgid "x_win_caps"
+msgstr "Using capslock to switch case and case, Windows7 uses Ctrl+Shift to switch Chinese and English input, and Windows10 uses Shift to switch Chinese and English input."
+
+msgid "x_file_limit"
+msgstr "Windows upload files maximum limit 2G, more than 2G files please upload in segments, and then merge. linux unlimited"
+
+msgid "x_please_select_course"
+msgstr "Please Select Course"
+
+msgid "x_all_course"
+msgstr "All Course"
+
+msgid "x_not_found_team"
+msgstr "Not Found Team"
+
+msgid "x_end_gt_start_time"
+msgstr "The end time must be greater than the start time"
+
+msgid "x_sign_time"
+msgstr "Sign Time"
+
+msgid "x_lost_course"
+msgstr "Tips: Please Select Course"
+
+msgid "x_lost_lesson"
+msgstr "Tips: Please Select Lesson"
+
+msgid "x_lost_classes"
+msgstr "Tips: Please Select Organizational Structure"
+
+msgid "x_lost_start"
+msgstr "Tips: Please Select Start Time"
+
+msgid "x_lost_end"
+msgstr "Tips: Please Select End Time"
+
+msgid "x_class_in_schedules"
+msgstr "Tips: The class has courses during this time"
+
+msgid "x_please_select_time"
+msgstr "Tips: Please select time"
+
+msgid "x_learning_type"
+msgstr "Learning Type"

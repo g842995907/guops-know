@@ -1,0 +1,282 @@
+{% extends 'event/cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+{% load custom_filters %}
+
+{% block title %}
+    <a href="{% url 'cms_system_configuration:sys_notice_list' %}">{% trans 'x_sys_notice' %}</a>>
+    {% if mode == 0 %}
+        {% trans 'x_new_sys_notice' %}
+    {% else %}
+        {% trans 'x_edit_sys_notice' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/bootstrap-select/css/bootstrap-select.min.css" %}"/>
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static "lib/bootstrap-switch-master/dists/css/bootstrap3/bootstrap-switch.css" %}"/>
+    <link rel="stylesheet"
+          href="{% static "lib/bootstrap-switch-master/dists/css/bootstrap3/bootstrap-switch.min.css" %}"/>
+    <script src="{% static 'lib/bootstrap-switch-master/dists/js/bootstrap-switch.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static "lib/bootstrap-switch-master/dists/js/bootstrap-switch.min.js" %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+
+    <style>
+        .bootstrap-switch-success-v1 {
+            color: #FFFFFF;
+            background: #00B293;
+        }
+
+        .bootstrap-switch-failure-v1 {
+            color: #FFFFFF;
+            background: #B2B2B2;
+        }
+    </style>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              enctype="multipart/form-data"
+                {% if mode == 0 %}
+              action="{% url 'cms_system_configuration:cms_api:sys-notice-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_system_configuration:cms_api:sys-notice-detail' sysNotice.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_notice_title' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ sysNotice.name }}"/>
+                        <span id="name_check" style="color: #cc5965;font-weight: 700;"></span>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_notice_text' %}</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="content"
+                                  name="content">{{ sysNotice.content }}</textarea>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_notice_group' %}</label>
+                    <div class="col-sm-4">
+                        <select class="form-control m-b" name="group" id="group" data-form-fixed="1">
+
+                            {% for k,v in groups.items %}
+                                    <option value="{{ v }}"
+                                            {% if sysNotice.group == v %}selected{% endif %}>{{ k }}</option>
+                            {% endfor %}
+{##}
+{#                            {% for classes in classes_list %}#}
+{#                                <option value="{{ classes.id }}-class"#}
+{#                                        {% if sysNotice.classes == classes.id %}selected{% endif %}>{{ classes.name }}</option>#}
+{#                            {% endfor %}#}
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group"  style="display: none" id="choose-class">
+                <div class="hr-line-dashed"></div>
+                    <label class="col-sm-2 control-label">{{ ORGANIZATION.Second_level }}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="faculty" id="auth_faculty" data-form-fixed="1">
+                            <option value="">{% trans "x_please_choose" %}{{ ORGANIZATION.Second_level }}</option>
+                            {% for faculty in faculty_list %}
+                                <option value="{{ faculty.id }}"
+                                        {% if faculty.id == sysNotice.faculty %}selected{% endif %}>{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="major" id="auth_major" data-form-fixed="1">
+                            <option value="">{% trans "   ----   " %}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="classes" id="auth_classes" data-form-fixed="1">
+                            <option value="">{% trans "   ----   " %}</option>
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+            <div class="form-group">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="alert alert-danger server-error" id="server-error">
+                    </div>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_system_configuration:sys_notice_list' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_system_configuration:sys_notice_list' %}";
+
+        function init_major(faculty_id, select_id) {
+            $("#auth_major").empty();
+            $("#auth_classes").empty();
+            $.ajax({
+                type:"GET",
+                url:"{% url 'cms_x_person:cms_api:major-list' %}",
+                data: {"faculty": faculty_id},
+                datatype:"json",
+                success:function (data) {
+                    if ($("#auth_faculty").val() == "") {
+                        $("#auth_major").append("<option value=''>{% trans  'x_please_choose' %}{{ ORGANIZATION.Third_level }}</option>");
+                        $("#auth_classes").append("<option value=''>{% trans 'x_please_choose' %}{{ ORGANIZATION.Fourth_level }}</option>");
+                    } else {
+                        var major_list = data.rows;
+                        $("#auth_major").append("<option value=''>{% trans  'x_please_choose' %}{{ ORGANIZATION.Third_level }}</option>");
+                        $("#auth_classes").append("<option value=''>{% trans 'x_please_choose' %}{{ ORGANIZATION.Fourth_level }}</option>");
+                        for (var i in major_list){
+                            if (select_id == major_list[i].id){
+                                $("#auth_major").append("<option value='" + major_list[i].id + "' selected>" + major_list[i].name + "</option>");
+                            }else {
+                                $("#auth_major").append("<option value='" + major_list[i].id + "'>" + major_list[i].name + "</option>");
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        //生成班级列表
+        function init_classes(faculty_id, major_id, select_id) {
+            $("#auth_classes").empty();
+            $.ajax({
+                type:"GET",
+                url:"{% url 'cms_x_person:cms_api:classes-list' %}",
+                data:{"faculty": faculty_id,
+                      "major": major_id,
+                },
+                datatype:"json",
+                success:function (data) {
+                    if ($("#auth_major").val() == "") {
+                        {#$("#auth_classes").append("<option value=''>{% trans "   ----   " %}</option>");#}
+                        $("#auth_classes").append("<option value=''>{% trans  'x_please_choose' %}{{ ORGANIZATION.Third_level }}</option>");
+                    } else {
+                        var classes_list = data.rows;
+                        $("#auth_classes").append("<option value=''>{% trans  "x_please_choose" %}{{ ORGANIZATION.Fourth_level }}</option>");
+                        for (var i in classes_list){
+                            if (select_id == classes_list[i].id){
+                                $("#auth_classes").append("<option value='" + classes_list[i].id + "' selected>" + classes_list[i].name + "</option>");
+                            } else {
+                                $("#auth_classes").append("<option value='" + classes_list[i].id + "'>" + classes_list[i].name + "</option>");
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        function clear_select() {
+            $("#auth_faculty").val('');
+            $("#auth_major").val('');
+            $("#auth_classes").val('');
+        }
+
+        $(function () {
+            $("#content").initMarkdown();
+            $("#validateForm").mvalidate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 20,
+                    },
+                    content: {
+                        required: true,
+                        maxlength: 100,
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "{% trans 'x_required_name' %}",
+                        maxlength: "{% trans 'x_name_length_lt_20' %}"
+                    },
+                    content: {
+                        required: "{% trans 'x_lost_content' %}",
+                        maxlength: "{% trans 'x_content_length_lt_100' %}"
+                    }
+                },
+                ignore: ''
+            });
+            $('#validateForm').ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {
+                {#beforeSubmit: function (datas, $form, options) {#}
+                {#    fileUpload.setFormData(datas, 'logo');#}
+                {#  }#}
+            });
+
+            $("#auth_faculty").change(function () {
+                init_major($(this).val())
+            });
+
+            $("#auth_major").change(function () {
+                init_classes($("#auth_faculty").val(), $(this).val())
+            });
+            
+            $("#group").click(function () {
+                if($("#group").val() == {{ select }}){
+                    $("#choose-class").show();
+                }else {
+                    $("#choose-class").hide();
+                    clear_select();
+                }
+            });
+
+            {% if mode == 1 and sysNotice.classes %}
+                $("#choose-class").show();
+                init_major({{ sysNotice.faculty }},{{ sysNotice.major }});
+                init_classes({{ sysNotice.faculty }},{{ sysNotice.major }},{{ sysNotice.classes }});
+            {% endif %}
+
+        });
+
+    </script>
+{% endblock %}

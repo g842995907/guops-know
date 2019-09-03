@@ -1,0 +1,348 @@
+{% load i18n %}
+{% load static %}
+
+<link href="{% static "lib/ladda/css/ladda.min.css" %}" rel="stylesheet">
+<style type="text/css">
+    #lessons {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    #lessons li {
+        background: #FAFAFB;
+        border: 1px solid #e7eaec;
+        margin: 0 0 10px 0;
+        padding: 10px;
+        border-radius: 2px;
+    }
+</style>
+
+<script src="{% static 'lib/hplus/js/jquery-ui-1.10.4.min.js' %}"></script>
+<script src="{% static "lib/jquery/jquery.ui.touch-punch.min.js" %}"></script>
+<script src="{% static "lib/ladda/js/spin.min.js" %}"></script>
+<script src="{% static "lib/ladda/js/ladda.min.js" %}"></script>
+<script src="{% static "cms/js/ajax.csrf.js" %}"></script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">{% trans 'x_class_sorting' %}</h4>
+</div>
+<div class="modal-body" style="padding-bottom: 0;">
+    <div id="lesson-list-jstree">
+    </div>
+
+    <div class="btn-tpl-all hidden">
+        <div class="btn-group" style="margin-left: 20px;">
+            <button class='btn btn-white' onclick="CALLBACK.node_create(this)"><i
+                        class="glyphicon glyphicon-plus" style="color: green;"></i>{% trans "x_add" %}</button>
+            <button class='btn btn-white' style="margin-left: 5px" onclick="CALLBACK.node_rename(this)"><i class="glyphicon glyphicon-pencil" style="color: red;"></i>{% trans "x_modify" %}</button>
+            <button class='btn btn-white' style="margin-left: 5px" onclick="CALLBACK.node_delete(this)"><i class="glyphicon glyphicon-remove" style="color: orange;"></i>{% trans "x_delete" %}</button>
+        </div>
+    </div>
+    <div class="btn-tpl-no-delete hidden">
+        <div class="btn-group" style="margin-left: 20px;">
+            <button class="btn btn-white" onclick="CALLBACK.node_create(this)"><i
+                    class="glyphicon glyphicon-plus" style="color: green;"></i>&nbsp;{% trans "x_add" %}
+            </button>
+{#            <button class="btn btn-white" style="margin-left: 5px;" onclick="CALLBACK.node_rename(this)">#}
+{#                <i class="glyphicon glyphicon-pencil" style="color: orange;"></i>&nbsp;{% trans "x_modify" %}#}
+{#            </button>#}
+        </div>
+    </div>
+    <div class="btn-tpl-no-add hidden">
+        <div class="btn-group" style="margin-left: 20px;">
+            <button class='btn btn-white' style="margin-left: 5px" onclick="CALLBACK.node_rename(this)"><i class="glyphicon glyphicon-pencil" style="color: red;"></i>{% trans "x_modify" %}</button>
+            <button class='btn btn-white' style="margin-left: 5px" onclick="CALLBACK.node_delete(this)"><i class="glyphicon glyphicon-remove" style="color: orange;"></i>{% trans "x_delete" %}</button>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-white" data-dismiss="modal" style="margin-bottom: 0;">{% trans "x_close" %}</button>
+    <button class="btn btn-primary confirm-order" data-dismiss="modal" style="margin-bottom: 0;">{% trans "x_confirm" %}</button>
+</div>
+
+<script>
+
+    var course_id = "{{ course.id }}";
+    var lesson_jstree_list_url = "{% url 'cms_course:api:lesson-jstree-list' %}?course_id=" + course_id;
+    var lesson_jstree_post_url = "{% url 'cms_course:api:lesson-jstree-change-data' %}";
+    var js_data = new Array();
+    var lesson_typ_dic = {
+            0: "{% trans 'x_heoretical_lesson' %}",
+            1: "{% trans 'x_experiment_lesson' %}",
+            2: "{% trans 'x_practice_lesson' %}",
+            3: "{% trans 'x_exam_lesson' %}"
+        };
+    var class_hour = gettext("x_class_hours");
+    var reg = new RegExp("\("+class_hour+"\\d+ \)\?\("+lesson_typ_dic[0]+"\|"+lesson_typ_dic[1]+"\|"+lesson_typ_dic[2]+"\|"+lesson_typ_dic[3]+"\) - ");
+    var replace_reg = /^\d+(\.\d+\.\d+\.|\.\d+\.|\.)\d+|&nbsp;|^第[ ]*\d+[ ]*章|^Chapter \d+|undefined\.(undefined|NaN)/g;
+
+    var CALLBACK = {
+        format_text: function (get_text) {
+            // 删除课程类型
+            var text = get_text.replace(reg, "").trim();
+            var value = text.replace(replace_reg, "").trim();
+            console.log(value);
+            return value
+        },
+        custom_select_node: function (e) {
+            var sel_id = e.parentElement.parentElement.getAttribute("id");
+            var re_sel_id = sel_id.replace("_anchor", "");
+            if (re_sel_id.length > 0){
+                return re_sel_id
+            }else {
+                swal({
+                    title: gettext('x_please_select_a_node'),
+                    type: 'warning',
+                    confirmButtonText: gettext('x_confirm'),
+                });
+                return
+            }
+
+        },
+        save_jstree_data: function () {
+            var order_list = new Array();
+            //全部展开jstree, 收起来的li标签将会消失
+            open_jstree.jstree('open_all');
+            $.each($("#lesson-list-jstree li"), function (k, v) {
+                order_list.push(v.getAttribute('id'))
+            });
+
+            {#var ref = $("#lesson-list-jstree").jstree(true);#}
+            var json_datas = ref._model.data;
+            var data = new Array()
+            for (var json_data in json_datas) {
+                if (json_datas[json_data]['id'] != "#") {
+                    var temp_data = json_datas[json_data]["original"];
+                    temp_data['id'] = json_datas[json_data]['id'];
+                    temp_data['self_id'] = json_datas[json_data]['id'];
+                    temp_data['text'] = CALLBACK.format_text(codeUtil.htmlDecode(json_datas[json_data]['text']));
+                    temp_data['type'] = json_datas[json_data]['type'];
+                    temp_data['parent'] = json_datas[json_data]['parent'];
+                    temp_data['course'] = course_id;
+                    temp_data['parents'] = json_datas[json_data]['parents'].join(",");
+                    data.push(temp_data)
+                }
+            }
+
+            $.post(lesson_jstree_post_url, {
+                data: JSON.stringify(data),
+                order: order_list.join(","),
+                course_id: course_id
+            }, function (data) {
+                console.log(data);
+                swal({
+                    title: gettext('x_operation_success'),
+                    type: 'success',
+                    confirmButtonText: gettext('x_confirm'),
+                });
+            }, 'json').error(function (data) {
+                swal({
+                    title: data.responseJSON['error'],
+                    type: 'error',
+                    confirmButtonText: gettext('x_confirm'),
+                });
+            });
+        },
+
+        node_create: function (e) {
+            var re_sel_id = CALLBACK.custom_select_node(e);
+            var sel = ref.create_node(re_sel_id);
+            if (sel) {
+                ref.edit(sel);
+            }
+        },
+
+        node_rename: function (e) {
+            var re_sel_id = CALLBACK.custom_select_node(e);
+            var node_text = ref.get_node(re_sel_id).text;
+            ref.edit(re_sel_id, '', function (node) {
+                if (node.text.trim() == ""){
+                    ref.set_text(node, node_text);
+                }
+            });
+        },
+
+        node_delete: function (e) {
+            var re_sel_id = CALLBACK.custom_select_node(e);
+
+            var sel = re_sel_id;
+            if (ref.get_node(sel).parent == '#') {
+                swal({
+                        title: gettext("x_root_node_not_allowed_delete"),
+                        type: "warning",
+                        confirmButtonText: "{% trans "x_confirm" %}"
+                    });
+                return;
+            }
+            if (ref.get_node(sel).children.length > 0) {
+                swal({
+                        title: gettext("x_existe_child_node_can_not_delete"),
+                        type: "warning",
+                        confirmButtonText: "{% trans "x_confirm" %}"
+                    });
+                return;
+            }
+
+            ref.delete_node(sel);
+        },
+
+        init_jstree: function () {
+            var $tree = $("#lesson-list-jstree").jstree({
+                'core': {
+                    "themes": {
+                            "variant": "large",
+                        },
+                    "check_callback": true,//在对树进行改变时，check_callback是必须设置为true；
+                    "data": js_data,
+                    {% comment %}strings: {
+                        'New node': '创建章节'
+                    }{% endcomment %}
+                },
+                "types": {
+                    "#": {
+                        "max_children": 1,
+                        "max_depth": 5,
+                        "valid_children": ["default"]
+                    },
+                    "default": {
+                        "icon": "fa fa-folder icon-state-warning icon-lg",
+                        "valid_children" : ["default","folder", "file"]
+                    },
+                    "folder": {
+                        "icon": "fa fa-folder icon-state-success jstree-themeicon-custom",
+                        "valid_children" : ["file"]
+                    },
+                    "file": {
+                        "icon": "fa fa-file icon-state-warning icon-lg",
+                        "valid_children" : []
+                    }
+                },
+                //plugins-各种jstree的插件引入，展示树的多样性
+                "sort": function (a, b) {
+                    return this.get_node(a).original.order > this.get_node(b).original.order ? 1 : -1;
+                    {#return this.get_type(a) === this.get_type(b) ? (this.get_text(a) > this.get_text(b) ? 1 : -1) : (this.get_type(a) >= this.get_type(b) ? 1 : -1);#}
+                },
+                "plugins": ["dnd", "wholerow", "types", "unique", "themes"]
+
+            });
+            ref = $tree.jstree(true);
+            open_jstree = $tree;
+            $tree.on('hover_node.jstree', function (e, data) {
+                //监听鼠标移上事件
+                // console.log(data)
+                var node = data.node;
+                var a_attr = node.a_attr;
+                var a_attr_id = a_attr.id;
+                var id = node.id;
+                if (node.type === 'folder' || node.type === 'default') {
+                    if (node.parent === "#"){
+                        var btnTpl = $('.btn-tpl-no-delete').clone().html();
+                    }else if(node.parents.length === 5){
+                        var btnTpl = $('.btn-tpl-no-add').clone().html();
+                    }
+                    else{
+                        var btnTpl = $('.btn-tpl-all').clone().html();
+                    }
+                    $('#' + a_attr_id).append(btnTpl)
+                }
+            });
+            $tree.on('dehover_node.jstree', function (e, data) {
+                //监听鼠标移出事件
+                var node = data.node;
+                var a_attr = node.a_attr;
+                var a_attr_id = a_attr.id;
+                var id = node.id;
+                if (node.parent == "#") { //判断选中是否为父类
+                    $('#' + a_attr_id).children('.btn-group').remove();
+                } else {
+                    $('#' + a_attr_id).children('.btn-group').remove();
+                }
+            });
+            $tree.on('ready.jstree', function (e, data) {
+                {#console.log(data);#}
+                //不能以数字进行id选取
+            });
+
+            $.get(lesson_jstree_list_url, {}, function (data) {
+                // 刷新jstree的数据
+                js_data = data.rows;
+                // 添加章节目录
+                var length = js_data.length;
+                var first_count = 1;
+                var first_first_count = 1;
+                var dic_count = {};
+                for (var i = 0; i < length; i++) {
+                    js_data[i].text = codeUtil.htmlEncode(js_data[i].text);
+                    if (js_data[i].parent != "#") {
+                        // 一级文件 和一级文件夹， 一级文件不做处理
+                        if (js_data[i].parents.length == 2 && js_data[i].type != "file") {
+                            js_data[i].text = gettext("x_NO_nbsp") + first_count + gettext("x_chapter_nbsp") + js_data[i].text;
+                            dic_count[js_data[i].id] = first_count;
+                            dic_count[js_data[i].id + '_count'] = 1;
+                            first_count += 1;
+                        } else if (js_data[i].parents.length == 3 || js_data[i].parents.length == 4) {
+                            var chapter_order = dic_count[js_data[i].parents[0]];
+                            var current_number = dic_count[js_data[i].parents[0] + "_count"];
+                            if (js_data[i].type == "file"){
+                                    var lessonType = lesson_typ_dic[js_data[i].lesson_type] + " - ";
+                                    js_data[i].text = chapter_order + "." + current_number + "&nbsp;&nbsp;" + lessonType + js_data[i].text;
+                                }else {
+                                    js_data[i].text = chapter_order + "." + current_number + "&nbsp;&nbsp;" + js_data[i].text;
+                                }
+                            dic_count[js_data[i].parents[0] + "_count"] += 1;
+                            if (js_data[i].type != "file") { // 二级文件夹多余的操作
+                                dic_count[js_data[i].id] = chapter_order + "." + current_number;
+                                dic_count[js_data[i].id + '_count'] = 1;
+                            }
+                        } else if (js_data[i].parents.length == 5) {
+                            var chapter_order = dic_count[js_data[i].parents[0]];
+                            var current_number = dic_count[js_data[i].parents[0] + "_count"];
+                            if (js_data[i].type == "file"){
+                                    var lessonType = lesson_typ_dic[js_data[i].lesson_type] + " - ";
+                                    js_data[i].text = chapter_order + "." + current_number + "&nbsp;&nbsp;&nbsp;" + lessonType + js_data[i].text;
+                                }else {
+                                    js_data[i].text = chapter_order + "." + current_number + "&nbsp;&nbsp;&nbsp;" + js_data[i].text;
+                                }
+                            dic_count[js_data[i].parents[0] + "_count"] += 1;
+                        }else if (js_data[i].parents.length == 2 && js_data[i].type == "file" || js_data[i].parents.length == 1 && js_data[i].type == "file"){ // 处理一级文件
+                                var lessonType = lesson_typ_dic[js_data[i].lesson_type] + " - ";
+                                js_data[i].text = gettext("x_class_hours") + first_first_count + " " + lessonType + js_data[i].text;
+                                first_first_count += 1
+                            }
+                    }
+                }
+                $("#lesson-list-jstree").jstree(true).settings.core.data = js_data;
+                $("#lesson-list-jstree").jstree(true).refresh();
+
+                $tree.bind("refresh.jstree", function (event, data) {
+                    $tree.jstree("open_all");
+
+                });
+            });
+
+            $tree.bind("activate_node.jstree", function (obj, e) {
+                var currentNode = e.node;
+                {#console.log(currentNode)#}
+            });
+            $tree.bind("move_node.jstree", function (e, data, pos) {
+            });
+            $tree.on("changed.jstree", function (e, data) {
+            });
+            $(document).on('dnd_stop.vakata', function (e, data) {
+            });
+            $(document).on('dnd_start.vakata', function (e, data) {
+            });
+        }
+    };
+
+    $(function () {
+        CALLBACK.init_jstree();
+
+        $("button.confirm-order").click(function () {
+            CALLBACK.save_jstree_data();
+        });
+    });
+</script>

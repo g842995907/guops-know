@@ -1,0 +1,320 @@
+msgid "x_fantasy"
+msgstr "程序员"
+
+msgid "x_personal"
+msgstr "个人"
+
+msgid "x_team"
+msgstr "组队"
+
+msgid "x_score_fix"
+msgstr "固定分值"
+
+msgid "x_score_dynamic"
+msgstr "动态分值"
+
+msgid "x_score_cumulative"
+msgstr "累加分值"
+
+msgid "x_end_gt_start_time"
+msgstr "结束时间必须大于开始时间"
+
+msgid "x_inprogress"
+msgstr "进行中"
+
+msgid "x_comming"
+msgstr "未开始"
+
+msgid "x_pause"
+msgstr "暂停"
+
+msgid "x_over"
+msgstr "结束"
+
+msgid "x_has_over"
+msgstr "已结束"
+
+msgid "x_has_fired"
+msgstr "已解散"
+
+msgid "x_forbidden_game"
+msgstr "禁赛"
+
+msgid "x_allow_game"
+msgstr "解禁"
+
+msgid "x_game_status"
+msgstr "比赛状态"
+
+msgid "x_select_task"
+msgstr "请选择题目"
+
+msgid "x_reward_score"
+msgstr "奖励分数"
+
+msgid "x_cheat"
+msgstr "作弊"
+
+msgid "x_123_blood"
+msgstr "一二三血"
+
+msgid "x_show_rank"
+msgstr "显示排名"
+
+msgid "x_no_show_rank"
+msgstr "不显示排名"
+
+msgid "x_solved"
+msgstr "解出"
+
+msgid "x_invalid"
+msgstr "无效"
+
+msgid "x_un_solved"
+msgstr "未解出"
+
+msgid "x_make_invalid"
+msgstr "标记无效"
+
+msgid "x_restore_score"
+msgstr "恢复分数"
+
+msgid "x_share_game"
+msgstr "分享赛"
+
+msgid "x_trial_game"
+msgstr "闯关赛"
+
+msgid "x_cumulative_points"
+msgstr "累加"
+
+msgid "x_dynamic_integration"
+msgstr "动态"
+
+msgid "x_contest"
+msgstr "竞赛"
+
+msgid "x_competition_form"
+msgstr "比赛形式"
+
+msgid "x_integral_mode"
+msgstr "积分方式"
+
+msgid "x_game_mode"
+msgstr "参赛方式"
+
+msgid "x_reward_points"
+msgstr "积分奖励"
+
+msgid "x_review"
+msgstr "回顾"
+
+msgid "x_participate"
+msgstr "参赛"
+
+msgid "x_enter_correct_answer"
+msgstr "请输入您认为正确的答案……"
+
+msgid "x_score_display"
+msgstr "得分:{source}分"
+
+msgid "x_ranking_display"
+msgstr "排名:{ranking}名"
+
+msgid "x_not_join"
+msgstr "未参加"
+
+msgid "x_single_choice_cannot_empty"
+msgstr "单选题第{num}题答案不能为空！"
+
+msgid "x_multiple_choice_cannot_empty"
+msgstr "多选题第{num}题答案不能为空！"
+
+msgid "x_fill_blank_cannot_empty"
+msgstr "填空题第{num}题答案不能为空！"
+
+msgid "x_competition_introduction"
+msgstr "比赛介绍"
+
+msgid "x_competition_brief_introduction"
+msgstr "比赛简介"
+
+msgid "x_competition_information"
+msgstr "赛制信息"
+
+msgid "x_competition_time"
+msgstr "比赛时间"
+
+msgid "x_competition_rules"
+msgstr "比赛规则"
+
+msgid "x_game_over"
+msgstr "比赛已结束"
+
+msgid "x_no_announcement"
+msgstr "暂无公告"
+
+msgid "x_game_announcement"
+msgstr "比赛公告"
+
+msgid "x_game_task"
+msgstr "比赛题目"
+
+msgid "x_game_trend"
+msgstr "比赛趋势"
+
+msgid "x_flag_wrong"
+msgstr "提交的flag错误！"
+
+msgid "x_game_suspended"
+msgstr "比赛暂停中"
+
+msgid "x_to_start"
+msgstr "距比赛开始"
+
+msgid "x_to_end"
+msgstr "距比赛结束"
+
+msgid "x_submit"
+msgstr "提交"
+
+msgid "x_scoreboard"
+msgstr "排行榜"
+
+msgid "x_solved_count"
+msgstr "解题数"
+
+msgid "x_first_place"
+msgstr "第一名"
+
+msgid "x_second_place"
+msgstr "第二名"
+
+msgid "x_third_place"
+msgstr "第三名"
+
+msgid "x_amount_team"
+msgstr "有{amount}个队伍解出"
+
+msgid "x_upload_writeup_already"
+msgstr "已上传题解"
+
+msgid "x_please_hurry"
+msgstr "请尽快"
+
+msgid "x_click_here"
+msgstr "点击此处"
+
+msgid "x_re-upload"
+msgstr "重新上传"
+
+msgid "x_upload_writeup"
+msgstr "上传题解"
+
+msgid "x_notice"
+msgstr "公告"
+
+msgid "x_start_vis"
+msgstr "启动态势"
+
+msgid "x_stop_vis"
+msgstr "停止态势"
+
+msgid "x_vis_has_started"
+msgstr "已启动"
+
+msgid "x_vis_has_stoped"
+msgstr "已停止"
+
+msgid "x_show_all_positions"
+msgstr "显示全部排名"
+
+msgid "x_not_show_all_positions"
+msgstr "不显示全部排名"
+
+msgid "x_public_token"
+msgstr "公开token"
+
+msgid "x_private_token"
+msgstr "不公开token"
+
+msgid "x_step_by_step_multiple_flags"
+msgstr "当前题目支持分步解题，存在多个FLAG!"
+
+msgid "x_can_not_add_line"
+msgstr "不能添加连线"
+
+msgid "x_incomplete_solution"
+msgstr "未完全解出"
+
+msgid "x_correct_answer"
+msgstr "回答正确"
+
+msgid "x_right_answer"
+msgstr "正确答案"
+
+msgid "x_exam_countdown"
+msgstr "距考试结束"
+
+msgid "x_exam_over"
+msgstr "考试已结束"
+
+msgid "x_operation_problem"
+msgstr "操作题"
+
+msgid "x_hand_over"
+msgstr "交卷"
+
+msgid "x_examination_countdown"
+msgstr "考试倒计时"
+
+msgid "x_submit_next_question"
+msgstr "提交，进入下一题"
+
+msgid "x_judgment_problem"
+msgstr "判断题"
+
+msgid "x_click_visit_URL"
+msgstr "点击访问题目网址"
+
+msgid "x_problem_solved"
+msgstr "本题已解决"
+
+msgid "x_next_question"
+msgstr "下一题"
+
+msgid "x_correct_rate"
+msgstr "正确率"
+
+msgid "x_over_submit"
+msgstr "本题已解决，是否提交试卷！"
+
+msgid "x_submit_over"
+msgstr "提交试卷后，考试结束！"
+
+msgid "x_hant_submit"
+msgstr "确认是否交卷！"
+
+msgid "x_account_number"
+msgstr "账号"
+
+msgid "x_name_surname"
+msgstr "姓名"
+
+msgid "x_class"
+msgstr "班级"
+
+msgid "x_event_infiltration"
+msgstr "渗透赛"
+
+msgid "x_see_detail"
+msgstr "查看详情"
+
+msgid "x_please_choose_answer"
+msgstr "请选择答案"
+
+msgid "x_right"
+msgstr "正确"
+
+msgid "x_wrong"
+msgstr "错误"

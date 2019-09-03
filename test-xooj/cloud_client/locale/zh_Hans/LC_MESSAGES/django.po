@@ -1,0 +1,65 @@
+msgid "x_upgrade_management"
+msgstr "升级管理"
+
+msgid "x_update_note"
+msgstr "更新备注"
+
+msgid "x_load_offline_update"
+msgstr "导入离线升级包"
+
+msgid "x_check_update"
+msgstr "检查升级"
+
+msgid "x_current_version"
+msgstr "当前版本为:"
+
+msgid "x_find_new_version"
+msgstr "版本更新"
+
+msgid "x_update_now"
+msgstr "立即更新"
+
+msgid "x_version_update"
+msgstr "版本更新"
+
+msgid "x_update"
+msgstr "升级"
+
+msgid "x_update_history"
+msgstr "升级记录"
+
+msgid "x_new_update"
+msgstr "新升级"
+
+msgid "x_update_status"
+msgstr "升级状态"
+
+msgid "x_update_time"
+msgstr "升级时间"
+
+msgid "x_cancel"
+msgstr "取消"
+
+msgid "x_yes"
+msgstr "确定"
+
+msgid "x_updating"
+msgstr"升级中,请耐心等待..."
+
+msgid "x_updating_warning"
+msgstr"升级中,请稍后刷新页面!"
+
+msgid "x_wrong_update_zip"
+msgstr "升级包错误!"
+
+msgid "x_update_backup"
+msgstr "备份文件"
+
+msgid "x_update_pip"
+msgstr "安装升级包"
+
+msgid "x_update_remove"
+msgstr "删除备份"
+
+msgid "x_update_finish"
+msgstr "完成更新"

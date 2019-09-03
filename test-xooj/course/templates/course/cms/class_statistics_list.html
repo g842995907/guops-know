@@ -1,0 +1,679 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v static %}
+
+{% block title %}
+    <a>{% trans "x_learning_statistics" %}</a>
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static 'lib/jstree/css/style.css' %}"/>
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+        pagination-box {
+            width: 100%;
+        }
+
+        #pagination {
+            background-color: transparent;
+            margin: -5px 0;
+            float: right;
+        }
+
+        .pagination-info {
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <ul class="nav nav-tabs">
+{#            <li class="active">#}
+{#                <a data-toggle="tab" href="#tab-1" aria-expanded="false">{% trans 'x_class_statistics' %}</a>#}
+{#            </li>#}
+            <li class="active">
+                <a data-toggle="tab" href="#tab-1" aria-expanded="false">{% trans 'x_course_statistics' %}</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#tab-2" aria-expanded="false">{% trans 'x_person_statistics' %}</a>
+            </li>
+        </ul>
+        <div class="clearfix tab-content">
+            <div id="tab-2" class="tab-pane">
+                <div class="ibox-content">
+                    <div id="userTableToolbar">
+                        <div class="form-group">
+                            <div class="clearfix">
+                                <div class="m-r pull-left col-md-2">
+                                    <select class="form-control m-b sticky" id="facultyName" onchange="USERCALLBACK.majorlist()">
+                                        <option value="0" selected="selected">{% trans 'x_all' %}{{ ORGANIZATION.Second_level }}</option>
+                                        {% for faculty in faculty_list %}
+                                            <option value={{ faculty.id }}>{{ faculty.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="m-r pull-left col-md-2">
+                                    <select class="form-control m-b sticky" id="majorName" onchange="USERCALLBACK.classlist()">
+                                        <option value="0" selected="selected">{% trans 'x_all' %}{{ ORGANIZATION.Third_level }}</option>
+                                        {% for faculty in major_list %}
+                                            <option value={{ faculty.id }}>{{ faculty.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="m-r pull-left col-md-2">
+                                    <select class="form-control m-b sticky select_search" id="classesName">
+                                        <option value="0" selected="selected">{% trans 'x_all' %}{{ ORGANIZATION.Fourth_level }}</option>
+                                        {% for classes in classes_list %}
+                                            <option value={{ classes.id }}>{{ classes.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="m-r pull-left col-md-2">
+                                    <input class="form-control m-b sticky" id="user_search"
+                                           placeholder={% trans 'x_name_surname' %} type="text">
+                                    </input>
+                                </div>
+                                <div class="m-r pull-left">
+                                    <a class="btn btn-primary" id="table_refresh" onclick="userTable.refresh();">
+                                        <i class="fa fa-search"></i> {% trans 'x_search' %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="userTable"
+                       data-toggle="table"
+                       data-toolbar="#userTableToolbar"
+                       data-toolbar-align="center"
+                       data-show-refresh="false"
+                       data-search="false"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-url="{% url 'cms_course:api:course-user-statistics' %}"
+                >
+                    <thead>
+                    <tr>
+                        <th data-field="first_name" data-escape="true" data-formatter="userTable.nameFormatter">{% trans 'x_name_surname' %}</th>
+                        <th data-field="organization" data-formatter="userTable.organizationFormatter">{% trans 'x_org' %}</th>
+                        <th data-field="group_name" data-formatter="userTable.groupFormatter">{% trans 'x_role' %}</th>
+                        <th data-field="complete_lessons" data-escape="true" data-sortable="true">{% trans 'x_complete_lessons' %}</th>
+                        <th data-field="complete_experiment" data-escape="true" data-sortable="true">{% trans 'x_complete_experiment' %}</th>
+                        <th data-field="complete_practice" data-escape="true" data-sortable="true">{% trans 'x_complete_practice' %}</th>
+                        <th data-field="experiment_mark_score" data-formatter="userTable.markscoreFormatter" data-sortable="true">{% trans 'x_experiment_average_score' %}</th>
+                    </tr>
+                    </thead>
+                </table>
+                </div>
+            </div>
+            <div id="tab-1" class="tab-pane active">
+                <div class="ibox-content">
+                    <div id="coursetableToolbar">
+                        <div class="form-group">
+                        <div class="clearfix">
+                            <div class="m-r pull-left col-md-2">
+                                <select class="form-control m-b sticky" id="search_direction">
+                                    <option value="">{% trans 'x_all_directions' %}</option>
+                                    {% for d in directions %}
+                                        <option value="{{ d.id }}">{% if LANGUAGE_CODE == 'zh-hans' %}{{ d.cn_name }}{% else %}{{ d.en_name }}{% endif %}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="m-r pull-left col-md-2">
+                                <select class="form-control m-b sticky select_search" id="search_difficulty">
+                                    <option value="">{% trans 'x_all_difficulty' %}</option>
+                                    {% for k,v in difficulty.items %}
+                                        <option value="{{ v }}">{{ k }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="m-r pull-left col-md-2">
+                                <input class="form-control m-b sticky" id="course_search" placeholder="{% trans 'x_name' %}"
+                                       type="text"/>
+                            </div>
+                            <div class="col-md-2 col-sm-2">
+                                <a class="btn btn-primary" id="table_refresh" onclick="coursetable.refresh();">
+                                    <i class="fa fa-search"></i>{% trans 'x_search' %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <table id="courseTable"
+                           data-toggle="table"
+                           data-toolbar="#coursetableToolbar"
+                           data-toolbar-align="center"
+                           data-show-refresh="false"
+                           data-search="false"
+                           data-pagination="false"
+                           data-side-pagination="server"
+                           data-url="{% url 'cms_course:api:course-course-statistics' %}"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="name" data-escape="true" data-sortable="true" >{% trans 'x_name' %}</th>
+                            <th data-field="direction_i18n_name" data-escape="true">{% trans 'x_direction' %}</th>
+                            <th data-field="difficulty" data-formatter="coursetable.difficultyFormatter">{% trans 'x_difficulty' %}</th>
+                            <th data-field="count" data-sortable="true">{% trans 'x_num_hour' %}</th>
+                            <th data-field="lesson_study_count" data-sortable="true">{% trans 'x_study_num' %}</th>
+                            <th data-field="report_learn_count" data-sortable="true">{% trans 'x_submit_report_num' %}</th>
+                            <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                            <th data-field="id" data-formatter="coursetable.operatorFormatter">{% trans 'x_operation' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <div class="pagination-box clearfix">
+                        <div style="float: left;margin-top: 15px;">
+                            <span class="pagination-info"></span>
+                            <span class="pagesize-info" id="page-info">{% trans 'x_pagination_info_left' %}<span class="btn-group dropup">
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown" aria-expanded="false"><span
+                                    class="page-size">10</span> <span class="caret"></span></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li role="menuitem" class="active">
+                                    <a href="#">10</a>
+                                </li>
+                                <li role="menuitem">
+                                    <a href="#">25</a>
+                                </li>
+                                <li role="menuitem">
+                                    <a href="#">50</a>
+                                </li>
+                            </ul>
+                            </span>{% trans 'x_pagination_info_right' %}</span>
+                        </div>
+                        <div id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script src="{% static_v 'x_person/cms/js/constants.js' %}"></script>
+    <script src="{% static 'course/js/treegrid/treegrid.js' %}"></script>
+    <script src="{% static 'web/js/paginator.js' %}"></script>
+    <script type="text/javascript">
+        var major_list = "{% url 'cms_x_person:cms_api:major-list' %}";
+        var classes_list = "{% url 'cms_x_person:cms_api:classes-list' %}";
+        var detailUrl = "{% url 'cms_course:class_statistics_detail' 0 %}";
+        var userMajorFirstTime = true;
+        var userClassFirstTime = true;
+        var courseFirstTime = true;
+    </script>
+
+    <script type="text/javascript">
+        $('#testEnvModal').on('hidden.bs.modal', function () {
+            $('[data-widget-id=common-env]').empty();
+            $('[data-widget-id=common-env]').clearLessonEnvInstance();
+        });
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.operatorFormatter = function(value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa fa fa-pie-chart',
+                        text: "{% trans 'x_log_detail' %}",
+                        url: detailUrl.replace(0, value)
+                    }
+                ];
+
+                return bsTable.getOperatorHtml(btns);
+            };
+
+            this.organizationFormatter = function (value, row, index) {
+                var organization_list = value.split('/');
+                var data = '<span style="color: #f7a54a">' + organization_list[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + organization_list[1] + '</span>';
+                return data;
+            };
+
+            this.lessonFormatter = function (value, row, index) {
+                return CALLBACK.addUnit(value, gettext("x_lesson"))
+            };
+
+            this.experimentFormatter = function (value, row, index) {
+                return CALLBACK.addUnit(value, gettext("x_one"))
+            };
+
+            this.practiceFormatter = function (value, row, index) {
+                return CALLBACK.addUnit(value, gettext('x_lesson_task'))
+            };
+
+            this.markscoreFormatter = function (value, row, index) {
+                if (value == 0) {
+                    return value;
+                }else {
+                    return Number(value).toFixed(1);
+                };
+            }
+
+        });
+
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.faculty = $("#faculty_name").val();
+                params.major = $("#major_name").val();
+                params.classes = $("#classes_name").val();
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        var CALLBACK = {
+            batchSet: function (btn) {
+                var ids = table.getCheckedValues();
+                if (ids.length == 0) {
+                    return;
+                }
+                var url = $(btn).attr('data-url');
+                var fieldname = $(btn).attr('data-field');
+                var value = $(btn).attr('data-value');
+                var data = {
+                    ids: ids,
+                };
+                data[fieldname] = value;
+                ajaxDialog.buttonClick(http.patch, url, data, function (res) {
+                    if (res) {
+                        if (res.error_code == 0) {
+                            swal({
+                                title: res.info,
+                                type: "info",
+                                confirmButtonText: "{% trans 'x_select_share_teacher' %}",
+                                confirmButtonColor: '#DD6B55'
+                            });
+                            return false
+                        }
+                    }
+                    table.reload();
+                });
+            },
+            categorySwitch: function () {
+                class_html = '';
+                person_html = '';
+                var category = $("#category").val();
+                if (category == 1) {
+
+                };
+                $("#major_name").empty();
+                $('#major_name').append("<option value=0 selected=selected>{% trans "x_all" %} {{ ORGANIZATION.Third_level }}</option>");
+                http.get(major_list, {'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#major_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                CALLBACK.classlist()
+            },
+            majorlist: function () {
+                if (courseFirstTime) {
+                    courseFirstTime = false;
+                    return;
+                }
+                var facultyid = $("#faculty_name").val();
+                $("#major_name").empty();
+                $('#major_name').append("<option value=0 selected=selected> {% trans "x_all" %} {{ ORGANIZATION.Third_level }} </option>");
+                http.get(major_list, {'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#major_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                CALLBACK.classlist()
+            },
+            classlist: function () {
+                var major_id = $("#major_name").val();
+                var facultyid = $("#faculty_name").val();
+                $("#classes_name").empty();
+                $('#classes_name').append("<option value=0 selected=selected> {% trans 'x_all' %}{{ ORGANIZATION.Fourth_level }}</option>");
+                http.get(classes_list, {'major': major_id, 'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#classes_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                table.refresh();
+            },
+            addUnit: function (value, unit) {
+                if (value != 0) {
+                    return value + unit
+                }
+            },
+        };
+    </script>
+
+    <script type="text/javascript">
+        // var superuser = {{ superuser }};
+        // var staff = {{ staff }};
+        //pageWidgets.registerCheckTableRow($("#userTable"));
+        var userTable = bsTable.getTableModule($('#userTable'), function () {
+            this.operatorFormatter = function(value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa fa fa-pie-chart',
+                        text: "{% trans 'x_log_detail' %}",
+                        url: detailUrl.replace(0, value)
+                    }
+                ];
+
+                return bsTable.getOperatorHtml(btns);
+            };
+
+            this.nameFormatter = function (value, row, index) {
+                return [
+                   '<div>',
+                    '<a href="'+"{% url "cms_course:user_statistics" 0 %}".replace(0, row.id)+'" ' +
+                    'style="color: #53616d"' +
+                    '>' + value + '</a>',
+                    '</div>'
+                ].join('');
+            };
+
+            this.organizationFormatter = function (value, row, index) {
+                if (value == null) {
+                    return null;
+                }
+                var organization_list = value.split('/');
+                var data = '<span style="color: #f7a54a">' + organization_list[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + organization_list[1] + '</span>' + ' / ' +
+                        '<span>' + organization_list[2] + '</span>';
+                return data;
+                };
+            
+            this.groupFormatter = function (value, row, index) {
+                return gettext(value);
+            };
+            
+            this.onlineFormatter = function (value, row, index) {
+                if (value == ModelConstant.User.Online.OFFLINE) {
+                    var text = "<span class='text-default' style='color: #999;'>{% trans 'x_offline' %}</span>";
+                } else if (value == ModelConstant.User.Online.ONLINE) {
+                    var text = "<span class='text-success' style='color: #1ab394;'>{% trans 'x_online' %}</span>";
+                } else {
+                    var text = "<span class='text-danger'>{% trans 'x_abnormal' %}</span>";
+                }
+                return text;
+            };
+
+            this.markscoreFormatter = function (value, row, index) {
+                if (value == 0) {
+                    return value;
+                }else {
+                    return Number(value).toFixed(1);
+                };
+            }
+
+        });
+        var USERCALLBACK = {
+            batchSet: function (btn) {
+                var ids = userTable.getCheckedValues();
+                if (ids.length == 0) {
+                    return;
+                }
+                var url = $(btn).attr('data-url');
+                var fieldname = $(btn).attr('data-field');
+                var value = $(btn).attr('data-value');
+                var data = {
+                    ids: ids,
+                };
+                data[fieldname] = value;
+                ajaxDialog.buttonClick(http.patch, url, data, function (res) {
+                    if (res) {
+                        if (res.error_code == 0) {
+                            swal({
+                                title: res.info,
+                                type: "info",
+                                confirmButtonText: "{% trans 'x_select_share_teacher' %}",
+                                confirmButtonColor: '#DD6B55'
+                            });
+                            return false
+                        }
+                    }
+                    userTable.reload();
+                });
+            },
+            majorlist: function () {
+                var facultyid = $("#facultyName").val();
+                http.get(major_list, {'faculty': facultyid}, function (data) {
+                    $("#majorName").empty();
+                    $('#majorName').append("<option value=0 selected=selected> {% trans 'x_all' %}{{ ORGANIZATION.Third_level }} </option>");
+                    $.each(data.rows, function (n, value) {
+                        $('#majorName').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                USERCALLBACK.classlist()
+            },
+            classlist: function () {
+                var major_id = $("#majorName").val();
+                var facultyid = $("#facultyName").val();
+                http.get(classes_list, {'major': major_id, 'faculty': facultyid}, function (data) {
+                    $("#classesName").empty();
+                    $('#classesName').append("<option value=0 selected=selected>{% trans 'x_all' %}{{ ORGANIZATION.Fourth_level }} </option>");
+                    $.each(data.rows, function (n, value) {
+                        $('#classesName').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                userTable.refresh();
+            }
+        };
+
+        $('#userTable').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+
+            queryParams: function (params) {
+                params.faculty = $("#facultyName").val();
+                params.major = $("#majorName").val();
+                params.classes = $("#classesName").val();
+                params.search = $("#user_search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        $('#user_search').keydown(function (e) {
+            if (e.keyCode == 13) {
+                userTable.refresh();
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+        var $table = $('#courseTable');
+        var coursetable = bsTable.getTableModule($table, function(){
+            this.authUrl = '{% url 'cms_course:auth_class' 0 %}';
+            this.shareUrl = '{% url 'cms_course:share_teacher' 0 %}';
+
+            this.difficultyFormatter = function (value, row, index) {
+                if (value == 0) {
+                    return gettext('x_easy');
+                } else if (value == 1) {
+                    return gettext('x_intermediate');
+                } else if (value == 2) {
+                    return gettext('x_hard');
+                }
+            };
+
+            this.operatorFormatter = function (value, row, index) {
+                if (row.no_child == true && row.is_lesson != true) {
+                    return null;
+                };
+
+                if ((row.tree_icon_expand == true && row.is_lesson != true) && row.expand == undefined) {
+                    var btns = [
+                        {
+                            type: 'button',
+                            class: 'btn-warning tree-expand',
+                            icon: 'fa fa-folder-open',
+                            text: '{% trans 'x_collapse' %}',
+                        }
+                    ];
+                    return table.getOperatorHtml(btns);
+                } else if ((row.tree_icon_expand == false && row.is_lesson != true) && row.expand == undefined) {
+                    var btns = [
+                        {
+                            type: 'button',
+                            class: 'btn-warning tree-expand',
+                            icon: 'fa fa-folder-open',
+                            text: '{% trans 'x_expand' %}',
+                        }
+                    ];
+                    return table.getOperatorHtml(btns);
+                };
+                if ((row.expand == false && row.is_lesson != true) || (row.expand == false && row.is_lesson == undefined)) {
+                    var btns = [
+                        {
+                            type: 'button',
+                            class: 'btn-warning tree-expand',
+                            icon: 'fa fa-folder-open',
+                            text: '{% trans 'x_expand' %}',
+                        }
+                    ];
+                } else if (row.expand == true && row.is_lesson != true) {
+                    var btns = [
+                        {
+                            type: 'button',
+                            class: 'btn-warning tree-expand',
+                            icon: 'fa fa-folder-open',
+                            text: '{% trans 'x_collapse' %}',
+                        }
+                    ];
+                } else {
+                    var btns = [
+                        {
+                            type: 'link',
+                            class: 'btn-info',
+                            icon: 'fa fa-pie-chart',
+                            text: '{% trans 'x_learning_statistics' %}',
+                            url: ('{% url 'cms_course:statistics' 0 %}').replace(0, value),
+                        }
+                    ];
+                }
+
+                return table.getOperatorHtml(btns);
+            };
+
+            this.prepareBatchLoads = function (btn) {
+                http.get('{% url "cms_course:api:course-batch-loads" %}', {}, function(res){
+                    var files = res.files;
+                    $("#batchLoadTable").bootstrapTable('load', files);
+                });
+                $('#selectBatchLoad').modal();
+            };
+        });
+
+        var batchLoadTable = bsTable.getTableModule($('#batchLoadTable'), function (){
+            this.batchLoads = function () {
+                var filenames = batchLoadTable.getCheckedValues();
+                if (filenames.length == 0) {
+                    return;
+                }
+                $('#selectBatchLoad').modal('hide');
+                ajaxDialog.buttonClickError(http.post, '{% url "cms_course:api:course-batch-loads" %}', {filenames: filenames}, function () {
+                    popUtil.successHint(gettext('x_import_success'));
+                    table.reload();
+                });
+            };
+        });
+        $("#batchLoadTable").bootstrapTable({data: {}});
+
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search_text = $("#course_search").val();
+                params.search_direction = $("#search_direction").val();
+                params.search_sub_direction = $("#search_sub_direction").val();
+                params.search_difficulty = $("#search_difficulty").val();
+                params.page = parseInt($('.pagination .active a').last().text());
+                params.pagesize = parseInt($('.page-size').first().text());
+                params.my_course = $('#my-course').is(":checked");
+                params.sys_course = $('#sys-course').is(":checked");
+                params.share_course = $('#share-course').is(":checked");
+                params.sys_course = true;
+                params.my_course = true;
+                params.share_course = true;
+                return params;
+            },
+            treeView: true,//是否开启树视图
+            treeId: "identity_id",//id字段
+            treeField: "name",
+            leafIcon:'blank_replace',
+            // pageSize: 10
+            onLoadSuccess: function (data) {
+                $('#pagination').bootstrapPaginator({
+                    currentPage: data.page,
+                    totalPages: Math.ceil(data.total / data.pagesize) == 0 ? 1 : Math.ceil(data.total / data.pagesize),
+                });
+                if (data.total == 0) {
+                    $(".pagination-box").hide()
+                } else {
+                    var text = gettext('x_pagination_info');
+                    var info = text.replace('-1', data.data_start).replace('-2', data.data_end).replace('-3', data.total);
+                    $('#page-info').text(info);
+                    $(".pagination-box").show()
+                }
+            }
+        });
+
+        $('.dropdown-menu li').click(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.page-size').text(parseInt($(this).text()));
+            coursetable.refresh();
+        })
+
+
+        $('#pagination').click(function () {
+            coursetable.refresh()
+        });
+
+        $('.table_refresh').click(function () {
+            coursetable.refresh();
+        });
+
+        $("#course_search").keydown(function (e) {
+            if (e.keyCode == 13) {
+                coursetable.refresh();
+            }
+        });
+
+        var sub_dir_param = $("#search_sub_direction");
+
+        $(function () {
+            function refresh_sub_direction(parent_id) {
+                sub_dir_param.children("option").show();
+                sub_dir_param.children("option:not([data-parent='"+parent_id+"'])").hide();
+                sub_dir_param.children("option[value='']").show();
+            }
+
+            $("#search_direction").change(function () {
+                refresh_sub_direction($(this).val());
+                sub_dir_param.val("");
+                sub_dir_param.children("option[value='']").attr("selected",true);
+                coursetable.refresh();
+            });
+
+            $("#search_difficulty").change(function () {
+                refresh_sub_direction($(this).val());
+                sub_dir_param.val("");
+                sub_dir_param.children("option[value='']").attr("selected",true);
+                coursetable.refresh();
+            });
+
+            refresh_sub_direction($("#search_direction").val());
+        })
+    </script>
+{% endblock %}

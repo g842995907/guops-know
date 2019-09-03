@@ -1,0 +1,142 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static_v %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static_v 'x_person/css/layout.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'web/css/calendar.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <script src="{% static 'web/echarts/echarts.min.js' %}"></script>
+    <script src="{% static 'x_person/js/echarts-base.js' %}"></script>
+    <script src="{% static 'x_person/js/calendar.js' %}"></script>
+    <script src="{% static_v 'web/js/common.js' %}"></script>
+    <script>
+        $(function () {
+            $('.head-show').height($('.head-show').width())
+        })
+        $(window).resize(function () {
+                $('.head-show').height($('.head-show').width())
+            }
+        )
+
+    </script>
+    <style>
+        #nop > p {
+            display: inline;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <!-- container start-->
+    <section class="container mrg93T mrg20B">
+        <div class="bread layout-color">
+            <a class="layout-color" href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a> >>
+            <a class="active font15" href="#">{% trans 'x_growth_trajectory' %}</a>
+        </div>
+        {#个人信息start#}
+        <div class="personal-info-box font16P mrg0A mrg15T">
+            {# 左侧头像信息 start#}
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                <div class="default-bg head-info">
+                    <div class="row mrg0A">
+                        <div class="head-img col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <span>
+                    {% if request.user.logo %}
+                        {% if  request.user.logo.url %}
+                            <img id="headShow" class="head-show img-responsive img-circle"
+                                 src="{{ request.user.logo.url }}">
+                        {% else %}
+                            <img aid="headShow" class="head-show img-responsive img-circle"
+                                 src="{% static 'x_person/img/user_default.jpg' %}">
+                        {% endif %}
+                    {% else %}
+                        <img aid="headShow" class="head-show img-responsive img-circle"
+                             src="{% static 'x_person/img/user_default.jpg' %}">
+                    {% endif %}
+                    </span>
+                        </div>
+                        <div class="head-detail col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                            {% autoescape on %}
+                                <p><i class="fa fa-user-md vertical-middle"></i>：{{ request.user.first_name }}</p>
+                                <p><i class="oj-icon oj-icon-E90A vertical-middle"></i>：{{ request.user.team.name }}</p>
+                                <p><i class="fa fa-sitemap vertical-middle"></i>：{{ request.user.faculty.name }}</p>
+                                <p><i class="fa fa-sitemap vertical-middle"></i>：{{ request.user.major.name }}</p>
+                                <p><i class="fa fa-sitemap vertical-middle"></i>：{{ request.user.classes.name }}</p>
+                                <p><i class="fa fa-barcode vertical-middle"></i>：
+                                    {% if request.user.student_id %}
+                                        {{ request.user.student_id  }}
+                                    {% endif %}
+                                </p>
+                            {% endautoescape %}
+                        </div>
+                    </div>
+                    <div class="row mrg0A mrg10T">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="nop">
+                            <li class="oj-icon oj-icon-E91C vertical-middle"></li>：
+                                <p style="word-break: break-word">
+                                    {% if request.user.brief_introduction %}
+                                        {{ request.user.brief_introduction }}
+                                    {% endif %}
+                                </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# 左侧头像信息 end#}
+            {# 右侧数据信息 start#}
+            <div class="data-info col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                <div class="default-bg ">
+                    <div class="row mrg0A">
+                        <div id="main_echart" class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="height: 300px;"></div>
+                        <div id="radar_echart" class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+            {# 右侧数据信息 end#}
+        </div>
+        {#个人信息end#}
+        {#    日历start#}
+        {% include 'x_person/web/calendar.html' %}
+        {#    日历end#}
+    </section>
+    <!-- container end-->
+{% endblock %}
+
+
+{% block document_ready %}
+    <script>
+        var radius;
+        $(function () {
+            if ((screen.width <= 1024) && (screen.height == 768)) {
+                radius = 40;
+            } else if ((screen.width <= 1366)) {
+                radius = 50;
+            } else {
+                radius = 80;
+            }
+        });
+
+
+        var myChart = echarts.init(document.getElementById('main_echart'));
+        var myRadar = echarts.init(document.getElementById('radar_echart'));
+        $(function () {
+            {% if practice_task_record %}
+            http.get("{{ practice_task_record }}", {}, function (res) {
+                draw_chart(res);
+            });
+            {% else %}
+                draw_chart({error_code:0,response_data:[]});
+            {% endif %}
+
+            {% if practice_task_radar %}
+            http.get("{{ practice_task_radar }}", {}, function (res) {
+                draw_radar(res.response_data);
+            });
+            {% else %}
+                draw_radar([]);
+            {% endif %}
+        })
+    </script>
+{% endblock %}

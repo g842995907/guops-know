@@ -1,0 +1,157 @@
+
+.exercise_type {
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+}
+
+.exercise .active a {
+    color: orange !important;
+}
+
+.md-editor > textarea {
+    background: none;
+}
+
+.md-editor > textarea:focus {
+    background: none;
+}
+
+.md-editor > .md-preview {
+    background: #16212e;
+    color: white;
+}
+
+div > h2 {
+    padding: 10px 0 10px 20px;
+    margin-top: 0;
+}
+
+.fixed-table-loading {
+    top: -22px !important;
+    background-color: transparent;
+}
+
+.fixed-table-pagination {
+    margin-top: 50px;
+}
+
+@media screen and (max-width: 1366px) {
+    .fixed-table-pagination {
+        margin-top: 0px;
+    }
+}
+
+#options label {
+    vertical-align: top;
+}
+
+#options label p {
+    display: inline;
+}
+
+/*提交答案进度百分比*/
+.loading {
+    background-image: url("../img/loading.gif");
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+    display: none;
+}
+
+.percent {
+    display: none;
+    line-height: 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    border:2px solid #FF9900;
+}
+
+.answer-right {
+    width: 24px;
+    /*height: 25px;*/
+    height: 30px;
+    margin-top: 3px;
+    display: inline-block;
+    background: url("../img/correct.png") no-repeat center;
+}
+
+.answer-wrong {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background: url("../img/wrong.png") no-repeat center;
+    margin-right: 15px;
+}
+
+/*除理论基础外答题页*/
+.download-file, .download-file:link, .download-file:visited, .download-file:hover, .download-file:active {
+    cursor: pointer;
+    border-bottom: 1px dashed;
+}
+
+.submit-flag {
+    padding-left: 0;
+}
+
+.submit-flag input {
+    outline: none;
+    border: transparent;
+    border-radius: 0;
+}
+
+.apply-env p {
+
+}
+
+.bugDetail .nav-tabs > li > a {
+    border-radius: 0 !important;
+    border: none;
+}
+
+.nav-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+    margin: 0 5px 0 0;
+}
+
+@media screen and (max-width: 1152px) {
+    .nav-tabs > li {
+        margin: 0 5px 0 0 !important;
+    }
+
+}
+
+.nav-tabs > li > a {
+    margin-right: 0px;
+}
+
+.write-up-tab {
+    padding: 15px 0 15px 45px;
+}
+
+.discuss-area, .comment-area, .reply-area {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.reply-area ,
+.reply-area:focus{
+    border: 1px solid rgba(0, 24, 54, 0.35);
+}
+
+#previous:hover, #next:hover {
+    color: #ff9900;
+}
+
+ .md-preview img{
+        width: 100%;
+        height: 100%;
+ }

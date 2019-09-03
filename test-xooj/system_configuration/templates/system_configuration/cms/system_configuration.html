@@ -1,0 +1,270 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_system_configuration' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+    <style>
+    .desktop-transmission-quality-explain {
+      position: relative;
+    }
+    .desktop-transmission-quality-explain .hint {
+      position: absolute;
+      left: 100%;
+      top: 50%;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      width: 200px;
+      padding: 8px;
+      border-radius: 4px;
+      z-index: 100;
+      display: none;
+    }
+    </style>
+
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script>
+      $(function () {
+        $('.desktop-transmission-quality-explain>span').on('mouseenter', function () {
+          $('.desktop-transmission-quality-explain .hint').show();
+        });
+        $('.desktop-transmission-quality-explain>span').on('mouseleave', function () {
+          $('.desktop-transmission-quality-explain .hint').hide();
+        });
+      });
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              action="{% url 'cms_system_configuration:cms_api:system-configuration-batch-update' %}"
+              method="post" class="form-horizontal"> {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_system_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="system_name" name="system_name"
+                               value="{{ system_name }}"/>
+                    </div>
+                    <div style="padding-top:3px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+
+                <!-- 版权信息-->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_copyright_information' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="copyright" name="copyright"
+                               value="{{ copyright }}"/>
+                    </div>
+                </div>
+                <!-- 随机答案前缀配置-->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_random_flag_prefix' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="answer_prefix" name="answer_prefix"
+                               value="{{ answer_prefix }}"/>
+                    </div>
+                </div>
+                <!-- 场景/人 -->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_scene_people' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="person_env_count" name="person_env_count"
+                               value="{{ person_env_count }}"/>
+                    </div>
+                </div>
+
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_open_registration' %}</label>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="public_register"
+                               value="{% if public_register == '1' %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" id="public_register"
+                               data-name="public_register"
+                                {% if public_register == '1' %} checked {% endif %}>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_registered_users_review' %}</label>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="audit" value="{% if audit == '1' %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" id="audit"
+                               data-name="audit"
+                                {% if audit == '1' %} checked {% endif %}>
+                    </div>
+                </div>
+                {% if audit == 1 %} <h1>asf</h1> {% endif %}
+
+                <!-- 背景图-->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'Logo' %}</label>
+                    <div class="col-sm-6">
+                        <div class="image_upload_widget">
+                            <div>
+                                <div class="btn btn-primary btn_image_upload image_upload">
+                                    {% trans "x_select_pic" %}
+                                    {#                                    <input type="button" class="image_upload" id="logo"/>#}
+                                    <input type="file" class="form-control image_upload image_id" id="logo"
+                                           value="{% if logo %}{{ logo }}{% endif %}"
+                                           accept="image/gif,image/jpeg,image/png,image/bmp"/>
+                                    <input type="text" class="form-control hidden" name="logo">
+                                </div>
+                            </div>
+                            <a href="{{ logo }}"
+                               class="image_show"
+                               title="图片"
+                               data-gallery="">
+                                <img {% if logo %}src="{{ logo }}"{% endif %}>
+                            </a>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev"><</a>
+                                <a class="next">></a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 桌面传输质量 -->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_desktop_transmission_quality' %}</label>
+                    <div class="col-sm-8">
+                        <div class="desktop-transmission-quality clearfix">
+                          <div class="radio checkbox-success text-center pull-left" style="margin-right: 10px;">
+                              <input type="radio" id="desktop_transmission_quality1"
+                                     name="desktop_transmission_quality"
+                                     value="1"
+                                     {% if desktop_transmission_quality == '1' %}checked{% endif %}
+                              />
+                              <label for="desktop_transmission_quality1">{% trans 'x_desktop_transmission_quality_low' %}</label>
+                          </div>
+                          <div class="radio checkbox-success text-center pull-left" style="margin-right: 10px;">
+                              <input type="radio" id="desktop_transmission_quality2"
+                                     name="desktop_transmission_quality"
+                                     value="2"
+                                     {% if desktop_transmission_quality == '2' %}checked{% endif %}
+                              />
+                              <label for="desktop_transmission_quality2">{% trans 'x_desktop_transmission_quality_middle' %}</label>
+                          </div>
+                          <div class="radio checkbox-success text-center pull-left" style="margin-right: 10px;">
+                              <input type="radio" id="desktop_transmission_quality3"
+                                     name="desktop_transmission_quality"
+                                     value="3"
+                                     {% if desktop_transmission_quality == '3' %}checked{% endif %}
+                              />
+                              <label for="desktop_transmission_quality3">{% trans 'x_desktop_transmission_quality_high' %}</label>
+                          </div>
+                          <div class="pull-left desktop-transmission-quality-explain">
+                            <span class="glyphicon glyphicon-question-sign " style="margin-top: 8px;cursor: pointer;"></span>
+                            <div class="hint">
+                              远程桌面传输质量，指的是浏览器访问系统虚拟机远程桌面质量。<br />
+                              低：分辨率较低，去除桌面特效，占用带宽较少。<br />
+                              中：分辨率中等，去除桌面特效，占用带宽中等。<br />
+                              高：分辨率自适应客户端，开启桌面特效，占用带宽较高。
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="alert alert-danger server-error" id="server-error">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_system_configuration:system_configuration' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_system_configuration:system_configuration' %}";
+    </script>
+    <script>
+        $(".image_upload_widget").bindImgUpload();
+
+    </script>
+    <script>
+        $(function () {
+            $("#validateForm").mvalidate({
+                rules: {
+                    system_name: {
+                        required: true,
+                        maxlength: 30
+                    }
+                },
+                messages: {
+                    system_name: {
+                        required: "{% trans 'x_must_input_system' %}",
+                        maxlength: "{% trans 'x_input_sysytem_30' %}"
+                    }
+                }
+            });
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, function () {
+                if ($('#server-error').text().indexOf(gettext('x_name')) > 0)
+                    $('#system_name').val("{{ system_name }}");
+                else if ($('#server-error').text().indexOf(gettext('x_scene_num')) > 0)
+                    $('#person_env_count').val({{ person_env_count }});
+            }, {});
+        });
+        $(function () {
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+
+                $(html).change(function () {
+                    var name = $(this).attr('data-name');
+                    var $input = $(this).prev();
+                    if ($(this).prop('checked')) {
+                        $input.val(1);
+                    } else {
+                        $input.val(0);
+                    }
+                });
+            });
+        });
+
+
+    </script>
+{% endblock %}

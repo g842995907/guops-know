@@ -1,0 +1,18 @@
+[
+  {
+    "model": "system_configuration.systemconfiguration",
+    "pk": 1,
+    "fields": {
+      "key": "system_name",
+      "value": "\u8d5b\u5b81\u5b9e\u8bad\u5e73\u53f0"
+    }
+  },
+  {
+    "model": "system_configuration.systemconfiguration",
+    "pk": 2,
+    "fields": {
+      "key": "copyright",
+      "value": "\u8d5b\u5b81\u7f51\u5b89\u79d1\u6280\u6709\u9650\u516c\u53f8 \u7248\u6743\u6240\u6709"
+    }
+  }
+]

@@ -1,0 +1,397 @@
+{% load staticfiles %}
+{% load static_v %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<head>
+    {% get_current_language as LANGUAGE_CODE %}
+    <meta charset="UTF-8"/>
+    <title>{% trans 'x_login'|capfirst %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/css/default.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/css/common.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/css/login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" media="screen" href="{% static_v 'web/css/styleLogin.css' %}">
+    <link rel="stylesheet" href="{% static_v 'web/css/common.css' %}"/>
+    <script src="{% static_v 'web/js/jquery-3.2.1.min.js' %} "></script>
+    <script src="{% static_v 'web/js/jquery.form.js' %}"></script>
+    <script src="{% static "web/js/ajax.csrf.js" %}"></script>
+    <script src="{% static 'web/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+
+    {# 预加载场景相关资源 #}
+    <link rel="prefetch" href="{% static 'common_env/lib/bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="prefetch" href="{% static 'common_env/lib/vis/vis.min.css' %}" />
+    <link rel="prefetch" href="{% static 'common_env/css/network.css' %}" />
+    <link rel="prefetch" href="{% static 'common_env/lib/vue/vue.min.js' %}" />
+    <link rel="prefetch" href="{% static 'common_env/lib/vis/vis.min.js' %}" />
+    <link rel="prefetch" href="{% static 'common_env/lib/echarts/echarts.js' %}" />
+    <link rel="prefetch" href="{% static 'common_env/js/network.js' %}" />
+
+</head>
+<style type="text/css">
+    html, body {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+    {#        background: url(../../static/img/bg.jpg);#} background-size: 100% 100%;
+    }
+
+    h1 {
+        margin: 0;
+        position: absolute;
+        left: 50px;
+        top: 20px;
+    }
+
+    h4 {
+        margin: 0;
+        position: absolute;
+        right: 50px;
+        bottom: 30px;
+    }
+
+    ul, li {
+        list-style: inherit;
+    }
+
+    .modal {
+        margin-top: -400px;
+    }
+
+    .username,.password{
+        color: #333;
+    }
+
+    .captcha{
+        width: 130px;
+        height:40px;
+        border:none;
+        border-left:1px solid #3c3c3c;
+        padding-left: 10px;
+    }
+
+    @media screen and (max-width: 1366px) {
+        .modal {
+            top: 0;
+            margin-top: 0px;
+        }
+    }
+    .modal-content{
+        background-color: rgba(19, 37, 60, 0.9);
+    }
+    .modal-header{
+        border-bottom: 1px solid #293e66;
+    }
+    .tip_message{
+        display: flex;
+        margin: 20px;
+        padding: 15px;
+    }
+    .browser{
+        flex: 1;
+        color: #b2b6bf;
+    }
+</style>
+<body>
+<!-- 模态框 -->
+<div class="modal fade" id="checkModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5>提示</h5>
+            </div>
+            <div class="modal-body">
+                <p style="color: #ff9509">推荐使用以下版本的浏览器</p>
+                <div class="tip_message" style="background-color: rgba(0,24,54,0.46);">
+                    <a class="browser chrome">
+                        <img src="{% static_v 'web/img/chorme.png' %}" alt="" style="width: 50%">
+                        <p>Google Chrome 72</p>
+                    </a>
+                    <a class="browser firefox">
+                        <img src="{% static_v 'web/img/firefox.png' %}" alt="" style="width: 50%">
+                        <p>Mozilla Firefox 65</p>
+                    </a>
+{#                    <a class="browser">#}
+{#                        <img src="{% static_v 'web/img/edge.png' %}" alt="">#}
+{#                        <p>edge</p>#}
+{#                    </a>#}
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="count-particles hidden">
+    <span class="js-count-particles">--</span>
+</div>
+<!-- particles.js container -->
+<div id="particles-js"></div>
+<h1 class='fl'>
+{#    <img id="platform_logo" class="hidden left-top-logo"#}
+{#         src="{% static_v 'web/img/xlogo_'|add:LANGUAGE_CODE|add:'.png' %}" alt="">#}
+    <img id="platform_logo" alt="Brand" class="left-top-logo"
+         {% if request.platform_logo %}
+         src="/media/system_logo/{{ request.platform_logo }}"
+         {% else %}
+         src="{% static_v 'web/img/xlogo_'|add:LANGUAGE_CODE|add:'.png' %}"
+         {% endif %}
+    >
+</h1>
+
+<div class="logoin-warpper">
+    <div class="centerDiv">
+        <div class="oj_banner mrg50R">
+            <img src="{% static_v 'web/img/login0.png' %}" alt="" class='width100' id='snOj_img'>
+        </div>
+        <div class="login-box">
+            <div class='logoMain' id="login">
+                <div class='font26 whiteC text-center mrg40B'>
+                    {% trans 'x_login'|capfirst %}
+                </div>
+                <div class='mrg50B'>
+                    <div class="write-login mrg30T">
+                        <div class="">
+                            <span class="person pad25L pad15R inLine human-login" style="vertical-align: top"></span>
+                            <input class="font16 pad15R username" id="username"  name="username"
+                                   value="{{ form.cleaned_data.username }}" type="text"
+                                   placeholder="{% trans 'x_user_name' %}">
+                        </div>
+                    </div>
+                    <div class="write-login mrg30T">
+                        <div class="">
+                            <span class="person pad25L pad15R inLine suo-login" style="vertical-align: top"></span>
+                            <input class="font16 pad15R password" id="password" name="password" value="" type="password"
+                                   placeholder="{% trans 'x_password' %}">
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="write mrg30T pull-left" style="width: 220px;">
+                            <div class="">
+                                <span class="person pad25L pad15R inLine suo" style="vertical-align: top"></span>
+                                <input class="font16 pad15R captcha" id="captcha" name="captcha"
+                                       value=""
+                                       type="text"
+                                       placeholder="{% trans 'x_verification_code' %}"><br><br>
+                            </div>
+                        </div>
+                        <img class="mrg30T pull-left" style="margin:0px 0px 0px 30px;width:70px;height:44px;"
+                             src="{% url 'cms_system_configuration:captcha' %}"
+                             id="captcha_img" alt="验证码"/>
+                    </div>
+{#                    <div class="cookie mrg20T clearfix">#}
+{#                        <div class="remember fl">#}
+{#                            <input id="remember_me" name="remember_me" value="y" type="checkbox">#}
+{#                            <span class="whiteC">{% trans 'x_remember_me' %}</span>#}
+{#                        </div>#}
+{#                        <div class="forget whiteC fr">#}
+{#                            <a href="{% url 'common_web:forget_password' %}"><span#}
+{#                                    class="whiteC">{% trans 'x_forget_password' %}</span></a>#}
+{#                        </div>#}
+{#                    </div>#}
+
+                    <p class="text-center" id="failMessage" style="font-size: medium; color: red"></p>
+
+                </div>
+                <input type="submit" id="ajaxLogin" value="{% trans 'x_login_immediately' %}"
+                       class='clickLogin pad10T pad10B text-center whiteC font18 mrg15B posRelative'>
+
+                {% if public_register != 0 %}
+                    <div class='text-center mar'>
+                        <a href="{% url 'common_web:register' %}" id="register-user"
+                           class='sign whiteC '>{% trans 'x_registered_account' %}</a>
+                    </div>
+                {% endif %}
+
+            </div>
+            <div class="browser mrg5T">{% trans 'x_tip_login' %}</div>
+        </div>
+
+    </div>
+</div>
+
+<input type="hidden" name="next" value="{{ next }}"/>
+<form class='language whiteC' id="languageForm" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+    <input name="language" id="language" style="display: none"/>
+    <div>
+        <a onclick="showLanguage('zh-hans')" class='whiteC'>中文</a>
+        <span class='line inLine'></span>
+        <a onclick="showLanguage('en')" class='whiteC'>English</a>
+    </div>
+</form>
+
+{#<span id="copyright" class='font12 sn_oj'>{% trans '赛宁网安科技有限公司 版权所有' %}</span>#}
+<span id="copyright" class='font12 sn_oj'>{{ request.copyright }}</span>
+
+</body>
+<script>
+    var captchaUrl = "{% url 'cms_system_configuration:captcha' %}";
+    $('#captcha_img').click(function () {
+        this.src = captchaUrl + '?time=' + Math.random();
+    });
+
+    $(document).ready(function () {
+        const chrome_link=  '/media/browser/Chrome/Chrome_72_64.exe';
+        $(".chrome").attr('href', chrome_link)
+        const firefox_link=  '/media/browser/Firefox/Firefox_65_win64.exe';
+        $(".firefox").attr('href', firefox_link)
+
+        const testBrowser = appInfo()
+        let userAgent=window.navigator.userAgent
+        if(userAgent.indexOf('Chrome')>-1 ){
+            if(String(testBrowser.version).split('.')[0] < 68){
+                $('#checkModal').modal('show');
+            }
+        }else if(userAgent.indexOf('Firefox')>-1){
+            if(String(testBrowser.version).split('.')[0] < 64){
+                $('#checkModal').modal('show');
+            }
+        }else if(userAgent.indexOf('Edge')>-1){
+            if(String(testBrowser.version).split('.')[0] < 40){
+                $('#checkModal').modal('show');
+            }
+        }else {
+            $('#checkModal').modal('show');
+        }
+        // 获取当前浏览器名 及 版本号
+        function appInfo(){
+            var browser = {appname: 'unknown', version: 0},
+                userAgent = window.navigator.userAgent.toLowerCase();  // 使用navigator.userAgent来判断浏览器类型
+            if ( /(msie|firefox|opera|chrome|netscape)\D+(\d[\d.]*)/.test( userAgent ) ){
+                browser.appname = RegExp.$1;
+                browser.version = RegExp.$2;
+            } else if ( /version\D+(\d[\d.]*).*safari/.test( userAgent ) ){ // safari
+                browser.appname = 'safari';
+                browser.version = RegExp.$2;
+            }
+            return browser;
+        }
+        var n = 0;
+        var srcs = new Array()
+        srcs.push("{% static_v 'web/img/login0.png' %}")
+        srcs.push("{% static_v 'web/img/login1.png' %}")
+        srcs.push("{% static_v 'web/img/login2.png' %}")
+        setInterval(function () {
+            n++;
+            n %= 3;
+            document.getElementById('snOj_img').src = srcs[n]
+        }, 1000);
+
+    });
+    var ajax_login = function () {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'common_web:handlerlogin' %}",
+            data: {
+                "username": $('#username').val(),
+                "password": $('#password').val(),
+                "captcha": $('#captcha').val(),
+                "next": $('input[name="next"]').val()
+            },
+            datatype: "json",
+            success: function (res) {
+                if (res.error_code){
+                    if (res.error_code == '1')
+                        $('#failMessage').html("{% trans 'x_enter_username_password' %}");
+                    else if (res.error_code == '2')
+                        $('#failMessage').html("{% trans 'x_enter_username' %}");
+                    else if (res.error_code == '3')
+                        $('#failMessage').html("{% trans 'x_enter_password' %}");
+                    else if (res.error_code == '4')
+                        $('#failMessage').html("{% trans 'x_incorrect_username_password' %}");
+                    else if (res.error_code == '5')
+                        $('#failMessage').html("{% trans 'x_user_not_active' %}");
+                    else if (res.error_code == '6'){
+                        $("#failMessage").html("{% trans 'x_user_has_expired' %}");
+                    }
+                    else if (res.error_code == '7'){
+                        $("#failMessage").html("{% trans 'x_enter_verification_code' %}");
+                    }
+                    else if (res.error_code == '8'){
+                        $("#failMessage").html("{% trans 'x_verification_code_error' %}");
+                    }
+                    $('#captcha').val('');
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                }
+                else
+                    window.location = res.redirect_url;
+            }
+        })
+    };
+    $(function () {
+        $("#password").keydown(function (e) {
+            if (e.keyCode == 13) {
+                ajax_login();
+            }
+        });
+        $('#ajaxLogin').click(function () {
+            ajax_login();
+        })
+    })
+</script>
+<script src="{% static_v 'web/js/particles.min.js' %}"></script>
+<script src="{% static_v 'web/js/app.js' %}"></script>
+<script src="{% static_v 'web/js/stats.js' %}"></script>
+<script>
+{#    var system_url = "{% url 'system_configuration:api:system-configuration-list' %}"#}
+</script>
+<script>
+    var count_particles, stats, update;
+    stats = new Stats;
+    stats.setMode(0);
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+    document.body.appendChild(stats.domElement);
+    count_particles = document.querySelector('.js-count-particles');
+    update = function () {
+        stats.begin();
+        stats.end();
+        if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
+            count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+        }
+        requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+
+    function showLanguage(language) {
+        $('#language').val(language);
+        $('#languageForm').submit();
+
+        // set guacamole language
+        var languageGpMapping = {
+            'zh-hans': 'zh',
+            'en': 'en',
+        }
+        var gp = JSON.parse(localStorage.getItem('GUAC_PREFERENCES') || '{"emulateAbsoluteMouse":true,"inputMethod":"none","language":"zh"}');
+        gp.language = languageGpMapping[language];
+        localStorage.setItem('GUAC_PREFERENCES', JSON.stringify(gp));
+    }
+    $(function () {
+{#        $.ajax({#}
+{#            url: system_url,#}
+{#            type: "GET",#}
+{#            dataType: "json",#}
+{#            async: false,#}
+{#            success: function (data) {#}
+{#                if (data.rows.length > 0) {#}
+{#                    $.each(data.rows, function (index, value, array) {#}
+{#                        if (value.key == "copyright") {#}
+{#                            $("#copyright").html(value.esc_value);#}
+{#                        }#}
+{#                        ;#}
+{#                        if (value.key == "logo") {#}
+{#                            var logo_url = '/media/system_logo/' + value.value#}
+{#                            $("#platform_logo").attr('src', logo_url);#}
+{#                        }#}
+{#                    });#}
+{#                }#}
+{#                $("#platform_logo").removeClass('hidden')#}
+{#            }#}
+{#        });#}
+    })
+
+</script>
+</html>

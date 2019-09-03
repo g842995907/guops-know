@@ -1,0 +1,96 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_comment' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="col-md-3 col-sm-3">
+                        <input class="form-control m-b" id="search" placeholder={% trans "x_name" %}
+                               type="text"/>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-md-3 col-sm-3">
+                        <a class="btn btn-primary" href="{% url 'cms_x_tools:comment_create' %}">
+                            <i class="fa fa-plus"></i>{% trans 'x_add' %}
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_x_tools:api:tool-comment-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_x_tools:api:tool-comment-list' %}">
+            <thead>
+            <tr>
+                <th data-field="username">{% trans "x_user" %}</th>
+                <th data-field="tool_name">{% trans "x_tool" %}</th>
+                <th data-field="parent">{% trans "x_related_comments" %}</th>
+                <th data-field="comment">{% trans "x_comment" %}</th>
+                <th data-field="thumbs_up">{% trans "x_praise_number" %}</th>
+                <th data-field="create_time">{% trans "x_comment_time" %}</th>
+                <th data-field="id" data-formatter="operatorFormatter">{% trans "x_operation" %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+        var table = bsTableClass($('#table'));
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                params.search_direction = $("#search_direction").val();
+                params.search_difficulty = $("#search_difficulty").val();
+                return params;
+            }
+        });
+
+
+        function operatorFormatter(value, row, index) {
+            var update_comment = "{% url 'cms_x_tools:comment_detail' -1 %}".replace('-1', value);
+            var delete_comment = "{% url 'cms_x_tools:comment_delete' -1 %}".replace('-1', value);
+            return [
+                '<div>',
+                '<a class="btn btn-primary" style="margin-left: 5px; margin-right: 5px;" href="' + update_comment + '">',
+                '<i class="fa fa-edit"></i> {% trans "x_edit" %}',
+                '</a>',
+                '<a class="btn btn-danger" style="margin-left: 5px; margin-right: 5px;" href="' + delete_comment + '">',
+                '<i class="fa fa-delete"></i> {% trans "x_delete" %}',
+                '</a>',
+                '</div>'
+            ].join('');
+        }
+    </script>
+{% endblock %}

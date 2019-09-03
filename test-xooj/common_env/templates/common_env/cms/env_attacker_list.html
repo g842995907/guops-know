@@ -1,0 +1,121 @@
+{% extends './iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_env_attacker_management' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <style>
+        .filter{
+            width: 196px;
+        }
+    @media screen and (max-width:1200px) {
+        .filter{
+         width:150px;
+        }
+
+    }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left filter">
+                        <select class="form-control m-b sticky select_search" id="type">
+                            <option value="">{% trans 'x_all_attacker_type' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ListModelConstant.EnvAttacker.Type'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_attacker_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_common_env:env_attacker_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                    </div>
+                    <div class="m-r pull-left">
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_common_env:api:env-attacker-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_common_env:api:env-attacker-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true">{% trans 'x_name' %}</th>
+                <th data-field="type" data-formatter="table.typeFormatter">{% trans 'x_type' %}</th>
+                <th data-field="desc">{% trans 'x_desc' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans "x_operation" %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_common_env:env_attacker_list' %}";
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+
+        var table = bsTable.getTableModule($('#table'), function () {
+
+            this.operatorFormatter = function (value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: '{% trans "x_edit_attacker" %}',
+                        url: listUrl + value,
+                        builtin: row.builtin,
+                    }
+                ];
+
+                return table.getOperatorHtml(btns);
+            };
+
+            this.typeFormatter =  function (value, row, index) {
+                return DictModelConstant.EnvAttacker.Type[value];
+            };
+        });
+
+        $("#table").stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.type = $("#type").val();
+                params.search = $("#search").val();
+                return params;
+            },
+        });
+    </script>
+{% endblock %}

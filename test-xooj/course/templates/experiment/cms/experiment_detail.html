@@ -1,0 +1,171 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% if mode == 0 %}
+        {% trans '新建实验' %}
+    {% else %}
+        {% trans '编辑实验' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_course:api:course-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_course:api:course-detail' course.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ course.name }}"/>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div style="display: none;">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans '课程类型' %}</label>
+                        <div class="col-sm-6">
+                            <select class="form-control m-b" name="type" id="type" data-form-fixed="1">
+                                    <option value="0">{% trans "Base Course" %}</option>
+                                    <option value="1" selected>{% trans "Experiment Course" %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans '实验logo' %}</label>
+                    <div class="col-sm-4">
+                        <div class="image_upload_widget">
+                            <div>
+                                <div class="btn btn-primary btn_image_upload image_upload" id="logo">
+                                    {% trans "x_select_pic" %}
+                                    <input type="text" class="form-control image_upload hidden" name="logo"
+                                           accept="image/gif,image/jpeg,image/png,image/bmp"/>
+                                </div>
+                            </div>
+                            <a href="{% if course.logo %}{{ course.logo.url }} {% endif %}" class="image_show"
+                               title="图片" name="logo"
+                               data-gallery=""><img {% if course.logo %}src="{{ course.logo.url }}"{% endif %}></a>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev"><</a>
+                                <a class="next">></a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_direction' %}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="direction" id="direction" data-form-fixed="1">
+                            {% for d in directions %}
+                                <option value="{{ d.id }}"
+                                        {% if d.id == course.direction.id %}selected{% endif %}>{{ d.cn_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans '课程难度' %}</label>
+                    <div class="col-sm-6">
+                        <select class="form-control m-b" name="difficulty" id="difficulty" data-form-fixed="1">
+                            {% for k, v in difficulty.items %}
+                                <option value="{{ v }}"
+                                        {% if v == course.difficulty %}selected{% endif %}>{{ k }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_introduction' %}</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="introduction" name="introduction">
+                            {% if course.introduction %}{{ course.introduction }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-2">
+                        <input type="checkbox" class="form-control js-switch" data-form-fixed="1" id="public" name="public"
+                                {% if course.public != 0 %} checked="" {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                        <a class="btn btn-white"
+                           href="{% url 'cms_course:experiment' %}">{% trans 'x_cancel' %}</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        $(".image_upload_widget").bindLocalCropImgUpload({aspectRatio: 7/4});
+        var listUrl = "{% url 'cms_course:experiment' %}";
+
+        $(".image_upload_widget").bindLocalImgUpload();
+
+        $(function () {
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            });
+        });
+
+        $().ready(function () {
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+            });
+
+            $("#introduction").initMarkdown();
+        });
+    </script>
+{% endblock %}

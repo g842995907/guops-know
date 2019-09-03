@@ -1,0 +1,259 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans 'x_authorization_Operation' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+
+    <link rel="stylesheet" href="{% static "lib/bootstrap-switch-master/dists/css/bootstrap3/bootstrap-switch.css" %}"/>
+    <script src="{% static 'lib/bootstrap-switch-master/dists/js/bootstrap-switch.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <style type="text/css">
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 1px;
+        }
+
+        @media (min-width: 768px) {
+            .form-horizontal .control-label {
+                padding-top: 7px;
+                margin-bottom: 0;
+                text-align: center;
+            }
+        }
+
+        .bootstrap-switch-success-v1 {
+            color: #FFFFFF;
+            background: #00B293;
+        }
+
+        .bootstrap-switch-failure-v1 {
+            color: #FFFFFF;
+            background: #B2B2B2;
+        }
+
+        .control-label {
+            padding-right: 7px;
+        }
+
+        .custom-auth {
+            margin-top: 45px;
+            border: 1px solid #e7eaec;
+            padding: 40px;
+            position: relative;
+        }
+
+        .radio-box {
+            position: absolute;
+            top: -10px;
+            background: #fff;
+            padding: 0 5px;
+        }
+
+        input[type="radio"] {
+            vertical-align: text-bottom;
+        }
+
+        .btn-w-m {
+            min-width: 95px;
+        }
+
+        .ibox-content {
+            padding: 15px 40px 20px;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div class="form-horizontal" style="background: white">
+            <form id="validateForm"
+                  method="post"
+                  action="{{ modify_share_url }}"
+                  class="form-horizontal">
+                {% csrf_token %}
+                <div class="" style="padding-bottom: 8px;margin-left: 44px;">
+                    <input type="radio" name="share_mode" value="1" data-form-fixed="1">
+                    <label class="control-label">{% trans 'x_all_share' %}</label>
+                    {#                <div class="col-sm-2">#}
+                    {#                    <input type="hidden" name="share_mode" data-form-fixed="1"#}
+                    {#                           value="1">#}
+                    {#       trans '             <'input type="checkbox" id="share_mode" checked>#}
+                    {#                </div>#}
+                </div>
+
+                <div class="all-auth">
+                </div>
+
+                <div class="custom-auth">
+                    <div class="radio-box">
+                        <input type="radio" name="share_mode" value="2" data-form-fixed="1">
+                        <label>{% trans 'x_custom_share' %}</label></div>
+                    <div class="">
+
+                        <div class="form-group">
+                            <div class="checkbox checkbox-success" style="margin: 0 0 20px 30px;">
+                                <input type="checkbox" class="checkall" id="checkAll">
+                                <label for="checkAll">{% trans "x_select_all" %}</label>
+                            </div>
+                            <div class="col-sm-12" id="classes">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin: 30px 0 0 0;">
+                    <a class="btn btn-w-m btn-white"
+                       href="{{ url_list_url }}">{% trans 'x_cancel' %}</a>
+                    <input type="submit" class="btn btn-w-m btn-primary" value="{% trans "x_authorized" %}"/>
+                </div>
+            </form>
+            <div id="class-template-div" style="display: none;">
+                <div class="col-sm-2">
+                    <div class="checkbox-inline checkbox checkbox-success">
+                        <input type="checkbox" class="checkitem" id="" name="share_teachers" value="">
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        (function () {
+            var _ = modelConstantUtil.dataType;
+            modelConstantUtil.addConstant({
+                CMS: {
+                    AUTH: {
+                        ALL_AUTH: _(1, gettext('x_all_auth')),
+                        CUSTOM_AUTH: _(2, gettext('x_custom_auth'))
+                    },
+                    SHARE: {
+                        ALL_SHARE: _(1, gettext('x_all_share')),
+                        CUSTOM_SHARE: _(2, gettext('x_custom_share'))
+                    }
+                }
+            });
+            if (window.optionRender) {
+                $(function () {
+                    optionRender.loadDefaultSelect();
+                });
+            }
+        }());
+
+        function freshTeachers() {
+            var classes_div = $("#classes");
+            var class_tpl = $("#class-template-div");
+            classes_div.html("");
+
+            $.ajax({
+                url: "{% url 'cms_x_person:cms_api:user-list' %}",
+                type: "get",
+                async: false,
+                data: {"is_teacher": true},
+                datatype: "json",
+                success: function (data) {
+                    var users = data.rows;
+                    for (var i in users) {
+                        class_tpl.children(".col-sm-2").attr("teacher", users[i].id);
+                        class_tpl.find("input").attr("id", users[i].id);
+                        class_tpl.find("input").attr("value", users[i].id);
+                        class_tpl.find("label").html(codeUtil.htmlEncode(users[i].first_name));
+                        classes_div.append(class_tpl.html());
+                    }
+                }
+            });
+        }
+
+
+        function handleAuthMode(share_mode) {
+            var $options = $('#share_mode option');
+            $options.each(function (j, opt) {
+                if (opt.value == share_mode) {
+                    opt.selected = true;
+                }
+            });
+
+        }
+
+        $('[name="share_mode"]').change(function () {
+            if ($('input[name="share_mode"]')[0].checked == true) {
+                $('.custom-auth, .radio-box').css({
+                    'background': '#f3f3f4',
+                    'cursor': 'not-allowed'
+                });
+                $('input[type=checkbox]').prop('disabled', 'disabled')
+            } else {
+                $('.custom-auth,.radio-box').css({
+                    'background': '#fff',
+                    'cursor': 'auto'
+                });
+                $('input[type=checkbox]').prop('disabled', false)
+            }
+        });
+
+        function initChecked() {
+            $.ajax({
+                url: "{{ query_share_url}} ",
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    handleAuthMode(data.share_mode);
+
+                    if (data.share_mode == ModelConstant.CMS.AUTH.ALL_AUTH) {
+                        $('[name="share_mode"][value="1"]').prop('checked', true);
+                        $('[name="share_mode"]').change();
+                        return;
+                    }
+                    $('[name="share_mode"][value="2"]').prop('checked', true);
+                    $('[name="share_mode"]').change();
+
+                    for (var i in data.teachers) {
+                        if (data.teachers[i].share == 1) {
+                            $("input[name='share_teachers'][value='" + data.teachers[i].id + "']").attr("checked", true);
+                        }
+                    }
+                }
+            });
+        }
+
+
+        $("#checkAll").click(function () {
+            if (this.checked) {
+                $("input[name='share_teachers']:checkbox").each(function () {
+                    if ($(this).parents(".col-sm-2").css("display") == "block") {
+                        $(this).prop("checked", true);
+                    }
+                })
+            } else {
+                $("input[name='share_teachers']:checkbox").each(function () {
+                    if ($(this).parents(".col-sm-2").css("display") == "block") {
+                        $(this).prop("checked", false);
+                    }
+                })
+            }
+        });
+
+        freshTeachers();
+        initChecked();
+
+        var listUrl = "{{ url_list_url }}";
+        $("#validateForm").ajaxFormDialog(function () {
+            setTimeout(function () {
+                window.location.href = listUrl;
+            }, ajaxDialog.defaultDelayTime);
+        });
+    </script>
+
+{% endblock %}

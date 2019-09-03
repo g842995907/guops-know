@@ -1,0 +1,74 @@
+[
+  {
+    "model": "common_cloud.licenseconfig",
+    "pk": 1,
+    "fields": {
+      "cn_name": "\u6709\u6548\u671f",
+      "en_name": "deadline",
+      "type": 2
+    }
+  },
+  {
+    "model": "common_cloud.licenseconfig",
+    "pk": 2,
+    "fields": {
+      "cn_name": "\u573a\u666f\u4e0a\u9650",
+      "en_name": "concurrent",
+      "type": 1
+    }
+  },
+  {
+    "model": "common_cloud.licenseconfig",
+    "pk": 3,
+    "fields": {
+      "cn_name": "\u786c\u76d8\u5e8f\u5217\u53f7",
+      "en_name": "series_number",
+      "type": 0
+    }
+  },
+  {
+    "model": "common_cloud.licenseconfig",
+    "pk": 4,
+    "fields": {
+      "cn_name": "\u6700\u5927\u7ec8\u7aef\u8282\u70b9\u6570\u91cf",
+      "en_name": "terminal_node_number",
+      "type": 1
+    }
+  },
+  {
+    "model": "common_cloud.licenseconfig",
+    "pk": 5,
+    "fields": {
+      "cn_name": "\u7248\u672c",
+      "en_name": "edition",
+      "type": 3
+    }
+  },
+  {
+    "model": "common_cloud.licenseconfig",
+    "pk": 6,
+    "fields": {
+      "cn_name": "cpu",
+      "en_name": "cpu",
+      "type": 0
+    }
+  },
+  {
+    "model": "common_cloud.licenseconfig",
+    "pk": 7,
+    "fields": {
+      "cn_name": "\u4e3b\u677f",
+      "en_name": "motherboard",
+      "type": 0
+    }
+  },
+  {
+    "model": "common_cloud.licenseconfig",
+    "pk": 8,
+    "fields": {
+      "cn_name": "\u7248\u672c\u53f7",
+      "en_name": "version",
+      "type": 0
+    }
+  }
+]

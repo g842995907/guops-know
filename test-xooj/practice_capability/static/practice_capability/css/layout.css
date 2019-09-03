@@ -1,0 +1,86 @@
+/* line 6, layout.scss */
+.container {
+  max-width: 1200px;
+}
+
+/* line 10, layout.scss */
+.exam {
+  padding: 60px 0px 0px 60px;
+  margin-top: 45px;
+}
+
+/* line 14, layout.scss */
+.exam > div:nth-of-type(1),
+.exam > div:nth-of-type(2) {
+  margin-top: -40px;
+}
+
+/* line 18, layout.scss */
+.exam-img {
+  position: relative;
+}
+
+/* line 26, layout.scss */
+.exam-img span {
+  position: absolute;
+  display: inline-block;
+  width: 72px;
+  height: 72px;
+  top: 0px;
+  right: 0px;
+  max-width: 100%;
+}
+
+/* line 37, layout.scss */
+.exam-img .exam-done {
+  background: url("../img/tip_02.png") no-repeat center;
+}
+
+/* line 41, layout.scss */
+.exam-img .exam-unfinished {
+  background: url("../img/tip_01.png") no-repeat center;
+}
+
+/* line 45, layout.scss */
+.exam-score {
+  padding-right: 0px !important;
+}
+
+/* line 50, layout.scss */
+.exam-score img {
+  max-width: 95px;
+  max-height: 122px;
+}
+
+/* line 55, layout.scss */
+.exam-score p > span {
+  font-size: 16px;
+}
+
+/* line 59, layout.scss */
+.exam-score p {
+  font-size: 40px;
+  font-weight: 900;
+  text-align: center;
+  margin-top: -40px;
+}
+
+/* line 66, layout.scss */
+.exam-score-A {
+  color: #00ff01;
+}
+
+/* line 70, layout.scss */
+.exam-score-B {
+  color: #ffff01;
+}
+
+/* line 74, layout.scss */
+.exam-score-C {
+  color: #ff9a00;
+}
+
+/* line 78, layout.scss */
+.exam-score-D {
+  color: #ff6600;
+}

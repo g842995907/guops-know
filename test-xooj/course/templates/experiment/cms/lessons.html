@@ -1,0 +1,130 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    <a href="{% url 'cms_course:experiment' %}">{% trans "x_experiment_course" %}</a> >
+    {{ experiment.name }} > {% trans 'x_courseware' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="col-md-3 col-sm-3">
+                        <input class="form-control m-b" id="search" placeholder="{% trans 'x_title' %}"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-md-6 col-sm-6">
+                        <a class="btn btn-primary" href="{% url 'cms_course:exp_lesson_detail' experiment.id 0 %}">
+                            <i class="fa fa-plus"></i>{% trans 'x_add' %}
+                        </a>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_course:api:lesson-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                        <button class="btn btn-primary"
+                                data-url="{% url 'cms_course:api:lesson-batch-public' %}"
+                                onclick="table.batchPublic(this, 1);">
+                            <i class="fa fa-eye"></i> {% trans 'x_public' %}
+                        </button>
+                        <button class="btn btn-default"
+                                data-url="{% url 'cms_course:api:lesson-batch-public' %}"
+                                onclick="table.batchPublic(this, 0);">
+                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_course:api:lesson-list' %}?course_id={{ experiment.id }}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name">{% trans 'x_name' %}</th>
+{#                <th data-field="en_name">{% trans 'x_en_name' %}</th>#}
+                <th data-field="course_name">{% trans '实验名称' %}</th>
+                <th data-field="id" data-formatter="courseFormatter">{% trans 'x_courseware_content' %}</th>
+                <th data-field="practice_name">{% trans 'x_lab_environment' %}</th>
+                <th data-field="report_count">{% trans '报告数量' %}</th>
+                <th data-field="public" data-formatter="bsTable.publicFormatter">{% trans 'x_public' %}</th>
+                <th data-field="id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_course:exp_lesson_detail' experiment.id -1 %}";
+        var reportUrl = "{% url 'cms_course:report_list' experiment.id 0 %}"
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+        var table = bsTableClass($('#table'));
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                return params;
+            }
+        });
+
+        function operatorFormatter(value, row, index) {
+            var btns = [
+                {
+                    type: 'link',
+                    class: 'btn-primary',
+                    icon: 'fa-edit',
+                    text: "{% trans 'x_edit' %}",
+                    url: listUrl.replace(-1, value)
+                },
+                {
+                    type: 'link',
+                    class: 'btn-primary',
+                    icon: 'fa-files-o',
+                    text: gettext('x_experimental_report'),
+                    url: reportUrl.replace(0, value)
+                }
+            ];
+            return bsTable.getOperatorHtml(btns);
+        }
+
+        function getCorseware(content, showName, icon) {
+            if (content != null && content != undefined && content != '') {
+                return [
+                    '<img title="{0}" src="{1}"/>'.format(showName, icon),
+                ].join('');
+            }
+        }
+
+        function courseFormatter(value, row, index) {
+            return [
+                '<div>',
+                getCorseware(row.pdf, "{% trans 'pdf课件' %}", "{% static_v "course/img/pdf_course.png"  %}"),
+                getCorseware(row.video, "{% trans 'video课件' %}", "{% static_v "course/img/video_course.png" %}"),
+                '</div>'
+            ].join('');
+        }
+    </script>
+{% endblock %}

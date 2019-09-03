@@ -1,0 +1,60 @@
+[data-widget-id=common-env] .destory-time-count-down{
+    color: #fff;
+    margin: 0px 0px 10px;
+    font-size: 20px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    display: none;
+}
+
+[data-widget-id=common-env] .current-env-hint{
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 24px;
+    z-index: 10;
+    color: #ffffff;
+    font-weight: bolder;
+}
+
+[data-widget-id=common-env] .info-panel .execute-script{
+    margin-top: 10px;
+}
+[data-widget-id=common-env] .info-panel .execute-script button{
+    font-size: 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 2px 5px;
+    color: #fff;
+    background-color: #1ab394;
+    border: 1px solid #1ab394;
+    cursor: pointer;
+    display: inline-block;
+}
+
+[data-widget-id=common-env] .info-panel .execute-script button:hover {
+    background-color: #18a689;
+    border: 1px solid #18a689;
+}
+[data-widget-id=common-env] .info-panel .execute-script button:active {
+    background-color: #17967c;
+    border: 1px solid #17967c;
+}
+[data-widget-id=common-env] .info-panel .execute-script button span {
+    display: none;
+    margin-right: 5px;
+}
+
+[data-widget-id=common-env] .info-panel .execute-script button.btn-ajax-pending {
+    background-color: #418a7b;
+    cursor: wait;
+}
+
+[data-widget-id=common-env] .info-panel .execute-script button.btn-ajax-pending span{
+    display: inline-block;
+}

@@ -1,0 +1,44 @@
+{
+    "scene": {
+        "desc": "", 
+        "name": "attack", 
+        "tag": [], 
+        "tools": [], 
+        "vulns": []
+    }, 
+    "servers": [
+        {
+            "accessMode": [
+                {
+                    "mode": "nla", 
+                    "password": "password", 
+                    "port": 3389, 
+                    "protocol": "rdp", 
+                    "username": "Administrator"
+                }
+            ], 
+            "attackScript": "", 
+            "attacker": "", 
+            "checkScript": "", 
+            "checker": "", 
+            "cleanScript": "", 
+            "deployScript": "", 
+            "external": false, 
+            "flavor": "m1.1c-0.5g-8g", 
+            "id": "server-1", 
+            "image": "win", 
+            "imageType": "vm", 
+            "initScript": "", 
+            "installScript": "", 
+            "installers": [], 
+            "lan_number": 0, 
+            "name": "win", 
+            "net": [], 
+            "pushFlagScript": "", 
+            "role": "target", 
+            "systemSubType": "windows-10", 
+            "systemType": "windows", 
+            "wan_number": 1
+        }
+    ]
+}

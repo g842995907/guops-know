@@ -1,0 +1,627 @@
+{% extends './iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+{% block title %}
+    <a href="{% url 'cms_common_env:env_attacker_list' %}">{% trans "x_env_attacker_management" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_add_attacker' %}
+    {% else %}
+        {% trans 'x_edit_attacker' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <script type="text/javascript" src="{% static_v 'common_env/widgets/select_standard_device/js/select_standard_device.js' %}"></script>
+    <style>
+        .server-item{
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            display: inline-block;
+            padding: 5px 10px;
+        }
+        .server-item .name{
+            display: inline-block;
+        }
+        .server-item .edit-server{
+            margin: 0 5px 0 20px;
+            color: #1ab394;
+            cursor: pointer;
+        }
+        .server-item .remove-server{
+            color: #ff0000;
+            cursor: pointer;
+        }
+        .edit-panel h3{
+            margin-bottom: 20px;
+        }
+        .edit-panel .control-label{
+            white-space: nowrap;
+            text-align: right;
+        }
+        .edit-panel input[readonly]{
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: auto;
+        }
+
+        .edit-panel .tag-item {
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            padding: 4px 20px 4px 8px;
+            display: inline-block;
+            position: relative;
+        }
+        .edit-panel .tag-item .glyphicon-remove {
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            color: #f00;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .edit-panel .tag-adder{
+            margin-top: 10px;
+        }
+        .edit-panel .tag-adder .form-control{
+            height: 28px;
+            width: 150px;
+        }
+        .edit-panel .tag-adder .form-control.checkbox{
+            border: none;
+            background-color: transparent;
+        }
+        .edit-panel .tag-adder .tag-add-btn{
+            vertical-align: top;
+            padding: 3px 8px;
+            margin: 0;
+        }
+        .edit-panel .tag-adder.add-firewall-rule .form-control{
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .edit-panel .server-role label{
+            color: #ff0000;
+        }
+        .edit-panel .server-role select{
+            color: #ff0000;
+        }
+        .edit-panel .attack-intensity .form-control{
+            width: 160px;
+        }
+    </style>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              enctype="multipart/form-data"
+                {% if mode == 0 %}
+              action="{% url 'cms_common_env:api:env-attacker-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_common_env:api:env-attacker-detail' envattacker.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ envattacker.name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_attacker_type' %}</label>
+                    <div class="col-sm-3">
+                        <select class="form-control m-b" name="type" id="type" data-form-fixed="1">
+                            <option data-id="option-rendering" data-list='ListModelConstant.EnvAttacker.Type' data-selected="{{ envattacker.type }}">{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_attacker_server' %}</label>
+                    <input type="hidden" id="config" name="config" value="{{ envattacker.json_config }}" />
+                    {% verbatim %}
+                    <div id="configVue">
+                        <div class="col-sm-8">
+                            <div class="server-item" v-for="server in servers">
+                                <span class="name">{{ server.name }}</span>
+                                <span class="fa fa-edit edit-server" @click="editServer(server)"></span>
+                                <span class="fa fa-remove remove-server" @click="removeServer(server)"></span>
+                            </div>
+                            <span class="btn btn-sm btn-success" style="margin-bottom: 0;" @click="addServer()">+</span>
+                        </div>
+                        <div class="modal fade" id="editingServerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span
+                                                aria-hidden="true">&times;</span><span
+                                                class="sr-only">Close</span></button>
+                                        <h4 class="modal-title" id="myModalLabel">{{ 'x_edit_attacker_server' | trans }}</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="edit-panel edit-server">
+                                            <div class="form-group hidden">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_id' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentServer.id" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group hidden">
+                                                <label class="col-sm-2 control-label">{{ 'x_name' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentServer.name" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_img_name' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentServer.image" readonly />
+                                                </div>
+                                                <label class="col-sm-2 control-label hidden">{{ 'x_img_type' | trans }}</label>
+                                                <div class="col-sm-4 hidden">
+                                                    <input type="text" class="form-control" :value="currentServer.imageType" readonly />
+                                                </div>
+                                                <label class="col-sm-2 control-label">{{ 'x_sys_type' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentServer.systemType" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_img_size' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <select class="form-control" v-model="currentServer.flavor">
+                                                        <option :value="option.value" v-for="option in flavorOptions">{{ option.text }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group hidden">
+                                                <label class="col-sm-2 control-label">{{ 'x_is_external' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <div class="checkbox checkbox-success">
+                                                        <input type="checkbox" id="check-external" v-model="currentServer.external" />
+                                                        <label for="check-external"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group hidden">
+                                                <label class="col-sm-2 control-label">{{ 'x_access_mode' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <div class="tag-container access-modes">
+                                                        <div class="tag-item access-mode" v-for="mode in currentServer.accessMode">
+                                                            <span v-if="mode.protocol == 'rdp' && mode.mode">[{{ mode.mode }}]</span>
+                                                            <span>{{ mode.protocol }}</span>
+                                                            <span>{{ mode.port }}</span>
+                                                            <span v-if="mode.username">{{ mode.username }}</span>
+                                                            <span v-if="mode.username">{{ mode.password }}</span>
+                                                            <span class="glyphicon glyphicon-remove" @click="removeAccessMode(mode)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tag-adder add-access-mode form-inline">
+                                                        <input type="text" class="form-control" :placeholder="'x_protocol' | trans" list="accessModeList"
+                                                               v-model="serverEditor.accessMode.protocol">
+                                                        <datalist id="accessModeList">
+                                                            <option :value="option.value" v-for="option in accessModeOptions">
+                                                        </datalist>
+                                                        <input type="number" class="form-control" :placeholder="'x_port' | trans"
+                                                               v-model.number="serverEditor.accessMode.port">
+                                                        <select class="form-control" :title="'x_authentication_mode' | trans"
+                                                                v-model="serverEditor.accessMode.mode"
+                                                                v-if="serverEditor.accessMode.protocol == 'rdp'">
+                                                            <option value="rdp">rdp</option>
+                                                            <option value="nla">nla</option>
+                                                        </select>
+                                                        <input type="text" class="form-control" :placeholder="'x_user_name' | trans"
+                                                               v-model="serverEditor.accessMode.username">
+                                                        <input type="text" class="form-control" :placeholder="'x_password' | trans"
+                                                               v-model="serverEditor.accessMode.password">
+                                                        <input type="text" class="form-control" :placeholder="'x_desc' | trans"
+                                                               v-model="serverEditor.accessMode.desc">
+                                                        <span class="btn btn-warning tag-add-btn"
+                                                              :title="'x_add_access_mode' | trans"
+                                                              @click="addAccessMode">+</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_install_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentServer.installScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_attack_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentServer.initScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group hidden">
+                                                <label class="col-sm-2 control-label">{{ 'x_attack_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentServer.attackScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_attack_intensity' | trans }}</label>
+                                                <div class="col-sm-10 form-inline attack-intensity">
+                                                    <select class="form-control" v-model="currentServer.attackIntensity.type">
+                                                        <option value="traffic">{{ 'x_attack_intensity_traffic' | trans }}</option>
+                                                        <option value="scale">{{ 'x_attack_intensity_scale' | trans }}</option>
+                                                    </select>
+                                                    <input type="number" class="form-control" v-model.number="currentServer.attackIntensity.bandwidth"
+                                                           :placeholder="'x_bandwidth' | trans"  v-if="currentServer.attackIntensity.type == 'scale'" />
+                                                    <br />
+                                                    <br />
+                                                    <input type="number" class="form-control" v-model.number="currentServer.attackIntensity.intensity.low"
+                                                           :placeholder="'x_low_intensity' | trans" />
+                                                    <input type="number" class="form-control" v-model.number="currentServer.attackIntensity.intensity.middle"
+                                                           :placeholder="'x_middle_intensity' | trans" />
+                                                    <input type="number" class="form-control" v-model.number="currentServer.attackIntensity.intensity.high"
+                                                           :placeholder="'x_high_intensity' | trans" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix modal-footer">
+                                        <span class="btn btn-success" @click="localSaveServer();">{{ 'x_confirm' | trans }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endverbatim %}
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_resource_file' %}</label>
+                    <div class="col-sm-6">
+                        <input type="file" class="hidden" id="file" name="file" />
+                        <span class="btn btn-primary file-upload-btn">{% if envattacker.file %}{% trans 'x_reupload' %}{% else %}{% trans 'x_upload' %}{% endif %}</span>
+                        <span class="hint"></span>
+                        {% if envattacker.file %}
+                            <a class="btn btn-success m-l" href="{{ envattacker.file }}" download="{{ envattacker.name }}.zip">{% trans 'x_download_file' %}</a>
+                            <span class="btn btn-danger m-l" id="deleteFile">{% trans 'x_del_file' %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_desc' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="desc" name="desc" value="{{ envattacker.desc }}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white" href="{% url 'cms_common_env:env_attacker_list' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 选择标靶 -->
+    <div class='modal fade' id='selectStandardDevice' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_select_standard_device' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <div data-widget-id='select-standard-device' data-instance-id='t1'></div>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="selectStandardDevice();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script>
+        var configVue = new Vue({
+            el: '#configVue',
+            data: {
+                servers: [],
+                currentServer: {
+                    id: '',
+                    name: '',
+                    imageType: '',
+                    systemType: '',
+                    image: '',
+                    flavor: '',
+                    external: false,
+                    accessMode: [],
+                    initScript: '',
+                    installScript: '',
+                    checkScript: '',
+                    attackScript: '',
+                    initSupport: true,
+                    attackIntensity: {
+                        type: 'traffic',
+                        bandwidth: '',
+                        intensity: {
+                            low: '',
+                            middle: '',
+                            high: '',
+                        }
+                    }
+                },
+                serverEditor: {
+                    accessMode: {
+                        protocol: '',
+                        port: '',
+                        mode: 'rdp',
+                        username: '',
+                        password: '',
+                        desc: '',
+                    },
+                },
+                flavorOptions: [],
+                accessModeOptions: ListModelConstant.EnvTerminal.AccessMode,
+            },
+            methods: {
+                startEditServer: function () {
+                    $(this.$el).find('#editingServerModal').modal();
+                },
+                addServer: function () {
+                    showSelectStandardDevice();
+                },
+                editServer: function (thisServer) {
+                    var currentServer = this.currentServer;
+                    $.each(currentServer, function (attr) {
+                        currentServer[attr] = thisServer[attr];
+                    });
+                    this.startEditServer();
+                },
+                removeServer: function (thisServer) {
+                    var index = null;
+                    $.each(this.servers, function (i, server) {
+                        if (server.id == thisServer.id) {
+                            index = i;
+                            return false;
+                        }
+                    });
+                    if (index != null) {
+                        this.servers.splice(index, 1);
+                    }
+                },
+                localSaveServer: function () {
+                    var currentServer = $.extend(true, {}, this.currentServer);
+                    var sourceServer = null;
+                    $.each(this.servers, function (i, server) {
+                        if (server.id == currentServer.id) {
+                            sourceServer = server;
+                        }
+                    });
+                    if (sourceServer == null) {
+                        this.servers.push(currentServer);
+                    } else {
+                        $.each(sourceServer, function (attr) {
+                            sourceServer[attr] = currentServer[attr];
+                        });
+                    }
+
+                    $(this.$el).find('#editingServerModal').modal('hide');
+                },
+                // 添加访问方式
+                addAccessMode: function () {
+                    var editingAccessMode = $.extend(true, {}, this.serverEditor.accessMode);
+                    if (!editingAccessMode.protocol) {
+                        popUtil.warningHint(gettext('x_input_protocol'));
+                        return;
+                    }
+                    if (arrayUtil.in(editingAccessMode.protocol, [ModelConstant.EnvTerminal.AccessMode.SSH, ModelConstant.EnvTerminal.AccessMode.RDP])&& !editingAccessMode.username) {
+                        popUtil.warningHint(gettext('x_input_username'));
+                        return;
+                    }
+                    var editingAccessModeStr = editingAccessMode.protocol + '|' + editingAccessMode.username;
+                    var accessMode = this.currentServer.accessMode;
+                    var existAccessModeStrs = [];
+                    $.each(accessMode, function (i, mode) {
+                        existAccessModeStrs.push(mode.protocol + '|' + mode.username);
+                    });
+                    if (arrayUtil.in(editingAccessModeStr, existAccessModeStrs)) {
+                        popUtil.warningHint(gettext('x_exist_protocol'));
+                        return;
+                    }
+
+                    if (editingAccessMode.protocol != 'rdp') {
+                        delete editingAccessMode.mode;
+                    }
+                    accessMode.push(editingAccessMode);
+                },
+                removeAccessMode: function (currentAccessMode) {
+                    var currentAccessModeStr = currentAccessMode.protocol + '|' + currentAccessMode.username;
+
+                    var accessMode = this.currentServer.accessMode;
+                    var index = null;
+                    $.each(accessMode, function (i, mode) {
+                        var modeStr = mode.protocol + '|' + mode.username;
+                        if (modeStr == currentAccessModeStr) {
+                            index = i;
+                            return false;
+                        }
+                    });
+                    if (index != null) {
+                        accessMode.splice(index, 1);
+                    }
+                },
+                serializeConfig: function () {
+                    var config = {servers: this.servers};
+                    $('#config').val(JSON.stringify(config));
+                },
+            },
+            watch: {
+                'serverEditor.accessMode.protocol': {
+                    handler: function(val, oldval){
+                        var defaultPort = ModelConstant.auxiliaryConstant.AccessModeDefaultPort[val];
+                        if (defaultPort) {
+                            this.serverEditor.accessMode.port = defaultPort;
+                        }
+                    },
+                }
+            },
+            mounted: function () {
+                var loadedConfig = $('#config').val();
+                if (loadedConfig) {
+                    loadedConfig = JSON.parse(loadedConfig);
+                    this.servers = loadedConfig.servers || [];
+                }
+                http.get('{% url "common_env:flavors" %}', {}, function(res){
+                    var options = [];
+                    $.each(res, function(i, flavor){
+                        options.push({
+                            text: flavor[1],
+                            value: flavor[0],
+                        });
+                    });
+                    configVue.flavorOptions = options;
+                });
+            }
+        });
+
+        function device2Server(device) {
+            var server = {
+                id: 'server-' + uuidUtil.guid(),
+                name: device.name,
+                imageType: device.image_type,
+                systemType: device.system_type,
+                image: device.name,
+                flavor: device.flavor,
+                accessMode: [],
+                external: false,
+                initScript: '',
+                installScript: '',
+                attackScript: '',
+                initSupport: device.init_support,
+                attackIntensity: {
+                    type: 'traffic',
+                    bandwidth: '',
+                    intensity: {
+                        low: '',
+                        middle: '',
+                        high: '',
+                    }
+                }
+            };
+
+            if (device.access_mode) {
+                var accessMode = {protocol: device.access_mode};
+                if (device.access_port) {
+                    accessMode.port = Number(device.access_port);
+                }
+                if (device.access_connection_mode) {
+                    accessMode.mode = device.access_connection_mode;
+                }
+                if (device.access_user) {
+                    accessMode.username = device.access_user;
+                }
+                if (device.access_password) {
+                    accessMode.password = device.access_password;
+                }
+                server.accessMode.push(accessMode);
+            }
+            return server;
+        }
+
+        // 选择标靶
+        var selectStandardDeviceWidgetBindFlag = false;
+
+        function showSelectStandardDevice() {
+            $SELECT_STANDARD_DEVICE(function () {
+                if (!selectStandardDeviceWidgetBindFlag) {
+                    $('[data-widget-id=select-standard-device]').bindStandardDeviceSelectWidget();
+                    $('[data-widget-id=select-standard-device] [data-filter-name=system_type] option[value=other]').remove();
+                    selectStandardDeviceWidgetBindFlag = true;
+                }
+                $('#selectStandardDevice').modal();
+            });
+        }
+
+        function selectStandardDevice() {
+            var table = standardDeviceSelectWidgetInstance.t1.table;
+            var ids = table.getCheckedValues();
+            if (ids.length != 1) {
+                popUtil.warningHint(gettext('x_select_one_standard_device_limit'));
+                return;
+            }
+            var standardDeviceId = ids[0];
+
+            var device = table.getData(standardDeviceId);
+            var server = device2Server(device);
+            var currentServer = configVue.currentServer;
+            $.each(currentServer, function (attr) {
+                currentServer[attr] = server[attr];
+            });
+            $('#selectStandardDevice').modal('hide');
+            configVue.startEditServer();
+        }
+
+        $(function () {
+            var listUrl = "{% url 'cms_common_env:env_attacker_list' %}";
+
+            $('#validateForm').mvalidate({
+                rules: {
+                    name:{
+                        required: true
+                    }
+                },
+            });
+            $('#validateForm').ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {
+                beforeHandle: function () {
+                    configVue.serializeConfig();
+                },
+            });
+
+            $('.file-upload-btn').click(function () {
+                $(this).prev().click();
+            });
+            $('.file-upload-btn').siblings('[type=file]').change(function () {
+                $(this).siblings('.hint').text(this.files[0].name);
+            });
+
+            {% if envattacker.file %}
+            $('#deleteFile').click(function () {
+                ajaxDialog.buttonClick(http.delete, "{% url 'cms_common_env:api:env-attacker-delete-file' envattacker.id %}", {}, function(res){
+                    window.location.reload();
+                });
+            });
+            {% endif %}
+        });
+
+
+    </script>
+{% endblock %}

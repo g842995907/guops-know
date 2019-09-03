@@ -1,0 +1,776 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+{% block title %}
+    <a>{% trans "x_course_schedule" %}</a>
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static 'course/fullcalendar/fullcalendar.css' %}" rel="stylesheet">
+
+    <script src="{% static 'course/fullcalendar/lib/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'course/fullcalendar/lib/moment.min.js' %}"></script>
+    <script src="{% static 'course/fullcalendar/fullcalendar.min.js' %}"></script>
+    <script src="{% static 'course/fullcalendar/locale/zh-cn.js' %}"></script>
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+        .modal-dialog {
+            margin-top: 150px;
+        }
+        /* 日历 */
+        #calendar {
+            margin: 40px auto;
+        }
+
+        .fc-time-grid .fc-slats td {
+            height: 5em;
+        }
+
+        .fc-button {
+            color: inherit;
+            border: 1px solid #e7eaec;
+            cursor: pointer;
+            display: inline-block;
+            height: 1.9em;
+            line-height: 1.9em;
+            overflow: hidden;
+            padding: 0 .6em;
+            position: relative;
+            white-space: nowrap
+        }
+        .fc-event {
+            text-align: center;
+            font-size: 1em;
+            color: #fff;
+            min-height:4.8em !important;
+            border: #1ab394;
+            background-color: #2f62de;
+            margin-top:0px;
+        }
+        .fc-event .fc-time{
+            text-align: center;
+            {#background-color: #0bd7d5;#}
+        }
+        .fc-event .fc-title{
+            margin: 1px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+    {% if request.user.is_superuser %}
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky" id="group_name" onchange="CALLBACK.changeSelect()">
+                            <option value=0>{% trans 'x_checked_teacher' %}</option>
+                            <option value=1>{% trans 'x_show' %}{{ ORGANIZATION.Fourth_level }}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2" id="teacher_box">
+                        <select class="form-control m-b sticky" id="teacher_name" onchange="CALLBACK.refreshSchdule()">
+                            {% for teacher in teacher_list %}
+                                <option value={{ teacher.id }} {% if teacher.id == request.user.id %}selected="selected"{% endif %}>
+                                {% if teacher.first_name %}
+                                    {{ teacher.first_name }}
+                                {% else %}
+                                    {{ teacher.username }}
+                                {% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="classes_box" style="display: none">
+                        <div class="m-r pull-left col-md-2">
+                            <select class="form-control m-b sticky" id="faculty_name" onchange="CALLBACK.majorlist()">
+                                <option value="0" selected="selected">
+                                    {% trans "x_all" %}{{ ORGANIZATION.Second_level }}</option>
+                                <option data-id="option-rendering" data-load='loadFacultySelect'
+                                            async>{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+
+                        <div class="m-r pull-left col-md-2">
+                            <select class="form-control m-b sticky" id="major_name" onchange="CALLBACK.classlist()">
+                                <option value="0" selected="selected">
+                                    {% trans "x_all" %}{{ ORGANIZATION.Third_level }}</option>
+                                    <option data-id="option-rendering" data-load='loadMajorSelect'
+                                            async>{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+
+                        <div class="m-r pull-left col-md-2">
+                            <select class="form-control m-b sticky select_search" id="classes_name" onchange="CALLBACK.refreshSchdule()">
+                                <option value="0" selected="selected">
+                                    {% trans "x_all" %}{{ ORGANIZATION.Fourth_level }}</option>
+                                    <option data-id="option-rendering" data-load='loadClassesSelect'
+                                            async>{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+        <div id='calendar'></div>
+    </div>
+
+    <div class="modal fade" id="addObjcectInputModalAdd" tabindex="-1" role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title"><i class="fa fa-info-circle"></i>{% trans 'x_new_course' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" id="choose-course">
+                        <label class="col-sm-2 control-label">{% trans 'x_course' %}</label>
+                        <div class="col-sm-4">
+                            <select class="form-control m-b" name="course" id="select_course_add" data-form-fixed="1">
+                                <option value="">{% trans "x_please_select_course" %}</option>
+                                <option data-id="option-rendering" data-load='loadCourseSelect'
+                                            async>{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <select class="form-control m-b" name="lesson" id="select_lesson_add" data-form-fixed="1">
+                                <option value="">{% trans "   ----   " %}</option>
+                            </select>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_start_end_time' %}</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control layer-date laydate-icon" id="startTimeAdd"
+                                   name="start_time" value="" placeholder="{% trans 'x_start_time' %}"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control layer-date laydate-icon" id="endTimeAdd"
+                                   name="end_time" value="" placeholder="{% trans 'x_end_time' %}"/>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group" id="choose-class">
+                        <label class="col-sm-2 control-label">{% trans 'x_please_choose' %}{{ ORGANIZATION.Fourth_level }}</label>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="faculty" id="auth_faculty_add" data-form-fixed="1">
+                                <option value="">{% trans "x_please_choose" %}{{ ORGANIZATION.Second_level }}</option>
+                                <option data-id="option-rendering" data-load='loadFacultySelect'
+                                            async>{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="major" id="auth_major_add" data-form-fixed="1">
+                                <option value="">{% trans "   ----   " %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="classes" id="auth_classes_add" data-form-fixed="1">
+                                <option value="">{% trans "   ----   " %}</option>
+                            </select>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <div class="alert alert-danger server-error" id="server-error">
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;"></div>
+                </div>
+                <div class="clearfix modal-footer">
+                    <input id="weekly" class="hidden"/>
+                    <span type="button" class="btn btn-white" style="margin-bottom: 0" data-dismiss="modal"
+                          id="cancelAdd">{% trans 'x_cancel' %}</span>
+                    <span class="btn btn-success" id="determineAdd"
+                          onclick="subSchedule()">{% trans 'x_save' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addObjcectInputModalEdit" tabindex="-1" role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                    <h4 class="modal-title"><i class="fa fa-info-circle"></i>{% trans 'x_edit_course' %}</h4>
+                </div>
+                <div class="modal-body" style="min-height: 220px;">
+                    <div class="form-group" id="choose-course">
+                        <label class="col-sm-2 control-label">{% trans 'x_course' %}</label>
+                        <div class="col-sm-4">
+                            <select class="form-control m-b" name="course" id="select_course_edit" data-form-fixed="1">
+                                <option value="">{% trans "x_please_select_course" %}</option>
+                                <option data-id="option-rendering" data-load='loadCourseSelect'
+                                            async>{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <select class="form-control m-b" name="lesson" id="select_lesson_edit" data-form-fixed="1">
+                                <option value="">{% trans "   ----   " %}</option>
+                            </select>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_start_end_time' %}</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control layer-date laydate-icon" id="startTimeEdit"
+                                   name="start_time" value="" placeholder="{% trans 'x_start_time' %}"/>
+                        </div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control layer-date laydate-icon" id="endTimeEdit"
+                                   name="end_time" value="" placeholder="{% trans 'x_end_time' %}"/>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group" id="choose-class">
+                        <label class="col-sm-2 control-label">{{ ORGANIZATION.Second_level }}</label>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="faculty" id="auth_faculty_edit" data-form-fixed="1">
+                                <option value="">{% trans "x_please_choose" %}{{ ORGANIZATION.Second_level }}</option>
+                                <option data-id="option-rendering" data-load='loadFacultySelect'
+                                            async>{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="major" id="auth_major_edit" data-form-fixed="1">
+                                <option value="">{% trans "   ----   " %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="classes" id="auth_classes_edit" data-form-fixed="1">
+                                <option value="">{% trans "   ----   " %}</option>
+                            </select>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-8 col-sm-offset-2">
+                            <div class="alert alert-danger server-error" id="update-error">
+                            </div>
+                        </div>
+                    </div>
+                <div style="margin-top: 60px;"></div>
+                </div>
+                <div class="clearfix modal-footer">
+                    <input id="weeklyEdit" class="hidden"/>
+                    <span type="button" class="btn btn-white" style="margin-bottom: 0" data-dismiss="modal"
+                          id="cancelAdd">{% trans 'x_cancel' %}</span>
+                    <span class="btn btn-success" id="updateEdit" onclick="upSchedule()">{% trans 'x_save' %}</span>
+                    <input id="event_id" class="hidden"/>
+                    <span class="btn btn-danger" style="margin-bottom: 0" id="deleEdit"
+                          onclick="destroySchedule()">{% trans 'x_delete' %}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var courseListUrl = "{% url 'cms_course:api:course-list' %}";
+        var lessonListUrl = "{% url 'cms_course:api:lesson-list' %}";
+        var faculty_list = "{% url 'cms_x_person:cms_api:faculty-list' %}";
+        var major_list = "{% url 'cms_x_person:cms_api:major-list' %}";
+        var classes_list = "{% url 'cms_x_person:cms_api:classes-list' %}";
+    </script>
+    <script type="text/javascript">
+        var language = '{{ LANGUAGE_CODE }}';
+        var title = (language == 'en') ? "D MM YYYY":"YYYY年 第W周 M月D日";
+
+        $('.layer-date').initDatetime();
+        var ClassRoomUrl = "{% url 'cms_course:lesson_classroom' 0 %}";
+        $(document).ready(function () {
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,today,next',
+                    center: 'title',
+                    // right: 'month,agendaWeek,agendaDay'，
+                    right: '',
+                },
+                // weekends: true,
+                {#weekMode: 'liquid',#}
+                defaultView: 'agendaWeek',
+                allDaySlot: false,
+                height: 'auto',
+                minTime: "8:00",
+                maxTime: "21:00",
+                slotDuration: "00:60:00",
+                aspectRatio: 1.1,
+                //slotLabelFormat:'h',
+                timeFormat: 'H:mm',
+                titleFormat: title,
+                columnFormat: 'dddd',
+                //eventLimit: true,
+                contentHeight:600,
+                selectable: true,//设置是否可被单击或者拖动选择
+                selectHelper: true,//点击或者拖动选择时，是否显示时间范围的提示信息，该属性只在agenda视图里可用
+                unselectAuto: true,//点击或者拖动选中之后，点击日历外的空白区域是否取消选中状态 true为取消 false为不取消，只有重新选择时才会取消
+                editable: true,//Event是否可被拖动或者拖拽
+                dragOpacity: 0.5,//Event被拖动时的不透明度
+                dayNames:[gettext('x_sun'), gettext('x_mon'), gettext('x_tues'),
+                    gettext('x_wed'), gettext('x_thurs'), gettext('x_fri'), gettext('x_sat')],
+                buttonText:{today:gettext("x_today")},
+
+                select: function (start, end) {
+                    var weekly = start.format('d');
+                    var cha = end - start;
+                    console.log(cha);
+                    var start_time = start.format('YYYY-MM-DD HH:mm:ss');
+                    var end_time;
+                    if ((end - start) <= 1800000) {
+                        var tmp = new Date(start_time);
+                        tmp = tmp.setMinutes(tmp.getMinutes() + 60);
+                        end_time = dateUtil.defaultFormatDate(new Date(tmp));
+                    } else {
+                        end_time = end.format('YYYY-MM-DD HH:mm:ss')
+                    }
+
+                    $("#startTimeAdd").val(start_time);
+                    $("#endTimeAdd").val(end_time);
+                    $("#weekly").val(weekly);
+                    $("#addObjcectInputModalAdd").modal("show");
+                },
+                eventClick: function (event) {
+                    //clickCallback
+                },
+                eventMouseover: function (event) {
+                    var startInput = $("#startTimeEdit");
+                    var endInput = $("#endTimeEdit");
+                    var weekly = event.start.format('d');
+                    startInput.val(event.start.format('YYYY-MM-DD HH:mm:ss'));
+                    endInput.val(event.end.format("YYYY-MM-DD HH:mm:ss"));
+
+                    var lesson_id = event.lesson;
+                    var classes_id = event.classes;
+                    var faculty_id = event.faculty;
+
+                    initCheckbox("select_course_edit", "select_lesson_edit", "auth_faculty_edit", "auth_major_edit", "auth_classes_edit", event);
+
+                    $("#weeklyEdit").val(weekly);
+                    $("#event_id").val(event.id);
+                    $(this).html("<div class='btn-wrap' style='position:absolute;margin-left:-5px;top:15px;width:100%'><a class='btn btn-info' style='margin-right:6px;' onclick='showModal()'>"+gettext('x_edit')+"</a>" +
+                        "<a href='" + ClassRoomUrl.replace(0, event.id) + "' class='btn btn-info'>" + gettext('x_enter_class') + "</a></div>");
+
+                },
+                eventMouseout: function (event) {
+                    $('#calendar').fullCalendar('refetchEvents');
+                },
+                eventAfterRender: function(event, element) {
+                    element.find(".fc-title").remove();
+
+                    var new_event_title =
+                    "<span style='color: #f7a54a'>" + codeUtil.htmlEncode(event.course_name) + "</span>" + " / " +
+                    "<span style='color: #23c6c8'>" + codeUtil.htmlEncode(event.lesson_name) + "</span>" +
+                    "</br>"+
+                    "<span style='color: #f7a54a'>" + codeUtil.htmlEncode(event.faculty_name) + "</span>" + " / " +
+                    "<span style='color: #23c6c8'>" + codeUtil.htmlEncode(event.major_name) + "</span>" + " / " +
+                    "<span>" + codeUtil.htmlEncode(event.classes_name) + "</span>" ;
+
+                    element.append(new_event_title);
+
+                },
+                events: function (start, end, timezone, callback) {
+                    var event_list = [];
+                    var data = {
+                        faculty: $("#faculty_name").val(),
+                        major: $("#major_name").val(),
+                        classes:$("#classes_name").val(),
+                        create:$("#teacher_name").val()
+                    };
+                    $.ajax({
+                        type: "GET",
+                        url: "{% url 'cms_course:api:course-schedule-list' %}",
+                        data: data,
+                        datatype: "json",
+                        success: function (data) {
+                            {#console.log(data.rows);#}
+                            event_list = data.rows;
+                            callback(event_list)
+                        }
+                    });
+                },
+            });
+        });
+
+        function init_classesBox(){
+            var default_faculty = {% if default_schedule %} {{ default_schedule.faculty.id }} {% else %} 0 {% endif %}
+            var default_major = {% if default_schedule %} {{ default_schedule.major.id }} {% else %} 0 {% endif %}
+            var default_classes = {% if default_schedule %} {{ default_schedule.classes.id }} {% else %} 0 {% endif %}
+            $("#faculty_name").val(default_faculty);
+            $("#major_name").val(default_major);
+            $("#classes_name").val(default_classes);
+        }
+        function clear_classesBox() {
+            $("#faculty_name").val(0);
+            $("#major_name").val(0);
+            $("#classes_name").val(0);
+        }
+        
+        function clear_teacherBox() {
+            $("#teacher_name").val(0);
+        }
+        
+        function loadFacultySelect(callback) {
+            http.get(faculty_list, {}, function(res){
+                var options = [];
+                $.each(res.rows, function(i, faculty){
+                    options.push({
+                        value: faculty.id,
+                        text: faculty.name,
+                    });
+                });
+                callback(options);
+            });
+        }
+
+        function loadMajorSelect(callback) {
+            http.get(major_list, {}, function(res){
+                var options = [];
+                $.each(res.rows, function(i, major){
+                    options.push({
+                        value: major.id,
+                        text: major.name,
+                    });
+                });
+                callback(options);
+            });
+        }
+
+        function loadClassesSelect(callback) {
+            http.get(classes_list, {}, function(res){
+                var options = [];
+                $.each(res.rows, function(i, classes){
+                    options.push({
+                        value: classes.id,
+                        text: classes.name,
+                    });
+                });
+                callback(options);
+            });
+        }
+
+        function loadCourseSelect(callback) {
+            http.get(courseListUrl, {}, function(res){
+                var options = [];
+                $.each(res.rows, function(i, course){
+                    options.push({
+                        value: course.id,
+                        text: course.name,
+                    });
+                });
+                callback(options);
+            });
+        }
+
+        function showModal() {
+            $("#addObjcectInputModalEdit").modal("show");
+        }
+
+        function subSchedule() {
+            var startInput = $("#startTimeAdd");
+            var endInput = $("#endTimeAdd");
+            var start = startInput.val();
+            var end = endInput.val();
+            if(start == '' || end == ''){
+                $("#server-error").html("{% trans "x_please_select_time" %}").show()
+                return
+            }
+            var dow = $("#weekly").val();
+
+            console.log(start);
+            var data = {
+                start: start,
+                end: end,
+                course: $("#select_course_add").val(),
+                lesson: $("#select_lesson_add").val(),
+                faculty: $("#auth_faculty_add").val(),
+                major: $("#auth_major_add").val(),
+                classes: $("#auth_classes_add").val(),
+                dow: dow,
+            };
+            $.ajax({
+                type: "POST",
+                url: "{% url 'cms_course:api:course-schedule-list' %}",
+                data: data,
+                datatype: "json",
+                success: function (res) {
+                    $('#calendar').fullCalendar('refetchEvents');
+                    $("#addObjcectInputModalAdd").modal("hide");
+                },
+                error: function (err_message) {
+                    if (err_message.status == 400) {
+                        $("#server-error").html(err_message.responseJSON[0].message).show()
+                    }
+                }
+            });
+        }
+
+        function upSchedule() {
+            var startInput = $("#startTimeEdit");
+            var endInput = $("#endTimeEdit");
+            var start = startInput.val();
+            var end = endInput.val();
+            var dow = $("#weeklyEdit").val();
+            if(start == '' || end == ''){
+                $("#update-error").html("{% trans "x_please_select_time" %}").show()
+                return
+            }
+            var event_id = $("#event_id").val();
+            console.log(dow);
+            console.log(start);
+            console.log(end);
+            var data = {
+                start: start,
+                end: end,
+                course: $("#select_course_edit").val(),
+                lesson: $("#select_lesson_edit").val(),
+                faculty: $("#auth_faculty_edit").val(),
+                major: $("#auth_major_edit").val(),
+                classes: $("#auth_classes_edit").val(),
+                dow: dow,
+            };
+            var detailUrl = "{% url 'cms_course:api:course-schedule-detail' 0 %}";
+            $.ajax({
+                type: "PATCH",
+                url: detailUrl.replace('0', event_id),
+                data: data,
+                datatype: "json",
+                success: function (res) {
+                    $('#calendar').fullCalendar('refetchEvents');
+                    $("#addObjcectInputModalEdit").modal("hide");
+                },
+                error: function (err_message) {
+                    if (err_message.status == 400) {
+                        $("#update-error").html(err_message.responseJSON[0].message).show()
+                    }
+                }
+            });
+        }
+
+        function destroySchedule() {
+            var scheduleUrl = "{% url 'cms_course:api:course-schedule-batch-destroy' %}";
+            var event_id = $("#event_id").val();
+            console.log(event_id);
+            console.log(scheduleUrl);
+            ajaxDialog.buttonClick(http.delete, scheduleUrl, {id: event_id}, function () {
+                $('#calendar').fullCalendar('refetchEvents');
+                $("#addObjcectInputModalEdit").modal("hide");
+            });
+
+        }
+
+        function initCheckbox(course_div, lesson_div, faculty_div, major_div, classes_div, event) {
+            var TRUE = 1;
+
+            function init_lesson(course_id, select_id) {
+                $("#" + lesson_div).empty();
+                $.ajax({
+                    type: "GET",
+                    url: lessonListUrl,
+                    data: {"course_id": course_id, 'public': TRUE},
+                    datatype: "json",
+                    success: function (data) {
+                        if ($("#" + course_div).val() == "") {
+                            $("#" + lesson_div).append("<option value=''>{% trans "   ----   " %}</option>");
+                        } else {
+                            var lesson_list = data.rows;
+                            $("#" + lesson_div).append("<option value=''>{% trans  "x_please_select_lesson" %}</option>");
+                            for (var i in lesson_list) {
+                                if (select_id == lesson_list[i].id) {
+                                    $("#" + lesson_div).append("<option value='" + lesson_list[i].id + "' selected>" + lesson_list[i].name + "</option>");
+                                } else {
+                                    $("#" + lesson_div).append("<option value='" + lesson_list[i].id + "'>" + lesson_list[i].name + "</option>");
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            //init年级
+            function init_major(faculty_id, select_id) {
+                $("#" + major_div).empty();
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'cms_x_person:cms_api:major-list' %}",
+                    data: {"faculty": faculty_id},
+                    datatype: "json",
+                    success: function (data) {
+                        if ($("#" + faculty_div).val() == "") {
+                            $("#" + major_div).append("<option value=''>{% trans "   ----   " %}</option>");
+                        } else {
+                            var major_list = data.rows;
+                            $("#" + major_div).append("<option value=''>{% trans  'x_please_choose' %}{{ ORGANIZATION.Third_level }}</option>");
+                            for (var i in major_list) {
+                                if (select_id == major_list[i].id) {
+                                    $("#" + major_div).append("<option value='" + major_list[i].id + "' selected>" + major_list[i].name + "</option>");
+                                } else {
+                                    $("#" + major_div).append("<option value='" + major_list[i].id + "'>" + major_list[i].name + "</option>");
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            //生成班级列表
+            function init_classes(faculty_id, major_id, select_id) {
+                $("#" + classes_div).empty();
+                $.ajax({
+                    type: "GET",
+                    url: "{% url 'cms_x_person:cms_api:classes-list' %}",
+                    data: {
+                        "faculty": faculty_id,
+                        "major": major_id,
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        if ($("#" + major_div).val() == "") {
+                            $("#" + classes_div).append("<option value=''>{% trans "   ----   " %}</option>");
+                        } else {
+                            var classes_list = data.rows;
+                            $("#" + classes_div).append("<option value=''>{% trans  'x_please_choose' %}{{ ORGANIZATION.Fourth_level }}</option>");
+                            for (var i in classes_list) {
+                                if (select_id == classes_list[i].id) {
+                                    $("#" + classes_div).append("<option value='" + classes_list[i].id + "' selected>" + classes_list[i].name + "</option>");
+                                } else {
+                                    $("#" + classes_div).append("<option value='" + classes_list[i].id + "'>" + classes_list[i].name + "</option>");
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            if (event != '') {
+                $("#" + course_div).val(event.course);
+                $("#" + faculty_div).val(event.faculty);
+                init_lesson($("#" + course_div).val(), event.lesson);
+                init_major($("#" + faculty_div).val(), event.major);
+                init_classes($("#" + faculty_div).val(), $("#" + major_div).val(), event.classes);
+
+            } else {
+                $("#" + course_div).change(function () {
+                    init_lesson($("#" + course_div).val())
+                });
+                $("#" + faculty_div).change(function () {
+                    init_major($("#" + faculty_div).val())
+                });
+                $("#" + major_div).change(function () {
+                    init_classes($("#" + faculty_div).val(), $("#" + major_div).val())
+                });
+            }
+        }
+
+        $("#addObjcectInputModalAdd").on("hidden.bs.modal", function () {
+            $("#select_course_add").val("");
+            $("#select_lesson_add").empty();
+            $("#select_lesson_add").append("<option value=''>{% trans "   ----   " %}</option>")
+            $("#auth_faculty_add").val("");
+            $("#auth_major_add").empty();
+            $("#auth_major_add").append("<option value=''>{% trans "   ----   " %}</option>")
+            $("#auth_classes_add").empty();
+            $("#auth_classes_add").append("<option value=''>{% trans "   ----   " %}</option>")
+            $("#server-error").hide();
+            $(this).removeData("bs.modal");
+        });
+
+        $("#addObjcectInputModalEdit").on("hidden.bs.modal", function () {
+            $("#select_course_edit").val("");
+            $("#select_lesson_edit").val("");
+            $("#auth_faculty_edit").val("");
+            $("#auth_major_edit").val("");
+            $("#auth_classes_edit").val("");
+            $("#update-error").hide();
+            $(this).removeData("bs.modal");
+        });
+
+        $(function () {
+            initCheckbox("select_course_edit", "select_lesson_edit", "auth_faculty_edit", "auth_major_edit", "auth_classes_edit", '');
+            initCheckbox("select_course_add", "select_lesson_add", "auth_faculty_add", "auth_major_add", "auth_classes_add", '');
+
+        });
+
+
+        var CALLBACK = {
+            changeSelect: function () {
+                if ($("#group_name").val() == 1){
+                    $("#classes_box").show();
+                    $("#teacher_box").hide();
+                    clear_teacherBox();
+                    init_classesBox();
+                } else {
+                    $("#classes_box").hide();
+                    $("#teacher_box").show();
+                    clear_classesBox();
+                    var first_id = {{ request.user.id }};
+                    $("#teacher_name").val(first_id);
+                }
+                $('#calendar').fullCalendar('refetchEvents');
+            },
+            majorlist: function () {
+                var facultyid = $("#faculty_name").val();
+                $("#major_name").empty();
+                $('#major_name').append("<option value=0 selected=selected>{% trans 'x_please_choose' %}{{ ORGANIZATION.Third_level }} </option>");
+                http.get(major_list, {'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#major_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                $('#calendar').fullCalendar('refetchEvents');
+                CALLBACK.classlist()
+            },
+            classlist: function () {
+                var major_id = $("#major_name").val();
+                var facultyid = $("#faculty_name").val();
+                $("#classes_name").empty();
+                $('#classes_name').append("<option value=0 selected=selected> {% trans 'x_please_choose' %}{{ ORGANIZATION.Fourth_level }} </option>");
+                http.get(classes_list, {'major': major_id, 'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#classes_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                $('#calendar').fullCalendar('refetchEvents');
+            },
+            refreshSchdule: function () {
+                $('#calendar').fullCalendar('refetchEvents');
+            }
+        };
+    </script>
+{% endblock %}

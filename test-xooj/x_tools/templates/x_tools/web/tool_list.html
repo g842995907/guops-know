@@ -1,0 +1,279 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/course.css' %}"/>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+            <span>&gt;&gt;</span>
+            <a href="{% url 'x_tools:list' %}" class='active font15'>{% trans "x_toolbox" %}</a>
+        </div>
+        <div class="content pad10T">
+            <table class="filtrate">
+                <tr>
+                    <td width="50" class="top10">{% trans "x_category" %}:</td>
+                    <td width="60" class="top10">
+                        <span><a href="javaScript:void(0)" class="category-list activated sticky" name="category-list"
+                                 id="category-all" value="">{% trans "x_all" %}</a></span></td>
+                    <td>
+                        {% for category in categories %}
+                            <span><a href="javaScript:void(0)" class="category-list" name="category-list"
+                                     value="{{ category.id }}">{{ category.name }}</a></span>
+                        {% endfor %}
+                </tr>
+                <tr>
+                    <td width="50" class="top10">{% trans "x_platform" %}:</td>
+                    <td width="60" class="top10">
+                        <span><a href="javaScript:void(0)" class="platforms-list activated sticky" name="platforms-list"
+                                 id="platforms-all" value="">{% trans "x_all" %}</a></span></td>
+                    <td>
+                        <span><a href="javaScript:void(0)" class="platforms-list" name="platforms-list" value="windows">Window</a></span>
+                        <span><a href="javaScript:void(0)" class="platforms-list" name="platforms-list" value="linux">Linux</a></span>
+                        <span><a href="javaScript:void(0)" class="platforms-list" name="platforms-list" value="mac">Mac OS</a></span>
+                        <span><a href="javaScript:void(0)" class="platforms-list" name="platforms-list" value="android">Android</a></span>
+                        <span><a href="javaScript:void(0)" class="platforms-list" name="platforms-list"
+                                 value="ios">IOS</a></span>
+                        <span><a href="javaScript:void(0)" class="platforms-list" name="platforms-list"
+                                 value="online">{% trans "x_online" %}</a></span>
+                        <span><a href="javaScript:void(0)" class="platforms-list" name="platforms-list"
+                                 value="others">{% trans "x_other" %}</a></span>
+                </tr>
+                <tr>
+                    <td width="50" class="top10">{% trans "x_authorized" %}:</td>
+                    <td width="60" class="top10">
+                        <span><a href="javaScript:void(0)" class="license_model-list activated sticky"
+                                 name="license_model-list"
+                                 id="license_model-all" value="">{% trans "x_all" %}</a></span></td>
+                    <td>
+                        <span><a href="javaScript:void(0)" class="license_model-list" name="license_model-list"
+                                 value="free">{% trans "x_free" %}</a></span>
+                        <span><a href="javaScript:void(0)" class="license_model-list" name="license_model-list"
+                                 value="trial">{% trans "x_limit" %}</a></span>
+                        <span><a href="javaScript:void(0)" class="license_model-list" name="license_model-list"
+                                 value="non-free">{% trans "x_charge" %}</a></span>
+                </tr>
+            </table>
+            <div class='clearfix row mrg20B'>
+                <div class="search default-bg fr">
+                    <input class="search-text pad10L fl sticky" placeholder="{% trans 'x_search' %}" type="text"
+                           id="search-text" name="search-text"/>
+                    <span class="search-bg mainBg fr font18 text-center cursor" id="tool-search">
+                        <span class="oj-icon search-btn whiteC oj-icon-E911"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="row defaultColor mrg100B default-bg">
+                <div class="row pad40A " id="tool-list-div">
+                    <!-- Tool list -->
+                </div>
+                <div style="text-align:center;display: flex;justify-content: center;align-items: center;">
+                    <div class="pagination"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: none;" id="tool-template-div">
+        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 mrg20B">
+            <a href="{% url 'x_tools:detail' 0 %}" class='posRelative inLine overflows'>
+                <img src="{% static 'tools/img/gongj.png' %}" style="width:100%" class="hoverImg">
+                <span class='oj_labelTitle hoverC' name="name"></span>
+                <div class="mask-layer" title="此内容仅在正式版提供"><i class="fa fa-lock fa-4x"></i></div>
+            </a>
+            <div>
+                <div class="lineH40 font14 of-hide">
+                    <span>{% trans "x_category" %}：</span>
+                    <span class="category_name" name="category"></span>
+                </div>
+                <div class="font14 ">
+                    <span>{% trans "x_update_time" %}：</span>
+                    <span class="update_time" name="update_time"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static "web/js/paginator.js" %}"></script>
+    <script src="{% static "web/js/sticky.js" %}"></script>
+    <script type="text/javascript">
+        function get_query_string(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null)return unescape(r[2]);
+            return null;
+        }
+
+        {#        function format_date_str(date_str) {#}
+        {#            var date = new Date(date_str);#}
+        {#            return date.getFullYear() + "-" + (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + "-" + date.getDate();#}
+        {#        }#}
+
+        var pageSize = 12;
+        var flag = true
+        $(document).ready(function () {
+            function loadSuccess (total) {
+                if(flag){
+                    $("div.pagination").after("<div class='pageBox'>" +
+                    "<div class='goPage'>" + gettext('x_go_page') +"<input class='pageNum' type='text'>" + gettext('x_page') +"</div>" +
+                    "<input type='button' value='GO' class='pageBtn'></div>")
+
+                    $(".pageBtn").click(function () {
+                    let goPage = $(".pageNum").val()
+                    let go_limit = Math.ceil(total/pageSize)
+                    if(!goPage || go_limit < goPage){
+                        return
+                    }
+                    let limit = pageSize;
+                    var offset = (goPage-1)*limit
+                    var search_text = "",
+                    category = "",
+                    platforms = "",
+                    license_model = ""
+
+                if (location.search == "") {
+                    search_text = get_params_from_ls("search-text");
+                    category = get_params_from_ls("category-list");
+                    platforms = get_params_from_ls("platforms-list");
+                    license_model = get_params_from_ls("license_model-list");
+                } else {
+                    search_text = get_query_string("search");
+                    category = get_query_string("search_category");
+                    platforms = get_query_string("search_platforms");
+                    license_model = get_query_string("search_license_model");
+                }
+                    refresh_tool_list(search_text, category, platforms, license_model, offset, limit);
+                    $(".pageNum").val('')
+                });
+                    flag = false
+                }else {
+                    return
+                }
+
+            }
+
+            // 初始化工具列表
+            function refresh_tool_list(search_text, category, platforms, license_model, offset, limit) {
+                if (limit == "") {
+                    limit = pageSize;
+                }
+                offset = Number(offset);
+
+                $('div.pagination').empty();
+                var tool_list_div = $("#tool-list-div");
+                var tool_tpl = $("#tool-template-div");
+                tool_list_div.empty();
+
+                $.ajax({
+                    url: "{% url 'x_tools:api:web-tool-list' %}",
+                    type: "get",
+                    data: {
+                        "search": search_text, "search_platforms": platforms,
+                        "search_license_model": license_model, "search_category": category,
+                        "offset": offset, "limit": limit
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        var total = data.total;
+                        if (total > 0) {
+                            var tool_list = data.rows;
+                            for (var i in tool_list) {
+                                if (tool_list[i].lock == 1) {
+                                    tool_tpl.find("a").attr("href", "javascript:void(0);");
+                                    tool_tpl.find(".mask-layer").show();
+                                } else {
+                                    tool_tpl.find("a").attr("href", "{% url 'x_tools:detail' 0 %}".replace("0", tool_list[i].id));
+                                    tool_tpl.find(".mask-layer").hide();
+                                }
+                                var img_src = tool_list[i].cover;
+                                if (tool_list[i].cover == null || tool_list[i].cover == "") {
+                                    img_src = "{% static 'tools/img/gongj.png' %}";
+                                }
+                                tool_tpl.find("a>img").attr("src", img_src);
+                                {#                                tool_tpl.find("a>img").attr("onerror", "javascript:this.src='{% static "tools/img/gongj.png" %}'");#}
+                                tool_tpl.find("span[name='name']").html(tool_list[i].name);
+                                {#                                tool_tpl.find("span[name='category']").attr("title", tool_list[i].category_names);#}
+                                tool_tpl.find("span[name='category']").html(tool_list[i].category_i18n_names);
+                                tool_tpl.find("span[name='update_time']").html(dateUtil.formatYMD(tool_list[i].update_time));
+                                tool_list_div.append(tool_tpl.html());
+                            }
+                            $('div.pagination').bootstrapPaginator({
+                                currentPage: (offset / limit) + 1,
+                                totalPages: Math.ceil(total / limit),
+                                onPageClicked: function (event, originalEvent, type, page) {
+                                    if ((1 / limit) + 1 == page) return;
+                                    offset = (page - 1) * limit;
+                                    refresh_tool_list(search_text, category, platforms, license_model, offset, limit);
+                                }.bind(this)
+                            });
+                            $(".pageBox").show("fast")
+                            loadSuccess(total)
+                        } else {
+                            $(".pageBox").hide("fast")
+                            return;
+                        }
+                    }.bind(this),
+                    error: function () {
+                        console.info("Error");
+                    }
+                })
+            }
+            function init_tool_list() {
+                var search_text = "",
+                    category = "",
+                    platforms = "",
+                    license_model = "",
+                    offset = 0;
+
+                if (location.search == "") {
+                    search_text = get_params_from_ls("search-text");
+                    category = get_params_from_ls("category-list");
+                    platforms = get_params_from_ls("platforms-list");
+                    license_model = get_params_from_ls("license_model-list");
+                    offset = get_params_from_ls("offset");
+                } else {
+                    search_text = get_query_string("search");
+                    category = get_query_string("search_category");
+                    platforms = get_query_string("search_platforms");
+                    license_model = get_query_string("search_license_model");
+                    offset = get_query_string("offset");
+                }
+                $("[name='search-text']").val(search_text);
+                init_activate_elem("category-list", category);
+                init_activate_elem("platforms-list", platforms);
+                init_activate_elem("license_model-list", license_model);
+                refresh_tool_list(search_text, category, platforms, license_model, offset, "");
+            }
+
+            // 初始化分类样式
+            activate_effects("category");
+            activate_effects("platforms");
+            activate_effects("license_model");
+
+            function research() {
+                var search_text = $("#search-text").val();
+                var category = $(".category-list.activated").attr("value");
+                var platforms = $(".platforms-list.activated").attr("value");
+                var license_model = $(".license_model-list.activated").attr("value");
+
+                refresh_tool_list(search_text, category, platforms, license_model, "0", "")
+            }
+
+            // 点击搜索按钮
+            $("#tool-search").click(research);
+            $("a[name='category-list']").click(research);
+            $("a[name='platforms-list']").click(research);
+            $("a[name='license_model-list']").click(research);
+
+            // 生成列表
+            init_tool_list();
+        });
+    </script>
+{% endblock %}
+
+<!-- container end-->

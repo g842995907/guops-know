@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script src="{% static 'course/js/jquery-3.2.1.min.js'%}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/video.css' %}"/>
+</head>
+<body>
+	<div class='wrap'>
+		<video controls='controls' >
+			<source  src="{{ video_url }}" type="video/mp4">
+		</video>
+	</div>
+</body>
+</html>

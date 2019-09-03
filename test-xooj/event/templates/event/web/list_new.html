@@ -1,0 +1,557 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'event/web/css/event_new.css' %}"/>
+    <style>
+        .event h3 {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .text-nowrap {
+            white-space: nowrap;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    {% verbatim %}
+    <div class='container mrg93T' id="main">
+        <div class="bread" v-cloak>
+            <a :href="homeUrl">[[ home ]]</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active font15'>[[ type ? eventType[type] : competition ]]</a>
+        </div>
+        <div class="mrg20T content pad10T clearfix" id="eventList" v-if="events" v-cloak>
+            <div class="event col-sm-12 col-md-12 col-lg-12 mrg20B center-block" 　v-for="event in events">
+                <div class="row pad25L pad25R pad20T pad20B mrg0A oj_card posRelative"
+                     :class="{'ing': event.process == 0, 'future': event.process == 1, 'finish': event.process == 2}">
+                    <div class="col-sm-4 col-md-3 col-lg-3 posRelative">
+                        <img :src="event.logo" alt="" class='width100 larger-img'>
+                    </div>
+                    <div class="col-sm-4 col-md-4 col-lg-4 whiteC event-info">
+                        <h3 class='mrg0T font22 orangeC font' :title="event.name">[[event.name ]]</h3>
+                        <div class="info">
+                            <div class='font14 mrg5B text-nowrap'>
+                                <span class="mrg5L">[[ compition_style ]]：[[ eventType[event.type] ]]</span>
+                            </div>
+                            <div class='font14 mrg5B text-nowrap'>
+                                <span class="mrg5L">[[ way_of_entry ]]：[[ eventMode[event.mode] ]]</span>
+                            </div>
+                            <div class='font14 mrg5B text-nowrap'>
+                                <span class="mrg5L">[[ integral_way ]]：[[ eventIntegralMode[event.integral_mode] ]]</span>
+                            </div>
+                            <div class='font14 mrg5B text-nowrap'>
+                                <span class="mrg5L">[[ points_reward ]]：[[ eventRewardMode[event.reward_mode] ]]</span>
+                            </div>
+                            <div class='font14 mrg15B'>
+                                <span class="mrg5L">[[ event.start_time | formatYMDHM ]]~[[ event.end_time | formatYMDHM ]]</span>
+                            </div>
+                        </div>
+                        <!--
+                        <div class='font14 mrg15B'>
+                            <time>{{ event.start_time | formatYMDHM }}~{{ event.end_time | formatYMDHM }}</time>
+                        </div>
+                        -->
+
+
+                        <div v-if="event.process == 2 ">
+                            <div v-if="event.type == 1">
+                                <a :href="event | reviewUrl" target="_blank"
+                                   class='event-btn whiteC text-center review cursor'>[[ event | accessFormat ]]</a>
+                            </div>
+                            <div v-else>
+                                <a :href="event | detailUrl" target="_blank"
+                                   class='event-btn whiteC text-center review cursor'>[[ event | accessFormat ]]</a>
+                            </div>
+                        </div>
+                        <div v-else-if="event.process == 1 && event.type == 1">
+                            <a v-on:click="showError" class='event-btn whiteC text-center review cursor'>[[ event |
+                                accessFormat ]]
+                            </a>
+                        </div>
+                        <div v-else>
+                            <div v-if="event.grade && event.type == 1">
+                                <a :href="event | reviewUrl" target="_blank"
+                                   class='event-btn whiteC text-center review cursor'>[[ event | accessFormat ]]</a>
+                            </div>
+                            <div v-else>
+                                <a :href="event | detailUrl" target="_blank"
+                                   class='event-btn whiteC text-center join cursor'>[[ event | accessFormat ]]</a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-4 col-md-5 col-lg-5 whiteC">
+                        <div class="bar" :id="setBarId(event.id)" style="width: 100%;"></div>
+
+                        <div class="radar" :id="setRadarId(event.id)" style="width: 100%;"></div>
+                    </div>
+                    <div class="oj_label whiteC">
+                        [[ event | processFormat ]]
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="paginationBox" style="">
+            <div class="pagination"></div>
+        </div>
+    </div>
+    {% endverbatim %}
+
+    <script src="{% static 'web/js/paginator.js' %}"></script>
+    <script type="text/javascript">
+        var eventType = {
+            '1': gettext('x_exam'),
+            '2': gettext('x_jeopardy'),
+            '3': gettext('x_share_game'),
+            '4': gettext('x_trial_game'),
+            '5': gettext('x_ad_game'),
+            '6': gettext('x_event_infiltration'),
+        };
+        var eventMode = {
+            '1': gettext('x_personal'),
+            '2': gettext('x_team'),
+        };
+        var eventIntegralMode = {
+            '1': gettext('x_cumulative_points'),
+            '2': gettext('x_dynamic_integration'),
+        };
+        var eventRewardMode = {
+            '0': gettext('x_none'),
+            '1': gettext('x_123_blood'),
+        };
+        var eventDetailUrl = {
+            '1': '{% url "event_exam:detail" 0 %}',
+            '2': {% if x_jeopardy_url %}"{{ x_jeopardy_url }}"{% else %}""{% endif %},
+            '3': '',
+            '4': {% if x_trial_url %}"{{ x_trial_url }}"{% else %}""{% endif %},
+            '5': {% if x_ad_url %}"{{ x_ad_url }}"{% else %}""{% endif %},
+            '6': {% if x_infiltration_url %}"{{ x_infiltration_url }}"{% else %}""{% endif %},
+            '7': '{% url 'event_exam:review' 0 %}'
+        };
+
+        var reviewUrl = '{% url 'event_exam:review' 0 %}';
+
+        var type = '{{ type }}';
+        var listVue;
+        var pageSize = 12;
+        var flag = true
+        getList(0, pageSize);
+
+
+        function getList(offset, limit) {
+            $('div.pagination').empty();
+            var data = {
+                offset: offset,
+                limit: limit
+            };
+            if (type) {
+                data.type = type;
+            }
+            http.get('{% url "event:api:event-list" %}', data, function (res) {
+                var events = res.rows;
+                {#                alert(typeof(events[0].start_time));#}
+                {#                alert(events[0].start_time.replace('T',' '));#}
+                if (listVue) {
+                    listVue.events = events;
+                    Vue.nextTick(function () {
+                        listVue.beforeSet();
+                    });
+                } else {
+                    listVue = new Vue({
+                        el: '#main',
+                        delimiters: ['[[', ']]'],
+                        data: {
+                            events: events,
+                            eventType: eventType,
+                            eventMode: eventMode,
+                            eventIntegralMode: eventIntegralMode,
+                            eventRewardMode: eventRewardMode,
+                            homeUrl: "{% url 'common_web:home' %}",
+                            type: type,
+                            home: gettext('x_home'),
+                            competition: gettext('x_contest'),
+                            compition_style: gettext('x_competition_form'),
+                            integral_way: gettext('x_integral_mode'),
+                            way_of_entry: gettext('x_game_mode'),
+                            points_reward: gettext('x_reward_points'),
+
+                        },
+                        methods: {
+                            showError: function () {
+                                $('#hint-msg').html(gettext('x_sorry_not_start'));
+                                $("#hint-msg-warp").attr("data-backdrop", "static");
+                                $("#hint-msg-warp").modal();
+                                $("#hint-msg-warp").show();
+                                {#                                $("#remind-button").click(function () {#}
+                                {#                                    window.location.href = "{% url 'event_exam:list' %}";#}
+                                {#                                });#}
+                                {#                                $("[type=button]").click(function () {#}
+                                {#                                    window.location.href = "{% url 'event_exam:list' %}";#}
+                                {#                                })#}
+                            },
+                            setBarId: function (index) {
+                                return "bar" + index
+                            },
+                            setRadarId: function (index) {
+                                return "radar" + index
+                            },
+                            beforeSet: function () {
+                                var event_list = this.events;
+                                for (var i = 0; i < event_list.length; i++){
+                                    var event = event_list[i];
+                                    var task_category = event.task_category;
+                                    var user_score = event.user_score
+                                    var total_score = event.total_score
+                                    var process = event.process;
+                                    var type = event.type;
+                                    if (type == 1 || type == 5){
+                                        beforeSetBarCharts(this.setRadarId(event.id),task_category);
+                                    }
+                                    else {
+                                        if (process == 2) {
+                                        //网状图
+                                        beforeSetRadarEcharts(this.setRadarId(event.id),user_score,total_score)
+                                        }
+                                        else {
+                                            beforeSetBarCharts(this.setRadarId(event.id),task_category);
+                                        }
+                                    }
+
+                                }
+                            }
+                        },
+                        filters: {
+                            processFormat: function (event) {
+                                {#if (event.type == 5) {#}
+                                {#    switch (event.status) {#}
+                                {#        case 1:#}
+                                {#            return gettext("x_upcoming");#}
+                                {#        case 2:#}
+                                {#            return gettext("x_paused");#}
+                                {#        case 3:#}
+                                {#            return gettext("x_underway");#}
+                                {#        case 4:#}
+                                {#            return gettext("x_archive");#}
+                                {#    }#}
+                                {#    return "";#}
+                                {# }#}
+                                if (event.process == 0) {
+                                    if (event.status == 2) {
+                                        return gettext("x_paused");
+                                    } else {
+                                        return gettext("x_underway");
+                                    }
+                                } else if (event.process == 1) {
+                                    return gettext("x_upcoming");
+                                } else if (event.process == 2) {
+                                    return gettext("x_archive");
+                                }
+                            },
+                            accessFormat: function (event) {
+                                {#if (event.type == 5) {#}
+                                {#    if (event.status == 4) {#}
+                                {#        return gettext("x_review");#}
+                                {#    }#}
+                                {# }#}
+                                if (event.process == 2) {
+                                    return gettext("x_review");//回顾
+                                }
+                                if (event.grade && event.type == 1){
+                                    return gettext("x_review");//回顾
+                                }
+
+                                return event.type == 1 ? gettext("x_exam") : gettext("x_participate");//考试&&参赛
+                            },
+                            detailUrl: function (event) {
+                                return eventDetailUrl[event.type].replace('0', event.id);
+                            },
+                            reviewUrl: function (event) {
+                                return reviewUrl.replace('0', event.id);
+                            }
+                            {#                            formatYMDHM :function (data) {#}
+                            {#                              return  dateUtil.formatYMDHM(data);#}
+                            {#                            }#}
+
+                        },
+                        mounted:function () {
+                            this.beforeSet();
+                        }
+
+                    });
+
+                }
+
+                if (res.total > 0) {
+                    $('div.pagination').bootstrapPaginator({
+                        currentPage: (offset / limit) + 1,
+                        totalPages: Math.ceil(res.total / limit),
+                        onPageClicked: function (event, originalEvent, type, page) {
+                            if ((1 / limit) + 1 == page) {
+                                return;
+                            }
+                            offset = (page - 1) * limit;
+                            getList(offset, limit);
+                        },
+                        callback: getList,
+                    });
+
+                }
+            });
+        }
+
+        function beforeSetBarCharts(id, json_data) {
+            var key_arr = [];
+            var value_arr = [];
+            var data = JSON.parse(JSON.stringify(json_data));
+            {#key_arr = ['a','b','c'];#}
+            {#value_arr = [1,2,3];#}
+            for (key in data) {
+                key_arr.push(key);
+                value_arr.push(data[key]);
+                if (key_arr.length == 5){
+                    break;
+                }
+            }
+
+            $("#" + id).each(function () {
+                $(this).height($('.event-info').height());
+                setBarEcharts(id, key_arr, value_arr);
+                $(window).resize(function () {
+                    setBarEcharts(id, key_arr, value_arr);
+                })
+            });
+        }
+
+        function beforeSetRadarEcharts(id, user_score, total_score) {
+            {#var value_arr = [];#}
+            {#var key_arr = [];#}
+            var value = JSON.parse(JSON.stringify(user_score));
+            var category = JSON.parse(JSON.stringify(total_score));
+
+            $("#" + id).each(function () {
+                $(this).height($('.event-info').height());
+                setRadarEcharts(id, category, value);
+                $(window).resize(function () {
+                      setRadarEcharts(id, category, value);
+                })
+            });
+        }
+
+
+        function setBarEcharts(id, category_data, value_data) {
+            myChart = echarts.init(document.getElementById(id));
+{#            var category = ['Pwn', 'Web', 'Misc', 'Reverse'];#}
+{#            var barData = [4, 6, 3, 500];#}
+            var category = category_data;
+            var barData = value_data;
+            option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'none'
+                    },
+                },
+                grid: {
+                    left: '3%',
+                    right: '8%',
+                    top: '3%',
+                    bottom: '3%',
+                    containLabel: true,
+                },
+                xAxis: {
+                    type: 'value',
+                    splitLine: {show: false},
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: 'transparent',
+                        },
+                    },
+                    axisTick: {
+                        show: false
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    data: category,
+                    splitLine: {show: false},
+                    inverse: true,
+                    axisLine: {
+                        show: false,
+                        lineStyle: {
+                            color: '#fff',
+                        },
+                    },
+                    axisLabel: {
+                        interval: 0,
+                        margin: 110,
+                        textStyle: {
+                            align: 'left',
+                            baseline: 'middle'
+                        }
+                    },
+                    axisTick: {
+                        show: false
+                    },
+                    offset: 10,
+                    nameTextStyle: {
+                        fontSize: 15
+                    }
+                },
+                series: [
+                    {
+                        name: '数量',
+                        type: 'bar',
+                        data: barData,
+                        barWidth: 14,
+                        barGap: 10,
+                        smooth: true,
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'right',
+                                offset: [5, -2],
+                                textStyle: {
+                                    color: '#F68300',
+                                    fontSize: 13
+                                }
+                            }
+                        },
+                        itemStyle: {
+                            emphasis: {
+                                barBorderRadius: 7
+                            },
+                            normal: {
+                                barBorderRadius: 7,
+                                color: new echarts.graphic.LinearGradient(
+                                    0, 0, 1, 0,
+                                    [
+                                        {offset: 0, color: '#3977E6'},
+                                        {offset: 1, color: '#37BBF8'}
+
+                                    ]
+                                )
+                            }
+                        }
+                    }
+                ]
+            };
+            if (category.length != 0){
+                myChart.setOption(option);
+            }
+        }
+        function setRadarEcharts(id, category_data, value_data) {
+            var myChart = echarts.init(document.getElementById(id));
+            {#var category = ['Pwn', 'Web', 'Misc', 'Reverse'];#}
+            {#var barData = [4, 6, 3, 5];#}
+            var barData = new Array();
+            var category = new Array();
+
+            var textColors = '#24b0f9';
+            var i = 0;
+            for (key in category_data) {
+                var each_category = {};
+                each_category.name = key;
+                each_category.max = category_data[key];
+                category[i] = each_category;
+                i++;
+            }
+
+            var index = 0;
+            for (key in category_data) {
+                if (value_data[key]) {
+                    barData[index] = value_data[key];
+                } else {
+                    barData[index] = 0;
+                }
+                index++;
+            }
+
+
+            var option = {
+                radar: {
+                    name: {
+                        textStyle: {
+                            color: '#1fa0fb',
+                            backgroundColor: '#999',
+                            borderRadius: 3,
+                            padding: [3, 5]
+                        }
+                    },
+                    {#indicator: [#}
+                    {#    {name: 'Pwn', max: 300},#}
+                    {#    {name: 'Reverse', max: 300},#}
+                    {#    {name: 'Web', max: 300},#}
+                    {#],#}
+                    indicator: category,
+                    splitArea: {
+                        areaStyle: {
+                            color: [],
+                            shadowColor: 'rgba(0, 0, 0, 0)',
+                            shadowBlur: 10
+                        }
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: textColors,
+                            opacity: 0.5
+                        }
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(255,255,255,.2)'
+                        }
+                    },
+
+                },
+                series: [{
+                    name: '',
+                    type: 'radar',
+                    // areaStyle: {normal: {}},
+                    data: [
+                        {
+                            value: barData,
+                            name: '',
+                            areaStyle: {
+                                normal: {
+                                    color: textColors,
+                                    opacity: 0.25
+                                },
+                            },
+                            label: {
+                                normal: {
+                                    show: false,
+                                    formatter: function (params) {
+                                        return params.value;
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    color: textColors
+                                }
+                            },
+                            itemStyle: {
+                                normal: {color: textColors}
+                            }
+                        },
+
+                    ]
+                }]
+            };
+            if (category.length != 0){
+                myChart.setOption(option);
+            }
+
+        }
+    </script>
+{% endblock %}
+
+<!-- container end-->
+

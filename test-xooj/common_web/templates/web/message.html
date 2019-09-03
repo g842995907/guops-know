@@ -1,0 +1,202 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+{% block other_css_js %}
+    <title>消息列表</title>
+    <link rel="stylesheet" href="{% static 'web/css/message.css' %}">
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/iCheck/custom.css" %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-table.css' %}"/>
+    <script src="{% static 'web/js/bootstrap-table.js' %}"></script>
+    {% get_current_language as LANGUAGE_CODE %}
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <script src="{% static 'web/js/bootstrap-table-zh-CN.js' %}"></script>
+    {% endif %}
+    <script src="{% static "lib/hplus/js/plugins/iCheck/icheck.min.js" %}"></script>
+    <script>
+        {#$(document).ready(function () {#}
+        {#    $(".i-checks").iCheck({checkboxClass: "icheckbox_square-green", radioClass: "iradio_square-green",})#}
+        {# });#}
+    </script>
+    <style>
+        .gray{
+            color: #8fa2a6;
+        }
+        .miss{
+            opacity:0;
+        }
+    </style>
+{% endblock %}
+{% block container %}
+    <div class='container posRelative' style="padding-top: 93px;">
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+{#            <a href="{% url 'course_occupation:index_occupation' %}" class="active font15">个人中心</a>#}
+{#            <span>&gt;&gt;</span>#}
+            <a href="#" class="active font15">{% trans 'x_message_list' %}</a>
+        </div>
+        {% verbatim %}
+        <div class="default-bg mrg20T pad20A" id="mesVue" v-cloak>
+            <ul class="msg">
+                <li class="" v-for="notice in notices" :class="{ gray:notice.read }" :id="notice.id">
+                    <div class="clearfix msg-list pad10L">
+                        <div class="pull-left">
+                            <input :id="'checkbox'+notice.id" type="checkbox" class="i-checks" v-model="ids"
+                                   :value="notice.id" name="msg_check">
+                            <label :for="'checkbox'+notice.id"></label>
+                        </div>
+                        <div class="cursor msg-up-down pull-left" @click="read_notice(notice)">
+                            <i class="fa fa-circle font12 " :class="[notice.read? 'miss':'orangeC']"></i>
+                            <span>[{{ notice.notice_type }}]&nbsp;{{ notice.name }}</span>
+
+
+                        </div>
+                        <div class="pull-left text-right">{{ notice.publisher }}</div>
+                        <div class="pull-left text-right" style="text-align: center"><span
+                                class="pie">{{ notice.last_edit_time }}</span>
+                        </div>
+                    </div>
+                    <div class="msg-details" v-html="marked(notice.content)">
+                        <a v-if="notice.type==2" :href="team_url" style="font-size: 12px">&nbsp;{{ handle }}</a>
+                    </div>
+
+                </li>
+                <p style="display: none">{{ selected }}:{{ ids }}</p>
+
+
+            </ul>
+            <div class="clearfix text-right" v-if="notices.length!=0">
+                <div class="pull-left">
+                    <button class="btn btn-msg" id="checkAll" @click="checkAll" value="1">{{ selectAll }}</button>
+                    <button class="btn btn-msg mrg30L" @click="destory_msg">{{ deleteClick }}</button>
+                </div>
+                <div class="pagination"></div>
+            </div>
+            <div v-else="notices.length=0" style="height:35px;text-align: center">{{ noMessages }}</div>
+        </div>
+        {% endverbatim %}
+
+
+    </div>
+    <script src="{% static 'web/js/paginator.js' %}"></script>
+    <script>
+    $(function () {
+    })
+    </script>
+    <script>
+        var mesVue;
+        var pageSize = 12;
+        getList(0, pageSize);
+
+        function getList(offset, limit) {
+            $('div.pagination').empty();
+            var data={
+                offset: offset,
+                limit: limit
+            };
+            http.get("{% url 'system_configuration:api:sys-notice-list' %}", data, function(data){
+                var notices = data.rows;
+                if (mesVue){
+                    mesVue.notices = notices;
+                }else {
+                    mesVue = new Vue({
+                        el: "#mesVue",
+                        data:{
+                            team_url:"{% url 'x_person:team'%}",
+                            notices:notices,
+                            ids:[],
+                            noMessages:gettext('x_no_messages'),
+                            deleteClick :gettext('x_delete'),
+                            selectAll:gettext('x_select_all'),
+                            selected:gettext('x_selected'),
+                            handle:gettext("x_handle"),
+                        },
+                        methods: {
+                            read_notice:function (notice) {
+{#                                if($("#"+notice.id).find('i').first().hasClass('fa-angle-right')){#}
+{#                                    $("#"+notice.id).find('.msg-details').slideDown('fast');#}
+{#                                    $("#"+notice.id).find('i').first().removeClass('fa-angle-right').addClass('fa-angle-down')#}
+{#                                } else{#}
+{#                                   $("#"+notice.id).find('.msg-details').slideUp('fast');#}
+{#                                   $("#"+notice.id).find('i').first().removeClass('fa-angle-down').addClass('fa-angle-right')#}
+{#                                }#}
+                                $("#"+notice.id).find('.msg-details').slideToggle('fast');
+                                if (notice.read == false){
+                                    sys_notice.notice_count -= 1;
+                                    var data={
+                                        'sys_notice': notice.id,
+                                        'user': {{ request.user.id }},
+                                    };
+                                    http.post("{% url 'system_configuration:api:user-notice-list' %}",data,function(){
+                                        $("#"+notice.id).addClass('gray');
+                                        $("#"+notice.id).find('.fa-circle').addClass('miss');
+                                        notice.read = true
+                                    })
+                                }
+                            },
+                            checkAll:function () {
+                                var _this = this;
+                                if($("#checkAll").val() == 1){
+                                    this.ids = [];
+                                    $("input[name='msg_check']:checkbox").each(function () {
+                                        $(this).prop("checked", true);
+                                    });
+                                    this.notices.forEach(function (item, index) {
+                                        _this.ids.push(item.id)
+                                    });
+                                    $("#checkAll").val(0);
+                                }else {
+                                    $("input[name='msg_check']:checkbox").each(function () {
+                                        $(this).prop("checked", false);
+                                    });
+                                    _this.ids = [];
+                                    $("#checkAll").val(1);
+                                }
+                            },
+                            destory_msg: function () {
+                                var del_sum = this.ids;
+                                if (del_sum != ""){
+                                    var data={
+                                    ids:del_sum
+                                    };
+                                    http.delete("{% url 'system_configuration:api:user-notice-batch-destroy' %}",data,function(){
+                                        getList(0, pageSize);
+                                        sys_notice.notice_count -= del_sum.length;
+                                    })
+                                }
+                            },
+
+                        },
+                        filters: {
+                            getMarked: function (value) {
+                                return marked(value)
+                            }
+                        },
+                        created:function () {},
+                        mounted:function () {}
+                    });
+                }
+                if (data.total > 0) {
+                    $('div.pagination').bootstrapPaginator({
+                        currentPage: (offset / limit) + 1,
+                        totalPages: Math.ceil(data.total / limit),
+                        onPageClicked: function (event, originalEvent, type, page) {
+                            if ((1 / limit) + 1 == page) {
+                                return;
+                            }
+                            offset = (page - 1) * limit;
+                            getList(offset, limit);
+                        }
+                    });
+                }
+            })
+        }
+
+        function checkAll() {
+            $("input[name='msg_check']:checkbox").each(function () {
+                $(this).prop("checked", true);
+            })
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <script src="{% static 'web/js/paginator.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static '/practice_capability/css/layout.css' %}"/>
+{% endblock %}
+
+{% block container %}
+    <section class="container layout-color mrg93T" id="main" v-cloak>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a class="active font15">{% trans 'x_self_test_paper' %}</a>
+        </div>
+        {% verbatim %}
+        <div v-for="event in events">
+            <div class="exam default-bg clearfix">
+                <div class="col-sm-3 col-md-3 col-lg-3">
+                    <div class="exam-img hoverImg">
+                        <a :href="event|urlFormat"> <img class="img-responsive" :src="event.logo" style="width: 100%"></a>
+                        <span class="exam-status"
+                              :class="{'exam-done': event.finish==true, 'exam-unfinished': event.finish==false}"></span>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6">
+                    <p><a class="layout-color font26" :href="event|urlFormat">{{ event.name }}</a>
+                    </p>
+                    <p>{{ event.introduction }}</p>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-2 exam-score pull-right">
+                    <p class="exam-score-A"><span class="layout-color" v-bind:style="{'visibility':event.finish==false ? 'hidden' : '' }">{{ "x_score" | trans }}：</span>{{ event.score }}</p>
+                    <img class="img-responsive pull-right" v-bind:style="{'visibility':event.finish==false ? 'hidden' : '' }"
+                         :src="event|processFormat">
+                </div>
+            </div>
+            {% endverbatim %}
+    </section>
+    <div class="paginationBox" style="">
+        <div class="pagination"></div>
+    </div>
+{% endblock %}
+
+
+{% block document_ready %}
+    <script type="text/javascript">
+        var listVue;
+        var pageSize = 12;
+        var flag = true;
+        getList(0, pageSize);
+        function getList(offset, limit) {
+            $('div.pagination').empty();
+            var data = {
+                offset: offset,
+                limit: limit
+            };
+            var score_a = "{% static 'practice_capability/img/level_A.png' %}"
+            var score_b = "{% static 'practice_capability/img/level_B.png' %}"
+            var score_c = "{% static 'practice_capability/img/level_C.png' %}"
+
+            http.get('{% url "practice_capability:api:test-paper-list" %}', data, function (res) {
+                for (var i in res.rows) {
+                    if (!res.rows[i].logo) {
+                        res.rows[i].logo = '{% static "practice_capability/img/default_cover.png" %}'
+                    }
+                }
+                var events = res.rows;
+                if (listVue) {
+                    listVue.events = events;
+                } else {
+                    listVue = new Vue({
+                        el: '#main',
+                        data: {
+                            events: events,
+                        },
+                        filters: {
+                            processFormat: function (event) {
+                                if (event.score > 0.9*event.task_all_score) {
+                                    return score_a;
+                                } else if (event.score > 70*event.task_all_score) {
+                                    return score_b;
+                                }
+                                return score_c;
+                            },
+                            urlFormat: function (event) {
+                                return ('{% url 'practice_capability:exam_detail' 0 %}').replace(0, event.id)
+                            }
+                        },
+                        methods: {
+                            attend: function (event) {
+                                var signupUrl = eventSignupUrl[event.type][event.mode];
+                                var eventUrl = eventDetailUrl[event.type].replace('0', event.id);
+                                http.get(signupUrl, {event: event.id}, function (res) {
+                                    console.log(res);
+                                    if (res.total > 0) {
+                                        window.location.href = eventUrl;
+                                    } else {
+                                        http.post(signupUrl, {event: event.id}, function (res) {
+                                            window.location.href = eventUrl;
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+
+                if (res.total > 0) {
+                    $('div.pagination').bootstrapPaginator({
+                        currentPage: (offset / limit) + 1,
+                        totalPages: Math.ceil(res.total / limit),
+                        onPageClicked: function (event, originalEvent, type, page) {
+                            if ((1 / limit) + 1 == page) {
+                                return;
+                            }
+                            offset = (page - 1) * limit;
+                            getList(offset, limit);
+                        },
+                        callback: getList,
+                    });
+                    {#loadSuccess()#}
+                }
+            });
+        }
+    </script>
+{% endblock %}

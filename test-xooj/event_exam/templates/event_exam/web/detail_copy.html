@@ -1,0 +1,389 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load static_v %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <script type="text/javascript" src="{% static_v 'practice/widgets/task_env/js/network.js' %}"></script>
+    <script>
+        $(function () {
+        $('#mynote').summernote();
+    })
+    </script>
+{% endblock %}
+
+
+
+{% block container %}
+    <div class='container mrg93T' id="main">
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="{% url 'event:list' %}">{% trans '竞赛' %}</a>
+            <span>&gt;&gt;</span>
+
+            <a href="" class='active'>{{ event.name }}</a>
+        </div>
+        <div class="row mrg30T mrg0L mrg0R mrg25B">
+            <div class='oj_examTitle pad40L whiteC font20 weight mainBg'>
+                 {{ event.name }}
+                <span class="pull-right pad15R font16" style="display: none" id="all_score"></span>
+            </div>
+
+            <div class="default-bg pad40A">
+                <div class="no-topic-wrap" style="display: none">
+                    <img src='{% static 'event/web/img/wz.gif' %}'>
+                </div>
+
+                <div>
+                    {% verbatim %}
+                    <div class="row mrg0A pad30L"
+                         v-if="tasks.length > 0"
+                         id="choice_container" v-cloak>
+                        <h4 class='pad15L mrg25B'>单选题</h4>
+                        <div class="option-container choice-description-box" v-for="(task,index) in tasks">
+                            <div class="description">
+                                <div class='row pad15L mrg0A'>
+                                        <span :data-taskids="task.hash">{{ index+1 }}.{{ task.content|examHrefFormat }}</span>
+                                    <small class='whiteC'>分值{{ task.score }} 分</small>
+                                </div>
+                            </div>
+
+                            <ol style='list-style-type:none'>
+                                <div class='row mrg0A'>
+                                    <div class="col-md-12 font14 lineH30" v-for="option in task.ops">
+                                        <input :name='task.hash' type='radio' class="mrg10T mrg10B mrg10R"
+                                               :disabled='done == true'
+                                               :id="task.hash+option[0]"
+                                               :checked='done==true && task.myanswers==option[0]'
+                                               :answer='option[0]'>
+                                        <label :for='task.hash+option[0]'>{{ option[0] }}． {{ option[1]}}</label>
+                                    </div>
+                                    <div data-value="B" class="col-md-12 layoutColor right-answer answer-show"
+                                         v-bind:style="{'visibility': (done==false || task.rightanswers == null) ? 'hidden' : '' }">正确答案：{{
+                                        task.rightanswers }}
+                                    </div>
+                                </div>
+                            </ol>
+                        </div>
+
+                    </div>
+                    <div class="row mrg0A pad30L"
+                         v-if="check_tasks.length > 0"
+                         id="check-container" v-cloak>
+                        <h4 class='pad15L mrg25B'>多选选题</h4>
+                        <div class="check-container choice-description-box" v-for="(task,index) in check_tasks">
+                            <div class="description">
+                                <div class='row pad15L mrg0A'>
+                                    <span :data-taskids="task.hash">{{ index+1 }}.{{ task.content|examHrefFormat}}</span>
+                                    <small class='whiteC'>分值{{ task.score }} 分</small>
+                                </div>
+                            </div>
+
+                            <ol style='list-style-type:none'>
+                                <div class='row mrg0A'>
+                                    <div class="col-md-12 font14 lineH30" v-for="option in task.ops">
+                                        <input :name='task.hash' type='checkbox' class="mrg10T mrg10B mrg10R"
+                                               :disabled='done == true'
+                                               :id="task.hash+option[0]"
+                                               :checked='done==true && task.myanswers.indexOf(option[0])>-1'
+                                               :answer='option[0]'>
+                                        <label :for='task.hash+option[0]'>{{ option[0] }}． {{ option[1]}}</label>
+                                    </div>
+                                    <div data-value="B" class="col-md-12 layoutColor right-answer answer-show"
+                                         v-bind:style="{'visibility': (done==false || task.rightanswers == null) ? 'hidden' : '' }">正确答案：{{
+                                        task.rightanswers
+                                        }}
+                                    </div>
+                                </div>
+                            </ol>
+                        </div>
+
+                    </div>
+                    <div class="row mrg0A pad30L"
+                         v-bind:style="{'visibility': fill_tasks.length > 0 ? '' : 'hidden' }"
+                         id="fill-container" v-cloak>
+                        <h4 class='pad15L mrg25B'>问答题</h4>
+                        <div class="fill-container choice-description-box pad15L" v-for="(task,index) in fill_tasks">
+                            <div class="row mrg0A pad20B">
+                                <span :data-taskids="task.hash">{{ index+1 }}.{{ task.title}}</span>
+                                <small class='whiteC'>分值{{task.score}}分</small>
+                                <p :data-taskids="task.hash" style="word-wrap:break-word">{{ task.content|examHrefFormat}}</p>
+                            </div>
+
+                            <div class="row mrg20B pad30L "
+                                 v-bind:style="{'display': task.file_url ? '' : 'none' }">
+                                <a :href="task.attach_url" class="download-file" target="_blank" id="task_content_url">x_download_attachment</a>
+                            </div>
+
+                            <div class="row mrg20B pad30L "
+                                 v-bind:style="{'display': task.url ? '' : 'none' }">
+                                <a :href="task.url" class="download-file" target="_blank"
+                                   id="task_content_url">点击访问题目网址</a>
+                            </div>
+
+                            <div class="row mrg20B pad30L " v-if="task.is_dynamic_env">
+                                <div data-widget-id="common-env" :data-task-hash="task.hash"></div>
+                            </div>
+
+                            <div class="row clearfix mrg0A  fill-description">
+                                <div class='row mrg0A'>答案：</div>
+                                <textarea :name="task.hash" placeholder="请输入您认为正确的答案……"
+                                          class="blank-line col-md-11 default-bg font14 mrg10T "
+                                          :disabled='done == true'
+                                          :value='task.myanswers'
+                                          style="resize:none;border:1px solid #3b5d82;"></textarea>
+                            </div>
+                            <div data-value="B" class="layoutColor right-answer answer-show pad20B"
+                                 v-bind:style="{'visibility': (done==false || task.rightanswers == null) ? 'hidden' : '' }">正确答案：{{ task.rightanswers
+                                }}
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endverbatim %}
+
+                    <div class="text-right">
+                        <input type="button" class="btn mainBg whiteC" id="submit-paper" value="{% trans 'x_submit' %}">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 pad0L pad0R couseDetail">
+            <ul id="myTab" class="nav nav-tabs pad10T pad10B pad40L font16 default-bg">
+                <li class="active mrg30L mrg30R">
+                    <a href="#list" data-toggle="tab" class="pad30L pad30R pad5T pad5B">
+                        {% trans 'x_answer_report' %}
+                    </a>
+                </li>
+
+            </ul>
+
+
+            <div class="tab-pane default-bg mrg15T pad30T pad30R pad30L pad30B" id="note">
+                {% include "web/mynote.html" %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+<!-- container end-->
+
+{% block document_ready %}
+    <script type="text/javascript">
+        function get_choose_options(task) {
+            var questionchoose = $.parseJSON(task.options);
+            options = []
+            $.each(questionchoose, function (key, value) {
+                options.push([key, $(value).text()]);
+            });
+            return options;
+        }
+
+        function get_answers(task, answers) {
+            for (var i in answers) {
+                if (task.hash == answers[i].taskId) {
+                    return [answers[i].answer, answers[i].rightAnswer]
+                }
+            }
+        }
+
+        $(function () {
+            http.get("{% url 'event_exam:api:event-detail' pk %}", {}, function (res) {
+                if (res.process == 1) {//未开始
+                    $('.no-topic-wrap').show();
+                    $('#submit-paper').hide();
+                }
+                else if (res.process == 0 || res.process == 2) {
+                    get_tasks();
+                }
+            });
+        });
+
+        var radio_choice = new Array();
+        var multiple_choice = new Array();
+        var fill_blank = new Array();
+
+        function get_tasks() {
+            http.get("{% url 'event_exam:api:event-exam-task' pk %}", {}, function (res) {
+                data = res.response_data;
+                var radio_choice = new Array();
+                var multiple_choice = new Array();
+                var fill_blank = new Array();
+
+                tasks = data.tasks;
+                if (data.done) {
+                    for (var i in tasks) {
+                        a = get_answers(tasks[i], data.myAnswer);
+                        tasks[i].rightanswers = a[1]
+                        tasks[i].myanswers = a[0]
+                    }
+                    $('#submit-paper').hide();
+                    $('#all_score').show();
+                    $('#all_score').html(gettext("得分") + data.score + gettext(" 分/总分 ") + data.all_score + gettext(" 分"))
+                }
+
+                for (var i in tasks) {
+                    if (tasks[i].is_choice_question) {
+                        tasks[i].ops = get_choose_options(tasks[i])
+                        if (tasks[i].is_multiple_choice) {
+                            multiple_choice.push(tasks[i])
+                        } else {
+                            radio_choice.push(tasks[i]);
+                        }
+                    } else {
+                        if (tasks[i].file_url) {
+                            tasks[i].attach_url = tasks[i].file_url.url;
+                        }
+                        fill_blank.push(tasks[i])
+                    }
+                }
+
+                radio_choice_vue = new Vue({
+                    el: '#choice_container',
+                    data: {
+                        tasks: radio_choice,
+                        done: data.done,
+                    },
+                    filters: {
+                        examHrefFormat: function (html) {
+                            return $(html).text();
+                        }
+                    },
+                    methods: {}
+                });
+
+
+                check_choice_vue = new Vue({
+                    el: '#check-container',
+                    data: {
+                        done: data.done,
+                        check_tasks: multiple_choice,
+                    },
+                    filters: {
+                        examHrefFormat: function (html) {
+                            return $(html).text();
+                        }
+                    },
+                    methods: {}
+                });
+
+                fill_vue = new Vue({
+                    el: '#fill-container',
+                    data: {
+                        done: data.done,
+                        fill_tasks: fill_blank,
+                    },
+                    filters: {
+                        examHrefFormat: function (html) {
+                            return $(html).text();
+                        }
+                    },
+                    methods: {}
+                });
+
+                $ENV(function () {
+                    var $env = $('[data-widget-id=common-env]');
+                    $env.registerEnvWidget({
+                        common: {
+                            lang: LANGUAGE_CODE,
+                            alert: ialert,
+                            confirm: iconfirm
+                        }
+                    });
+                    $env.getEnv();
+                });
+
+{#                init_course_note('{{ testpaper.hash }}');#}
+            });
+        }
+
+        $('#submit-paper').click(function () {
+            var taskids = new Array();
+            var answers = new Array();
+            //获取题目id
+            $('span[data-taskids]').each(function () {
+                taskids.push($(this).attr('data-taskids'));
+            });
+
+            taskids = taskids.join(",");
+
+            //获取题目答案
+            var option = $(".option-container > ol");
+            var check = $(".check-container > ol ");
+            var fill = $('.fill-description');
+            var blankAnswer = false;
+            //单选题答案
+            $.each(option, function (n, value) {
+                if ($("input[type='radio']:checked", option[n]).length) {
+                    answers.push($("input[type='radio']:checked", option[n]).attr('answer'));
+                } else {
+                    desc = $(this.parentElement).find("span")[0];
+                    showPopMsg(gettext($(desc).text()) + gettext(' 答案不能为空！'));
+                    blankAnswer = true;
+                    return false;
+                }
+            })
+
+            //多选题答案
+            var tmp;
+            var tmpstr = "";
+            $.each(check, function (n, value) {
+                tmp = [];
+                select = $("input[type='checkbox']:checked", check[n])
+                if (select.length > 0) {
+                    $.each(select, function (n, value) {
+                        tmp.push($(select[n]).attr('answer'));
+                    });
+                } else {
+                    desc = $(this.parentElement).find("span")[0];
+                    showPopMsg(gettext($(desc).text()) + gettext(' 答案不能为空！'));
+                    blankAnswer = true;
+                    return false;
+                }
+                tmpstr = tmp.join('|')
+                answers.push(tmpstr);
+                tmpstr = "";
+            })
+            //填空题答案
+            $.each(fill, function (n, value) {
+                var s = fill[n];
+                if ($('.blank-line', s).val() == '') {
+                    desc = $(this.parentElement).find("span")[0];
+                    showPopMsg(gettext($(desc).text()) + gettext(' 答案不能为空！'));
+                    blankAnswer = true;
+                    return false;
+                } else {
+                    answers.push($('.blank-line', s).val());
+                }
+            })
+
+            answers = answers.join(",");
+            if (blankAnswer == false) {
+                $.ajax({
+                    type: "POST",
+                    url: '{% url "event_exam:api:event-submit-testpaper"  pk %}',
+                    data: {
+                        'taskids': taskids,
+                        'answers': answers,
+                    },
+                    success: function (json) {
+                        if (json.error_code == 0) {
+                            showPopMsg(gettext("提交成功！您的得分为：") + json.response_data.allScore)
+                        } else {
+                            showPopMsg(getErrorMsg(json.error_code));
+                        }
+
+                    },
+                    error: function (message) {
+                        showPopMsg(gettext('异常'));
+                    }
+                });
+            }
+
+        });
+    </script>
+{% endblock %}

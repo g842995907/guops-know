@@ -1,0 +1,249 @@
+/*
+* @Author: Marte
+* @Date:   2017-06-23 14:12:22
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-06-23 14:29:34
+*/
+.oj_tool dd, .oj_tool dt {
+    float: left;
+    font-weight: normal;
+}
+
+.oj_tool dl {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+.oj_table .search {
+    margin-top: 80px;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background: rgba(0, 0, 0, .2)
+}
+
+.oj_table .table-striped > tbody > tr:hover, .exercise .table-striped > tbody > tr:hover {
+    background: rgba(255, 255, 255, .1)
+}
+
+.searchNoMargin .search {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.oj_table .form-control, .exercise .form-control {
+    height: 40px;
+}
+
+.oj_bug {
+    padding-left: 150px;
+}
+
+.simulateButton {
+    position: absolute;
+    right: 150px;
+    bottom: 50px;
+    cursor: pointer;
+}
+
+.bugDetail .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+    border: none !important;
+}
+
+.bugDetail .nav-tabs > li > a {
+    border-radius: 0 !important;
+    border: none;
+}
+
+/*表格新样式*/
+
+.table-warp .fixed-table-container, .table-warp .fixed-table-container {
+    border-color: transparent !important;
+}
+
+.fixed-table-loading {
+    top: -22px !important;
+    background-color: transparent;
+}
+
+/*.fixed-table-pagination {*/
+    /*margin-top: 50px;*/
+/*}*/
+
+.fixed-table-container {
+    border: none;
+}
+
+.nav-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+    margin: 0 5px 0 0;
+    border-bottom: none;
+}
+
+/*icon列表*/
+.grade_ball {
+    width: 45px;
+    height: 45px;
+    color: white;
+    display: inline-block;
+    border-radius: 22px;
+    text-align: center;
+    line-height: 44px;
+    font-family: 'english';
+    font-size: 24px;
+    float: left;
+    position: relative;
+    z-index: 2;
+}
+
+.green {
+    background: green !important;
+}
+
+.grays {
+    background: #cdccc7 !important;
+}
+
+.reds {
+    background: red !important;
+}
+
+.oranges {
+    background: #ff8a00 !important;
+}
+
+.yellows {
+    background: #ffd200 !important;
+}
+
+.temperature {
+    width: 210px;
+    height: 26px;
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: -8px;
+}
+
+.temperature span {
+    width: 35px;
+    height: 26px;
+    font-size: 14px;
+    color: white;
+    display: inline-block;
+    text-align: center;
+    line-height: 26px;
+    float: left;
+}
+
+.temperature span:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.temperature span:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.bugs .bug_label {
+    padding: 3px 8px;
+    background: #63bec3;
+    color: #fe2a26;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-right: 70px;
+}
+
+.bugs .ico_tag {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.bugs .ico_tag:last-of-type {
+    margin-right: 0;
+}
+
+.bugs .chinese_True {
+    background: url(../img/zhongwen1.png) no-repeat center center;
+}
+
+.bugs .exploit_True {
+    background: url(../img/gongji1.png) no-repeat center center;
+}
+
+.bugs .details_True {
+    background: url(../img/xj1.png) no-repeat center center;
+}
+
+.bugs .software_True {
+    background: url(../img/zt1.png) no-repeat center center;
+}
+
+.bugs .analyzer_True {
+    background: url(../img/jc1.png) no-repeat center center;
+}
+
+.bugs .chinese_False {
+    background: url(../img/zhongwen.png) no-repeat center center;
+}
+
+.bugs .exploit_False {
+    background: url(../img/gongji.png) no-repeat center center;
+}
+
+.bugs .details_False {
+    background: url(../img/xj.png) no-repeat center center;
+}
+
+.bugs .software_False {
+    background: url(../img/zt.png) no-repeat center center;
+}
+
+.bugs .analyzer_False {
+    background: url(../img/jc.png) no-repeat center center;
+}
+
+.bugs .bug_article {
+    border-top: 2px solid #61bec3;
+    border-left: 1px solid #61bec3;
+    border-right: 1px solid #61bec3;
+    border-bottom: 1px solid #61bec3;
+    padding: 0 30px;
+    background: #eff8ff;
+}
+
+.tooltip-inner {
+    max-width: 500px;
+    padding: 6px 8px;
+    color: #fff;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.75);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, .7);
+    box-shadow: 0 0 4px 2px grey;
+}
+
+/**/
+.exercise_type {
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+}
+
+.exercise .active a {
+    color: orange !important;
+}
+
+.nav-tabs > li {
+    float: left;
+    margin-bottom: -1px;
+    margin: 0 5px 0 0;
+}
+
+.nav-tabs > li > a {
+    margin-right: 0px;
+}

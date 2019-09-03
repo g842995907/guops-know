@@ -1,0 +1,306 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_self_test_paper_library' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_title' %}"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_practice_capability:testpaper_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+{#                        <a class="btn btn-info" href="{% url 'cms_practice_capability:testpaper_detail' 0 %}?new_type=true">#}
+{#                            <i class="fa fa-copy"></i> {% trans 'x_import' %}#}
+{#                        </a>#}
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_practice_capability:api:test-paper-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+{#                        <button class="btn btn-success"#}
+{#                                data-url="{% url 'cms_practice_capability:api:test-paper-batch-public' %}"#}
+{#                                onclick="table.batchPublic(this, 1);">#}
+{#                            <i class="fa fa-eye"></i> {% trans 'x_public' %}#}
+{#                        </button>#}
+{#                        <button class="btn btn-warning"#}
+{#                                data-url="{% url 'cms_practice_capability:api:test-paper-batch-public' %}"#}
+{#                                onclick="table.batchPublic(this, 0);">#}
+{#                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}#}
+{#                        </button>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a href="/media/word/testpaper.docx" download="试卷.docx" id="export_paper" hidden="hidden">按钮</a>
+
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_practice_capability:api:test-paper-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true" data-formatter="titileFormatter" data-sortable="true">{% trans 'x_name' %}</th>
+                <th data-field="task_number" data-sortable="true" >{% trans 'x_total_task_count' %}</th>
+                <th data-field="task_all_score" data-sortable="truw">{% trans 'x_total_score' %}</th>
+                <th data-field="public" data-formatter="table.publicFormatter" data-sortable="true">{% trans 'x_public' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="share_count" data-formatter="table.shareFormatter">{% trans 'x_authorization_Operation' %}</th>
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div class="modal fade" id="exam-detail-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_list_questions' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h2 class="text-center" id="exam-name">试题名称</h2>
+                        <p id="totla-score">共2题 满分3分</p>
+                        <div class="form-group">
+                            <form id="courseform" target="form-target">
+                                <span>{% trans 'x_judge_paper' %}</span>
+                                <ol style="padding: 20px;" id="judgment_exam_list">
+                                </ol>
+                                <span>{% trans 'x_single_paper' %}</span>
+                                <ol style="padding: 20px;" id="single_exam_list">
+                                </ol>
+                                <span>{% trans 'x_multiple_paper' %}</span>
+                                <ol style="padding: 20px;" id="multiple_exam_list">
+                                </ol>
+                                <span>{% trans 'x_operation_paper' %}</span>
+                                <ol style="padding: 20px;" id="analysis_exam_list">
+                                </ol>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="modal fade" id="select_add_new_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style='top: 100px; font-size: 14px'>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">选择新增模式</h4>
+            </div>
+            <div class="modal-body">
+
+                <h2 class="row">
+                    <div class="col-md-6 text-center"><a href="{% url 'cms_practice_capability:testpaper_detail' 0 %}">手动添加</a></div>
+                    <div class="col-md-6 text-center"><a href="{% url 'cms_practice_capability:testpaper_detail' 0 %}?new_type=true">自动添加</a></div>
+                </h2>
+            </div>
+            <div class="modal-footer">
+{#                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "x_close" %}</button>#}
+{#                <button type="button" class="btn btn-primary">{% trans 'x_confirm' %}</button>#}
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var $table = $('#table');
+        pageWidgets.registerCheckTableRow($table);
+
+        var table = bsTable.getTableModule($table, function () {
+            this.shareUrl = '{% url 'cms_practice_capability:share_teacher' 0 %}';
+
+            this.operatorFormatter = function (value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        url: ("{% url 'cms_practice_capability:testpaper_detail' 0 %}").replace(0, value)
+                    },
+                    {
+                        type: 'btn',
+                        class: 'btn-success',
+                        icon: 'fa-file-text-o',
+                        text: '{% trans 'x_pre_show' %}',
+                        {#url: ('{% url 'cms_course:auth_class' 0 %}').replace(0, value),#}
+                        click: "examModal(" + value + ")",
+                    },
+                    {
+                        type: 'btn',
+                        class: 'btn-warning',
+                        icon: 'fa-file-text-o',
+                        text: gettext('x_export_paper'),
+                        {#url: ('{% url 'cms_course:auth_class' 0 %}').replace(0, value),#}
+                        click: "exportTestPaper(" + value + ")",
+                    }
+                ];
+                return table.getOperatorHtml(btns);
+            }
+        });
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                params.search_direction = $("#search_direction").val();
+                params.search_difficulty = $("#search_difficulty").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        function examModal(examId) {
+            getExamDetail(("{% url 'cms_practice_capability:ret_testpaper_detail' 0 %}").replace(0, examId));
+            $('#exam-detail-Modal').modal('toggle');
+        }
+
+        function exportTestPaper(examId) {
+            $.ajax({
+                url: '{% url "cms_practice_capability:generate_docx" %}',
+                type: 'GET',
+                datatype: 'json',
+                data: {data: examId},
+                success: function (res) {
+                    if (res.has_analysis == 'yes') {
+                            swal({
+                                title: gettext('x_testpaper_export_confirm'),
+                                type: "warning",
+                                showCancelButton: true,
+                                cancelButtonText: gettext('x_cancel'),
+                                confirmButtonColor: "#DD6B55",
+                                confirmButtonText: gettext('x_confirm')
+                            }, function () {
+                                // console.log(res);
+                                $('#export_paper').attr("href", '/'+res.url);
+                                $('#export_paper').attr('download', res.paper_name + '.docx');
+                                document.getElementById("export_paper").click();
+                            });
+                            return false;
+                        }else {
+                        $('#export_paper').attr("href", '/'+res.url);
+                        $('#export_paper').attr('download', res.paper_name + '.docx');
+                        document.getElementById("export_paper").click();
+                    }
+
+                }
+
+            });
+
+        }
+
+        function getExamDetail(url) {
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                async: false,
+                success: function (json) {
+                    // console.log(json);
+                    $('#judgment_exam_list, #single_exam_list, #multiple_exam_list, #analysis_exam_list').empty();
+                    var data = json.response_data;
+
+                    if (json.error_code == 0) {
+                        $('#exam-name').html(codeUtil.htmlEncode(data.name));
+                        $('#totla-score').html('<p>' + (gettext("x_all_have")) + " " + data.number + " " + (gettext("x_task")) + "&nbsp;&nbsp;&nbsp;&nbsp;" + (gettext("x_full_score")) + data.allScore + ' PT</p>')
+                        for (var i = 0; i < data.tasks.judgment_selections.length; i++) {
+                            var questionchoose = data.tasks.judgment_selections[i].options_dsc;
+                            $('#judgment_exam_list').append('<li><pre>' + /*(i + 1) + ':' +*/ marked(data.tasks.judgment_selections[i].content) +
+                                '(' + (gettext("x_this_task")) + data.tasks.judgment_selections[i].score + ' PT)</pre>' + getChooseHtml(questionchoose, (data.tasks.judgment_selections[i].is_multiple_choice == 1)) + '</li>')
+                        };
+                        for (var i = 0; i < data.tasks.single_selections.length; i++) {
+                            var questionchoose = data.tasks.single_selections[i].options_dsc;
+                            $('#single_exam_list').append('<li><pre>' + /*(i + 1) + ':' +*/ marked(data.tasks.single_selections[i].content) +
+                                '(' + (gettext("x_this_task")) + data.tasks.single_selections[i].score + ' PT)</pre>' + getChooseHtml(questionchoose, (data.tasks.single_selections[i].is_multiple_choice == 1)) + '</li>')
+                        };
+                        for (var i = 0; i < data.tasks.multiple_selections.length; i++) {
+                            var questionchoose = data.tasks.multiple_selections[i].options_dsc;
+                            $('#multiple_exam_list').append('<li><pre>' + /*(i + 1) + ':' +*/ marked(data.tasks.multiple_selections[i].content) +
+                                '(' + (gettext("x_this_task")) + data.tasks.multiple_selections[i].score + ' PT)</pre>' + getChooseHtml(questionchoose, (data.tasks.multiple_selections[i].is_multiple_choice == 1)) + '</li>')
+                        };
+                        for (var i = 0; i < data.tasks.analysis_questions.length; i++) {
+                            var html = '<li><pre>' + marked(data.tasks.analysis_questions[i].title) + '(' + (gettext("x_this_task")) + data.tasks.analysis_questions[i].score + ' PT)</pre>' + '<p>' +'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+ marked(data.tasks.analysis_questions[i].content) + '</p>';
+                                if (data.tasks.analysis_questions[i].url) {
+                                    html = html + '<p><a href="' + data.tasks.analysis_questions[i].url + '">' + data.tasks.analysis_questions[i].url + '</a></p>';
+                                }
+                                if (data.tasks.analysis_questions[i].file_url) {
+                                    html = html + '<p><a href="' + data.tasks.analysis_questions[i].file_url.url + '"> ' + (gettext("x_attachment_download")) + '</a></p>';
+                                }
+                                html = html + "</li>";
+                                $('#analysis_exam_list').append(html)
+                        };
+                        $("#judgment_exam_list p, #single_exam_list p, #multiple_exam_list p, #analysis_exam_list p").css('display', 'inline');
+                        $("#judgment_exam_list p img, #single_exam_list p img, #multiple_exam_list p img, #analysis_exam_list p img").addClass('img-responsive');
+                    }
+                },
+                error: function () {
+                }
+            })
+        }
+
+        function getChooseHtml(chooses, ismulti) {
+            if (ismulti) {
+                itype = 'checkbox';
+            }
+            else {
+                itype = 'radio';
+            }
+            isright = $(this).attr('isright');
+            text = "<ol style='list-style-type:none'>";
+            cmdstr = "";
+            $.each(chooses, function (key, value) {
+                text = text + "<li><input disabled type='" + itype + "' value='" + "'>&nbsp;&nbsp;&nbsp;&nbsp;" + key + "．<label for='" + "'>" + marked(value) + "</label> </li>"
+            });
+            text = text + "</ol>";
+            return text;
+        }
+        function titileFormatter(value, row, index) {
+            var nameString = "";
+            if (value.length > 15) {
+                nameString = value.substring(0, 15) + '...';
+            } else {
+                nameString = value;
+            }
+            return [
+                '<span id="thread"  data-toggle="tooltip" title="' + value + '">' + nameString + '</span>',
+            ].join('');
+        }
+
+    </script>
+{% endblock %}

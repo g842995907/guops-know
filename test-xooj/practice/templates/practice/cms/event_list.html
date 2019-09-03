@@ -1,0 +1,480 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans 'x_task_event' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static 'lib/bootstrap-icheck/css/icheck-bootstrap.css' %}" type="text/css" rel="stylesheet"/>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+{#                    <div class="m-r pull-left" style="width:196px">#}
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="type">
+                            <option value="" selected="selected">{% trans 'x_all_type' %}</option>
+                            {% for k,v in type_list.items %}
+                                <option value="{{ k }}">{{ v }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+{#                    <div class="col-md-2 col-sm-2">#}
+                    <div class="m-r pull-left col-md-2">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_title' %}"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_practice:event_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_practice:cms_api:task-event-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+
+                        <button class="btn btn-success"
+                                data-url="{% url 'cms_practice:cms_api:task-event-batch-public' %}"
+                                onclick="table.batchPublic(this, 1);">
+                            <i class="fa fa-eye"></i> {% trans 'x_public' %}
+                        </button>
+
+                        <button class="btn btn-warning"
+                                data-url="{% url 'cms_practice:cms_api:task-event-batch-public' %}"
+                                onclick="table.batchPublic(this, 0);">
+                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}
+                        </button>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_practice:cms_api:task-event-topic-empty' %}"
+                                onclick="table.topicEempty(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_empty' %}
+                        </button>
+                    </div>
+                    <div class="m-r pull-right {% if not debug %} hidden{% endif %}">
+                        <a class="btn btn-primary pull-right" id="batchDumps" onclick="show_export_tip()"
+                           data-url="{% url 'cms_practice:cms_api:task-event-batch-dumps' %}"
+                           href="javascript:void(0);">
+                            <i class="fa fa-cloud-download"></i> {% trans 'x_export' %}
+                        </a>
+                        <button class="btn btn-primary pull-right" id="batchLoads"
+                                {% comment %}onclick="table.prepareBatchLoads(this);"{% endcomment %}
+                                data-toggle="modal" data-target="#selectBatchLoad_byinput"
+                                style="margin-right: 4px;">
+                            <i class="fa fa-cloud-upload"></i> {% trans 'x_import' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-show-refresh="false"
+               data-toolbar-align="center"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_practice:cms_api:task-event-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true" data-sortable="true" >{% trans 'x_name' %}</th>
+                <th data-field="type" data-formatter="table.typeFormatter">{% trans 'x_type' %}</th>
+                <th data-field="weight" data-sortable="true">{% trans 'x_weight' %}</th>
+                <th data-field="task_count" data-sortable="true">{% trans 'x_task_count' %}</th>
+                <th data-field="public" data-formatter="table.publicFormatter" data-sortable="true">{% trans 'x_is_public' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="share_count" data-formatter="table.shareFormatter">{% trans 'x_authorization_Operation' %}</th>
+                <th data-field="all_auth_count" data-formatter="table.authFormatter">{% trans 'x_authorization_quantity' %}
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <!-- 选择导入 -->
+    <div class='modal fade' id='selectBatchLoad' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            x class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_import' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <table id="batchLoadTable"
+                           data-show-refresh="false"
+                           data-toolbar-align="center"
+                           data-search="false"
+                           data-pagination="true">
+                        <thead>
+                        <tr>
+                            <th data-field="name">{% trans 'x_name' %}</th>
+                            <th data-field="size"
+                                data-formatter="batchLoadTable.filesizeFormatter">{% trans 'x_size' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="batchLoadTable.batchLoads();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- input按钮选择导入 -->
+    <div class='modal fade' id='selectBatchLoad_byinput' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_import' %}</h4>
+                </div>
+                <div class='modal-body'>
+                  <form action="{% url "cms_practice:cms_api:task-event-batch-loads" %}" id="uploadPracticeForm"
+                        enctype="multipart/form-data" style="min-height: 100px"
+                            method="post">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" style="margin-top: 10px">{% trans 'x_practice_package' %}</label>
+                            <div class="col-sm-6" id="lessonAttachment-div"
+                                 style="display: block;">
+                                <input type="file" class="form-control" id="attachment" name="attachment"
+                                       accept="application/zip">
+                            </div>
+                        </div>
+                        <div class="form-group upload-progress" style="display: none;">
+                            <br>
+                            <div class="col-sm-6 col-md-offset-2">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                         aria-valuemax="100" style="width: 0%">
+                                        <span class="percent"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                    </form>
+                </div>
+                <div class='clearfix modal-footer'>
+{#                    <span class="btn btn-success" onclick="coursebatchLoads();" id="submit_practice">{% trans 'x_confirm' %}</span>#}
+                    <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-top: 5px;">{% trans "x_close" %}
+                    </button>
+                    <button type="button"  onclick="practicebatchLoads();" id="submit_practice" class="btn btn-primary">
+                        {% trans "x_confirm" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_practice:event_list' %}";
+    </script>
+    <script type="text/javascript">
+        $('input[type="file"]').prettyFile();
+
+        function swal_reload(title, type){
+          swal({
+                title: title,
+                type: type,
+                confirmButtonText: "{% trans "x_confirm" %}"
+              }, function () {
+                location.reload();
+              });
+        }
+        function pollingLoads(slug) {
+          var RecordLoadsUrl = "{% url 'cms_x_note:record_loads_status' %}";
+          http.get(RecordLoadsUrl, {slug: slug}, function (data) {
+            if (data === "True") {
+              clearTimeout(uploadTimer_practice);
+              swal_reload('{% trans "x_saved_successfully" %}', "success");
+            }else if (data === "False") {
+              clearTimeout(uploadTimer_practice);
+              swal_reload("{% trans 'x_saved_fail' %}", "error");
+            }else {
+              console.log('is running')
+            }
+          })
+        }
+
+        function practicebatchLoads() {
+            var uploadToken = +new Date();
+            var bar = $('div.progress-bar');
+            var percent = $('span.percent');
+            var ajax_option = {
+                url: $("form").attr("action") + '?uploadToken=' + uploadToken,
+                type: $("form").attr("method"),
+                cache: false,
+                async:true,
+                timeout: 0,
+                beforeSubmit: function (contentArray, $form, options) {
+                    var attachment_field = $("input[name='attachment']")[0];
+                    if (attachment_field != undefined && attachment_field.files[0] != undefined) {
+                        $('div.upload-progress').show();
+                        $("#submit_practice").attr("disabled", true);
+                    }else {
+                        return false
+                    }
+                },
+                uploadProgress: function (event, position, total, percentComplete) {
+                    var percentVal = percentComplete + '%';
+                    bar.width(percentVal);
+                    percent.html(percentVal);
+                    if (percentComplete >= 100){
+                        percent.html(gettext('x_uploading'));
+                    }
+                },
+                success: function (json) {
+                    percent.html("{% trans "x_upload_completed" %}");
+                    $("#submit_practice").attr("disabled", false);
+                    $("#selectBatchLoad_byinput").modal('toggle')
+                    swal({
+                      title: '<i class="fa fa-spin fa-spinner" style="font-size: 80px;"></i>',
+                      html: true,
+                      text: gettext("x_the_server_processing_please_wait"),
+                      showConfirmButton: false,
+                    });
+                    uploadTimer_practice = setInterval("pollingLoads(" + uploadToken + ")", 2000);
+                },
+                error: function (event, jqxhr, settings, thrownError) {
+                  swal_reload("{% trans 'x_saved_fail' %}", "error");
+                }
+            };
+            $("#uploadPracticeForm").ajaxSubmit(ajax_option);
+        }
+        function getCookie(cookieName) {
+            var strCookie = document.cookie;
+            var arrCookie = strCookie.split("; ");
+            for(var i = 0; i < arrCookie.length; i++){
+                var arr = arrCookie[i].split("=");
+                if(cookieName == arr[0]){
+                    return arr[1];
+                }
+            }
+            return "";
+        }
+        function show_export_tip(){
+            // 利用token进行download下载是否开始
+            var ids = table.getCheckedValues();
+            if (ids.length == 0) {
+                $('#batchDumps').attr('href', 'javascript:void(0);').removeAttr('download');
+                return;
+            }
+            var downloadToken = +new Date();
+            var url = $('#batchDumps').attr('data-url');
+            var params = [];
+            $.each(ids, function (i, id) {
+                params.push('ids=' + id);
+            });
+            $('#batchDumps').attr({
+                href: url + '?' + params.join('&'),
+                download: '',
+            });
+            var new_url = url + '?downloadToken=' + downloadToken + '&' + params.join('&');
+            $('#batchDumps').attr({
+              href: new_url,
+              download: '',
+            });
+
+            swal({
+              title: '<i class="fa fa-spin fa-spinner" style="font-size: 80px;"></i>',
+              html: true,
+              text: gettext("x_the_server_processing_please_wait"),
+              showConfirmButton: false,
+            });
+            function checkToken() {
+              var token = getCookie("downloadToken");
+              if (token && token == downloadToken) {
+                clearTimeout(downloadTimer);
+                swal({
+                  title: gettext('x_operation_success'),
+                  type: 'success',
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+              }
+            }
+            var downloadTimer = setInterval(checkToken, 1000);
+        }
+        pageWidgets.registerCheckTableRow($("#table"), {
+            oncheck: function () {
+                var ids = table.getCheckedValues();
+                if (ids.length == 0) {
+                    $('#batchDumps').attr('href', 'javascript:void(0);').removeAttr('download');
+                    return;
+                }
+                var url = $('#batchDumps').attr('data-url');
+                var params = [];
+                $.each(ids, function (i, id) {
+                    params.push('ids=' + id);
+                });
+                $('#batchDumps').attr({
+                    href: url + '?' + params.join('&'),
+                    download: '',
+                });
+            }
+        });
+        pageWidgets.registerCheckTableRow($("#batchLoadTable"), {
+            dataField: 'name',
+        });
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.authUrl = '{% url 'cms_practice:auth_class' 0 %}';
+            this.shareUrl = '{% url 'cms_practice:share_teacher' 0 %}';
+
+            this.operatorFormatter = function (value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        url: listUrl + value,
+                        builtin: row.builtin,
+                    }
+{#                    ,#}
+{#                    {#}
+{#                        type: 'link',#}
+{#                        class: 'btn-success',#}
+{#                        icon: 'fa-bullhorn',#}
+{#                        text: '{% trans 'x_authorization' %}',#}
+{#                        url: ('{% url 'cms_practice:auth_class' 0 %}').replace(0, value),#}
+{#                    }#}
+                ];
+                return bsTable.getOperatorHtml(btns);
+            };
+
+            this.typeFormatter = function (value, row, index) {
+                switch (parseInt(value)) {
+                    case 0:
+                        return gettext('x_theory');
+                    case 1:
+                        return gettext('x_real_vuln');
+                    case 2 :
+                        return gettext('x_exercise');
+                    case 3 :
+                        return gettext('x_man_machine');
+                    case 4:
+                        return gettext('x_ad_mode');
+                    case 5:
+                        return gettext('x_infiltration');
+                    default:
+                        return '';
+                }
+            };
+
+            this.prepareBatchLoads = function (btn) {
+                http.get('{% url "cms_practice:cms_api:task-event-batch-loads" %}', {}, function (res) {
+                    var files = res.files;
+                    $("#batchLoadTable").bootstrapTable('load', files);
+                });
+                $('#selectBatchLoad').modal();
+            };
+
+            this.topicEempty = function (btn) {
+                var ids = table.getCheckedValues();
+                if (ids.length == 0) {
+                    return;
+                }
+                var url = $(btn).attr('data-url');
+                var data = {
+                    ids: ids
+                };
+                for (var i = 0; i < ids.length; i++) {
+                    var index = table.getData(ids[i]);
+                    if (index.type != 0) {
+                        buttonClicks();
+                        return false
+                    }
+                }
+
+
+                ajaxDialog.buttonClick(http.post, url, data, function (res) {
+                        table.reload();
+                    }
+                )
+            }
+        });
+
+         function buttonClicks() {
+            var config = {
+                title: gettext('x_select_theoretical_basis'),
+                type: 'warning',
+                showCancelButton: true,
+                cancelButtonText: gettext('x_confirm'),
+                showConfirmButton: false,
+            };
+            var popConfig = $.extend(true, {}, config);
+            var showPending = true;
+            if (showPending) {
+                var pendingConfig = $.extend(true, {}, popConfig, {
+                    title: '<i class="fa fa-spin fa-spinner" style="font-size: 80px;"></i>',
+                    text: '',
+                });
+            }
+
+            swal(popConfig, function () {
+                if (showPending) {
+                    swal(pendingConfig);
+                }
+            });
+        };
+
+        var batchLoadTable = bsTable.getTableModule($('#batchLoadTable'), function () {
+            this.batchLoads = function () {
+                var filenames = batchLoadTable.getCheckedValues();
+                if (filenames.length == 0) {
+                    return;
+                }
+                $('#selectBatchLoad').modal('hide');
+                ajaxDialog.buttonClickError(http.post, '{% url "cms_practice:cms_api:task-event-batch-loads" %}', {filenames: filenames}, function () {
+                    table.reload();
+                });
+            };
+        });
+        $("#batchLoadTable").bootstrapTable({data: {}});
+
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.type = $("#type").val();
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+    </script>
+{% endblock %}

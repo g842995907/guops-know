@@ -1,0 +1,65 @@
+msgid "x_upgrade_management"
+msgstr "Update Manage"
+
+msgid "x_update_note"
+msgstr "Update Note"
+
+msgid "x_load_offline_update"
+msgstr "Import Offline Update"
+
+msgid "x_check_update"
+msgstr "Check Update"
+
+msgid "x_current_version"
+msgstr "Current Version:"
+
+msgid "x_find_new_version"
+msgstr "Find New Version"
+
+msgid "x_update_now"
+msgstr "Update Now"
+
+msgid "x_version_update"
+msgstr "Version"
+
+msgid "x_update"
+msgstr "Update"
+
+msgid "x_update_history"
+msgstr "Update History"
+
+msgid "x_new_update"
+msgstr "New Update"
+
+msgid "x_update_status"
+msgstr "Update Status"
+
+msgid "x_update_time"
+msgstr "Update Time"
+
+msgid "x_cancel"
+msgstr "Cancel"
+
+msgid "x_yes"
+msgstr "Yes"
+
+msgid "x_updating"
+msgstr "Updating, please be patient"
+
+msgid "x_updating_warning"
+msgstr "System Updating, Please don't refresh the page"
+
+msgid "x_wrong_update_zip"
+msgstr "Update Package Wrong!"
+
+msgid "x_update_backup"
+msgstr "Backup Files"
+
+msgid "x_update_pip"
+msgstr "Install Package"
+
+msgid "x_update_remove"
+msgstr "Remove Backup"
+
+msgid "x_update_finish"
+msgstr "Update Finished"

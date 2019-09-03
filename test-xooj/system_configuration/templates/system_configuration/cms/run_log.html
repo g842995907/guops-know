@@ -1,0 +1,133 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load static %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    {% trans 'x_log_manage' %}
+{% endblock %}
+
+{% block other_css_js %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <form id="validateForm"
+                  action="{% url 'cms_system_configuration:cms_api:run-log-django-list-log' %}"
+                  method="post" class="form-horizontal"> {% csrf_token %}
+
+                <div class="form-group" style="margin-left: 0px;">
+                    <label class="m-r pull-left control-label">{% trans 'x_logger_level' %}</label>
+                    <div class="m-r pull-left" style="width:196px">
+                        <select class="form-control m-b" name="log_level"
+                                id="log_level" data-form-fixed="1">
+                            <option data-id="option-rendering" data-list='ListModelConstant.Logger.Level'
+                                    data-selected="{{ log_level }}">{% trans 'x_logger_level' %}</option>
+                        </select>
+                    </div>
+
+                    <label class="m-r pull-left control-label">{% trans 'x_log_file_size' %}</label>
+                    <div class="m-r pull-left" style="width:196px">
+                        <select class="form-control m-b" name="log_size"
+                                id="log_size" data-form-fixed="1">
+                            <option data-id="option-rendering" data-list='ListModelConstant.Logger.FileSize'
+                                    data-selected="{{ log_size }}">{% trans 'x_log_file_size' %}</option>
+                        </select>
+                    </div>
+
+                    <label class="m-r pull-left control-label">{% trans 'x_log_file_count' %}</label>
+                    <div class="m-r pull-left" style="width:196px">
+                        <select class="form-control m-b" name="log_count"
+                                id="log_count" data-form-fixed="1">
+                            <option data-id="option-rendering" data-list='ListModelConstant.Logger.FileCount'
+                                    data-selected="{{ log_count }}">{% trans 'x_log_file_count' %}</option>
+                        </select>
+
+                    </div>
+
+                    <div class="m-r pull-left">
+                        <button class="btn btn-primary" type="submit">{% trans 'x_updated' %}</button>
+                    </div>
+                </div>
+            </form>
+{#            <ul class="nav nav-tabs">#}
+{#                <li class="active">#}
+{#                    <a data-toggle="tab" href="#tab-1" aria-expanded="false">{% trans 'x_log_file_list' %}</a>#}
+{#                </li>#}
+{#            </ul>#}
+
+            <div class="clearfix tab-content">
+
+                <div class="m-r pull-left" style="margin-top: 10px;margin-bottom: 10px">
+                    <a class="btn btn-primary" id="" onclick="table.exportLog(this);">
+                        <i class="fa fa-paper-plane-o"></i> {% trans 'x_export_log' %}
+                    </a>
+                </div>
+                <div id="tab-1" class="tab-pane active">
+                    <table id="table"
+                           data-toggle="table"
+                           data-show-refresh="false"
+                           data-search="false"
+                           data-pagination="true"
+                           data-side-pagination="server"
+                           data-url="{% url 'cms_system_configuration:cms_api:run-log-django-list-log' %}"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="name" data-escape="true">{% trans 'x_log_name' %}</th>
+                            <th data-field="create_time"
+                                data-formatter="table.datetimeFormatter">{% trans 'x_create_time' %}</th>
+                            <th data-field="modify_time"
+                                data-formatter="table.datetimeFormatter">{% trans 'x_update_time' %}</th>
+                            <th data-field="size"
+                                data-formatter="table.filesizeFormatter">{% trans 'x_log_size' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script src="{% static_v 'system_configuration/cms/js/constants.js' %}"></script>
+    <script>
+        pageWidgets.registerCheckTableRow($("#table"), {dataField: 'name'});
+        var downLogUrl = "{% url 'cms_system_configuration:down_log' %}";
+        var listUrl = "{% url 'cms_system_configuration:run_log' %}";
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.exportLog = function (btn) {
+                var values = new Array();
+                table.$table.find(".checkrow:checked").each(function () {
+                    values.push(this.value);
+                });
+
+                window.location.href = downLogUrl + "?file=" + values;
+            };
+
+            this.filesizeFormatter = function (value, row, index) {
+                return value + "M";
+            };
+        });
+
+
+        $('#validateForm').ajaxFormDialog(function () {
+            setTimeout(function () {
+                window.location.href = listUrl;
+            }, ajaxDialog.defaultDelayTime);
+        }, null, {
+            popConfig: {
+                title: gettext('x_want_to_continue_log')
+            }
+        });
+
+    </script>
+{% endblock %}

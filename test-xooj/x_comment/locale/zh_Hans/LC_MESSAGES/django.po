@@ -1,0 +1,12 @@
+msgid "x_all_theme"
+msgstr "全部主题"
+
+msgid "x_main_stickers"
+msgstr "主贴"
+
+msgid "x_like_num"
+msgstr "点赞数量"
+
+msgid "x_max_length_250"
+msgstr "长度最大为250个字符"
+

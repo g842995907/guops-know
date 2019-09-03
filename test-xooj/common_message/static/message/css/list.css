@@ -1,0 +1,94 @@
+/*
+* @Author: Marte
+* @Date:   2017-06-23 13:58:00
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-06-23 14:02:31
+*/
+
+.messIco {
+    width: 54px;
+    height: 54px;
+    background: url(../img/timeg.png) no-repeat center center;
+    float: left;
+    margin-top: 10px;
+    margin-top: -5px;
+    position: relative;
+    z-index: 31;
+}
+.mesBg1 {
+    background: url(../img/mesIco.png) no-repeat;
+    background-size: 100% 100%;
+}
+.mesBg2 {
+    background: url(../img/mesIco2.png) no-repeat;
+    background-size: 100% 100%;
+}
+.messInner {
+    width: 90%;
+    height: 100px;
+    float: right;
+    padding-top: 10px;
+    padding-left: 50px;
+}
+.megCon {
+    width: 100%;
+    height: 50px;
+    font: 14px/24px '微软雅黑';
+    color: #01f8ff;
+    position: relative;
+}
+.megTime {
+    font: 16px/20px '微软雅黑';
+    color: #585858;
+}
+.connectLine {
+    width: 1px;
+    height: 70px;
+    background: #b8730c;
+    background-size: 100% 100%;
+    position: absolute;
+    left: 26px;
+    top: 47px;
+    z-index: 30;
+}
+.oj_talkLabel{
+    width:80px;
+    height:30px;
+    position:absolute;
+    right:0;
+    top:0;
+    text-align:center;
+    line-height:30px;
+    color:white;
+}
+.aleady_talk .oj_talkLabel{
+    background:url(../img/hui2.png) no-repeat;
+    background-size:100% 100%;
+}
+.no_talk .oj_talkLabel{
+    background:url(../img/blue1.png) no-repeat;
+    background-size:100% 100%;
+}
+.oj_message:hover .messIco{
+    animation:0.5s scl2 linear ;
+}
+@keyframes scl2{
+    25%{
+        transform:scale(0.9);
+    }
+    40%{
+        transform:scale(0.8);
+    }
+    65%{
+         transform:scale(1);
+    }
+    70%{
+        transform:scale(1.2);
+    }
+    90%{
+        transform:scale(0.95);
+    }
+    100%{
+        transform:scale(1);
+    }
+}

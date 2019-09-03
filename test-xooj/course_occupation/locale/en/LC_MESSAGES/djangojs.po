@@ -1,0 +1,44 @@
+msgid "x_match"
+msgstr "Match"
+
+msgid "x_course"
+msgstr "Course"
+
+msgid "x_practice"
+msgstr "Practice"
+
+msgid "x_30_day"
+msgstr "30days"
+
+msgid "x_record"
+msgstr "Record"
+
+msgid "x_add_failure"
+msgstr "Add failure !"
+
+msgid "x_primary"
+msgstr "primary"
+
+msgid "x_intermediate"
+msgstr "intermediate"
+
+msgid "x_senior"
+msgstr "Senior"
+
+msgid "x_position_required"
+msgstr "Position: this field is required"
+
+msgid "x_difficlty_choose"
+msgstr "Difficulty level: please choose difficulty"
+
+msgid "x_course_experiment"
+msgstr "Course/Experiment"
+
+msgid "x_competition_practice"
+msgstr "Competition/Practice"
+
+msgid "click_to_enter"
+msgstr "Click to enter classroom"
+
+msgid "x_average_score"
+msgstr "Average Score"

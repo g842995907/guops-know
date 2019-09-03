@@ -1,0 +1,71 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static i18n %}
+{% block other_css_js %}
+
+    <title>{% block title %}{% trans 'x_saining_training_platform' %}{% endblock %}</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'web/summernote/summernote.css' %}">
+    <link rel="stylesheet" href="{% static 'course/css/learn_new.css' %}"/>
+
+    <script src="{% static "web/js/ajax.csrf.js" %}"></script>
+    <script src="{% static 'web/js/utils.js' %}"></script>
+    <script src="{% static 'web/summernote/summernote.js' %}"></script>
+
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <script src="{% static 'web/summernote/lang/summernote-zh-CN.js' %}"></script>
+        <script src="{% static 'web/js/bootstrap-table-zh-CN.js' %}"></script>
+    {% endif %}
+{#    <script src="{% static 'web/js/error.message.js' %}"></script>#}
+{#    <link rel="stylesheet" type="text/css" href="{% static 'course/js/jquery-ui/jquery-ui.min.css' %}">#}
+{#    <script src="{% static 'course/js/jquery-ui/jquery-ui.min.js' %}"></script>#}
+{% endblock %}
+{% block container %}
+{#    <style>#}
+{#        .panel-body {#}
+{#            position: relative !important;#}
+{#            z-index: 9999999999999999999999999999 !important;#}
+{#        }#}
+{#    </style>#}
+    <div class='container mrg93T' id="drag">
+        {% include './bread.html' %}
+        <div class='content mrg10T default-bg pad20B'>
+            <div class="borders pad20T pad5L clearfix">
+                <span class="font18" id="question-number">{% trans "x_my_note" %}</span>
+            </div>
+            <div class="mrg10T pad20R pad20L">
+                {% include "web/mynote.html" %}
+            </div>
+
+        </div>
+        {% include './sidebar.html' %}
+    </div>
+    {% include "web/message_modal.html" %}
+
+    <script type="text/javascript">
+        function init_course_detail() {
+            $.ajax({
+                url: "{% url 'course:api:course-detail' course_id %}",
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    // 填充表单资源hash
+                    $("input[name='hash']").val(data.hash);
+
+                    // 初始化用户笔记
+                    init_course_note(data.hash);
+                },
+                error: function () {
+                    showPopMsg("{% trans 'x_unable_get_details' %}");
+                }
+            });
+        }
+
+        $(function () {
+            init_course_detail();
+        });
+
+        {#$("#drag").draggable();#}
+        {#$("#drag").resizable();#}
+    </script>
+{% endblock %}

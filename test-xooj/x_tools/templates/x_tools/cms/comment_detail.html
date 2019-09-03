@@ -1,0 +1,129 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% if comment %}
+        {% trans 'x_edit_commen' %}
+    {% else %}
+        {% trans 'x_new_commen' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if comment %}
+              action="{% url 'cms_x_tools:api:tool-comment-detail' comment.id %}"
+              method="patch"
+                {% else %}
+              action="{% url 'cms_x_tools:api:tool-comment-list' %}"
+              method="post"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_user' %}</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name="user" id="user">
+                            <option value="">  ------  </option>
+                            {% for u in users %}
+                                <option value="{{ u.id }}"
+                                        {% if u.id == comment.user.id %}selected{% endif %}>{{ u.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_tool' %}</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name="tool" id="tool">
+                            <option value="">  ------  </option>
+                            {% for t in tools %}
+                                <option value="{{ t.id }}"
+                                        {% if t.id == comment.tool.id %}selected{% endif %}>{{ t.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_comment' %}</label>
+                    <div class="col-sm-6">
+                        <textarea name="comment" class="form-control">{{ comment.comment }}</textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_parent_comment' %}</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name="parent" id="comment">
+                            <option value="">  ------  </option>
+                            {% for c in parents %}
+                                <option value="{{ c.id }}"
+                                        {% if c.id == comment.parent.id %}selected{% endif %}>{{ c.comment }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_praise_number' %}</label>
+                    <div class="col-sm-6">
+                        <input name="thumbs_up" class="form-control" type="number" value="{{ comment.thumbs_up }}">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                 <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_x_tools:comment_list' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_x_tools:comment_list' %}";
+
+        $(".image_upload_widget").bindLocalImgUpload();
+
+        $(function () {
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            });
+        });
+
+        $().ready(function () {
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+            });
+        });
+    </script>
+{% endblock %}

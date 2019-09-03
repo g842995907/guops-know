@@ -1,0 +1,26 @@
+{% load staticfiles %}
+<title>XCTF admin</title>
+<link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+<style>
+    #introduction img {
+        max-width: 100%;
+    }
+</style>
+
+<div id="introduction"></div>
+
+<script src="{% static 'lib/hplus/js/plugins/markdown/marked.js' %}"></script>
+<script src="{% static 'lib/hplus/js/jquery.min.js' %}"></script>
+<script>
+    $.ajax({
+        url: "{% url 'cms_x_note:api:note-detail' note_id %}",
+        type: "get",
+        async: false,
+        data: {"is_teacher": true},
+        datatype: "json",
+        success: function (data) {
+            var content = marked(data.content);
+            $("#introduction").html(content);
+        }
+    });
+</script>

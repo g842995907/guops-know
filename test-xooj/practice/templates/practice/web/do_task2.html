@@ -1,0 +1,468 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load static_v %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/cube.grid.css' %}">
+    <script type="text/javascript" src="{% static_v 'practice/widgets/task_env/js/network.js' %}"></script>
+    <script src="{% static 'practice/js/practice.js' %}"></script>
+
+    <script src="{% static 'practice/js/radialIndicator.min.js' %}"></script>
+
+    <link rel="stylesheet prefetch" href="{% static 'web/PhotoSwipe/photoswipe.css' %}">
+    <link rel="stylesheet prefetch" href="{% static 'web/PhotoSwipe/default-skin/default-skin.css' %}">
+
+    <script src="{% static 'web/PhotoSwipe/photoswipe.js' %}"></script>
+    <script src="{% static 'web/PhotoSwipe/photoswipe-ui-default.min.js' %}"></script>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .course-label {
+            font-size: 0;
+        }
+        .course-label li {
+            display: inline-block;
+            font-size:14px;
+            padding-right: 8px;
+        }
+
+        .course-label li a {
+            height: 22px;
+            line-height: 20px;
+            border-radius:20px;
+            border: 1px solid #FF9900;
+            display: block;
+            color: #FF9900;
+            padding-left: 12px;
+            padding-right: 12px;
+            cursor: pointer;
+        }
+        .submit-flag span{
+            color: #FF9900;
+            display: block;
+            height: 30px;
+            line-height: 30px;
+            width: 150px;
+            text-align: center;
+            border:1px solid #FF9900;
+        }
+    .borders span{
+        margin-right: 5px;
+    }
+    .game_over{
+        color: #04ba6d;
+        margin-top: -3px;text-align: center;
+        border: 1px solid #04ba6d;
+        width: 80px; height: 30px;
+        line-height: 30px;
+    }
+    </style>
+
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="">{% trans 'x_theory' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="">{% trans 'x_my_question_bank' %}</a>
+            <span>&gt;&gt;</span>
+            <a class='active font15'>{% trans 'x_practiceing' %}</a>
+        </div>
+        <ul class="course-label orangeC mrg10T">
+            {% for tip in knowledges_list %}
+                <li><a>{{ tip }}</a></li>
+            {% endfor %}
+            </ul>
+        <div class="default-bg clearfix mrg30T mrg30B" style="margin-top: 0 !important;">
+            <div class="pad100L pad100R">
+                <h3 class="borders pad20B clearfix">
+                    <span class="font18 pull-left" id="question-category" style="color: #FF8800"></span>
+                    <span class="font18 pull-left" id="difficulty" style="color: #1fa2fe;"></span>
+                    <span class="font18 pull-left" id="question-number"></span>
+                    <span class="font18 pull-right" id="game_over"></span>
+                </h3>
+                <div class="pad20B mrg0A">
+                    <div class="markdown-wrapper pad20L pad20R photoswipe pad10T" id="task_content"></div>
+                    <div class="mrg30T">
+                        <a class="download-file fa-download hidden" target="_blank"
+                           id="task_attach">{% trans 'x_download_attachment' %}</a>
+                        <div>
+
+                        </div>
+                        <a class="download-file hidden fa-link" target="_blank"
+                           id="task_content_url">{% trans 'x_click_visit_URL' %}</a>
+                    </div>
+                    {# 提交答案input end#}
+                    {# 在线场景#}
+                    <div class="apply-env hidden" id="task_env">
+                        <p class="mrg20B whiteC"></p>
+                        <div data-widget-id="common-env" data-task-hash="{{ task_hash }}"></div>
+                        <!--                         <button type="submit" class="oj_toolDown mainBg whiteC pad30L pad30R">申请场景
+                                                </button> -->
+                    </div>
+                    {# 提交答案input#}
+                    {% verbatim %}
+                    <div class=" clearfix mrg30T" id="input_answer" name="submit_answer" v-cloak>
+                        <form action="" method="post" class=" pull-left col-lg-9 col-md-8 col-sm-8 col-xs-8"
+                              style="padding-left: 0px">
+                            <div class="form-group clearfix">
+                                <div class="submit-flag">
+                                    <input v-if="task_info.has_flag" id="task_answer" name="answer" class="form-control whiteC default-bg"
+                                    :placeholder="task_info.solving_mode  ?  gettext('x_multiple_flags'): gettext('x_input_answer')" type="text">
+                                    <span v-if="!task_info.has_flag">{{ 'x_no_answer'| trans}}</span>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="loading default-bg pull-left" id="loading"></div>
+                        <span class="answer-status orangeC " id="answer-status"></span>
+                        <!-- <span class="percent orangeC pull-left" id="percent"></span> -->
+                        <div class="prg-cont rad-prg pull-left" id="radialIndicator" style="display: none"></div>
+
+                        <button v-if="task_info.has_flag" id="checkbox_submit" type="button" @click="CALLBACK.submit_answer()"
+                                class="btn-common pull-right"><div class="left-right-line">{{ 'x_submit' | trans  }}</div></button>
+                    </div>
+                    {% endverbatim %}
+                    <div class="col-lg-offset-9 col-md-offset-8 col-sm-offset-8 col-xs-offset-8"><span
+                            id="repeat_record"></span></div>
+                    <span id="mode_text"></span>
+                    {# 我的笔记&云讨论&官方解题#}
+                    <div class="row mrg0A bugDetail mrg60T">
+                        <div class="col-md-12 pad0L mrg20B pad0R couseDetail">
+                            <ul id="myTab active" class="nav nav-tabs font16 default-bg mrg15B write-up-tab">
+                                <li class=" mrg30R active" id="logBtn"
+                                    style="text-align:center;overflow:hidden;">
+                                    <a href="#note" data-toggle="tab" class="pad30L pad30R pad5T pad5B fill whiteC">
+                                        {% trans 'x_my_note' %}</a>
+                                </li>
+                                <li class="mrg30L mrg30R hidden" id="writeUpBtn"
+                                    style="text-align:center;overflow:hidden;">
+                                    <a href="#official-write-up" data-toggle="tab"
+                                       class="pad30L pad30R pad5T pad5B fill whiteC">
+                                        {% trans 'x_official_solve_problem' %}
+                                    </a>
+                                </li>
+                                <li class="mrg30L mrg30R" id="eventBtn"
+                                    style="text-align:center;overflow:hidden;">
+                                    <a href="#forum" data-toggle="tab"
+                                       class="pad30L pad30R pad5T pad5B fill whiteC" id="clicka">
+                                        {% trans 'x_cloud_exchange' %}
+                                    </a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content font14">
+                                <div class="tab-pane fade active in default-bg pad30T pad30R pad30L pad30B"
+                                     id="note">
+                                    {% include "web/mynote.html" %}
+                                </div>
+                                <div class="row tab-pane fade  default-bg  mrg0A pad40A official-write-up"
+                                     id="official-write-up">
+                                    {#                                    <iframe class='gg' name="markdown_wp" src="" frameborder='0' scrolling='auto'#}
+                                    {#                                            width="100%" min-height="200px">#}
+                                    {#                                    </iframe>#}
+                                    <div class="markdown-wrapper" id="markdown-wp"></div>
+                                </div>
+                                <div class="tab-pane fade" id="forum" style="position:relative;">
+                                    {% include "web/comment_template.html" %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% include 'web/photoswipe.html' %}
+{% endblock %}
+
+{% block document_ready %}
+    <script>
+        var taskUrl = '{% url 'practice:task_detail' %}';
+        var taskRecordUrl = '{% url 'practice:task_record_detail' task_hash %}';
+        var submitTaskAnswer = "{% url 'practice:score_list' %}";
+        var type_name = '';
+        var url_name = '';
+        var language = '{{ LANGUAGE_CODE }}';
+        var type_id = '{{ type_id }}';
+        var task_hash = '{{ task_hash }}';
+        var isEn = {% if LANGUAGE_CODE == 'en' %}true{% else %}false{% endif %};
+    </script>
+    <script>
+        var submitAnswer = $("div[name='submit_answer']");
+
+        var getRadialIndicator = '';
+
+        var CALLBACK = {
+            get_task_detail: function () {
+                var data = {
+                    type_id:{{ type_id }},
+                    task_hash: "{{ task_hash }}",
+                };
+                http.get(taskUrl, data, function (data) {
+                    var task_info = data.response_data;
+                    $("input[name='hash']").val("{{ task_hash }}");
+
+                    //开始页面弹出当前解题模式
+                    {#if (task_info.solving_mode == "1") {#}
+                    {#    $("#mode_text").html(gettext("x_multiple_flags"))#}
+                    {# }#}
+                    {#InputAnswerVue.task_info = task_info;#}
+                    InputAnswerVue = new Vue({
+                        el: "#input_answer",
+                        data:{
+                            task_info:task_info
+                        },
+                        mounted:function () {
+                            getRadialIndicator = radialIndicator('#radialIndicator', {
+                                radius: 18,
+                                barWidth: 2,
+                                barColor: '#FF9900',
+                                barBgColor: "rgba(0, 24, 54, 0.35)",
+                                fontWeight: 'normal',
+                                fontSize: "14px",
+                                percentage: true
+                            });
+                        }
+                    });
+
+                        // 初始化评论列表
+                        init_comment_list("{{ task_hash }}");
+                        init_course_note("{{ task_hash }}");
+                        var task_content = gettext('x_question_no_title');
+                        if (task_info.content != null & task_info.content != "") {
+                            task_content = marked(gettext('x_subject_desc') + task_info.content);
+                            task_info.title = task_info.title;
+                        };
+                        var category_name = (language === 'zh-hans') ? task_info.category_cn_en_names.cn_name :
+                                                                        task_info.category_cn_en_names.en_name;
+                        $('#question-category').html(codeUtil.htmlEncode('[' + category_name + ']'));
+                        if(task_info.difficulty_rating == 0 ){
+                            $('#difficulty').html(codeUtil.htmlEncode('['+gettext('x_easy')+']'));
+                        }
+                        if(task_info.difficulty_rating == 1 ){
+                            $('#difficulty').html(codeUtil.htmlEncode('['+gettext('x_normal')+']'));
+                        }
+                        if(task_info.difficulty_rating == 2 ){
+                            $('#difficulty').html(codeUtil.htmlEncode('['+gettext('x_hard')+']'));
+                        }
+
+{#                        {% if task_info.difficulty_rating == 0 %}#}
+{#                            $('#difficulty').html(codeUtil.htmlEncode({% trans 'x_easy' %}));#}
+{#                        {% endif %}#}
+{#                        {% if task_info.difficulty_rating == 1 %}#}
+{#                            $('#difficulty').html(codeUtil.htmlEncode({% trans 'x_normal' %}));#}
+{#                        {% endif %}#}
+{#                        {% if task_info.difficulty_rating == 2 %}#}
+{#                            $('#difficulty').html(codeUtil.htmlEncode({% trans 'x_hard' %}));#}
+{#                        {% endif %}#}
+                        $('#question-number').html(codeUtil.htmlEncode(task_info.title));
+                        $('#task_content').html(task_content);
+                        if (task_info.file_url) {
+                            $("#task_attach").attr('href', task_info.file_url.url);
+                            $("#task_attach").removeClass('hidden');
+                        }
+
+                        if (task_info.is_dynamic_env) {
+                            $("#task_env").removeClass('hidden');
+                            $ENV(function () {
+                                $('[data-widget-id=common-env]').registerEnvWidget({
+                                    common: {
+                                        lang: LANGUAGE_CODE,
+                                        alert: ialert,
+                                        confirm: iconfirm,
+                                        webAccessTargets: [{
+                                            target: '_blank',
+                                            url: function (url, server, accessMode) {
+                                                if (accessMode.protocol === 'console') {
+                                                   return url;
+                                                }
+                                                return '{% url "practice:task_network" type_id task_hash %}?url={0}&host_ip={1}'.format(escape(url), server.host_ip || '')
+                                            }
+                                        }],
+                                    }
+                                });
+                                $('[data-widget-id=common-env]').getEnv();
+                            });
+                        }
+                        if (task_info.public_official_writeup) {
+                            $('#writeUpBtn').removeClass('hidden');
+                            if (task_info.official_writeup != null && task_info.official_writeup != "") {
+                                var mark_official_writeup = marked(task_info.official_writeup);
+                                $('#markdown-wp').html(mark_official_writeup);
+                            } else {
+                                $("#markdown-wp").html(gettext("x_no_writeup"))
+                            }
+                        }
+                        if (task_info.url != null && task_info.url != "") {
+                            $("#task_content_url").removeClass('hidden');
+                            $('#task_content_url').attr('href', task_info.url);
+                        }
+                        var url = urlename("{{ type_id }}");
+                        var event_name = codeUtil.htmlEncode(task_info.event_name);
+                        var event_href = '/' + url + '/task_list/' + task_info.event;
+                        $('.bread').html('<a href="/home/">' + gettext('x_home') + '</a>'
+                            + '<span>&gt;&gt;</span>'
+                            + '<a href="' + url_name + '" > ' + gettext(type_name) + '</a>'
+                            + '<span>&gt;&gt;</span>'
+                            + '<a href="' + event_href + '" > ' + gettext(codeUtil.htmlDecode(event_name)) + '</a>'
+                            + '<span>&gt;&gt;</span>'
+                            + '<a class="active">'
+                            + task_info.title_dsc
+                            + '</a>'
+                        );
+                        {# 查看图片#}
+                        var pswpElement = document.querySelectorAll('.pswp')[0];
+
+                        var img = $('.photoswipe img');
+                        img.each(function (index, element) {
+                            $(this).click(function () {
+                                var items = [];
+                                $('.photoswipe img').each(function (index, element) {
+                                    items.push({
+                                        src: element.src,
+                                        w: element.width,
+                                        h: element.height,
+                                    });
+                                });
+
+                                var options = {
+                                    index: index,// start at first slide
+                                    shareEl: false,
+                                };
+                                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+                                gallery.init();
+                            })
+                        })
+                        {#查看图片  #}
+                    }
+                );
+            },
+            get_task_record: function () {
+                http.get(taskRecordUrl, {}, function (data) {
+                    var errorCode = data.error_code;
+                    if (errorCode == 0) {
+                        var submit_detail = data.response_data;
+                        if (submit_detail != '' && submit_detail != null) {
+                            if (submit_detail.is_solved) {
+                                $("div[name='submit_answer']").addClass('hidden');
+                                $('#answer-status').removeClass('answer-wrong').addClass('answer-right');
+                                $("#mode_text").html('');
+                                $("#game_over").html(gettext("x_solved"));
+                                $("#game_over").addClass("game_over");
+                            }
+                            else {
+                                if (submit_detail.score_per != 0) {
+                                    getRadialIndicator.animate(Math.round(submit_detail.score_per * 100)); //启动动画
+                                    $('#radialIndicator').show('slow');
+                                }
+
+                            }
+                        }
+                    }
+                });
+            },
+            submit_answer: function () {
+                if ($('#task_answer').val() == "" | $('#task_answer').val() == null) {
+                    $('#answer-status').removeClass('answer-right').addClass('answer-wrong').show().delay(2000).fadeOut();
+                    $("#repeat_record").html(gettext("x_answer_not_empty") + "!")
+                    return;
+                }
+                var data = {
+                    answer: $('#task_answer').val(),
+                    type_id:{{ type_id }},
+                    hash: "{{ task_hash }}",
+                };
+                $('#loading').show();
+                {#$('#percent').hide();#}
+                $('#radialIndicator').hide()
+
+                $('#answer-status').removeClass('answer-wrong').removeClass('answer-right')
+                http.post(submitTaskAnswer, data, function (json) {
+                    var errorCode = json.error_code;
+                    var data = json.response_data;
+                    if (errorCode == 0) {
+                        sleep(400);
+                        $('#loading').hide();
+                        if (data.error_code == 0) {
+                            if (data.is_solved) {
+                                $("#repeat_record").html("");
+                                $('#answer-status').removeClass('answer-wrong').addClass('answer-right').show().delay(2000).fadeOut();
+                                $('#radialIndicator').delay(3000).fadeIn();
+                                if (data.score_per != 0.0) {
+                                    setTimeout(getRadialIndicator.animate(Math.round(data.score_per * 100)), 3000)
+                                }
+                                $('#percent').show('slow');
+
+                                if (data.score == data.all_score) { //如果全部答完，那么提交按钮隐藏
+                                    $('#answer-status').removeClass('answer-wrong').addClass('answer-right').show().delay(2000).fadeOut();
+                                    setTimeout(getRadialIndicator.animate(Math.round(data.score_per * 100)), 3000)
+                                    setTimeout('submitAnswer.addClass("hidden")', 4000)
+                                    $("#mode_text").html('');
+                                    $("#game_over").html(gettext("x_solved"));
+                                    $("#game_over").addClass("game_over");
+                                    $("#input_answer").hide();
+                                }
+                            }
+                            else {
+                                $("#repeat_record").html("");
+                                $('#answer-status').removeClass('answer-right').addClass('answer-wrong').show().delay(2000).fadeOut();
+                                if (data.score_per != 0.0) {
+                                    setTimeout(getRadialIndicator.animate(Math.round(data.score_per * 100)), 3000)
+                                    $('#radialIndicator').delay(3000).fadeIn()
+                                }
+
+                            }
+                        }
+                        else {
+                            if (data.error_code == 1) {
+                                $("#repeat_record").html(gettext("x_flag_solved"));
+                                $('#answer-status').removeClass('answer-right').addClass('answer-wrong').show().delay(2000).fadeOut();
+                                $('#radialIndicator').delay(3000).fadeIn();
+                                getRadialIndicator.animate(Math.round(data.score_per * 100));
+                            }
+                            else {
+                                $('#answer-status').removeClass('answer-right').addClass('answer-wrong').show().delay(2000).fadeOut();
+                                $('#radialIndicator').delay(3000).fadeIn();
+                                if (data.score_per != 0.0) {
+                                    getRadialIndicator.animate(Math.round(data.score_per * 100));
+                                }
+                                $("#repeat_record").html()
+                            }
+
+                        }
+                    } else {
+                        showPopMsg(getErrorMsg(errorCode));
+                    }
+                })
+            },
+        };
+
+
+        $(function () {
+            type_name = typename("{{ type_id }}");
+            var url = urlename("{{ type_id }}");
+            url_name = "/" + url + "/list";
+            CALLBACK.get_task_detail();//一开始的初始化，弹框，评论列表等等
+            CALLBACK.get_task_record();//答案正确的情况下显示的变化
+
+            // 回复锚点跳转
+            var url = window.location.toString();
+            var click_to = url.split("#")[1];
+            if (click_to == "clicka") {
+                $("#" + click_to + "").click()
+            }
+
+        });
+
+
+    </script>
+    <script src="{% static 'web/PhotoSwipe/pswp.js' %}"></script>
+{% endblock %}

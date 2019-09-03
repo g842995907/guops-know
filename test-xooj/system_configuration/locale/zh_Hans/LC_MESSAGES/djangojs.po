@@ -1,0 +1,70 @@
+msgid "x_scene_num"
+msgstr "场景数"
+
+msgid "x_shut_down"
+msgstr "已关机"
+
+msgid "x_scene_people"
+msgstr "场景/人"
+
+msgid "x_scene_limit"
+msgstr "场景上限"
+msgid "x_critical"
+msgstr "致命"
+
+msgid "x_logger_error"
+msgstr "错误"
+
+msgid "x_warn"
+msgstr "告警"
+
+msgid "x_info"
+msgstr "提示"
+
+msgid "x_debug"
+msgstr "调试"
+
+msgid "x_file_count_5"
+msgstr "5个"
+
+msgid "x_file_count_10"
+msgstr "10个"
+
+msgid "x_file_count_15"
+msgstr "15个"
+
+msgid "x_file_count_20"
+msgstr "20个"
+
+msgid "x_file_size_10"
+msgstr "10M"
+
+msgid "x_file_size_20"
+msgstr "20M"
+
+msgid "x_file_size_30"
+msgstr "30M"
+
+msgid "x_severe"
+msgstr "严重"
+
+msgid "x_logger_success"
+msgstr "成功"
+
+msgid "x_logger_fail"
+msgstr "失败"
+
+msgid "x_logger_partial_success"
+msgstr "部分成功"
+
+msgid "x_logger_opreating"
+msgstr "正在操作"
+
+msgid "x_all_user"
+msgstr "全部用户"
+
+msgid "x_teacher_group"
+msgstr "教员群组"
+
+msgid "x_student_group"
+msgstr "学员群组"

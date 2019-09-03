@@ -1,0 +1,29 @@
+msgid "x_vuln_id"
+msgstr "漏洞编号"
+
+msgid "writeup_markdown_only_zip"
+msgstr "writeup markdown：只接受zip的文件格式"
+
+msgid "delete_markdown"
+msgstr "删除 markdown"
+
+msgid "only_accept_markdown_zip"
+msgstr "支持markdown压缩成的zip包(优先显示)"
+
+msgid "writeup-custom-upload"
+msgstr "赛题题解-自定义上传"
+
+msgid "x_writeup_custom_upload_x_format_not_true"
+msgstr "赛题题解-自定义上传： 上传格式不正确"
+
+msgid "writeup-online-editing"
+msgstr "赛题题解-在线编辑"
+
+msgid "markdown_only_zip"
+msgstr "markdown：只接受zip的文件格式"
+
+msgid "x_analysis_questions"
+msgstr "分析题"
+
+msgid "x_operation_questions"
+msgstr "操作题"

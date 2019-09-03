@@ -1,0 +1,517 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+{% block title %}
+    <a href="{% url 'cms_x_person:user_list' %}">{% trans "x_user_manage" %}</a> >
+    {% trans 'x_examination_user' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'x_person/css/info.css' %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'x_person/js/user_util.js' %}" data-id="user_util"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+    <style>
+        .verify-abbdon {
+            position: absolute;
+            padding: 9px 33px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1;
+            color: rgba(102, 175, 233, 1);
+            text-align: center;
+            background-color: rgba(102, 175, 233, .3);;
+            border: 1px solid rgba(102, 175, 233, .6);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+            border-radius: 4px;
+            right: 14px;
+            top:0;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              action="{% url 'cms_x_person:cms_api:user-batch-status' userinfo.id %}"
+              method="patch"
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_user_name' %}</label>
+                    <div class="col-sm-6">
+
+                        <input type="text" class="form-control" id="username" name="username" data-form-fixed="1"
+                               {% if mode == 1 %}readonly{% endif %} value="{{ userinfo.username }} "/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name_surname' %}</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="first_name" name="first_name" data-form-fixed="1"
+                               value="{{ userinfo.first_name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ ORGANIZATION.Second_level }}</label>
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="faculty" name="faculty" data-form-fixed="1"
+                                data-style="btn-white">
+                            <option value=-1>{% trans 'x_please_select' %}</option>
+                            {% for faculty in faculty_list %}
+                                <option value={{ faculty.id }} {% if faculty.id == userinfo.faculty %}selected{% endif %}>{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ ORGANIZATION.Third_level }}</label>
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="major" name="major" data-form-fixed="1"
+                                data-style="btn-white">
+                            <option value=-1>{% trans 'x_please_select' %}</option>
+                            {% if majorId != -1 %}
+                                <option value={{ majorId }} selected>{{ major }}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ ORGANIZATION.Fourth_level }}</label>
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="classes" name="classes" data-form-fixed="1"
+                                data-style="btn-white">
+                            <option value=-1>{% trans 'x_please_select' %}</option>
+                            {% if classesId != -1 %}
+                                <option value={{ classesId }} selected>{{ classes }}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+
+{#                <div class="hr-line-dashed"></div>#}
+{#                <div class="form-group">#}
+{#                    <label class="col-sm-2 control-label">{% trans 'x_email' %}</label>#}
+{##}
+{#                    <div class="col-sm-6" style="position: relative">#}
+{#                        <input type="email" class="form-control" id="email" name="email" value="{{ userinfo.email }}">#}
+{#                        {% if user.email_validate %}#}
+{#                            <span class="verify-abbdon">{% trans "x_verified" %}</span>#}
+{#                        {% else %}#}
+{#                            <span class="verify-abbdon">{% trans "x_unverified" %}</span>#}
+{#                        {% endif %}#}
+{#                    </div>#}
+{##}
+{#                    <div style="padding-top:1px;font-size:25px">#}
+{#                        <span class="text-danger">*</span>#}
+{#                    </div>#}
+{#                </div>#}
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_role' %}</label>
+
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="group_name" name="groups" data-form-fixed="1"
+                                data-style="btn-white">
+                            <option value=-1>{% trans 'x_please_select' %}</option>
+                            {% for group in group_list %}
+                                {% if group.name == userinfo.group_name %}
+                                    <option value="{{ group.id }}" selected="selected">
+                                        {{ group.name }}
+                                        {% elif group.name != userinfo.group_name and group.name != "管理员" %}
+                                    <option value="{{ group.id }}">
+                                    {{ group.name }}
+                                {% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {#                    <span class="need-info">*</span>#}
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_phone' %}</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="mobile" name="mobile"
+                                {% if userinfo.mobile %} value="{{ userinfo.mobile }}" {% endif %}>
+                    </div>
+
+                </div>
+                <div class="hr-line-dashed"></div>
+{#                <div class="form-group">#}
+{#                    <label class="col-sm-2 control-label">{% trans 'x_nickname' %}</label>#}
+{##}
+{#                    <div class="col-sm-6">#}
+{#                        <input type="text" class="form-control" id="nickname" name="nickname"#}
+{#                                {% if userinfo.nickname %} value="{{ userinfo.nickname }}"{% endif %}>#}
+{#                    </div>#}
+{#                </div>#}
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_photo' %}</label>
+                    <div class="col-sm-4">
+                        <div class="image_upload_widget">
+                            <div>
+                                <div class="btn btn-primary btn_image_upload image_upload" id="logo">
+                                    {% trans "x_select_pic" %}
+                                    {#                                    <input type="button" class="image_upload" id="logo"/>#}
+                                    <input type="text" class="form-control hidden" name="logo">
+                                </div>
+                            </div>
+                            <a href="{% if userinfo.logo_url %}{{ userinfo.logo_url }}{% endif %}" class="image_show"
+                               title="图片"
+                               data-gallery="">
+                                <img {% if userinfo.logo_url %}src="{{ userinfo.logo_url }}"{% endif %}>
+                            </a>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev"><</a>
+                                <a class="next">></a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label"></label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="student_id" name="student_id"
+                                {% if userinfo.student_id %}
+                               value="{{ userinfo.student_id }}" {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_address' %}</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="address" name="address"
+                               {% if userinfo.address %}value="{{ userinfo.address }}"{% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_id_number' %}</label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="ID_number" name="ID_number"
+                                {% if userinfo.ID_number %}  value="{{ userinfo.ID_number }}" {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_introduction' %}</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="brief_introduction"
+                                  name="brief_introduction"
+                        >{% if userinfo.brief_introduction %}{{ userinfo.brief_introduction }}{% endif %}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-primary" type="submit">{% trans 'x_examination_passed' %}</button>
+                        <a class="btn btn-white" href="{% url 'cms_x_person:user_list' %}">{% trans 'x_cancel' %}</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_x_person:user_list' %}";
+        var major_list = "{% url 'cms_x_person:cms_api:major-list' %}";
+        var classes_list = "{% url 'cms_x_person:cms_api:classes-list' %}";
+        var is_school ={{ product_type }};
+        $(".image_upload_widget").bindLocalCropImgUpload({aspectRatio: 1});
+    </script>
+    <script>
+        var log = console.log.bind(console);
+
+        $(function () {
+            var init_major = function (faculty_id) {
+                $("#major").empty();
+                $("#classes").empty();
+                $('#major').append("<option value=-1>" + "{% trans 'x_please_select' %}" + "</option>");
+                $('#classes').append("<option value=-1>" + "{% trans 'x_please_select' %}" + "</option>");
+                http.get(major_list, {'faculty': faculty_id}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        if (value.id == major_id)
+                            $('#major').append("<option value=" + value.id + " selected>" + codeUtil.htmlEncode(value.name) + "</option>");
+                        else
+                            $('#major').append("<option value=" + value.id + ">" + codeUtil.htmlEncode(value.name) + "</option>");
+                        $("#major").selectpicker('refresh');
+                    });
+                });
+                $("#major").selectpicker('refresh');
+                $("#classes").selectpicker('refresh');
+            };
+            var init_classes = function (major_id) {
+                $("#classes").empty();
+                $('#classes').append("<option value=-1>" + "{% trans 'x_please_select' %}" + "</option>");
+                http.get(classes_list, {'major': major_id}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        if (value.id == classes_id)
+                            $('#classes').append("<option value=" + value.id + " selected>" + codeUtil.htmlEncode(value.name) + "</option>");
+                        else
+                            $('#classes').append("<option value=" + value.id + ">" + codeUtil.htmlEncode(value.name) + "</option>");
+                        $("#classes").selectpicker('refresh');
+                    });
+                });
+                $("#classes").selectpicker('refresh');
+            };
+            var change_init_major = function (faculty_id) {
+                $("#major").empty();
+                $("#classes").empty();
+                $('#major').append("<option value=-1>" + "{% trans 'x_please_select' %}" + "</option>");
+                $('#classes').append("<option value=-1>" + "{% trans 'x_please_select' %}" + "</option>");
+                http.get(major_list, {'faculty': faculty_id}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#major').append("<option value=" + value.id + ">" + codeUtil.htmlEncode(value.name) + "</option>");
+                        $("#major").selectpicker('refresh');
+                    });
+                });
+                $("#major").selectpicker('refresh');
+                $("#classes").selectpicker('refresh');
+            };
+            var change_init_classes = function (major_id) {
+                $("#classes").empty();
+                $('#classes').append("<option value=-1>" + "{% trans 'x_please_select' %}" + "</option>");
+                http.get(classes_list, {'major': major_id}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#classes').append("<option value=" + value.id + ">" + codeUtil.htmlEncode(value.name) + "</option>");
+                        $("#classes").selectpicker('refresh');
+                    });
+                });
+                $("#classes").selectpicker('refresh');
+            };
+
+            var major_id = "{{ majorId }}";
+            var classes_id = "{{ classesId }}";
+            init_major($('#faculty').val());
+            init_classes(major_id);
+            $('#faculty').change(function () {
+                change_init_major($(this).val());
+            });
+            $('#major').change(function () {
+                change_init_classes($(this).val());
+            });
+
+        });
+
+        {#        var get_password = function(){#}
+        {#            p = randomString(8)#}
+        {#            $('#reset_password').val(p)#}
+        {#        }#}
+        var randomString = function (len) {
+            len = len || 8;
+            /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+            var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+            var maxPos = $chars.length;
+            var pwd = '';
+            for (i = 0; i < len; i++) {
+                pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        }
+        $(function () {
+            $.validator.addMethod("username_v", function (value, element) {
+                var Regx = /^[0-9a-zA-Z\-_]{6,14}$/;
+                return this.optional(element) || (Regx.test(value));
+            },  gettext("x_user_name_prompt"));
+            $.validator.addMethod("email", function (value, element) {
+                var Regx = /^[^\._-][\w\.-]+@(?:[A-Za-z0-9]+\.)+(com|cn|gov|net|org)$/;
+                return this.optional(element) || Regx.test(value);
+            }, gettext("x_email_prompt"));
+            $.validator.addMethod("classes_v", function (value, element) {
+                var Regx = /^[1-9]\d*|0$/;
+                return this.optional(element) || Regx.test(value);
+            }, gettext("x_select_class"));
+            $.validator.addMethod("faculty_v", function (value, element) {
+                var Regx = /^[1-9]\d*|0$/;
+                return this.optional(element) || Regx.test(value);
+            }, gettext("x_select_department"));
+            $.validator.addMethod("major_v", function (value, element) {
+                var Regx = /^[1-9]\d*|0$/;
+                return this.optional(element) || Regx.test(value);
+            }, gettext("x_select_grade"));
+            $.validator.addMethod("groups_v", function (value, element) {
+                var Regx = /^[1-9]\d*|0$/;
+                return this.optional(element) || Regx.test(value);
+            }, gettext("x_select_character"));
+            $.validator.addMethod("mobile_v", function (value, element) {
+                var Regx = /^0\d{2,3}[ \-]+?\d{7,8}$|^1[358]\d{9}$|^147\d{8}$|^176\d{8}$/;
+                return this.optional(element) || Regx.test(value);
+            }, gettext("x_enter_china_phone"));
+{#            $.validator.methods.email = function (value, element) {#}
+{#                var emailRegx = /(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)/;#}
+{#                return this.optional(element) || emailRegx.test(value);#}
+{#            };#}
+            var mvalidate_dic = {
+                    rules: {
+                        email: {
+                            required: true,
+                            email: true,
+                        },
+                        first_name: {
+                            required: true,
+                            maxlength: 30
+                        },
+                        faculty: {
+                            required: true,
+                            faculty_v:true
+                        },
+                        major: {
+                            required: true,
+                            major_v: true
+                        },
+                        classes: {
+                            required: true,
+                            classes_v: true
+                        },
+                        groups:{
+                            required: true,
+                            groups_v: true
+                        },
+                        mobile: {
+{#                            required: true,#}
+                            mobile_v: true
+                        }
+                    },
+                    messages: {
+                        email: {
+                            required: "{% trans 'x_email_field_required' %}",
+                        },
+                        first_name: {
+                            required: "{% trans 'x_name_field_required' %}",
+                            maxlength: "{% trans 'x_name_too_long' %}"
+                        },
+                        faculty: {
+                            required: "{% trans 'x_select_department' %}",
+                        },
+                        major: {
+                            required: "{% trans 'x_select_grade' %}",
+                        },
+                        classes: {
+                            required: "{% trans 'x_select_class' %}",
+                        },
+                        groups:{
+                            required: "{% trans 'x_select_character' %}",
+                        },
+{#                        mobile: {#}
+{#                            required: "{% trans '电话：该字段必填' %}"#}
+{#                        }#}
+                    }
+                };
+            $("#validateForm").mvalidate(
+                mvalidate_dic
+            );
+            $(document).ready(function () {
+                var organization = product_type.organization(is_school);
+                $('#faculty').parent().parent().find('label').text(organization[1]);
+                $('#major').parent().parent().find('label').text(organization[2]);
+                $('#classes').parent().parent().find('label').text(organization[3]);
+                $('#student_id').parent().parent().find('label').text(organization[4]);
+            });
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {});
+        });
+        $("#brief_introduction").summernote({
+            {% if LANGUAGE_CODE == 'zh-hans' %}lang:'zh-CN',{% endif %}
+            height: 400,
+            toolbar: [
+                ['history', ['undo', 'redo']],
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ],
+            callbacks: {
+                onImageUpload: function (files) {
+                    var editor = $(this);
+
+                    var formData = new FormData();
+                    formData.append("image_file", files[0]);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'common_cms:common_upload_image' %}",
+                        data: formData,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+
+                        success: function (json) {
+                            editor.summernote('insertImage', json.url);
+                        }
+                    });
+                },
+                onImageRemove: function (target) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'common_cms:common_remove_image' %}",
+                        data: {url: target[0].src}
+                    });
+                }
+            }
+        });
+    </script>
+{% endblock %}

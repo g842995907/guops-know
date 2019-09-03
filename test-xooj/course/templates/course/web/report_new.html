@@ -1,0 +1,36 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static i18n %}
+{% block other_css_js %}
+
+    <title>{% block title %}{% trans 'x_saining_training_platform' %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'web/summernote/summernote.css' %}">
+    <link rel="stylesheet" href="{% static 'course/css/learn_new.css' %}"/>
+    <script src="{% static "web/js/ajax.csrf.js" %}"></script>
+    <script src="{% static 'web/js/utils.js' %}"></script>
+    <script src="{% static 'web/summernote/summernote.js' %}"></script>
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <script src="{% static 'web/summernote/lang/summernote-zh-CN.js' %}"></script>
+    {% endif %}
+{% endblock %}
+{% block container %}
+    <div class='container mrg93T'>
+        {% include './bread.html' %}
+        <div class='content mrg10T default-bg'>
+            <div class="borders pad20T pad5L clearfix">
+                <span class="font18" id="question-number">{% trans "x_experimental_report" %}</span>
+            </div>
+            <div class="mrg10T pad20R pad20L pad20B">
+                {% include "web/mynote.html" %}
+            </div>
+        </div>
+        {% include './sidebar.html' %}
+    </div>
+    {% include "web/message_modal.html" %}
+
+    <script type="text/javascript">
+        $(function () {
+            init_course_note("{{ lesson_hash }}");
+        });
+    </script>
+{% endblock %}

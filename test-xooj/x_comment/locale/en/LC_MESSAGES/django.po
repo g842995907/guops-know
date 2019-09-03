@@ -1,0 +1,11 @@
+msgid "x_all_theme"
+msgstr "All Theme"
+
+msgid "x_main_stickers"
+msgstr "Main Stickers"
+
+msgid "x_like_num"
+msgstr "Like"
+
+msgid "x_max_length_250"
+msgstr "The maximum length is 250 characters"

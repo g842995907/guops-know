@@ -1,0 +1,791 @@
+msgid "x_creating_snapshot"
+msgstr "快照创建中"
+
+msgid "x_create_snapshot"
+msgstr "创建快照"
+
+msgid "x_has_create_snapshot"
+msgstr "已创建快照"
+
+msgid "x_create_snapshot_error"
+msgstr "创建快照错误"
+
+msgid "x_un_create"
+msgstr "未创建"
+
+msgid "x_create_error"
+msgstr "创建错误"
+
+msgid "x_env_type_base"
+msgstr "仿真"
+
+msgid "x_env_type_ad"
+msgstr "攻防"
+
+msgid "x_env_type_attack"
+msgstr "攻击"
+
+msgid "x_env_type_simulation"
+msgstr "仿真模拟"
+
+msgid "x_operator"
+msgstr "操作机"
+
+msgid "x_target"
+msgstr "靶机"
+
+msgid "x_wingman"
+msgstr "僚机"
+
+msgid "x_gateway"
+msgstr "网关"
+
+msgid "x_executer"
+msgstr "执行者"
+
+msgid "x_terminal"
+msgstr "终端"
+
+msgid "x_router"
+msgstr "路由"
+
+msgid "x_network"
+msgstr "网络"
+
+msgid "x_firewall"
+msgstr "防火墙"
+
+msgid "x_rule"
+msgstr "规则"
+
+msgid "x_add_rule"
+msgstr "添加规则"
+
+msgid "x_to_edit"
+msgstr "待编辑"
+
+msgid "x_img_creating"
+msgstr "镜像创建中"
+
+msgid "x_saved"
+msgstr "已保存"
+
+msgid "x_create_img_error"
+msgstr "创建镜像错误"
+
+msgid "x_img_saving"
+msgstr "镜像保存中"
+
+msgid "x_img_has_saved"
+msgstr "已保存镜像"
+
+msgid "x_scene_vuln"
+msgstr "关联漏洞"
+
+msgid "x_scene_tool"
+msgstr "关联工具"
+
+msgid "x_split_|"
+msgstr "使用 | 分割"
+
+msgid "x_label"
+msgstr "标签"
+
+msgid "x_no_std_device"
+msgstr "无标靶"
+
+msgid "x_pre_page"
+msgstr "上一页"
+
+msgid "x_next_page"
+msgstr "下一页"
+
+msgid "x_edit_node"
+msgstr "编辑节点"
+
+msgid "x_add_line"
+msgstr "添加连线"
+
+msgid "x_node_id"
+msgstr "节点id"
+
+msgid "x_node_type"
+msgstr "节点类型"
+
+msgid "x_std_search"
+msgstr "标靶搜索"
+
+msgid "x_server"
+msgstr "服务器"
+
+msgid "x_node_role"
+msgstr "节点角色"
+
+msgid "x_img_name"
+msgstr "镜像名称"
+
+msgid "x_img_type"
+msgstr "镜像类型"
+
+msgid "x_img_size"
+msgstr "镜像大小"
+
+msgid "x_sys_type"
+msgstr "系统类型"
+
+msgid "x_access_mode"
+msgstr "接入方式"
+
+msgid "x_protocol"
+msgstr "协议"
+
+msgid "x_port"
+msgstr "端口"
+
+msgid "x_authentication_mode"
+msgstr "认证模式"
+
+msgid "x_sys_user"
+msgstr "系统用户"
+
+msgid "x_sys_user_passwd"
+msgstr "用户密码"
+
+msgid "x_desc"
+msgstr "描述"
+
+msgid "x_add_sys_user"
+msgstr "添加系统用户"
+
+msgid "x_install_cmd"
+msgstr "安装命令"
+
+msgid "x_init_cmd"
+msgstr "初始命令"
+
+msgid "x_deploy_cmd"
+msgstr "部署命令"
+
+msgid "x_clear_cmd"
+msgstr "清除命令"
+
+msgid "x_push_flag_cmd"
+msgstr "推送flag命令"
+
+msgid "x_check_cmd"
+msgstr "检查命令"
+
+msgid "x_attack_cmd"
+msgstr "攻击命令"
+
+msgid "x_checker"
+msgstr "检查机器"
+
+msgid "x_attacker"
+msgstr "攻击机器"
+
+msgid "x_is_external"
+msgstr "接入外网"
+
+msgid "x_tip_for_cmd"
+msgstr "请填写资源文件中shell或cmd文件路径"
+
+msgid "x_tip_for_node_ref"
+msgstr "执行节点id"
+
+msgid "x_net_config"
+msgstr "网络配置"
+
+msgid "x_add_net_config"
+msgstr "添加网络配置"
+
+msgid "x_net_id"
+msgstr "网络Id"
+
+msgid "x_ip"
+msgstr "IP"
+
+msgid "x_netmask"
+msgstr "子网掩码"
+
+msgid "x_egress"
+msgstr "上行带宽(Kb/s)"
+
+msgid "x_ingress"
+msgstr "下行带宽(Kb/s)"
+
+msgid "x_firewall_egress"
+msgstr "上行"
+
+msgid "x_firewall_ingress"
+msgstr "下行"
+
+msgid "x_firewall_both"
+msgstr "双向"
+
+msgid "x_get_online_scene"
+msgstr "启动场景"
+
+msgid "x_delete_env"
+msgstr "删除环境"
+
+msgid "x_expect_time"
+msgstr "预计时间"
+
+msgid "x_scene_create_progress"
+msgstr "创建进度"
+
+msgid "x_confirm_delete_env"
+msgstr "确认删除该环境吗?"
+
+msgid "x_set_name_replace"
+msgstr "配置文件中的名称会覆盖本名称"
+
+msgid "x_img_machine_info"
+msgstr "镜像机器信息"
+
+msgid "x_web_connect"
+msgstr "WEB连接进入"
+
+msgid "x_sys_visit"
+msgstr "系统访问"
+
+msgid "x_save_std_device_tip"
+msgstr "标靶保存期间，系统将无法访问，确认继续吗?"
+
+msgid "x_default_passwrd_need_user"
+msgstr "默认访问密码需要默认访问用户"
+
+msgid "x_upload_success_server_handle"
+msgstr "上传成功，服务器处理中..."
+
+msgid "x_uploading"
+msgstr "上传中..."
+
+msgid "x_please_donot_close"
+msgstr "请勿关闭页面"
+
+msgid "x_edit_img"
+msgstr "编辑镜像"
+
+msgid "x_img_machine_creating"
+msgstr "镜像机器创建中"
+
+msgid "x_img_machine_starting"
+msgstr "镜像机器启动中"
+
+msgid "x_save_img"
+msgstr "保存镜像"
+
+msgid "x_resave_img"
+msgstr "重新保存镜像"
+
+msgid "x_float_ip"
+msgstr "外网地址"
+
+msgid "x_fixed_ip"
+msgstr "内网地址"
+
+msgid "x_visit_env"
+msgstr "访问环境"
+
+msgid "x_login_type"
+msgstr "登录方式"
+
+msgid "x_more_time_than_expect"
+msgstr "比预计超时"
+
+msgid "x_node_name"
+msgstr "节点名称"
+
+msgid "x_node_cidr"
+msgstr "地址段"
+
+msgid "x_node_gateway"
+msgstr "网关"
+
+msgid "x_node_dns"
+msgstr "DNS"
+
+msgid "x_is_dhcp_on"
+msgstr "开启DHCP"
+
+msgid "x_sence_terminator_count_js"
+msgstr "场景最多只能添加 {count} 台终端"
+
+msgid "x_network_donot_connect_network"
+msgstr "网络不能和网络连接"
+
+msgid "x_route_only_network"
+msgstr "路由只能和网络连接"
+
+msgid "x_firewall_only_network"
+msgstr "防火墙只能和网络连接"
+
+msgid "x_vm_only_network"
+msgstr "虚拟机只能和网络连接"
+
+msgid "x_node_name_empty"
+msgstr "节点名称不能为空"
+
+msgid "x_input_username"
+msgstr "请填写用户名"
+
+msgid "x_exist_username"
+msgstr "已添加该用户名"
+
+msgid "x_input_protocol"
+msgstr "请填写访问协议"
+
+msgid "x_exist_protocol"
+msgstr "已添加该协议"
+
+msgid "x_exist_access_mode"
+msgstr "已添加该接入方式"
+
+msgid "x_exist_firewall"
+msgstr "防火墙已存在"
+
+msgid "x_exist_rule"
+msgstr "规则已存在"
+
+msgid "x_exist_net_config"
+msgstr "网络配置已存在"
+
+msgid "x_env_name"
+msgstr "场景名称"
+
+msgid "x_snapshot_status"
+msgstr "快照状态"
+
+msgid "x_none_snapshot"
+msgstr "无需快照"
+
+msgid "x_other"
+msgstr "其他"
+
+msgid "x_online"
+msgstr "在线"
+
+msgid "x_not_select"
+msgstr "未选择"
+
+msgid "x_add_access_mode"
+msgstr "添加接入方式"
+
+msgid "x_default_router"
+msgstr "简易路由"
+
+msgid "x_default_firewall"
+msgstr "简易防火墙"
+
+msgid "x_terminal_router"
+msgstr "虚拟路由"
+
+msgid "x_terminal_firewall"
+msgstr "虚拟防火墙"
+
+msgid "x_waf"
+msgstr "WAF"
+
+msgid "x_ips"
+msgstr "IPS"
+
+msgid "x_ids"
+msgstr "IDS"
+
+msgid "x_web_server"
+msgstr "Web服务器"
+
+msgid "x_database_server"
+msgstr "数据库服务器"
+
+msgid "x_file_server"
+msgstr "文件服务器"
+
+msgid "x_binary_server"
+msgstr "二进制服务器"
+
+msgid "x_mail_server"
+msgstr "邮件服务器"
+
+msgid "x_office_equipment"
+msgstr "办公设备"
+
+msgid "x_mobile_equipment"
+msgstr "移动设备"
+
+msgid "x_industrial_control_equipment"
+msgstr "工控设备"
+
+msgid "x_intelligent_equipment"
+msgstr "智能设备"
+
+msgid "x_uav"
+msgstr "UAV"
+
+msgid "x_vm"
+msgstr "虚拟机"
+
+msgid "x_docker"
+msgstr "容器"
+
+msgid "x_action"
+msgstr "功能"
+
+msgid "x_direction"
+msgstr "方向"
+
+msgid "x_rule_source_ip"
+msgstr "源ip(1.1.1.1)或子网(1.1.1.0/24)"
+
+msgid "x_rule_source_port"
+msgstr "源端口(80)或端口范围(80:90)"
+
+msgid "x_rule_dest_ip"
+msgstr "目的ip(1.1.1.1)或子网(1.1.1.0/24)"
+
+msgid "x_rule_dest_port"
+msgstr "目的端口(80)或端口范围(80:90)"
+
+msgid "x_edit_attacker_server"
+msgstr "编辑"
+
+msgid "x_select_one_standard_device_limit"
+msgstr "只能选择一个标靶"
+
+msgid "x_name"
+msgstr "名称"
+
+msgid "x_icon"
+msgstr "图标"
+
+msgid "x_role"
+msgstr "角色"
+
+msgid "x_system_type"
+msgstr "系统类型"
+
+msgid "x_size"
+msgstr "大小"
+
+msgid "x_img_status"
+msgstr "镜像状态"
+
+msgid "x_attack_intensity"
+msgstr "攻击强度"
+
+msgid "x_bandwidth"
+msgstr "带宽"
+
+msgid "x_low_intensity"
+msgstr "低强度"
+
+msgid "x_middle_intensity"
+msgstr "中等强度"
+
+msgid "x_high_intensity"
+msgstr "高强度"
+
+msgid "x_all_attacker_type"
+msgstr "所有攻击类型"
+
+msgid "x_static_routing"
+msgstr "静态路由表"
+
+msgid "x_routing_destination"
+msgstr "目的地址或网段"
+
+msgid "x_routing_next_jump"
+msgstr "下一跳"
+
+msgid "x_exist_static_routing"
+msgstr "该静态路由已存在"
+
+msgid "x_obfuscation_flow"
+msgstr "混淆流量"
+
+msgid "x_sniffing_deception"
+msgstr "嗅测/欺骗"
+
+msgid "x_web_application_penetration"
+msgstr "Web应用渗透"
+
+msgid "x_remote_service_attack"
+msgstr "远程服务攻击"
+
+msgid "x_client_attack"
+msgstr "客户端攻击"
+
+msgid "x_password_cracking"
+msgstr "密码破解"
+
+msgid "x_denial_of_service"
+msgstr "拒绝服务"
+
+msgid "x_social_engineering"
+msgstr "社会工程学"
+
+msgid "x_wireless_attack"
+msgstr "无线攻击"
+
+msgid "x_wan_number"
+msgstr "Wan口网络数量"
+
+msgid "x_lan_number"
+msgstr "Lan口网络数量"
+
+msgid "x_external_network"
+msgstr "互联网"
+
+msgid "x_shared_monitor"
+msgstr "监控"
+
+msgid "x_shared_assistance"
+msgstr "协助"
+
+msgid "x_docker_address"
+msgstr "Docker地址"
+
+msgid "x_attack_intensity_traffic"
+msgstr "流量"
+
+msgid "x_attack_intensity_scale"
+msgstr "规模"
+
+msgid "x_input_optional"
+msgstr "选填"
+
+msgid "x_input_required"
+msgstr "必填"
+
+msgid "x_attacker_type"
+msgstr "攻击类型"
+
+msgid "x_attacker_position"
+msgstr "攻击源位置"
+
+msgid "x_attacker_target"
+msgstr "目标参数"
+
+msgid "x_attacker_intensity"
+msgstr "攻击强度"
+
+msgid "x_low"
+msgstr "低"
+
+msgid "x_middle"
+msgstr "中"
+
+msgid "x_high"
+msgstr "高"
+
+msgid "x_start_attacker"
+msgstr "开始攻击"
+
+msgid "x_prepare_attacker"
+msgstr "执行准备中"
+
+msgid "x_continue_attacker"
+msgstr "继续攻击"
+
+msgid "x_pause_attacker"
+msgstr "暂停攻击"
+
+msgid "x_stop_attacker"
+msgstr "结束攻击"
+
+msgid "x_flow_chart"
+msgstr "流量图"
+
+msgid "x_connect_external_net"
+msgstr "连接外部网络"
+
+msgid "x_auto_allocate_ip"
+msgstr "自动分配ip"
+
+msgid "x_exist_dns"
+msgstr "DNS已存在"
+
+msgid "x_all_node_role"
+msgstr "全部节点类型"
+
+msgid "x_all_system"
+msgstr "全部系统"
+
+msgid "x_downstream"
+msgstr "下行"
+
+msgid "x_upstream"
+msgstr "上行"
+
+msgid "x_can_user_configure"
+msgstr "是否用户可配置"
+
+msgid "x_ad_terminal_number_limit"
+msgstr "攻防场景必须有{target_limit}台靶机和不超过{executer_limit}台执行机"
+
+msgid "x_no_checker"
+msgstr "无检查机器"
+
+msgid "x_user"
+msgstr "用户"
+
+msgid "x_no_password"
+msgstr "无密码"
+
+msgid "x_create_env_start"
+msgstr "创建场景开始"
+
+msgid "x_create_env_error"
+msgstr "创建场景错误"
+
+msgid "x_create_env_end"
+msgstr "创建场景结束"
+
+msgid "x_create_network_start"
+msgstr "正在创建网络[{name}]..."
+
+msgid "x_create_network_error"
+msgstr "创建网络[{name}]错误"
+
+msgid "x_create_network_end"
+msgstr "创建网络[{name}]结束"
+
+msgid "x_create_router_start"
+msgstr "正在创建路由[{name}]..."
+
+msgid "x_create_router_error"
+msgstr "创建路由[{name}]错误"
+
+msgid "x_create_router_end"
+msgstr "创建路由[{name}]结束"
+
+msgid "x_create_firewall_start"
+msgstr "正在创建防火墙[{name}]..."
+
+msgid "x_create_firewall_error"
+msgstr "创建防火墙[{name}]错误"
+
+msgid "x_create_firewall_end"
+msgstr "创建防火墙[{name}]结束"
+
+msgid "x_create_qos_start"
+msgstr "正在创建qos<终端[{terminal_name}]-网络[{net_name}]>..."
+
+msgid "x_create_qos_error"
+msgstr "创建qos<终端[{terminal_name}]-网络[{net_name}]>错误"
+
+msgid "x_create_qos_end"
+msgstr "创建qos<终端[{terminal_name}]-网络[{net_name}]>结束"
+
+msgid "x_create_terminal_start"
+msgstr "正在创建终端[{name}]..."
+
+msgid "x_create_terminal_error"
+msgstr "创建终端[{name}]错误"
+
+msgid "x_create_terminal_end"
+msgstr "创建终端[{name}]结束"
+
+msgid "x_bind_floating_ip"
+msgstr "终端[{name}]分配弹性ip..."
+
+msgid "x_all_image_type"
+msgstr "全部镜像类型"
+
+msgid "x_recreate"
+msgstr "重建"
+
+msgid "x_restart"
+msgstr "重启"
+
+msgid "x_confirm_recreate"
+msgstr "确认重建吗"
+
+msgid "x_confirm_restart"
+msgstr "确认重启吗"
+
+msgid "x_installers"
+msgstr "安装工具"
+
+msgid "x_version"
+msgstr "版本"
+
+msgid "x_add_installer"
+msgstr "添加工具"
+
+msgid "x_in_queue"
+msgstr "队列中"
+
+msgid "x_hatching"
+msgstr "孵化中"
+
+msgid "x_pause"
+msgstr "暂停中"
+
+msgid "x_pause_env"
+msgstr "暂停场景"
+
+msgid "x_recover_env"
+msgstr "恢复场景"
+
+msgid "x_paused_recover_env"
+msgstr "场景暂停中, 点击恢复"
+
+msgid "x_node_memory"
+msgstr "总内存"
+
+msgid "x_node_disk"
+msgstr "总磁盘大小"
+
+
+msgid "x_vm_status_no_state"
+msgstr "无状态"
+
+msgid "x_vm_status_running"
+msgstr "运行中"
+
+msgid "x_vm_status_blocked"
+msgstr "阻塞中"
+
+msgid "x_vm_status_paused"
+msgstr "暂停中"
+
+msgid "x_vm_status_shutdown"
+msgstr "已关闭"
+
+msgid "x_vm_status_shutoff"
+msgstr "已关闭"
+
+msgid "x_vm_status_crashed"
+msgstr "崩溃"
+
+msgid "x_vm_status_suspended"
+msgstr "挂起中"
+
+msgid "x_vm_status_failed"
+msgstr "错误"
+
+msgid "x_vm_status_building"
+msgstr "创建中"
+
+msgid "x_vm_status_abnormal"
+msgstr "异常"
+
+
+msgid "x_please_try_again_later"
+msgstr "请稍后重试"
+
+msgid "x_please_restart"
+msgstr "请重新启动"
+
+msgid "x_please_recreate"
+msgstr "请重新创建"
+
+
+msgid "x_first_start_check_hint"
+msgstr "场景首次启动耗时较长， 请耐心等待"
+
+msgid "x_export_env_data"
+msgstr "导出场景数据"

@@ -1,0 +1,229 @@
+{% load i18n %}
+{% load staticfiles %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'common_env/lib/vis/vis.min.css' %}"/>
+    <script src="{% static 'common_env/lib/vis/vis.min.js' %}"></script>
+    <style>
+        #mynetwork {
+            width: 100%;
+            height: 500px;
+        }
+
+        .modal {
+            top: 0;
+            margin-top: 0;
+        }
+
+        .description {
+            position: absolute;
+            width: 450px;
+            height: 115px;
+            background-color: rgba(3, 19, 39, .95);
+            border-radius: 10px;
+            z-index: 999;
+            font-size: 14px;
+        }
+
+        .description:before {
+            content: '';
+            border-left: 13px solid transparent;
+            border-right: 13px solid transparent;
+            border-bottom: 13px solid rgba(3, 19, 39, .95);
+            position: absolute;
+            top: -13px;
+            left: 30px;
+        }
+    </style>
+{% endblock %}
+
+{#    职业目标弹框#}
+<div class="modal fade common-msg-modal" id="index-modal" tabindex="-1" role="dialog" style="z-index: 1045">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title text-center">{% trans 'x_choose_career_goal' %}</h4>
+            </div>
+            <div class="modal-body centerDiv">
+                <div class="description pad10R pad10L pad10T pad10B hidden">
+                </div>
+                <div id="mynetwork"></div>
+            </div>
+            <div class="modal-footer deal-btn">
+                <button type="button" class="btn-confirm mainBg " onclick="add_info()">{% trans 'x_save' %}</button>
+                <button type="button" class="btn-cancel " data-dismiss="modal">{% trans 'x_cancel' %}</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="hidden" id="template">
+    {#    <p>职业名称：<span>渗透测试工程师</span></p>#}
+    {#    <p>职业简介：<span>渗透测试 (penetration test)并没有一个标准的定义，国外一些安全组织达成共识的通用说法是:渗透测试是通过模拟恶意黑客。</span></p>#}
+    {#    <p>职业课时：<span>186</span>课时</p>#}
+</div>
+<script type="text/javascript">
+
+
+</script>
+{% block document_ready %}
+    <script>
+        $('#index-modal').on('shown.bs.modal', function (e) {
+            http.get("{% url 'course_occupation:api:occupation-system-list' %}", {}, function (data) {
+                var data = data.rows;
+                var edges = new Array();
+                $.each(data, function (index, value) {
+                    $.each(value['occupation_to'], function (index, child_value) {
+                        var obj = {};
+                        obj['from'] = value['id'];
+                        obj['to'] = child_value['advanced'];
+                        obj['label'] = '';
+                        edges.push(obj);
+                    });
+                    delete value['occupation_to']
+                });
+                var nodes = data;
+                InitVisData(nodes, edges);
+            });
+
+
+        });
+
+        function add_info() {
+            var ids = network.getSelectedNodes();
+            // 一次只能更改一个职业， 提交与原来相同的职业id，不予执行
+            if (ids.length == 0) {
+                showPopMsg('{% trans "x_choose_career" %}');
+
+                return false
+            } else if (ids.length > 1) {
+                showPopMsg("{% trans 'x_unable_choose_numbers' %}");
+                return false
+            } else if (ids == occupation_id) {
+                showPopMsg("{% trans 'x_career_has_chosen' %}");
+                return false
+            } else {
+                // 提交更改职业 update, create
+                if (occupation_ischoice_id != "") {
+                    http.patch("{% url 'course_occupation:api:occupation-is-choice-detail' 0 %}".replace(0, occupation_ischoice_id), {occupationsys_id: ids}, function () {
+                        //刷新职业目标数据
+                        window.location.reload()
+                    });
+                } else {
+                    http.post("{% url 'course_occupation:api:occupation-is-choice-list' %}", {occupationsys_id: ids}, function () {
+                        //刷新职业目标数据
+                        window.location.reload()
+                    })
+
+                }
+                $('#index-modal').modal('toggle')
+            }
+
+        }
+
+        function InitVisData(nodes, edges) {
+            {#            var nodes = [#}
+            {#                {id: 1, label: '渗透测试工程师1', describe: 'aa'},#}
+            {#            ];#}
+            {##}
+            {#            var edges = [#}
+            {#                {from: 1, to: 2, label: ""},#}
+            {#            ];#}
+
+            var container = document.getElementById('mynetwork');
+            var data = {
+                nodes: nodes,
+                edges: edges
+            };
+            var options = {
+                edges: {
+                    font: {
+                        size: 12
+                    },
+                    color: {
+                        color: '#416ead',
+                        hover: '#e79006',
+                        highlight: '#e79006'
+
+                    },
+                    widthConstraint: {
+                        maximum: 90
+                    },
+                    shadow: true,//连接线阴影配置
+                    smooth: true,//是否显示方向箭头
+                    arrows: {to: true}//箭头指向to节点
+                },
+                nodes: {
+                    shape: 'box',
+                    margin: 10,
+                    widthConstraint: 120,
+                    color: {
+                        background: 'rgba(0, 24, 54, 1)', border: '#416ead',
+                        highlight: {background: '#e79006', border: '#e79006'},
+                        hover: {background: '#e79006', border: '#e79006'},
+                    },
+
+                    font: {
+                        color: '#fff'
+                    },
+                },
+                layout: {
+                    randomSeed: 1,//配置每次生成的节点位置都一样，参数为数字1、2等
+                    hierarchical: {
+                        direction: 'LR',//UD:上下 DU:下上 LR:左右 RL:右左
+                        sortMethod: 'directed'
+                    }, //层级结构显示}
+                },
+                physics: {
+                    enabled: false
+                },
+                interaction: {hover: true}
+            };
+            network = new vis.Network(container, data, options);
+            nodes_data = network.body.data.nodes;
+            edges_data = network.body.data.edges;
+
+            //初始化被选中的职业
+            network.selectNodes([occupation_id]);
+
+
+            var $description = $('.description');
+
+            network.on("hoverNode", function (e) {
+                var node_id = e['node'];
+                var describe = nodes_data._data[node_id]['describe'] || '--';
+                var label = nodes_data._data[node_id]['label'] || '--';
+                var count = nodes_data._data[node_id]['lesson_count'] || 0;
+                $description.html(getInfoHtml(label, describe, count));
+                $description.removeClass('hidden');
+                var x = this.body.nodes[e.node].x;
+                var y = this.body.nodes[e.node].y;
+                console.log(this.canvas);
+                var domCoord = this.canvas.canvasToDOM({x: x, y: y});
+                $description.animate({
+                    left: domCoord.x - 60 + 'px',
+                    top: domCoord.y + 50 + 'px',
+                })
+
+            });
+            network.on("blurNode", function (e) {
+                $description.addClass('hidden');
+            });
+
+            function getInfoHtml(label, describe, count) {
+                var msg;
+                {#                http.get("{% url 'course_occupation:api:occupation-system-occupation-count' 0 %}".replace(0, node_id), {}, function (data) {#}
+                {#                    var count = data['response_data']#}
+                {#                });#}
+                {#                msg = $('#template').clone().html();#}
+                msg = "<p>"+'{% trans 'x_occupation_name' %}'+"：<span>" + codeUtil.htmlEncode(label) + "</span></p>\n" +
+                    "    <p>"+"{% trans 'x_occupation_profile' %}"+"：<span>" + codeUtil.htmlEncode(describe) + "</span></p>\n" +
+                    "    <p>"+"{% trans 'x_occupation_class_hour' %}"+"：<span>" + count + "</span>课时</p>";
+                return msg;
+            }
+            return network;
+        }
+    </script>
+{% endblock %}

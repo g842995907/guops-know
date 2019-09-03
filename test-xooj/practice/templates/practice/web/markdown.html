@@ -1,0 +1,76 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <linK rel="stylesheet" href="{% static 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-markdown.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'web/css/common.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/default.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/markdown/css/base.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/markdown/css/highlight.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/markdown.css' %}"/>
+
+    <script src="{% static 'web/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'web/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'web/markdown/js/base.js' %}"></script>
+    <script src="{% static 'web/js/base64.js' %}"></script>
+    <script src="{% static 'web/markdown/js/highlight.pack.js' %}"></script>
+
+    <link rel="stylesheet prefetch" href="{% static 'web/PhotoSwipe/photoswipe.css' %}">
+    <link rel="stylesheet prefetch" href="{% static 'web/PhotoSwipe/default-skin/default-skin.css' %}">
+
+    <script src="{% static 'web/PhotoSwipe/photoswipe.js' %}"></script>
+    <script src="{% static 'web/PhotoSwipe/photoswipe-ui-default.min.js' %}"></script>
+
+    <script src="{% static 'lib/hplus/js/plugins/markdown/marked.js' %}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+</head>
+<body>
+
+<div id="markdown" class="markdown-wrapper pad20L pad20R photoswipe">
+    <input type="hidden" value="{{ markdown | safe }}" id="md">
+</div>
+
+{% include 'web/photoswipe.html' %}
+<script>
+    var rendererMD = new marked.Renderer();
+
+    marked.setOptions({
+        renderer: rendererMD,
+        gfm: true,
+        tables: true,
+        breaks: true,
+        pedantic: false,
+        sanitize: false,
+        smartLists: true,
+        smartypants: false
+    });
+    marked.setOptions({
+        highlight: function (code) {
+            return hljs.highlightAuto(code).value;
+        }
+    });
+
+    md = Base64.decode($('#md').val());
+    $('#markdown').html(marked(md));
+    $(document).ready(function () {
+        $('p').each(function () {
+            var l = $(this).children().first().find('img').length;
+            if (l) {
+                $(this).css('background-image', 'none')
+            }
+        })
+    })
+
+    $('.table').each(function () {
+        $(this).warp('<div class="table-warp"></div>')
+    })
+
+</script>
+<script src="{% static 'web/PhotoSwipe/pswp.js' %}"></script>
+</body>
+</html>

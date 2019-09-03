@@ -1,0 +1,172 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static static_v i18n %}
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-markdown.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/learn_new.css' %}">
+    <link rel="stylesheet" href="{% static 'web/markdown/css/base.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/markdown/css/highlight.css' %}"/>
+
+    <script src="{% static 'web/markdown/js/base.js' %}"></script>
+    <script src="{% static 'web/markdown/js/highlight.pack.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'web/markdown/js/klass.min.js' %}"></script>
+{#    <script type="text/javascript" src="{% static 'web/markdown/js/hammer.js' %}"></script>#}
+    <script type="text/javascript" src="{% static 'web/markdown/js/jquery.hammer.js' %}"></script>
+
+
+    <link rel="stylesheet prefetch" href="{% static 'web/PhotoSwipe/photoswipe.css' %}">
+    <link rel="stylesheet prefetch" href="{% static 'web/PhotoSwipe/default-skin/default-skin.css' %}">
+
+    <script src="{% static 'web/PhotoSwipe/photoswipe.js' %}"></script>
+    <script src="{% static 'web/PhotoSwipe/photoswipe-ui-default.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static_v 'course/widgets/lesson_env/js/network.js' %}"></script>
+
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style>
+        .apply-env {
+            font-size: 16px;
+            border-radius: 2px;
+            cursor: pointer;
+            padding: 8px 15px;
+            color: #fff;
+            background-color: #f99d12;
+            border: 1px solid #e48a01;
+            cursor: pointer;
+            position: absolute;
+            right: 0px;
+            top: 0px;
+            z-index: 100;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg25T' id="markdown">
+        {% include './bread.html' %}
+        <div class='content mrg10T default-bg mrg50B'>
+            <div class="markdown-wrapper load-page-wrapper ">
+                <div class="load-page pad20L pad20R mrg20B pad5T" id="show_env" style="display: none;">
+                    {% if lesson_id %}
+                        <div data-widget-id="common-env" data-lesson-hash="{{ lesson_id }}"></div>
+
+                        <script type="text/javascript">
+                            var LANGUAGE_CODE = '{{ LANGUAGE_CODE }}';
+                            $LESSON_ENV(function () {
+                                $('[data-widget-id=common-env]').registerLessonEnvWidget({
+                                    common: {
+                                        lang: LANGUAGE_CODE,
+                                        alert: ialert,
+                                        confirm: iconfirm,
+                                        webAccessTargets: ['_blank'],
+                                        webAccessUrlHandler: function (url) {
+                                            return '{% url "course:network" course_id lesson_id %}?url={0}'.format(escape(url))
+                                        }
+                                    }
+                                });
+
+                                $('[data-widget-id=common-env]').getLessonEnv();
+                            });
+                        </script>
+                    {% endif %}
+            </div>
+
+            <div class="markdown-wrapper demo-gallery photoswipe">
+                <div class="pad20L pad20R pad5T posRelative">
+                    {% comment %}<div class="apply-env-btn text-center" name="apply-env" hidden="hidden"></div>{% endcomment %}
+                    {{ markdown | safe }}
+                </div>
+
+            </div>
+        </div>
+        {% include './sidebar.html' %}
+    </div>
+
+{#    {% include 'web/message_modal.html' %}#}
+
+    {% include 'web/photoswipe.html' %}
+
+    <script>
+        $(document).ready(function () {
+            // 这个按钮一直不显示 点击获取在线场景
+            $('p').each(function () {
+                var l = $(this).children().first().find('img').length;
+                console.log(l)
+                if (l) {
+                    $(this).css('background-image', 'none')
+                }
+            });
+        });
+
+        $('.table').each(function () {
+            $(this).warp('<div class="table-warp"></div>')
+        });
+
+        var scrollpercent = "0.0";
+        var start;
+        var end;
+        var times = 0;
+        var old_percent = 0
+        var now_time;
+        var stay_total = 0;
+        var system_url = "{% url 'course:api:lesson-schedule-progress-rate' lesson_id%}";
+        start = new Date();
+        var last_time = Math.ceil(start / 1000);
+
+        $(document).ready(function () {
+
+            //自定计时判断页面停留时间
+            var automatic = window.setInterval(stay_time,120000);
+
+            //滑动产生的时间
+            $(window).scroll(function () {
+                //获取页面百分比
+                var scrollTo = $(window).scrollTop();
+                docHeight = $(document).height();
+                windowHeight = $(window).height();
+                scrollpercent = (scrollTo / (docHeight - windowHeight)) * 100;
+                scrollpercent = scrollpercent.toFixed(1);
+
+                //当滑动百分比超过5%
+                if (scrollpercent - old_percent >= 1) {
+                    //更新百分比
+                    old_percent = scrollpercent;
+                    //计算停留时间
+                    stay_time()
+                }
+                //清除自定计时
+                window.clearInterval(automatic);
+            });
+
+            function stay_time() {
+                now_time = new Date();
+                stay_times = Math.ceil((now_time.getTime()) / 1000) - last_time;
+                if (stay_times >= 120) {
+                    stay_total = stay_total + stay_times
+                }
+                last_time = Math.ceil(((new Date()).getTime()) / 1000)
+            }
+
+
+            $(window).bind('beforeunload', function (e) {
+                end = new Date();
+                stay_time();
+                times = end.getTime() - start.getTime();
+                times = Math.ceil(times / 1000);
+                times = times - stay_total;
+                $.ajax({
+                    type: 'POST',
+                    async: false, //同步提交
+                    url: system_url,
+                    data: {
+                        times: times,
+                        scrollpercent: scrollpercent,
+                    }
+                });
+            })
+        });
+
+    </script>
+    <script src="{% static 'web/PhotoSwipe/pswp.js' %}"></script>
+{% endblock %}

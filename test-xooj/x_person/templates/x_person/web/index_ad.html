@@ -1,0 +1,591 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static_v %}
+
+{% block other_css_js %}
+    {#    <link rel="stylesheet" type="text/css" href="{% static_v '/x_person/css/layout.css' %}"/>#}
+    <link rel="stylesheet" type="text/css" href="{% static_v 'x_person/css/indexad.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <script src="{% static 'web/echarts/echarts.min.js' %}"></script>
+    <script src="{% static "web/artTemplate/template.js" %}"></script>
+    <script src="{% static_v 'x_person/js/index.js' %}"></script>
+    <style>
+        .head-show {
+            width: 84px;
+        }
+
+        .team-member-list img {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 50%;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .fixed-table-pagination {
+            text-align: center;
+        }
+
+        .fixed-table-pagination div.pagination {
+            float: none !important;
+        }
+
+        #table > thead > tr {
+            display: none;
+        }
+
+        #table1 > thead > tr {
+            display: none;
+        }
+
+        .table > tbody {
+            border-top: 1px solid #42648c;
+        }
+        #team_user_list .userMessage{
+            margin: 0 auto;
+            width:50px;
+            white-space:nowrap;
+            overflow:hidden;
+            text-overflow:ellipsis;
+        }
+        .userMessage .tooltips{
+            background-color: #2E2E2E;
+            position: absolute;
+            top: 64%;
+            left: 65%;
+            z-index: 99;
+            padding: 5px;
+            opacity: 0;
+            border-radius: 4px;
+            transition: opacity 1s;
+
+        }
+        .team-member-list:hover .tooltips{
+            opacity: 1;
+        }
+
+
+    </style>
+    <script>
+        $(function () {
+            $('.head-show').height($('.head-show').width());
+
+        })
+        $(window).resize(function () {
+                $('.head-show').height($('.head-show').width())
+            }
+        )
+
+    </script>
+{% endblock %}
+
+{% block container %}
+    <!-- container start-->
+    <section class="container mrg93T mrg20B">
+        <div class="bread layout-color">
+            <a class="layout-color" href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a> >>
+            <a class="active font15" href="javascript:void(0)">{% trans 'x_personal_center' %}</a>
+        </div>
+
+        <div class="justify default-bg mrg20T pad10T pad10B pad30L pad30R">
+            <div class="index-head centerDiv">
+                <div class="head-img">
+                    {% if request.user.logo %}
+                        {% if  request.user.logo.url %}
+                            <img id="headShow" class="head-show img-responsive img-circle"
+                                 src="{{ request.user.logo.url }}">
+                        {% else %}
+                            <img aid="headShow" class="head-show img-responsive img-circle"
+                                 src="{% static 'course_occupation/img/user_default.jpg' %}">
+                        {% endif %}
+                    {% else %}
+                        <img aid="headShow" class="head-show img-responsive img-circle"
+                             src="{% static 'course_occupation/img/user_default.jpg' %}">
+                    {% endif %}
+                </div>
+
+                <div class="index-info mrg10L">
+                    <div class=""><span
+                            class="white-color font-bold font20">{% trans 'x_name_surname' %}：{{ request.user.first_name|default_if_none:'' }}&nbsp;&nbsp;&nbsp;</span><span
+                            class="orangeC fa fa-edit cursor"
+                            onclick="edit_info()">{% trans 'x_revising_personal_data' %}</span>
+
+                    </div>
+                    <div class="">{% trans 'x_team_name' %}：<a class="orangeC" href="{% url "x_person:team" %}">{{ request.user.team.name|default:'' }}</a>
+                        {% if request.user.team.name %}
+{#                            {% if teamleader %}&nbsp;&nbsp;#}
+{#                                <span class="orangeC fa fa-edit cursor"#}
+{#                                      onclick="edit_team()">{% trans 'x_amend_the_team_information' %}</span>#}
+{#                            {% else %}#}
+{#                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="orangeC fa fa-share cursor"#}
+{#                                                              onclick="CALLBACK.quit_team()">{% trans 'x_quit_team' %}</span>#}
+{#                            {% endif %}#}
+
+                        {% else %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="orangeC fa fa-plus cursor"
+                                                          onclick="edit_creat_team()">{% trans 'x_create_team' %}</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="orangeC fa fa-link cursor"
+                                                          onclick="edit_join_team()">{% trans 'x_join_team' %}</span>
+                        {% endif %}</div>
+                    <div class="">{% trans 'x_personal_signature' %}：{{ request.user.brief_introduction|default:'' }}</div>
+                </div>
+            </div>
+
+            <div class="index-course-info centerDiv text-center">
+                <div class=""><p class="orangeC"><span class="font20" name="team_member_number">--</span></p>
+                    <p class="comment-clr ">{% trans 'x_members_num' %}</p></div>
+                <div class="mrg25L"><p class="orangeC"><span class="font20" name="join_contest_number">--</span>
+                </p>
+                    <p class="comment-clr">{% trans 'x_entries_num' %}</p></div>
+                {% if teamleader %}
+                    <div id='team-apply' style="cursor: pointer;">
+                        <div class="mrg25L"><p class="orangeC posRelative"><span class="font20" name="apply_count">--</span>
+                            <span class="new-member-apply"></span>
+                        </p>
+                            <p class="comment-clr">{% trans 'x_enrollment_application' %}</p></div>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        {#学习/比赛记录  技能六维图#}
+        <div class="row mrg20T">
+            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+                <div class="default-bg">
+                    <div class="title pad15L whiteC cursor">
+                        <div class="pad5T pad5B pad5L pad5R">{% trans 'x_learning_competition_records' %}</div>
+                    </div>
+                    <div class="default-bg ">
+                        <div id='bubble' style="height: 300px;"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 hidden-xs ">
+                <div class="default-bg">
+                    <div class="title pad15L whiteC cursor">
+                        <div class="pad5T pad5B pad5L pad5R">{% trans 'x_skills_six_dimensions' %}</div>
+                    </div>
+                    <div id='radar' style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+
+        {#我的提问 队伍成员#}
+        <div class="row mrg20T">
+            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+                <div class="default-bg">
+                    <div class="tabs title pad15L whiteC cursor">
+                        <div class="active pad5T pad5B pad5L pad5R">{% trans 'x_my_question' %}</div>
+                        <div class="mrg20L pad5T pad5B pad5L pad5R">{% trans 'x_my_reply' %}</div>
+                    </div>
+                    <div class="tabs-content comment-clr cursor posRelative">
+                        <div class="question pad10L pad10R default-bg active pad20T" style="min-height: 250px;">
+                            <table class="table default-table-v2 table-hover" id="table"
+                                   data-toggle="table"
+                                   data-show-refresh="false"
+                                   data-search="false"
+                                   data-pagination="true"
+                                   data-side-pagination="server"
+                                   data-pagination-pre-text="<"
+                                   data-pagination-next-text=">"
+                                   data-page-size=5
+                                   data-url="{% url 'x_comment:api:comment-get-ask' %}?states=1"
+                            >
+                                <thead>
+                                <tr>
+                                    <th data-field="title" data-escape="true" data-width="20%"
+                                        data-formatter="titleFormatter"></th>
+                                    <th data-field="comment" data-escape="true" data-formatter="commentFormatter"></th>
+                                    {#                                    <th data-field="last_update" data-escape="true">{% trans 'x_category' %}</th>#}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="answer pad10L pad10R default-bg pad20T" style="min-height: 250px">
+                            <table class="table default-table-v2 table-hover" id="table1"
+                                   data-toggle="table"
+                                   data-show-refresh="false"
+                                   data-search="false"
+                                   data-pagination="true"
+                                   data-side-pagination="server"
+                                   data-pagination-pre-text="<"
+                                   data-pagination-next-text=">"
+                                   data-page-size=5
+                                   data-url="{% url 'x_comment:api:comment-get-ask' %}?states=0"
+                            >
+                                <thead>
+                                <tr>
+                                    <th data-field="title" data-escape="true" data-width="20%"
+                                        data-formatter="titleFormatter"></th>
+                                    <th data-field="comment" data-escape="true" data-formatter="commentFormatter"></th>
+                                    {#                                    <th data-field="last_update" data-escape="true">{% trans 'x_category' %}</th>#}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 hidden-xs ">
+                <div class="default-bg">
+                    <div class="title pad15L whiteC cursor">
+                        <div class="pad5T pad5B pad5L pad5R">{% trans 'x_team_members' %}</div>
+                    </div>
+                    <div class="default-bg team" style="min-height: 250px">
+                        <div class="row mrg10B pad10T" id="team_user_list">
+                            <template v-for="users,index in user_list">
+                                <div v-for="user,index in users"
+                                     class="col-lg-3 col-md-4 col-sm-4 col-xs-6 team-member-list mrg10B" style="cursor: pointer;position: relative">
+                                    <img v-if="user.user_logo_url" v-bind:src="user.user_logo_url">
+                                    <img v-else src="{% static 'course_occupation/img/team_logo.png' %}">
+                                    <div class="userMessage">
+                                        <span style="color: #FF9900 " class="required-v1 mrg5T"
+                                          v-show="user.team_leader">{% trans 'x_captain' %}<span>-</span></span>
+                                        <p style="display: inline">
+                                            [[ user.real_name ]]
+                                        </p>
+                                        <div class="tooltips">[[ user.real_name ]]</div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    {#    申请入队弹框#}
+    <div class="modal fade team-deal-modal" tabindex="-1" role="dialog" id="new-member-apply-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <h4 class="modal-title font18">{% trans 'x_enrollment_application' %}</h4>
+                </div>
+                <div class="modal-body member-apply-modal">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% verbatim %}
+    <script id="team_apply" type="text/html">
+        {{each teamusers as teamuser}}
+        <div class="new-member-apply-list clearfix">
+            <div class="pull-left">
+                {{ if teamuser.user_logo_url }}<img class="pull-left" src="{{ teamuser.user_logo_url }}">
+                {{ else }}<img class="pull-left" src="/static/x_person/img/team_logo.png">{{ /if }}
+                <p class="pull-left"><span class="new-member-apply-name">{{ teamuser.real_name }}</span><br><span
+                        class="new-member-apply-time"> {{ teamuser.modify_time | date}}</span></p>
+            </div>
+            <div class="pull-right deal-btn" id="button-{{ teamuser.id }}">
+                <span class="agree-btn"
+                      onclick="CALLBACK.team_user_operate('{{ teamuser.id }}',1)"
+                      style="cursor: pointer;">
+    {% endverbatim %}
+                    {% trans 'x_agree' %}
+    {% verbatim %}
+                </span><span
+                    class="refuse-btn"
+                    onclick="CALLBACK.team_user_operate('{{ teamuser.id }}',2)" style="cursor: pointer;">
+    {% endverbatim %}
+                {% trans "x_refuse" %}
+    {% verbatim %}
+            </span>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+    {% endverbatim %}
+    <!-- container end-->
+{% endblock %}
+
+
+{% block document_ready %}
+    <script>
+        template.helper('date', function (date) {
+            return dateUtil.formatYMD(date)
+        });
+        var edit_info_url = '{% url "x_person:info" %}';
+        var teamUserApiList = "{% url 'x_person:api:team-user-list'%}";
+        var edit_team_url = "{% url 'x_person:team_edit' 0 %}";
+        var edit_create_team_url = "{% url 'x_person:create_team' %}";
+        var edit_join_team_url = "{% url 'x_person:team' %}";
+    </script>
+    <script>
+        id = '{{ recordid }}';
+        edit_info = function () {
+            var edit_url = edit_info_url + '?return=' + urlparser.getEncodedLocalPath();
+            window.location.href = edit_url;
+        };
+        edit_team = function () {
+            var edit_url = edit_team_url.replace(0, '{{ teamid }}') + '?return=' + urlparser.getEncodedLocalPath();
+            window.location.href = edit_url;
+        };
+        edit_creat_team = function () {
+            var edit_url = edit_create_team_url + '?return=' + urlparser.getEncodedLocalPath();
+            window.location.href = edit_url;
+        };
+        edit_join_team = function () {
+            window.location.href = edit_join_team_url;
+        };
+
+        $('.tabs > div').on('click', function () {
+            var index = $(this).index();
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.tabs-content > div').eq(index).slideToggle(1).siblings().slideToggle(1);
+        });
+
+        var radarEChart = echarts.init(document.getElementById('radar'));
+        var bubbleEchart = echarts.init(document.getElementById('bubble'));
+        $(function () {
+{#            {% if practice_task_record %}#}
+{#                http.get("{{ practice_task_record }}", {}, function (res) {#}
+{#                    //技能六维图#}
+{#                    var radarOption = this.radarOption(res.response_data);#}
+{#                    radarEChart.setOption(radarOption, true);#}
+{#                });#}
+{#            {% else %}#}
+{#                var radarOption = this.radarOption(res.response_data);#}
+{#                radarEChart.setOption(radarOption, true);#}
+{#            {% endif %}#}
+
+            {% if practice_task_radar %}
+                http.get("{{ practice_task_radar }}", {}, function (res) {
+                    //技能六维图
+                    var radarOption = this.radarOption(res.response_data);
+                    radarEChart.setOption(radarOption, true);
+                });
+            {% else %}
+                //技能六维图
+                radarEChart.setOption(radarOption([]), true);
+            {% endif %}
+
+
+            http.get("{% url 'x_person:bubblechar' %}", {}, function (res) {
+                //学习/比赛记录
+                var bubbleOption = this.bubbleOptionad(res);
+                //启用设置
+                bubbleEchart.setOption(bubbleOption, true);
+            })
+            if ('{{ teamid }}' != "") {
+                CALLBACK.init_team_detail();
+            }
+            CALLBACK.get_team_user();
+        });
+        $(window).resize(function () {
+            radarEChart.resize();
+            bubbleEchart.resize();
+        });
+
+        var app = new Vue({
+            el: '#team_user_list',
+            delimiters: ['[[', ']]'],
+            data: {
+                user_list: '',
+            },
+        });
+
+        var CALLBACK = {
+            init_team_detail: function () {
+                $.ajax({
+                    url: "{% url 'x_person:api:team-detail' 0 %}".replace(0, '{{ teamid }}'),
+                    type: "get",
+                    datatype: "json",
+                    success: function (data) {
+                        {#                        if (data.logo_url) {#}
+                        {#                            $("[name='team_logo']").attr('src', data.logo_url);#}
+                        {#                        }#}
+                        {#                        $("[name='team_name']").html(codeUtil.htmlEncode(data.name));#}
+                        {#                        $("[name='team_intrduction']").html(codeUtil.htmlEncode(data.brief_introduction));#}
+                        {#                        $("[name='create_time']").html(data.create_time);#}
+                        $("[name='join_contest_number']").each(function () {
+                            $(this).html(data.join_contest_number);
+                        });
+                        $("[name='team_member_number']").each(function () {
+                            $(this).html(data.team_member_number);
+                        });
+
+                        if (parseInt(data.apply_count) == 0) {
+                            $('.new-member-apply').addClass('hidden');
+                            {#$("#team-apply")[0].removeEventListener('click', CALLBACK.handle_team_apply, false);#}
+                            $("#team-apply").attr('style', 'cursor: auto');
+                        } else {
+                            $("#team-apply")[0].addEventListener('click', CALLBACK.handle_team_apply, false)
+                        }
+
+                        $("[name='apply_count']").html(data.apply_count);
+                        $("[name='apply_count']").data("apply_count", data.apply_count);
+                    },
+                    error: function () {
+                        console.info("Error");
+                    }
+                });
+            },
+            get_team_user: function () {
+                var data = {
+                    teamid: '{{ teamid }}',
+                    join: 1,
+                };
+                if ('{{ teamid }}' != '') {
+                    http.get(teamUserApiList, data, function (data) {
+                        var user_list = new Array();
+                        var temp_user_list = new Array();
+                        for (var i = 0; i < Number(data.total); i++) {
+                            temp_user_list.push(data.rows[i]);
+                            if (!((i + 1) % 3)) {
+                                user_list.push(temp_user_list)
+                                temp_user_list = []
+                            }
+                            if ((i + 1) == Number(data.total)) {
+                                user_list.push(temp_user_list);
+                                temp_user_list = []
+                            }
+
+                        }
+                        app.user_list = user_list
+                    })
+                }
+
+            },
+            handle_team_apply: function () {
+                var data = {
+                    teamid: '{{ teamid }}',
+                    need_join: 1,
+                };
+                $.ajax({
+                    url: teamUserApiList,
+                    type: "get",
+                    data: data,
+                    datatype: "json",
+                    success: function (data) {
+                        $('#new-member-apply-modal').modal();
+                        template.config("escape", false);
+                        var html = template('team_apply', {teamusers: data.rows});
+                        $('.member-apply-modal').html(html);
+                    },
+                    error: function () {
+                        ajaxDialog.dialogErrorCallback(xhr, ts, et)
+                    }
+                });
+            },
+            team_user_operate: function (id, operate) {
+                var formData = new FormData();
+                formData.append('type', operate);
+                $.ajax({
+                    url: teamUserApiList + id.toString() + '/',
+                    type: "PATCH",
+                    data: formData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        var text;
+                        if (operate.toString() == '1') {
+                            text = '{% trans 'x_have_agreed' %}'
+                        } else {
+                            text = '{% trans 'x_have_refused' %}'
+                        }
+                        var btn_id = '#button-' + id.toString()
+                        $(btn_id).html(text);
+                        var old_count = $("[name='apply_count']").data("apply_count");
+                        var new_count = parseInt(old_count) - 1;
+                        $("[name='apply_count']").data("apply_count", new_count);
+                        $("[name='apply_count']").html(new_count.toString());
+                        if (new_count == 0) {
+                            $('.new-member-apply').addClass('hidden')
+                        }
+                    },
+                    error: function (xhr, ts, et) {
+                        ajaxDialog.dialogErrorCallback(xhr, ts, et)
+                    }
+                });
+            },
+            quit_team: function () {
+                {#$('#confirm-msg').text(gettext('x_want_to_continue'));#}
+                iconfirm(gettext('x_want_to_continue'));
+                var confirm_button = $('#hint-msg-confirm .btn-confirm')[0];
+                confirm_button.onclick = function () {
+                    var data = {
+                        'type': 3
+                    };
+                    http.patch(teamUserApiList + id.toString() + '/', data, function (data) {
+                        setTimeout(function () {
+                            window.location.href = '/course_occupation/index_ad/'
+                        }, ajaxDialog.defaultDelayTime);
+                    }, function (xhr, ts, et) {
+                        ierror(JSON.parse(xhr.responseText).detail);
+                    });
+                }
+            }
+        };
+
+        // 我的提问, 我的回复, 当页面加载时默认我的提问
+        function titleFormatter(value, row, index) {
+            //添加样式
+            return '<span class="orangeC font-bold mrg10R">[' + value + ']</span>'
+        }
+        function commentFormatter(value, row, index) {
+            //防止comment过长，限制长度
+            if (value.length > 85) {
+                return value.substr(0, 85) + '...'
+            }
+            return value
+        }
+
+        table = $('#table');
+        table1 = $('#table1');
+        table.on('load-success.bs.table', function (data) {
+            $('.team').css('min-height', $('.tabs-content').height());
+            $(window).resize(function () {
+                    $('.team').css('min-height', $('.tabs-content').height());
+                }
+            )
+        });
+        table1.on('load-success.bs.table', function (data) {
+            $('.team').css('min-height', $('.tabs-content').height());
+            $(window).resize(function () {
+                    $('.team').css('min-height', $('.tabs-content').height());
+                }
+            )
+        });
+
+        $('#table').bootstrapTable({
+            onClickRow: function (row) {
+                if (row.resource_url == '') {
+                    window.location.href = "#"
+                } else {
+                    window.location.href = row.resource_url + "#clicka";
+                }
+            }
+        });
+        $('#table1').bootstrapTable({
+            onClickRow: function (row) {
+                if (row.resource_url == '') {
+                    window.location.href = "#"
+                } else {
+                    window.location.href = row.resource_url + "#clicka";
+                }
+
+            }
+        });
+
+
+    </script>
+{% endblock %}

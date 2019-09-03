@@ -1,0 +1,61 @@
+msgid "x_server_error"
+msgstr "服务器出错了"
+
+msgid "x_logout"
+msgstr "退出"
+
+msgid "x_return_front"
+msgstr "返回前端"
+
+msgid "x_alarm_percent"
+msgstr "系统资源告警比例"
+
+
+msgid "x_create_user"
+msgstr "创建人"
+
+
+msgid "x_used_percent"
+msgstr "使用率为  "
+
+msgid "x_disk_used_too_much"
+msgstr "磁盘使用率过高  "
+
+
+msgid "x_cpu_used_too_much"
+msgstr "cpu使用率过高  "
+
+
+msgid "x_mem_used_too_much"
+msgstr "内存使用率过高  "
+
+
+msgid "x_service_error"
+msgstr " 服务异常  "
+
+
+msgid "x_service_status"
+msgstr " 服务状态为    "
+
+msgid "x_system_normal"
+msgstr "系统运行正常"
+
+msgid "x_service_normal"
+msgstr "各服务状态正常"
+
+
+msgid "x_vm_used"
+msgstr "仅统计虚拟机占用"
+
+
+msgid "x_name_exist"
+msgstr "{} 名字已经存在"
+
+msgid "x_unzip_password_error"
+msgstr "解压密码错误"
+
+msgid "x_unzip_fail"
+msgstr "解压失败"
+
+msgid "x_please_choose"
+msgstr "请选择"

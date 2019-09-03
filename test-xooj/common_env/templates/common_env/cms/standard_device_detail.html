@@ -1,0 +1,1218 @@
+{% extends './iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+{% block title %}
+    <a href="{% url 'cms_common_env:standard_device_list' %}">{% trans "x_target_management" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_add_std_device' %}
+    {% else %}
+        {% trans 'x_edit_std_device' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+    <script src="{% static_v 'common_remote/js/login_guacamole.js' %}"></script>
+
+    <style>
+    .default-selecting-imgs{
+        margin-top: 5px;
+        display: inline-block;
+        border: 1px solid #ddd;
+    }
+    .default-selecting-imgs legend{
+        width: auto;
+        margin-bottom: 0;
+        color: #666;
+        border: none;
+        font-size: 14px;
+        margin-left: 10px;
+    }
+    .default-selecting-imgs img{
+        margin: 5px;
+        cursor: pointer;
+    }
+    .edit-image-btn{
+        display: none;
+    }
+    #image_upload_type, #third_file_name{
+        display: inline-block;
+        width: auto;
+    }
+    #third_file_name {
+        vertical-align: bottom;
+    }
+    .lan-cidr {
+      margin: 5px 0;
+    }
+    </style>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              onkeydown="if(event.keyCode==13) return false;"
+              enctype="multipart/form-data"
+                {% if mode == 0 %}
+              action="{% url 'cms_common_env:api:standard-device-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_common_env:api:standard-device-detail' standard_device.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ standard_device.name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'logo' %}</label>
+                    <div class="col-sm-6">
+                        <div class="image_upload_widget">
+                            <div>
+                                <div class="btn btn-primary btn_image_upload image_upload" id="logo">
+                                    {% trans 'x_select_pic' %}
+                                    <input type="text" class="form-control image_upload hidden" name="logo"/>
+                                </div>
+                            </div>
+                            <a href="{% if standard_device.logo %}{{ standard_device.logo }}{% endif %}" class="image_show" title="图片" data-gallery="">
+                                <img {% if standard_device.logo %}src="{{ standard_device.logo }}"{% endif %} width="100">
+                            </a>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev"><</a>
+                                <a class="next">></a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                            <br />
+                            <fieldset class="default-selecting-imgs">
+                                <legend>{% trans "x_select_default_logo" %}</legend>
+                                {% for name, logo in default_logos %}
+                                    <img src="{{ logo }}" data-value="{{ name }}">
+                                {% endfor %}
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed hidden"></div>
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label">{% trans 'x_introduction' %}</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="description"
+                                  name="description">{{ standard_device.description }}</textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_role' %}</label>
+                    <div class="col-sm-3">
+                        <select class="form-control m-b" name="role" id="role" data-form-fixed="1">
+                            <option data-id="option-rendering" data-list='ListModelConstant.StandardDevice.Role' data-selected="{{ standard_device.role }}">{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <select class="form-control m-b" id="role_type" name="role_type">
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed" data-display="role-virtual-router" style="display: none;"></div>
+                <div class="form-group" data-display="role-virtual-router" style="display: none;">
+                    <label class="col-sm-2 control-label">{% trans 'x_port_number' %}</label>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <div class="input-group-addon">{% trans 'x_wan_number' %}</div>
+                            <input type="number" class="form-control" id="wan_number" name="wan_number" value="1" readonly style="background-color: transparent;outline: none;cursor: auto;" />
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group">
+                            <div class="input-group-addon">{% trans 'x_lan_number' %}</div>
+                            <input type="number" class="form-control" id="lan_number" name="lan_number" value="{{ standard_device.lan_number }}"/>
+                        </div>
+                        <div class="lan-configs">
+                            <div class="lan-cidrs">
+                            </div>
+                            <input type="hidden" name="lan_configs" id="lan_configs" value="{{ standard_device.lan_configs }}" >
+                        </div>
+                    </div>
+                </div>
+                <div data-display="role-3">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_system' %}</label>
+                        <div class="col-sm-3">
+                            <select class="form-control m-r pull-left" name="source_image_name" id="source_image_name" {% if standard_device.image_id %}disabled{% endif %}>
+                                <option data-id="option-rendering" data-load='loadBaseImageSelect'
+                                        {% if standard_device %}data-selected="{{ standard_device.source_image_name }}"{% endif %}
+                                        data-default-selected="0" async>{% trans 'x_loading' %}</option>
+                                <option value="">{% trans "x_custom_upload" %}</option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-7" data-upload-ele style="display: none;">
+                            <select class="form-control" id="image_upload_type">
+                                <option value="http">http上传</option>
+                                <option value="ftp">ftp上传</option>
+                            </select>
+                            <span data-show="http">
+                                <input type="file" class="hidden" id="image_file" name="image_file" />
+                                <span class="btn btn-primary file-upload-btn" style="margin-bottom: 0;vertical-align: bottom;">{% trans 'x_upload' %}</span>
+                                <span class="hint"></span>
+                            </span>
+                            <span data-show="ftp" style="display: none;">
+                                <input type="text" class="form-control" id="third_file_name" name="third_file_name" data-form-fixed="1" placeholder="镜像文件名称"/>
+                            </span>
+                        </div>
+                        <div class="col-sm-10 col-sm-offset-2 text-danger" data-upload-ele style="display: none;line-height: 30px;">
+                            {% trans 'x_upload_image_hint' %}(ftp_user@{{ image_ftp_address }} ftp_password)
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_img_info' %}</label>
+                        <div class="col-sm-3 hidden">
+                            <select class="form-control m-b" name="system_type" id="system_type" data-form-fixed="1">
+                                <option data-id="option-rendering" data-list='ListModelConstant.StandardDevice.SystemType' data-selected="{{ standard_device.system_type }}">{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="system_sub_type" id="system_sub_type" data-form-fixed="1">
+                                <option data-id="option-rendering" data-list='ListModelConstant.StandardDevice.SystemSubType' data-selected="{{ standard_device.system_sub_type }}">{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="image_type" id="image_type" data-form-fixed="1">
+                                <option data-id="option-rendering" data-list='ListModelConstant.StandardDevice.ImageType' data-selected="{{ standard_device.image_type }}">{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3" data-upload-ele style="display: none;">
+                            <select class="form-control" name="disk_format" data-form-fixed="1">
+                                {% for key, value in disk_format_info %}
+                                    <option value="{{ key }}" {% if key == standard_device.disk_format %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_default_size' %}</label>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="flavor" id="flavor" data-form-fixed="1">
+                                <option data-id="option-rendering" data-load='loadFlavorSelect' data-selected="{{ standard_device.flavor }}" async>{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_system_visit_type' %}</label>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="access_mode" id="access_mode" data-form-fixed="1">
+                                <option data-id="option-rendering" data-list='ModelConstant.auxiliaryConstant.SystemAccessModeList' data-selected="{{ standard_device.access_mode }}">{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3" data-hide="access_mode_console">
+                            <input type="text" class="form-control" id="access_port" name="access_port" data-form-fixed="1"
+                                   value="{% if standard_device.access_port %}{{ standard_device.access_port }}{% endif %}"/>
+                        </div>
+                        <div class="col-sm-3" data-display="access_mode_rdp">
+                            <select class="form-control m-b" name="access_connection_mode" id="access_connection_mode" data-form-fixed="1">
+                                <option value="rdp">rdp</option>
+                                <option value="nla">nla</option>
+                            </select>
+                        </div>
+                        <a class="glyphicon glyphicon-question-sign"
+                           style="vertical-align: bottom;vertical-align: -webkit-baseline-middle;"
+                           target="_blank"
+                           href="/help/target/"
+                           title="{% trans 'x_help' %}"></a>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_system_user_info' %}</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="access_user" name="access_user" placeholder="{% trans 'x_user_name' %}" data-form-fixed="1"
+                                   value="{% if standard_device.access_user %}{{ standard_device.access_user }}{% endif %}"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="access_password" name="access_password" placeholder="{% trans 'x_password' %}" data-form-fixed="1"
+                                   value="{% if standard_device.access_password %}{{ standard_device.access_password }}{% endif %}"/>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_show_adv_config' %}</label>
+                        <div class="col-sm-2">
+                            <input type="checkbox" class="form-control js-switch" id="detail-settings-toggle">
+                        </div>
+                    </div>
+                    <div class="detail-settings" style="display: none;">
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{% trans 'x_is_support_ci' %}</label>
+                            <div class="col-sm-2">
+                                <input type="hidden" name="init_support" value="{% if standard_device and standard_device.init_support %}1{% else %}0{% endif %}">
+                                <input type="checkbox" class="form-control js-switch" id="init_support" data-name="init_support"
+                                        {% if standard_device and standard_device.init_support %} checked {% endif %}>
+                            </div>
+                        </div>
+                        <input type="hidden" id="meta_data" name="meta_data" {% if standard_device.meta_data %}value="{{ standard_device.meta_data }}"{% endif %}>
+                        <div class="hr-line-dashed" data-upload-ele style="display: none;"></div>
+                        <div class="form-group" data-upload-ele style="display: none;">
+                            <label class="col-sm-2 control-label">{% trans 'x_hard_control_type' %}</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="disk_controller">
+                                {% for key, value in disk_controller_info %}
+                                    <option value="{{ key }}" {% if key == standard_device.loaded_meta_data.hw_disk_bus %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <a class="glyphicon glyphicon-question-sign"
+                               style="vertical-align: bottom;vertical-align: -webkit-baseline-middle;"
+                               target="_blank"
+                               href="/help/upload-target/"
+                               title="{% trans 'x_help' %}"></a>
+                        </div>
+                        <div class="hr-line-dashed" data-upload-ele style="display: none;"></div>
+                        <div class="form-group" data-upload-ele style="display: none;">
+                            <label class="col-sm-2 control-label">{% trans 'x_network_card_type' %}</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="virtual_network_interface_device">
+                                {% for key, value in virtual_network_interface_device_info %}
+                                    <option value="{{ key }}" {% if key == standard_device.loaded_meta_data.hw_vif_model %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <a class="glyphicon glyphicon-question-sign"
+                               style="vertical-align: bottom;vertical-align: -webkit-baseline-middle;"
+                               target="_blank"
+                               href="/help/upload-target/"
+                               title="{% trans 'x_help' %}"></a>
+                        </div>
+                        <div class="hr-line-dashed" data-upload-ele style="display: none;"></div>
+                        <div class="form-group" data-upload-ele style="display: none;">
+                            <label class="col-sm-2 control-label">{% trans 'x_video_device' %}</label>
+                            <div class="col-sm-3">
+                                <select class="form-control" id="video_image_driver">
+                                {% for key, value in video_image_driver_info %}
+                                    <option value="{{ key }}" {% if key == standard_device.loaded_meta_data.hw_video_model %}selected{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                            <a class="glyphicon glyphicon-question-sign"
+                               style="vertical-align: bottom;vertical-align: -webkit-baseline-middle;"
+                               target="_blank"
+                               href="/help/upload-target/"
+                               title="{% trans 'x_help' %}"></a>
+                        </div>
+                    </div>
+                    {% if DEBUG %}
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_image_status' %}</label>
+                        <div class="col-sm-3">
+                            <select class="form-control m-b" name="image_status" id="image_status" data-form-fixed="1">
+                                <option data-id="option-rendering" data-list='ListModelConstant.StandardDevice.ImageStatus' data-selected="{{ standard_device.image_status }}">{% trans 'x_loading' %}</option>
+                            </select>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if mode != 0 %}
+                    <div class="hr-line-dashed hidden"></div>
+                    <div class="form-group hidden">
+                        <label class="col-sm-2 control-label">{% trans 'x_custom_img' %}</label>
+                        <div class="col-sm-10">
+                            <span class="btn btn-success m-b m-r pull-left edit-image-btn" id="start_tmp_vm" data-status="0" onclick="startTmpVm(this)"><i class="fa fa-globe"></i> <span>{% trans 'x_edit_img' %}</span></span>
+
+                            <a class="btn btn-success m-b m-r pull-left edit-image-btn" id="edit_image" target="_blank" data-status="3"
+                                {% if standard_device.tmp_vm_info %}href="{{ standard_device.tmp_vm_info.connection_url }}"{% endif %}><i class="fa fa-edit"></i> {% trans 'x_login_img_machine' %}</a>
+                            <span class="btn btn-danger m-b m-r pull-left edit-image-btn" id="delete_tmp_vm" data-status="3" onclick="deleteTmpVm()"><i class="fa fa-remove"></i> {% trans 'x_free_img_machine' %}</span>
+
+                            <span class="btn btn-success m-b m-r pull-left edit-image-btn" id="save_image" data-status="3" onclick="saveImage()"><i class="fa fa-save"></i> <span>{% trans 'x_save_img' %}</span></span>
+                        </div>
+                        <div id="tmp_vm_detail" class="col-sm-10 col-sm-offset-2" style="padding-top: 20px;
+                        {% if not standard_device.tmp_vm_info or not standard_device.tmp_vm_info.status == 3 %}display: none;{% endif %}">
+                            <p id="tmp_vm_proxy" style="{% if not standard_device.tmp_vm_info.proxy_ip or not standard_device.tmp_vm_info.proxy_port  %}display: none;{% endif %}">{% trans 'x_sys_visit' %}:
+                                <span id="tmp_vm_proxy_protocol">{{ standard_device.tmp_vm_info.protocol }}</span>
+                                <span id="tmp_vm_proxy_ip">{{ standard_device.tmp_vm_info.proxy_ip }}</span>
+                                <span id="tmp_vm_proxy_port">{{ standard_device.tmp_vm_info.proxy_port }}</span></p>
+                            <p id="tmp_vm_float" style="{% if standard_device.tmp_vm_info.proxy_ip and standard_device.tmp_vm_info.proxy_port  %}display: none;{% endif %}">{% trans 'x_sys_visit' %}:
+                                <span id="tmp_vm_protocol">{{ standard_device.tmp_vm_info.protocol }}</span>
+                                <span id="tmp_vm_float_ip">{{ standard_device.tmp_vm_info.float_ip }}</span>
+                                <span id="tmp_vm_port">{{ standard_device.tmp_vm_info.port }}</span></p>
+                            <p>{% trans 'x_sys_user' %}:
+                                <span id="tmp_vm_username">{{ standard_device.tmp_vm_info.username }}</span>
+                            </p>
+                            <p>{% trans 'x_sys_user_passwd' %}:
+                                <span id="tmp_vm_password">{{ standard_device.tmp_vm_info.password }}</span>
+                            </p>
+                        </div>
+
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white" href="{% url 'cms_common_env:standard_device_list' %}">{% trans 'x_cancel' %}</a>
+                        <span class="btn btn-primary submit">{% trans 'x_save' %}</span>
+                        <button class="btn btn-primary hidden" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_common_env:standard_device_list' %}";
+        var editMode = {{ mode }};
+
+
+        function getLanConfigs() {
+            var lanConfigs = []
+            $('.lan-cidr').each(function (i, el) {
+                lanConfigs.push({
+                    cidr: el.value || '',
+                })
+            });
+            return lanConfigs
+        }
+        function loadLanConfigs(lanConfigs) {
+            const lanNumber = Number($('#lan_number').val())
+            $('.lan-cidrs').empty()
+            for (var i = 0; i < lanNumber; i++) {
+                var lanConfig = lanConfigs[i]
+                var cidr = lanConfig ? lanConfig.cidr : ''
+                $('.lan-cidrs').append('<input type="text" placeholder="cidr" class="lan-cidr form-control" value="' + cidr + '"/>')
+            }
+        }
+        loadLanConfigs({{ standard_device.lan_configs | safe }})
+        $('#lan_number').change(function () {
+            loadLanConfigs(getLanConfigs())
+        });
+
+        $(".image_upload_widget").bindLocalCropImgUpload({aspectRatio: 1}, null, true);
+        $('.js-switch').bindJsSwitch();
+
+        $('.file-upload-btn').click(function () {
+            $(this).prev().click();
+        });
+        $('.file-upload-btn').siblings('[type=file]').change(function () {
+            $(this).siblings('.hint').text(this.files[0].name);
+        });
+
+        $('#image_upload_type').change(function () {
+            var mode = $(this).val();
+            var $parent = $(this).parent();
+            $parent.find('#image_file').val(null);
+            $parent.find('.hint').text('');
+            $parent.find('#third_file_name').val('');
+            $parent.find('[data-show]').hide();
+            $parent.find('[data-show=' + mode + ']').show();
+        });
+
+        // 终端式网关的也是终端模式
+        function isTerminalMode() {
+            return $('#role').val() == ModelConstant.StandardDevice.Role.TERMINAL
+                || ($('#role').val() == ModelConstant.StandardDevice.Role.GATEWAY
+                    && !arrayUtil.in($('#role_type').val(), [ModelConstant.StandardDevice.RoleGatewayType.ROUTER, ModelConstant.StandardDevice.RoleGatewayType.FIREWALL]))
+        }
+
+        $(function () {
+            {% if standard_device %}
+            $('.file-upload-btn').siblings('.hint').text(ModelConstant.auxiliaryConstant.ImageUploadStatus[imageStatus]);
+            {% endif %}
+
+            // 添加验证方法
+            $.validator.addMethod('access_user_check', function (value, element, params) {
+                if ($('#access_password').val() && !value) {
+                    return false;
+                }
+                return true;
+            }, gettext('x_default_passwrd_need_user'));
+            $('#validateForm').mvalidate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 100
+                    },
+                    access_user: {
+                        access_user_check: true,
+                    },
+                },
+                messages: {
+                    name: {
+                        required: '{% trans "x_name_required" %}',
+                        maxlength: '{% trans "x_name_len_lt_60" %}'
+                    },
+                }
+            });
+
+            var progressHtml = `
+                <div class="upload-progress">
+                    <div class="progress">
+                      <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                        <span class="percent"></span>
+                      </div>
+                    </div>
+                </div>
+            `;
+            function requestForm() {
+                $('#validateForm').ajaxFormProgressDialog(function () {
+                    setTimeout(function () {
+                        window.location.href = listUrl;
+                    }, ajaxDialog.defaultDelayTime);
+                }, null, {
+                    beforeHandle: beforeHandle,
+                    beforeSubmit: function(datas, $form, options){
+                        prepareFormLogo($form, datas);
+                    },
+                    complete: function () {
+                        var $submitButton = $('#validateForm').find('[type=submit]');
+                        $submitButton.replaceWith($submitButton.prop('outerHTML'))
+                    },
+                    checkSameFields: false,
+                    $progress: '.upload-progress',
+                    $progressFile: $('#image_file'),
+                    uploadProgress: function (event, position, total, percentComplete) {
+                        if (isUploadMode() && percentComplete == 100) {
+                            setTimeout(function () {
+                                popUtil.warningHint(gettext('x_upload_success_server_handle')+'<div class="text-danger" style="font-size: 24px;">'+gettext('x_please_donot_close')+'</div>', {
+                                    html: true,
+                                    showConfirmButton: false,
+                                });
+                            }, 200);
+                        }
+                    },
+                    afterRequest: function () {
+                        if (isUploadMode()) {
+                            popUtil.warningHint(gettext('x_uploading')+'<div class="text-danger" style="font-size: 24px;">'+gettext('x_please_donot_close')+'</div>', {
+                                text: progressHtml,
+                                html: true,
+                                showConfirmButton: false,
+                            });
+                        }
+                    },
+                });
+                $('#validateForm').find('[type=submit]').click();
+            }
+
+            function beforeHandle() {
+                var metaData = {};
+                var hwDiskBus = $('#disk_controller').val();
+                var hwVifModel = $('#virtual_network_interface_device').val();
+                var hwVideoModel = $('#video_image_driver').val();
+                if (hwDiskBus) {
+                    metaData.hw_disk_bus = hwDiskBus;
+                }
+                if (hwVifModel) {
+                    metaData.hw_vif_model = hwVifModel;
+                }
+                if (hwVideoModel) {
+                    metaData.hw_video_model = hwVideoModel;
+                }
+                $('#meta_data').val(JSON.stringify(metaData));
+                $('#lan_configs').val(JSON.stringify(getLanConfigs()))
+            }
+
+            function prepareFormLogo($form, datas) {
+                var $logoWidget = $form.find('#logo').parents('.image_upload_widget');
+                var src = $logoWidget.find('.image_show').attr('href');
+                var $selectedImg = $logoWidget.find('.default-selecting-imgs img[src="' + src + '"]');
+                if ($selectedImg.length == 0) {
+                    fileUpload.setFormData(datas, 'logo');
+                } else {
+                    fileUpload.setFormData(datas, 'logo', $selectedImg.attr('data-value'));
+                }
+            }
+
+            function isUploadMode() {
+                return isTerminalMode()
+                    && $('#source_image_name').val() == ''
+                    && $('#image_file')[0].files.length > 0;
+            }
+
+            $('#validateForm .submit').click(function () {
+                // 上传模式, 先检查参数
+                if (isUploadMode()) {
+                    $('#image_file').attr('name', 'image_file');
+                    if (!$('#validateForm').valid()) {
+                        return;
+                    }
+                    var $tmpValidateForm = $('#validateForm').clone();
+                    $tmpValidateForm.prepend('<input type="hidden" name="_validate" value="1">');
+                    $tmpValidateForm.find('[name=image_file]').removeAttr('name');
+                    $tmpValidateForm.ajaxFormErrorDialog(function () {
+                        requestForm();
+                    }, null, {
+                        beforeSubmit: function(datas, $form, options){
+                            prepareFormLogo($form, datas);
+                        },
+                        checkSameFields: false
+                    });
+                    $tmpValidateForm.find('[type=submit]').click();
+                } else {
+                    $('#image_file').removeAttr('name');
+                    requestForm();
+                }
+            });
+        });
+
+        $('.image_upload_widget').find('.default-selecting-imgs').on('click', 'img', function(){
+            var $widget = $(this).parents('.image_upload_widget');
+            var src = $(this).attr('src');
+            $widget.find('.image_show').attr('href', src);
+            $widget.find('.image_show img').attr('src', src);
+        });
+
+        $(function () {
+            function setRoleStyle(){
+                var role = isTerminalMode() ? ModelConstant.StandardDevice.Role.TERMINAL : $('#role').val();
+                $('[data-display=role-' + role + ']').show();
+                $('[data-display^=role-]:not([data-display=role-' + role + '])').hide();
+            }
+            function setRoleTypeStyle() {
+                var role = $('#role').val();
+                var roleType = $('#role_type').val();
+                if (role == ModelConstant.StandardDevice.Role.GATEWAY && isTerminalMode()) {
+                    $('[data-display=role-virtual-router]').show();
+                } else {
+                    $('[data-display=role-virtual-router]').hide();
+                }
+            }
+            setRoleStyle();
+            var roleType = '{{ standard_device.role_type }}' || 1;
+            var firstLoad = true;
+            $('#role_type').change(function(){
+                setRoleStyle();
+                setRoleTypeStyle()
+            });
+            refreshRoleTypeSelect();
+            $('#role').change(function(){
+                setRoleStyle();
+                refreshRoleTypeSelect();
+                setRoleTypeStyle()
+            });
+            function refreshRoleTypeSelect() {
+                var $loadingOption = $('<option data-id="option-rendering" data-load="loadRoleTypeSelect" async>{% trans "x_loading" %}</option>');
+                if (firstLoad) {
+                    $loadingOption.attr('data-selected', roleType);
+                }
+                $('#role_type').html($loadingOption);
+                optionRender.renderAsyncSelect($loadingOption);
+                $('#role_type').change();
+                firstLoad = false;
+            }
+        });
+        function loadRoleTypeSelect(callback) {
+            var role = $('#role').val();
+            var roleType = ModelConstant.auxiliaryConstant.ListRoleType[role];
+            callback(roleType);
+        }
+        $('#detail-settings-toggle').change(function () {
+            if ($(this).prop('checked')) {
+                $('.detail-settings').show();
+            } else {
+                $('.detail-settings').hide();
+            }
+        });
+
+        var accessMode = '{% if standard_device.access_mode %}{{ standard_device.access_mode }}{% endif %}';
+        var accessConnectionMode = '{% if standard_device.access_connection_mode %}{{ standard_device.access_connection_mode }}{% endif %}';
+        if (accessConnectionMode) {
+            $('#access_connection_mode').val(accessConnectionMode);
+        }
+
+        function setAccessModeStyle() {
+            var accessMode = $('#access_mode').val() || accessMode;
+            $('[data-display^=access_mode]').hide();
+            $('[data-hide^=access_mode]').show();
+            $('[data-display=access_mode_' + accessMode + ']').show();
+            $('[data-hide=access_mode_' + accessMode + ']').hide();
+        }
+        $('#access_mode').change(function () {
+            var accessMode = $('#access_mode').val() || accessMode;
+            var defaultPort = ModelConstant.auxiliaryConstant.AccessModeDefaultPort[accessMode] || '';
+            $('#access_port').val(defaultPort);
+            setAccessModeStyle();
+        });
+
+        var baseImage = {};
+        function loadBaseImageSelect(callback) {
+            var res = [
+                {
+                    "detail": {
+                        "security": "nla",
+                        "name": "XOJ-DEFAULT-windows-10",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "windows-10",
+                        "user": "Administrator",
+                        "dis_name": "windows-10",
+                        "flavor": "m3.1c-2g-20g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "windows"
+                    },
+                    "name": "XOJ-DEFAULT-windows-10",
+                },
+                {
+                    "detail": {
+                        "security": "nla",
+                        "name": "XOJ-DEFAULT-windows-8",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "windows-8",
+                        "user": "root",
+                        "dis_name": "windows-8",
+                        "flavor": "m3.1c-2g-20g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "windows"
+                    },
+                    "name": "XOJ-DEFAULT-windows-8",
+                },
+                {
+                    "detail": {
+                        "security": "nla",
+                        "name": "XOJ-DEFAULT-windows-7",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "windows-7",
+                        "user": "Administrator",
+                        "dis_name": "windows-7",
+                        "flavor": "m3.1c-2g-20g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "windows"
+                    },
+                    "name": "XOJ-DEFAULT-windows-7",
+                },
+                {
+                    "detail": {
+                        "security": "rdp",
+                        "name": "XOJ-DEFAULT-windows-xp",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "windows-xp",
+                        "user": "Administrator",
+                        "dis_name": "windows-xp",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "windows"
+                    },
+                    "name": "XOJ-DEFAULT-windows-xp",
+                },
+                {
+                    "detail": {
+                        "security": "nla",
+                        "name": "XOJ-DEFAULT-windows-server-2012",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "windows-server-2012",
+                        "user": "Administrator",
+                        "dis_name": "windows-server-2012",
+                        "flavor": "m3.1c-2g-20g",
+                        "password": "password_win2012",
+                        "init_support": true,
+                        "system_type": "windows"
+                    },
+                    "name": "XOJ-DEFAULT-windows-server-2012",
+                },
+                {
+                    "detail": {
+                        "security": "nla",
+                        "name": "XOJ-DEFAULT-windows-server-2008",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "windows-server-2008",
+                        "user": "Administrator",
+                        "dis_name": "windows-server-2008",
+                        "flavor": "m3.1c-2g-20g",
+                        "password": "password_win2008",
+                        "init_support": true,
+                        "system_type": "windows"
+                    },
+                    "name": "XOJ-DEFAULT-windows-server-2008",
+                },
+                {
+                    "detail": {
+                        "security": "rdp",
+                        "name": "XOJ-DEFAULT-windows-server-2003",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "windows-server-2003",
+                        "user": "Administrator",
+                        "dis_name": "windows-server-2003",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "windows"
+                    },
+                    "name": "XOJ-DEFAULT-windows-server-2003",
+                },
+                {
+                    "detail": {
+                        "security": "rdp",
+                        "name": "XOJ-DEFAULT-windows-server-2000",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "windows-server-2000",
+                        "user": "Administrator",
+                        "dis_name": "windows-server-2000",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": false,
+                        "system_type": "windows"
+                    },
+                    "name": "XOJ-DEFAULT-windows-server-2000",
+                },
+                {
+                    "detail": {
+                        "access_mode": "ssh",
+                        "name": "XOJ-DEFAULT-ubuntu-16",
+                        "image_type": "vm",
+                        "access_port": 22,
+                        "system_sub_type": "ubuntu-16",
+                        "user": "root",
+                        "dis_name": "ubuntu-16",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-ubuntu-16",
+                },
+                {
+                    "detail": {
+                        "access_mode": "ssh",
+                        "name": "XOJ-DEFAULT-ubuntu-12",
+                        "image_type": "vm",
+                        "access_port": 22,
+                        "system_sub_type": "ubuntu-12",
+                        "user": "root",
+                        "dis_name": "ubuntu-12",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": false,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-ubuntu-12",
+                },
+                {
+                    "detail": {
+                        "access_mode": "ssh",
+                        "name": "XOJ-DEFAULT-centos-7",
+                        "image_type": "vm",
+                        "access_port": 22,
+                        "system_sub_type": "centos-7",
+                        "user": "root",
+                        "dis_name": "centos-7",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-centos-7",
+                },
+                {
+                    "detail": {
+                        "access_mode": "ssh",
+                        "name": "XOJ-DEFAULT-centos-6",
+                        "image_type": "vm",
+                        "access_port": 22,
+                        "system_sub_type": "centos-6",
+                        "user": "root",
+                        "dis_name": "centos-6",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-centos-6",
+                },
+                {
+                    "detail": {
+                        "access_mode": "ssh",
+                        "name": "XOJ-DEFAULT-centos-5",
+                        "image_type": "vm",
+                        "access_port": 22,
+                        "system_sub_type": "centos-5",
+                        "user": "root",
+                        "dis_name": "centos-5",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": false,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-centos-5",
+                },
+                {
+                    "detail": {
+                        "access_mode": "ssh",
+                        "name": "XOJ-DEFAULT-kali-linux",
+                        "image_type": "vm",
+                        "access_port": 22,
+                        "system_sub_type": "kali-2",
+                        "user": "root",
+                        "dis_name": "kali-linux",
+                        "flavor": "m3.1c-2g-20g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-kali-linux",
+                },
+                {
+                    "detail": {
+                        "access_mode": "console",
+                        "name": "XOJ-DEFAULT-android",
+                        "image_type": "vm",
+                        "access_port": "",
+                        "system_sub_type": "android",
+                        "user": "",
+                        "dis_name": "android",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "",
+                        "init_support": false,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-android",
+                },
+                {
+                    "detail": {
+                        "security": "rdp",
+                        "name": "XOJ-DEFAULT-UbuntuKylin-18.04",
+                        "image_type": "vm",
+                        "access_mode": "rdp",
+                        "access_port": 3389,
+                        "system_sub_type": "ubuntukylin-18",
+                        "user": "ubuntukylin",
+                        "dis_name": "UbuntuKylin-18.04",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "kylin123",
+                        "init_support": true,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-UbuntuKylin-18.04",
+                },
+                {
+                    "detail": {
+                        "access_mode": "ssh",
+                        "name": "XOJ-DEFAULT-redhat-7",
+                        "image_type": "vm",
+                        "access_port": 22,
+                        "system_sub_type": "redhat-7",
+                        "user": "root",
+                        "dis_name": "redhat-7",
+                        "flavor": "m2.1c-1g-10g",
+                        "password": "password",
+                        "init_support": true,
+                        "system_type": "linux"
+                    },
+                    "name": "XOJ-DEFAULT-redhat-7",
+                }
+            ]
+
+            {#http.get("{% url 'common_env:base_images' %}", {}, function(res){#}
+            var options = [];
+            $.each(res, function(i, image){
+                options.push({
+                    value: image.name,
+                    text: image.detail.dis_name,
+                });
+                baseImage[image.name] = image.detail;
+            });
+            callback(options);
+            fixDataLogic();
+            {# });#}
+        }
+
+        $('#source_image_name').change(function () {
+            var imageName = $(this).val();
+            if (imageName) {
+                var imageDetail = baseImage[imageName];
+                if (imageDetail) {
+                    setImageDetail(imageDetail);
+                }
+            }
+
+            fixDataLogic();
+        });
+        $('#system_type').change(function(){
+            var systemType = $(this).val();
+            var accessMode = $('#access_mode').val();
+            if (systemType == ModelConstant.StandardDevice.SystemType.LINUX && accessMode == ModelConstant.EnvTerminal.AccessMode.RDP) {
+                $('#access_mode').val(ModelConstant.EnvTerminal.AccessMode.SSH.value);
+                $('#access_mode').change();
+            } else if (systemType == ModelConstant.StandardDevice.SystemType.WINDOWS && accessMode == ModelConstant.EnvTerminal.AccessMode.SSH) {
+                $('#access_mode').val(ModelConstant.EnvTerminal.AccessMode.RDP.value);
+                $('#access_mode').change();
+            }
+        });
+
+
+        var firstFix = true;
+        function fixDataLogic() {
+            $('#flavor option[data-parent]').show();
+            var imageName = $('#source_image_name').val();
+            if (imageName) {
+                var imageDetail = baseImage[imageName];
+                if (imageDetail) {
+                    var $flavorOption = $('#flavor option[data-parent]');
+                    for (var i in $flavorOption) {
+                        if ($flavorOption.eq(i).val() == imageDetail.flavor) {
+                            break;
+                        } else {
+                            $flavorOption.eq(i).hide();
+                        }
+                    }
+
+                    if (firstFix && editMode == 0) {
+                        setImageDetail(imageDetail);
+                    }
+                    setAccessModeStyle();
+                }
+
+                $('[data-upload-ele]').hide();
+            } else {
+                setAccessModeStyle();
+
+                $('[data-upload-ele]').show();
+                if (editMode == 0) {
+                    $('#init_support').propJsSwitch(0);
+                }
+            }
+
+            firstFix = false;
+        }
+
+        function setImageDetail(imageDetail) {
+            $('#image_type').val(imageDetail.image_type);
+            $('#system_type').val(imageDetail.system_type);
+            $('#system_sub_type').val(imageDetail.system_sub_type);
+            $('#flavor').val(imageDetail.flavor);
+            $('#access_mode').val(imageDetail.access_mode);
+            $('#access_port').val(imageDetail.access_port);
+            if (imageDetail.security) {
+                $('#access_connection_mode').val(imageDetail.security);
+            }
+            $('#access_user').val(imageDetail.user);
+            $('#access_password').val(imageDetail.password);
+            $('#init_support').propJsSwitch(imageDetail.init_support);
+        }
+
+        function loadFlavorSelect(callback) {
+            http.get('{% url "common_env:flavors" %}', {}, function(res){
+                var options = [];
+                $.each(res, function(i, flavor){
+                    options.push({
+                        text: flavor[1],
+                        value: flavor[0],
+                    });
+                });
+                callback(options);
+            });
+        }
+
+        {% if mode != 0 %}
+        var tmpVmStatusCheck = null;
+        var imageStatusCheck = null;
+        {% if standard_device.tmp_vm_info %}
+            var tmpVmStatus = {{ standard_device.tmp_vm_info.status }};
+        {% else %}
+            var tmpVmStatus = 0;
+        {% endif %}
+        var imageStatus = {{ standard_device.image_status }};
+
+        // tmpVmStatus 0无临时机器,需要启动机器 1临时机器创建中 2临时机器启动中 3有临时机器，可编辑可保存
+        // imageStatus 0无镜像 1镜像创建中 2镜像已创建 3镜像创建错误
+        function setEditImageStyle(vmStatus, imStatus) {
+            if (vmStatus != undefined) {
+                tmpVmStatus = vmStatus;
+            }
+            if (imStatus != undefined) {
+                imageStatus = imStatus;
+            }
+            $('.edit-image-btn').hide();
+            $('.edit-image-btn[data-status=' + tmpVmStatus + ']').show();
+            $('#tmp_vm_detail').hide();
+            switch (tmpVmStatus) {
+                case 0: {
+                    $('#start_tmp_vm span').text(gettext('x_edit_img'));
+                    $('#start_tmp_vm').removeClass('disabled').show();
+                    break;
+                };
+                case 1: {
+                    $('#start_tmp_vm span').text(gettext('x_img_machine_creating'));
+                    $('#start_tmp_vm').addClass('disabled').show();
+                    break;
+                };
+                case 2: {
+                    $('#start_tmp_vm span').text(gettext('x_img_machine_starting'));
+                    $('#start_tmp_vm').addClass('disabled').show();
+                    break;
+                };
+                case 3: {
+                    if (imageStatus == 0) {
+                        $('#save_image span').text(gettext('x_save_img'));
+                        $('#save_image').removeClass('disabled');
+                    } else if (imageStatus == 2 || imageStatus == 3) {
+                        $('#save_image span').text(gettext('x_resave_img'));
+                        $('#save_image').removeClass('disabled');
+                        if (imageStatus == 2) {
+                            $('#delete_tmp_vm').show();
+                        }
+                    }
+                    $('#tmp_vm_detail').show();
+                    break;
+                };
+            }
+
+            if (imageStatus == 1) {
+                $('#save_image span').text(gettext('x_img_saving'));
+                $('#save_image').addClass('disabled');
+                $('#save_image').show();
+                $('#start_tmp_vm').hide();
+                $('#delete_tmp_vm').hide();
+            }
+        }
+        setEditImageStyle();
+
+        // 检查虚拟机状态
+        var tmpVmUrl = "{% url 'cms_common_env:api:standard-device-tmp-vm' standard_device.id %}";
+        if (tmpVmStatus == ModelConstant.StandardDeviceEditServer.Status.CREATING || tmpVmStatus == ModelConstant.StandardDeviceEditServer.Status.STARTING) {
+            checkTmpVmStatus();
+        }
+        function checkTmpVmStatus() {
+            if (tmpVmStatusCheck == null) {
+                tmpVmStatusCheck = setInterval(function () {
+                    http.get(tmpVmUrl, {}, function (res) {
+                        if (res) {
+                            setEditImageStyle(res.status);
+                            if (res.status == ModelConstant.StandardDeviceEditServer.Status.RUNNING) {
+                                clearInterval(tmpVmStatusCheck);
+                                tmpVmStatusCheck = null;
+                                $('#edit_image').attr('href', res.connection_url);
+                                $('#tmp_vm_proxy_protocol').text(res.protocol);
+                                $('#tmp_vm_proxy_ip').text(res.proxy_ip);
+                                $('#tmp_vm_proxy_port').text(res.proxy_port);
+                                if (res.proxy_ip && res.proxy_port) {
+                                    $('#tmp_vm_proxy').show();
+                                    $('#tmp_vm_float').hide();
+                                } else {
+                                    $('#tmp_vm_proxy').hide();
+                                    $('#tmp_vm_float').show();
+                                }
+                                $('#tmp_vm_protocol').text(res.protocol);
+                                $('#tmp_vm_username').text(res.username);
+                                $('#tmp_vm_float_ip').text(res.float_ip);
+                                $('#tmp_vm_port').text(res.port);
+                                $('#tmp_vm_password').text(res.password);
+                            }
+                        }
+                    });
+                }, 2000);
+            }
+        }
+
+        // 检查镜像状态
+        var standardDeviceUrl = "{% url 'cms_common_env:api:standard-device-detail' standard_device.id %}";
+        if (imageStatus == ModelConstant.StandardDevice.ImageStatus.CREATING) {
+            checkImageStatus();
+        }
+        function checkImageStatus() {
+            if (imageStatusCheck == null) {
+                imageStatusCheck = setInterval(function () {
+                    http.get(standardDeviceUrl, {}, function (res) {
+                        setEditImageStyle(undefined, res.image_status);
+                        if (res.image_status != ModelConstant.StandardDevice.ImageStatus.CREATING) {
+                            clearInterval(imageStatusCheck);
+                            imageStatusCheck = null;
+                        }
+                    });
+                }, 2000);
+            }
+        }
+
+        function startTmpVm(btn) {
+            setEditImageStyle(1);
+            $('#source_image_name').prop('disabled', true);
+            phttp(btn).post(tmpVmUrl, {}, function(res){
+                checkTmpVmStatus();
+            }, function(xhr, ts, et) {
+                ajaxDialog.popError(xhr, ts, et);
+                setEditImageStyle(0);
+                $('#source_image_name').prop('disabled', false);
+            });
+        }
+
+        function deleteTmpVm() {
+            ajaxDialog.buttonClick(http.delete, tmpVmUrl, {}, function (res) {
+                setEditImageStyle(0);
+            });
+        }
+
+        var imageUrl = "{% url 'cms_common_env:api:standard-device-image' standard_device.id %}";
+        function saveImage() {
+            ajaxDialog.buttonClick(http.post, imageUrl, {}, function (res) {
+                setEditImageStyle(undefined, 1);
+                checkImageStatus();
+            }, function(xhr, ts, et) {
+                ajaxDialog.popError(xhr, ts, et);
+            }, {
+                popConfig: {
+                    title: gettext('x_save_std_device_tip')
+                }
+            });
+        }
+
+        // 登录web远程服务
+        remoteUtil.loginGuacamole();
+        {% endif %}
+    </script>
+{% endblock %}

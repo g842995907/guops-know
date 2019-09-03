@@ -1,0 +1,435 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+
+{% block title %}
+    <a href="{% url 'cms_practice_attack_defense:task_list' %}">{% trans "x_ad_mode" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_add_task' %}
+    {% else %}
+        {% trans 'x_edit_task' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+
+    <script type="text/javascript" src="{% static_v 'common_env/widgets/select_env/js/select_env.js' %}"></script>
+
+    <style>
+        .progress {
+            position: relative;
+            padding: 1px;
+            border-radius: 3px;
+            margin-left: 15px;
+        }
+
+        #progress-toggle {
+            display: none;
+        }
+
+        .bar {
+            background-color: #B4F5B4;
+            width: 0%;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .percent {
+            position: absolute;
+            display: inline-block;
+            top: 3px;
+            left: 48%;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_practice_attack_defense:cms_api:practice-attack-defense-task-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_practice_attack_defense:cms_api:practice-attack-defense-task-detail' task.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_title' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="title" name="title" data-form-fixed="1"
+                               value="{{ task.title }}"/>
+                        <input type="hidden" name="is_dynamic_env" data-form-fixed="1" value="1">
+                        <input type="hidden" name="task_env__is_dynamic_flag" data-form-fixed="1" value="1">
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_score' %}</label>
+
+                    <div class="col-sm-6">
+                        <input type="number" class="form-control" id="score" name="score" min="0"
+                                {% if task.score != None %} value="{{ task.score }}" {% endif %}>
+                        <div id="checkScore"></div>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_task_event' %}</label>
+
+                    <div class="col-sm-6">
+                        <select class="form-control selectpicker" id="event_name" name="event" data-form-fixed="1"
+                                style="width: 220px;">
+                            {% for event in event_list %}
+                                <option {% if event.id == task.event %}selected{% endif %}
+                                        value="{{ event.id }}">{{ event.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_category' %}</label>
+
+                    <div class="col-sm-6">
+                        <select class="form-control selectpicker" id="category" name="category" data-form-fixed="1"
+                                style="width: 220px;">
+                            {% for category in category_list %}
+                                <option {% if category.id == task.category %}selected{% endif %}
+                                        value="{{ category.id }}">{% if LANGUAGE_CODE == 'zh-hans' %}{{ category.cn_name }}{% else %}{{ category.en_name }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans "x_knowledge_point" %}</label>
+                    {% if task.knowledges_list %}
+                        {% for knowledge in task.knowledges_list %}
+                        <div name="konwl">
+                            <div class="col-sm-1 know-label toolTipBox" style="position: relative">
+                                <input class="btn btn-info" value="{{ knowledge }}" name="knowledges" data-form-fixed="1"
+                                onkeydown="change_tip(this)">
+                                <div class="toolTip">{{ knowledge }}</div>
+                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>
+                            </div>
+                        </div>
+                        {% endfor %}
+{#                    {% else %}#}
+{#                        <div name="points">#}
+{#                            <div class="col-sm-1 know-label">#}
+{#                                <input class="btn btn-info" name="knowledges">#}
+{#                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>#}
+{#                            </div>#}
+{#                        </div>#}
+                    {% endif %}
+                    <div name="second"></div>
+                    <div class="col-sm-1" style="width: 5px">
+                        <a style="font-size:20px;" class="text-danger" id="faPlus" onclick="add_point()">+</a>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_sence_setting' %}</label>
+                    <div class="col-sm-10">
+                        <input type="hidden" id="task_env__env" name="task_env__env" {% if task.task_env and task.task_env.env %}value="{{ task.task_env.env }}"{% endif %}>
+                        <span class="btn btn-primary" onclick="showSelectEnv();">{% trans 'x_choose_scene' %}</span>
+                        <span class="hint">
+                            {% if task.task_env and task.task_env.env %}
+                                <a href="{% url 'cms_common_env:env_detail' task.task_env.env %}"
+                                   target="_blank">{{ task.task_env.title }}</a>
+                            {% endif %}
+                        </span><span style="font-size:20px" class="text-danger center">&nbsp;&nbsp;*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed hidden"></div>
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label">{% trans 'x_access_mode' %}</label>
+                    <input type="hidden" name="task_env__type" data-form-fixed="1"
+                           value="1">
+                </div>
+
+                <div class="hr-line-dashed hidden"></div>
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-6">
+                        <input type="hidden" name="public" data-form-fixed="1"
+                               value="1">
+                        <input type="checkbox" class="form-control js-switch" id="public"
+                               data-name="public"
+                                {% if task.public %} checked {% endif %}>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_is_show_official_wp' %}</label>
+
+                        <div class="col-sm-6">
+                            <input type="hidden" name="public_official_writeup" data-form-fixed="1"
+                                   value="{% if task.public_official_writeup %}1{% else %}0{% endif %}">
+                            <input type="checkbox" class="form-control js-switch" id="public_official_writeup"
+                                   data-name="public_official_writeup"  {% if task.public_official_writeup %}
+                                   checked="" {% endif %}>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_official_wp' %}</label>
+
+                        <div class="col-sm-6">
+                            <textarea class="form-control" id="official_writeup"
+                                      name="official_writeup">{% if task.official_writeup %}
+                                {{ task.official_writeup }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="progress-toggle">
+                    <label class="col-sm-2 control-label">"{% trans 'x_annex_uploading' %}"</label>
+                    <div class="progress col-sm-4 col-md-4">
+                        <div class="bar"></div>
+                        <div class="percent">0%</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white return">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit" id="save">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+                <input type="hidden" id="refer" name="refer">
+            </div>
+        </form>
+    </div>
+
+    <!-- 选择场景 -->
+    <div class='modal fade' id='selectEnv' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_choose_scene' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <div data-widget-id='select-env' data-instance-id='t1'></div>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="selectEnv();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_practice_attack_defense:task_list' %}";
+        {% if mode == 1 %}
+            var patchUrl = "{% url 'cms_practice_attack_defense:cms_api:practice-attack-defense-task-detail' task.id %}"
+        {% else %}
+            var patchUrl = "{% url 'cms_practice_attack_defense:cms_api:practice-attack-defense-task-list' %}"
+        {% endif %}
+
+    </script>
+    <script>
+        var returnUrl = urlparser.getQueryString("return");
+        returnUrl = returnUrl ? returnUrl : listUrl;
+        $("#content").initSummernote({height: 400});
+        {#$("#official_writeup").initSummernote({height: 400});#}
+        $("#official_writeup").initMarkdown();
+        var CALLBACK = {
+
+            deleteFile: function () {
+                ajaxDialog.buttonClick(http.patch, patchUrl, {file: null}, function () {
+                    $("#downloadFile").hide();
+                    $("#uploadFile").show();
+                })
+            }
+        }
+    </script>
+    <script>
+        $(function () {
+            $('.return').attr('href', returnUrl);
+            $('input[type="file"]').prettyFile();
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+
+                $(html).change(function () {
+                    var name = $(this).attr('data-name');
+                    var $input = $(this).siblings('[name=' + name + ']');
+                    if ($(this).prop('checked')) {
+                        $input.val(1);
+                    } else {
+                        $input.val(0);
+                    }
+                });
+            });
+
+            add_minus();
+        });
+
+
+        $(function () {
+            $("#validateForm").mvalidate({
+                rules: {
+                    category: {
+                        required: true,
+                    },
+                    event: {
+                        required: true,
+                    },
+                    title: {
+                        required: true,
+                    },
+                    score: {
+                        required: true,
+                        digits: true,
+                        min: 0,
+                        max: 5000,
+                    },
+                    answer: {
+                        answer_v: true,
+                    },
+                    task_env__env:{
+                        required: true
+                    }
+                },
+                messages: {
+                    title: {
+                        required: "{% trans 'x_required_name' %}",
+                    },
+                    score: {
+                        required: "{% trans 'x_lose_score' %}"
+                    },
+                    event: {
+                        required: "{% trans 'x_lose_task_event' %}"
+                    },
+                    category: {
+                        required: "{% trans 'x_lose_category' %}"
+                    },
+                    task_env__env: {
+                        required: "{% trans 'x_please_select_scene' %}"
+                    }
+                }
+            });
+
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = returnUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {
+                beforeSerialize: function () {
+                    var title = '';
+                    if ($('#title').val() == '' || $('#title').val() == null)
+                        title = $('#title').parent().prev().text() + gettext('x_field_cannot_empty');
+
+                    if (title != '') {
+                        swal({
+                            title: title,
+                            type: "error",
+                            confirmButtonText: '{% trans 'x_confirm' %}',
+                        }, function () {
+                            location.reload(true);//添加刷新清缓存操作
+                            return false;
+                        });
+                        return false;
+                    }
+                }
+            });
+        });
+
+        // 选择场景
+        var selectEnvWidgetBindFlag = false;
+
+        function showSelectEnv() {
+            $SELECTENV(function () {
+                if (!selectEnvWidgetBindFlag) {
+                    $('[data-widget-id=select-env]').bindEnvSelectWidget({type: 2});
+                    selectEnvWidgetBindFlag = true;
+                }
+                $('#selectEnv').modal();
+            });
+        }
+
+        function selectEnv() {
+            var table = envSelectWidgetInstance.t1.table;
+            var ids = table.getCheckedValues();
+            if (ids.length != 1) {
+                popUtil.warningHint(gettext('x_choose_environment'));
+                return;
+            }
+            var envId = ids[0];
+            $('[name=task_env__env]').val(envId);
+            var data = table.getData(envId);
+            var editUrl = '{% url "cms_common_env:env_list" %}' + envId;
+            $('[name=task_env__env]').siblings('.hint').html('<a href="' + editUrl + '" target="_blank">' + data.name + '</a>');
+
+            $('#selectEnv').modal('hide');
+        }
+
+        function add_minus() {
+            $(".know-label").mouseenter(function () {
+                $(this).find(".delete").show();
+
+            });
+            $(".know-label").mouseleave(function () {
+                $(this).find(".delete").hide();
+            });
+        }
+
+        function less_div(elem) {
+            $(elem).parent().parent().remove();
+        }
+
+        function add_point() {
+            var point_div = $("[name='points']").parent();
+            var addHtml = "<div name='points' class='toolTipBox'>" +
+                "                            <div class='col-sm-1 know-label'>" +
+                "                                <input class='btn btn-info' onkeydown='change_tip(this)' name='knowledges'>" +
+                "                                    <div class='toolTip'></div>" +
+                "                                <a class='delete' onclick='less_div(this)'><i class='fa fa-minus-square'></i></a>" +
+                "                            </div>" +
+                "                        </div>";
+
+            $("[name='second']").append(addHtml);
+            add_minus();
+            $('[name="knowledges"]').focus();
+        }
+
+
+        function change_tip(elem) {
+            var tip = $(elem).parent().find('.toolTip')
+            tip.html($(elem).val())
+        }
+    </script>
+{% endblock %}

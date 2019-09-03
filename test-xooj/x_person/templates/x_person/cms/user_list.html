@@ -1,0 +1,708 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block other_css_js %}
+    <script src="{% static_v 'x_person/js/constant.js' %}"></script>
+    <style>
+    #recentActionModal table th.action-time{
+        min-width: 140px;
+    }
+    </style>
+    <style>
+        .col-md-1{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}
+    {% trans 'x_user_manage' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+
+                    <div class="m-r pull-left col-md-1">
+                        <select class="form-control m-b sticky" id="faculty_name" onchange="CALLBACK.majorlist()">
+                            <option value="0" selected="selected">
+                                {% trans "x_all"  %}{{ ORGANIZATION.Second_level }}</option>
+                            {% for faculty in faculty_list %}
+                                <option value=
+                                                {{ faculty.id }}{% if faculty.id == userinfo.faculty %}selected{% endif %}>{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="m-r pull-left col-md-1">
+                        <select class="form-control m-b sticky" id="major_name" onchange="CALLBACK.classlist()">
+                            <option value="0" selected="selected">
+                                {% trans "x_all"  %}{{ ORGANIZATION.Third_level }}</option>
+                            {% for faculty in major_list %}
+                                <option value={{ faculty.id }} {% if faculty.id == userinfo.major %}selected{% endif %}>{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="m-r pull-left col-md-1">
+                        <select class="form-control m-b sticky select_search" id="classes_name">
+                            <option value="0" selected="selected">
+                                {% trans "x_all"  %}{{ ORGANIZATION.Fourth_level }}</option>
+                            {% for classes in classes_list %}
+                                <option value={{ classes.id }} {% if classes.id == userinfo.classes %}selected{% endif %}>{{ classes.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="m-r pull-left col-md-1">
+                        <select class="form-control m-b sticky select_search" id="groups">
+                            <option value="">{% trans 'x_all_roles' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ListModelConstant.User.Group'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+
+                    <div class="m-r pull-left col-md-1">
+                        <select class="form-control m-b sticky select_search" id="status">
+                            <option value="">{% trans 'x_status' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ListModelConstant.User.Status'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+
+                    <div class="m-r pull-left col-md-1">
+                        <select class="form-control m-b sticky select_search" id="online">
+                            <option value="">{% trans 'x_online_status' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ListModelConstant.User.Online'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b sticky" id="search"
+                               placeholder={% trans 'x_user_or_name' %} type="text">
+                        </input>
+                    </div>
+
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_x_person:user_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                        <a class="btn btn-success" style="margin-left: 2px" href="{% url 'cms_x_person:multi_users' %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_batch_import_user' %}
+                        </a>
+                        <button class="btn btn-primary" style="margin-left: 2px" data-toggle="modal" data-target="#batch_export_user">
+                            <i class="fa fa-plus"></i> {% trans 'x_batch_export_user' %}
+                        </button>
+                        <button class="btn btn-danger" style="margin-left: 2px"
+                                data-url="{% url 'cms_x_person:cms_api:user-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                        <button class="btn btn-primary" style="margin-left: 2px" data-field="is_active" data-value="1"
+                                data-url="{% url 'cms_x_person:cms_api:user-batch-active' %}"
+                                onclick="CALLBACK.batchSet(this);">
+                            <i class="fa fa-unlock-alt"></i> {% trans 'x_recovery' %}
+                        </button>
+                        <button class="btn btn-warning" style="margin-left: 2px" data-field="is_active" data-value="0"
+                                data-url="{% url 'cms_x_person:cms_api:user-batch-active' %}"
+                                onclick="CALLBACK.batchSet(this);">
+                            <i class="fa fa-lock"></i> {% trans 'x_disable' %}
+                        </button>
+                        <button class="btn btn-primary" style="margin-left: 2px" data-field="is_teacher" data-value="1"
+                                data-url="{% url 'cms_x_person:cms_api:user-batch-promote' %}"
+                                onclick="CALLBACK.batchSet(this);">
+                            <i class="fa fa-user-secret"></i> {% trans 'x_enhance_teacher' %}
+                        </button>
+                        <button class="btn btn-warning" style="margin-left: 2px" data-field="is_teacher" data-value="0"
+                                data-url="{% url 'cms_x_person:cms_api:user-batch-promote' %}"
+                                onclick="CALLBACK.batchSet(this);">
+                            <i class="fa fa-user"></i> {% trans 'x_down_student' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_x_person:cms_api:user-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="username" data-escape="true" data-sortable="true">{% trans 'x_user_name' %}</th>
+                <th data-field="first_name" data-escape="true" data-sortable="true">{% trans 'x_name_surname' %}</th>
+                <th data-field="id" data-formatter="orgFormatter">{% trans 'x_org' %}</th>
+                <th data-field="group_name" data-formatter="groupFormatter">{% trans 'x_role' %}</th>
+                <th data-field="experiment_time" data-formatter="secondTimeFormatter">{% trans 'x_experimental_time' %}</th>
+                <th data-field="attend_class_time" data-formatter="secondTimeFormatter">{% trans 'x_class_time' %}</th>
+                <th data-field="total_online_time" data-sortable="true" data-formatter="onlineTimeFormatter">{% trans 'x_total_online_time' %}</th>
+               {% comment %} <th data-field="is_active" data-formatter="activeFormatter">{% trans 'x_status' %}</th>{% endcomment %}
+                <th data-field="status" data-formatter="statusFormatter">{% trans 'x_status' %}</th>
+                <th data-field="online" data-formatter="onlineFormatter">{% trans 'x_online_status' %}</th>
+                <th data-field="last_login" data-formatter="bsTable.datetimeFormatter" data-sortable="true">{% trans 'x_last_login_time' %}</th>
+                <th data-field="last_login_ip">{% trans 'x_last_login_ip' %}</th>
+                <th data-field="id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade common-msg-modal" id="reset_password_modal" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="min-width: 500px;margin: 300px auto">
+            <div class="modal-content">
+                <form id="reset_password_form" action="" method="" class="form-horizontal">{% csrf_token %}
+                    <div class="modal-header">
+
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title">{% trans "x_reset_password" %}</h4>
+
+                        <div class="wrapper wrapper-content">
+                            <div class="row animated fadeInRight">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="form-group">
+                                            <label class="col-sm-4 control-label">{% trans "x_input_password"　 %}</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" align="middle" class="form-control"
+                                                       data-form-fixed="1"
+                                                       id="password" name="password">
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="col-sm-8 col-sm-offset-2">
+                                                    <div class="alert alert-danger server-error" id="server-error-password">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">{% trans 'x_cancel' %}</button>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_confirm' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {#导出用户弹框#}
+    <div class="modal fade" id="batch_export_user" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        {% trans 'x_batch_export_user' %}
+                    </h4>
+                </div>
+                <form id="export_user_form" action="{% url 'cms_x_person:cms_api:user-batch-export-users' %}" method="post"  >
+                {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="clearfix">
+                            <div class="pull-left col-lg-4 col-md-4 col-sm-4">
+                                <select class="form-control m-b" id="facultyName" name="facultyName" onchange="major_select_list()">
+                                    <option value="0" selected="selected">
+                                        {% trans "x_all" %}{{ ORGANIZATION.Second_level }}</option>
+                                    {% for faculty in faculty_list %}
+                                        <option value=
+                                                        {{ faculty.id }}{% if faculty.id == userinfo.faculty %}selected{% endif %}>{{ faculty.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <select class="form-control m-b" id="majorName" name="majorName" onchange="class_select_list()">
+                                    <option value="0" selected="selected">
+                                        {% trans "x_all" %}{{ ORGANIZATION.Third_level }}</option>
+                                    {% for faculty in major_list %}
+                                        <option value={{ faculty.id }} {% if faculty.id == userinfo.major %}selected{% endif %}>{{ faculty.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4">
+                                <select class="form-control m-b" id="classesName" name="classesName">
+                                    <option value="0" selected="selected">
+                                        {% trans "x_all" %}{{ ORGANIZATION.Fourth_level }}</option>
+                                    {% for classes in classes_list %}
+                                        <option value={{ classes.id }} {% if classes.id == userinfo.classes %}selected{% endif %}>{{ classes.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="text-center text-danger" style="font-size: 16px">
+                                <span id="user-export-error" style="display: none"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'x_cancel' %}
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="exportUser()">
+                            {% trans 'x_export' %}
+                        </button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <a href="" download="{% trans 'x_user_info' %}.xls" id="export_user" hidden="hidden"></a>
+
+    <div class="modal fade" id="recentActionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        <span class="current-user-name"></span> {% trans 'x_recent_operation' %}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" class="current-user-id" >
+                    <table id="recentActionTable"
+                           data-show-refresh="false"
+                           data-search="false"
+                           data-pagination="true"
+                           data-side-pagination="server"
+                           data-url="{% url 'cms_system_configuration:cms_api:user-action-list' %}"
+                    >
+                        <thead>
+                            <tr>
+                                <th data-field="content" data-escape="true">{% trans 'x_operation' %}</th>
+                                <th data-field="time" class="action-time" data-formatter="bsTable.datetimeFormatter">{% trans 'x_operation_time' %}</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block bottom_js %}
+    <script src="{% static_v 'x_person/cms/js/constants.js' %}"></script>
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_x_person:user_list' %}";
+        var auditUrl = "{% url 'cms_x_person:user_audit' 0 %}";
+        var major_list = "{% url 'cms_x_person:cms_api:major-list' %}";
+        var classes_list = "{% url 'cms_x_person:cms_api:classes-list' %}";
+        var is_school ={{ product_type }};
+    </script>
+    <script type="text/javascript">
+        var superuser = {{ superuser }};
+        var staff = {{ staff }};
+        pageWidgets.registerCheckTableRow($("#table"));
+        var table = bsTableClass($('#table'));
+        var CALLBACK = {
+            batchSet: function (btn) {
+                var ids = table.getCheckedValues();
+                if (ids.length == 0) {
+                    return;
+                }
+                var url = $(btn).attr('data-url');
+                var fieldname = $(btn).attr('data-field');
+                var value = $(btn).attr('data-value');
+                var data = {
+                    ids: ids,
+                };
+                data[fieldname] = value;
+                ajaxDialog.buttonClick(http.patch, url, data, function (res) {
+                    if (res) {
+                        if (res.error_code == 0) {
+                            swal({
+                                title: res.info,
+                                type: "info",
+                                confirmButtonText: "{% trans 'x_select_share_teacher' %}",
+                                confirmButtonColor: '#DD6B55'
+                            });
+                            return false
+                        }
+                    }
+                    table.reload();
+                });
+            },
+            majorlist: function () {
+                var facultyid = $("#faculty_name").val();
+                $("#major_name").empty();
+                $('#major_name').append("<option value=0 selected=selected>{% trans 'x_all' %}{{ ORGANIZATION.Third_level }}</option>");
+                http.get(major_list, {'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#major_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                })
+                CALLBACK.classlist()
+            },
+            classlist: function () {
+                var major_id = $("#major_name").val();
+                var facultyid = $("#faculty_name").val();
+                http.get(classes_list, {'major': major_id, 'faculty': facultyid}, function (data) {
+                    $("#classes_name").empty();
+                    $('#classes_name').append("<option value=0 selected=selected>{% trans "x_all" %}{{ ORGANIZATION.Fourth_level }}</option>");
+                    $.each(data.rows, function (n, value) {
+                        $('#classes_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                table.refresh();
+            }
+        };
+
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            onPostBody: function () {
+                var cnt = 0;
+                if (staff == 1 && superuser == 0) {//教员禁止删除教员和管理员
+                    $("td.th_checkall").each(function () {
+                        if ($.inArray($(this).nextAll().eq(5).text(), [gettext("x_administrator"), gettext("x_teacher")]) != -1) {   //函数用于在数组中搜索指定的值，并返回其索引值。如果数组中不存在该值，则返回 -1
+                            $(this).find('input').eq(0).attr('disabled', 'disabled');
+                            cnt += 1;
+                        }
+                    });
+                    if (cnt > 0) {
+                        $("th.th_checkall").each(function () {
+                            $(this).find('input').eq(0).attr('disabled', 'disabled');
+                        });
+                    }
+                    else {
+                        $("th.th_checkall").each(function () {
+                            $(this).find('input').eq(0).removeAttr('disabled');
+                        });
+                    }
+                }
+                else if (superuser == 1) {
+                    $("td.th_checkall").each(function () {
+                        if ($.inArray($(this).nextAll().eq(5).text(), [gettext("x_administrator")]) != -1) {
+                            $(this).find('input').eq(0).attr('disabled', 'disabled');
+                            cnt += 1;
+                        }
+                    });
+                    if (cnt > 0) {
+                        $("th.th_checkall").each(function () {
+                            $(this).find('input').eq(0).attr('disabled', 'disabled');
+                        });
+                    }
+                    else {
+                        $("th.th_checkall").each(function () {
+                            $(this).find('input').eq(0).removeAttr('disabled');
+                        });
+                    }
+                }
+            },
+            queryParams: function (params) {
+                params.faculty = $("#faculty_name").val();
+                params.major = $("#major_name").val();
+                params.classes = $("#classes_name").val();
+                params.groups = $("#groups").val();
+                params.status = $("#status").val();
+                params.online = $("#online").val();
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        function orgFormatter(value, row, index) {
+            if (!row.faculty_name) {
+                return '-';
+            }
+            var orgs = [row.faculty_name];
+            if (row.major_name) {
+                orgs.push(row.major_name);
+            }
+            if (row.classes_name) {
+                orgs.push(row.classes_name);
+            }
+            var data = '<span style="color: #f7a54a">' + orgs[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + orgs[1] + '</span>' + ' / ' + orgs[2];
+            return data;
+        }
+
+        function groupFormatter(value, row, index) {
+            return gettext(value);
+        }
+
+        function operatorFormatter(value, row, index) {
+            var btns = [];
+            var disable_button = "btn-primary";
+            var reset_button = "btn-warning";
+            var disable_click = 'get_password("' + value + '")';
+            var can_edit = {
+                type: 'link',
+                class: disable_button,
+                icon: 'fa-edit',
+                text: "{% trans 'x_edit' %}",
+                url: listUrl + value,
+            };
+
+
+            if (row.show_edit){
+                btns.push(can_edit)
+            }
+            btns.push({
+                    type: 'button',
+                    class: reset_button,
+                    icon: 'fa-edit',
+                    text: "{% trans 'x_reset_password' %}",
+                    click: disable_click,
+                });
+
+            if (row.status == StatusConstant.User.Status.NORMAL) {
+                btns.push({
+                    type: 'link',
+                    class: 'btn btn-primary',
+                    icon: 'fa-user',
+                    text: "{% trans 'x_audit' %}",
+                    url: auditUrl.replace(0, value)
+                })
+            }
+
+            if (row.group_name == "x_administrator" && staff == 1 && superuser == 0) {
+
+            }
+
+            btns.push({
+                type: 'btn',
+                class: 'btn btn-primary',
+                icon: 'fa-reorder',
+                text: "{% trans 'x_recent_operation' %}",
+                click: 'showRecentAction(' + value + ', "' + row.first_name + '")',
+            })
+            return bsTable.getOperatorHtml(btns);
+        }
+
+        function secondTimeFormatter(value, row, index) {
+            if (value) {
+                var day = Math.floor(value / (60 * 60 * 24));
+                var hour = Math.floor(value / (60 * 60)) - (day * 24);
+                var minute = Math.floor(value / 60) - (day * 24 * 60) - (hour * 60);
+                var second = Math.floor(value) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                var text = '';
+                if (day) {
+                    text = text + day + gettext('x_day')
+                }
+                if (hour) {
+                    text = text + hour + gettext('x_hour')
+                }
+                if (minute) {
+                    if (text.length > 1){
+                        text = text + minute + gettext('x_time_minute')
+                    }
+                    else {
+                        text = text + minute + gettext('x_minutes')
+                    }
+                }
+                return text
+            } else {
+                return '-';
+            }
+        }
+
+        function onlineTimeFormatter(value, row, index) {
+            if (value) {
+                var day = Math.floor(value / (60 * 60 * 24));
+                var hour = Math.floor(value / (60 * 60)) - (day * 24);
+                var minute = Math.floor(value / 60) - (day * 24 * 60) - (hour * 60);
+                var second = Math.floor(value) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                var text = '';
+                if (day) {
+                    text = text + day + gettext('x_day')
+                }
+                if (hour) {
+                    text = text + hour + gettext('x_hour')
+                }
+                if (minute) {
+                    if (text.length > 1){
+                        text = text + minute + gettext('x_time_minute')
+                    }
+                    else {
+                        text = text + minute + gettext('x_minutes')
+                    }
+                }
+                return text
+            } else {
+                return '-';
+            }
+        }
+
+        var recentActionTable;
+        function showRecentAction(userId, username) {
+            $('#recentActionModal .current-user-name').text(username);
+            $('#recentActionModal .current-user-id').val(userId);
+            if (recentActionTable) {
+                recentActionTable.refresh();
+            } else {
+                recentActionTable = bsTable.getTableModule($('#recentActionTable'));
+                $('#recentActionTable').bootstrapTable({
+                    ajaxOptions: {
+                        traditional: true
+                    },
+                    queryParams: function (params) {
+                        params.user = $("#recentActionModal .current-user-id").val();
+                        return params;
+                    },
+                });
+            }
+
+            $('#recentActionModal').modal('show');
+        }
+
+        var get_password = function (value) {
+            {#            $("[data-organization-name=device_sub_type_cn_name]").val("");#}
+
+            $("[name=password]").val(randomString(8)); //启用重置密码的8位数
+            {#            $("[name=password]").val('');#}
+            $('#server-error-password').html('').css('display', 'none');
+            $("#reset_password_modal").modal();
+            password_submit(value);
+            $("#reset_password_form").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {});
+            {#            p = randomString(8)#}
+            {#            $('#reset_password').val(p)#}
+        }
+        var randomString = function (len) {
+            len = len || 8;
+            /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+            var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
+            var maxPos = $chars.length;
+            var pwd = '';
+            for (i = 0; i < len; i++) {
+                pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+            }
+            return pwd;
+        }
+
+        var password_submit = function (value) {
+            {#            $("#device_type_form").attr("action", "{% url 'cms_course:api:direction-list' %}" + device_type_id + '/');#}
+            {#            $("#reset_password_form").attr("action", "{% url 'cms_x_person:cms_api:user-detail' value %}")#}
+            $("#reset_password_form").attr("action", "{% url 'cms_x_person:cms_api:user-list' %}" + value.toString() + '/');
+            $("#reset_password_form").attr("method", "patch");
+        }
+
+{% comment %}        function activeFormatter(value, row, index) {
+                        var text = value ? "{% trans '激活' %}" : "{% trans '禁用' %}";
+                        var iClass = value ? "fa-unlock-alt" : "fa-lock";
+                        return '<i class="fa ' + iClass + '" style="margin-right: 5px;"></i>' + text;
+            var text = value ? "{% trans 'x_status_normal' %}" : "<font color=\"red\">{% trans 'x_disable' %}</font>";
+                        var text = "<font color=\"red\">{% trans '禁用' %}</font>";
+            return text
+
+
+        }{% endcomment %}
+
+        function statusFormatter(value, row, index) {
+            if (row.status == StatusConstant.User.Status.REGISTER) {
+                var text = "<span class='text-warning'>{% trans 'x_new_user' %}</span>";
+            } else if (row.status == StatusConstant.User.Status.NORMAL) {
+                var text = "<span class='text-warning'>{% trans 'x_status_normal' %}</span>";
+            } else if (row.status == StatusConstant.User.Status.EXPIRED) {
+                var text = "<span class='text-warning'>{% trans 'x_status_expired' %}</span>";
+            } else  if (row.status == StatusConstant.User.Status.Disabled) {
+                var text = "<span class='text-danger'>{% trans 'x_disable' %}</span>";
+            } else {
+                var text = "<span class='text-success' style='color: #1ab394;'>{% trans 'x_status_normal' %}</span>";
+            }
+
+            return text
+        }
+
+        function onlineFormatter(value, row, index) {
+            if (value == ModelConstant.User.Online.OFFLINE) {
+                var text = "<span class='text-default' style='color: #999;'>{% trans 'x_offline' %}</span>";
+            } else if (value == ModelConstant.User.Online.ONLINE) {
+                var text = "<span class='text-success' style='color: #1ab394;'>{% trans 'x_online' %}</span>";
+            } else {
+                var text = "<span class='text-danger'>{% trans 'x_abnormal' %}</span>";
+            }
+            return text;
+        }
+    </script>
+    <script type="text/javascript">
+        function exportUser() {
+            $.ajax({
+                url: "{% url 'cms_x_person:cms_api:user-batch-export-users' %}",
+                data: {
+                    faculty_id: $("#facultyName option:selected").val(),
+                    major_id: $("#majorName option:selected").val(),
+                    classes_id: $("#classesName option:selected").val(),
+                },
+                type: "post",
+                datatype: "json",
+                success: function (res) {
+                    if (res.info == 'success') {
+                        $("#user-export-error").empty();
+                        $('#export_user').attr("href", res.url);
+                        document.getElementById("export_user").click();
+                    }else {
+                        $("#user-export-error").empty();
+                        $("#user-export-error").text(res.error);
+                        $("#user-export-error").show();
+                    };
+                }
+            })
+        };
+
+        var major_select_list = function () {
+                var facultyid = $("#facultyName").val();
+                $("#majorName").empty();
+                $('#majorName').append("<option value=0 selected=selected>{% trans "x_all" %}{{ ORGANIZATION.Third_level }}</option>");
+                http.get(major_list, {'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#majorName').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                class_select_list()
+            };
+        var class_select_list = function () {
+                var major_id = $("#majorName").val();
+                var facultyid = $("#facultyName").val();
+                $("#classesName").empty();
+                $('#classesName').append("<option value=0 selected=selected>{% trans "x_all" %}{{ ORGANIZATION.Fourth_level }}</option>");
+                http.get(classes_list, {'major': major_id, 'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#classesName').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                // table.refresh();
+            }
+    </script>
+{% endblock %}

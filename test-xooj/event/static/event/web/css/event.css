@@ -1,0 +1,49 @@
+/*
+* @Author: Marte
+* @Date:   2017-06-23 13:07:55
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-06-23 14:28:12
+*/
+.oj_competitionBtn{
+    transition:.4s;
+}
+.oj_competitionBtn:hover{
+    border-radius:50px;
+}
+.oj_label{
+    width:124px;
+    height:30px;
+    position:absolute;
+    right:0;
+    top:0;
+    text-align:center;
+    line-height:30px;
+    font-size:14px;
+    font-weight:bold;
+}
+.finish .oj_label{
+    background:url(../img/hui2.png) no-repeat;
+    background-size:100% 100%;
+}
+.ing .oj_label{
+    background:url(../img/blue1.png) no-repeat;
+    background-size:100% 100%;
+}
+.future .oj_label{
+    background:url(../img/yellow3.png) no-repeat;
+    background-size:100% 100%;
+}
+.exam .oj_label{
+    background:url(../img/red1.png) no-repeat;
+    background-size:100% 100%;
+}
+.md-editor > textarea{
+    background:none;
+}
+.md-editor > textarea:focus{
+    background:none;
+}
+.md-editor > .md-preview{
+    background:#16212e;
+    color:white;
+}

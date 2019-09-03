@@ -1,0 +1,1225 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    <a href="{% url 'cms_practice_capability:testpaper' %}">{% trans 'x_self_test_paper_library' %}</a>>
+    {% if mode == 0 %}
+        {% trans 'x_add_test_paper' %}
+    {% else %}
+        {% trans 'x_edit_test_paper' %}
+    {% endif %}
+{% endblock %}
+{% load staticfiles %}
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+
+    <script src="{% static 'lib/hplus/js/jquery-ui-1.10.4.min.js' %}"></script>
+
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+    <script src="{% static_v "practice_theory/cms/js/constants.js" %}"></script>
+    <script src="{% static 'lib/layer/layer.js' %}"></script>
+    <style>
+        ol {
+            list-style-position: inside;
+            counter-reset: sectioncounter;
+        }
+
+        ol li:before {
+            content: counter(sectioncounter) "、";
+            counter-increment: sectioncounter;
+        }
+
+        .sortable-list {
+            padding: 10px 0 15px 0;
+        }
+
+        .border-all {
+            border: 1px solid #d6d8d9 !important;
+        }
+
+        .message {
+            border: none;
+            padding: 10px 0 10px 20px;
+        }
+
+        .mrg10T {
+            margin-top: 10px;
+        }
+
+        .pad5A {
+            padding: 5px;
+        }
+
+        .score {
+            width: 40px;
+            line-height: 20px;
+            height: 20px;
+            font-size: 12px;
+        }
+
+        .questions {
+            display: inline-block;
+            width: 96%;
+        }
+
+        div.scroll {
+            height: 600px;
+            width: 100%;
+            overflow: auto;
+        {#border: 1px solid #dfdfdf;#}{#background-color: #ccc;#} padding: 8px;
+        }
+
+        .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+            {#width: auto;#}
+            margin-right: 15px;
+        }
+
+        .pull-left {
+            float: left;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .no-padding-left{
+            padding-left: 0!important;
+        }
+        .check{
+            border: 1px solid red !important;
+        }
+
+        input[name="event_name_num"],
+        input[name="event_name_score"] {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border-radius: 4px;
+            color: inherit;
+            background: #fff;
+            border: 1px solid #e7eaec;
+        }
+        .form-group{
+            margin-bottom: 20px;
+        }
+
+  .fixed-table-pagination .pagination-detail, .fixed-table-pagination div.pagination{
+      margin-top: 20px;
+  }
+    div.scroll{
+        height:690px;
+    }
+    .ibox-content{
+            padding: 13px 20px 0px;
+    }
+    #submitbtn{
+        background-color: #1ab394;
+        color: #fff;
+    }
+    .float-e-margins .btn{
+        margin-bottom: -4px;
+    }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content clearfix">
+        <div style="width: 47%;float: left;margin-left: 10px;margin-top: 10px">
+               <form id="examform" target="form-target">
+                                    <div class="clearfix">
+                                        <label class="col-sm-2 control-label" style="margin-top: 6px;padding-left: 0">{% trans 'x_test_paper_name' %}</label>
+                                        <div class="col-sm-10 col-md-10 col-lg-10">
+                                            <input type="text" class="form-control border-all text-center"
+                                                   id="examname"
+                                                   name="examname"
+                                                   placeholder="{% trans 'x_enter_name_testpaper' %}"
+                                                   value="{{ name }}"/>
+                                        </div>
+                                        <div style="padding-top:1px;font-size:25px;margin-bottom: 10px">
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <div class="clearfix" style="margin: 20px 0px">
+                                    <label class="col-sm-2 control-label" style="margin-top: 10px;padding-left: 0">{% trans 'x_introduction' %}</label>
+                                    <div class="col-sm-10 col-md-10 col-lg-10">
+                                            <textarea class="border-all" style="width: 100%"
+                                                      placeholder="{% trans 'x_testpaper_description' %}"
+                                                      id="examDescription"
+                                                      name="examDescription">{{ description |default_if_none:"" }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="clearfix mrg10T mrg10B " style="margin-bottom: -10px" >
+                                    <label class="col-sm-2 control-label" style="padding-left: 0">Logo</label>
+                                    <div class="col-sm-4">
+                                        <div class="image_upload_widget">
+                                            <div>
+                                                <div class="btn btn-primary btn_image_upload image_upload"
+                                                     id="logo">
+                                                    {% trans 'x_select_pic' %}
+                                                    <input type="text" class="form-control image_upload hidden"
+                                                           name="logo"
+                                                           accept="image/gif,image/jpeg,image/png,image/bmp"/>
+                                                </div>
+                                            </div>
+                                            <a href="{% if logo_url %}{{ logo_url }}{% endif %}"
+                                               class="image_show"
+                                               name="logo"
+                                               data-gallery=""><img
+                                                    {% if logo_url %}src="{{ logo_url }}"{% endif %}></a>
+                                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                                <div class="slides"></div>
+                                                <h3 class="title"></h3>
+                                                <a class="prev"><</a>
+                                                <a class="next">></a>
+                                                <a class="close">×</a>
+                                                <a class="play-pause"></a>
+                                                <ol class="indicator"></ol>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+            <div id="tableToolbar">
+                <div class="form-group">
+                    <div class="col-md-2 no-padding-left">
+                        <select class="form-control m-b" id="source_question" onchange="CALLBACK.select_source()">
+                            <option value="1">{% trans "x_practice_library" %}</option>
+                            <option value="2">{% trans "x_lesson_exercises" %}</option>
+                            {#                            <option value="3">{% trans "人机攻防" %}</option>#}
+                        </select>
+                    </div>
+                    <div class="col-md-2 no-padding-left" >
+                        <select class="form-control m-b" id="course_list">
+                            <option selected="selected">{% trans "x_bank_name" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 no-padding-left hidden" id="third_list">
+                        <select class="form-control m-b sticky select_search" id="lesson_id" name="lesson_name_value" data-width="150px" data-size="6"><option value=0>{% trans "x_please_select_lessons" %}</option></select>
+                    </div>
+                    <div class="col-md-2 no-padding-left" >
+                        <select class="form-control m-b sticky select_search" id="category_list">
+                            <option value="" selected="selected">{% trans "x_all_category" %}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 col-sm-2 no-padding-left">
+                        <select class="form-control m-b sticky select_search" id="question_type_list">
+                            <option value="" selected="selected">{% trans "x_question_type" %}</option>
+                            <option value='0'>{% trans "x_single_choice" %}</option>
+                            <option value='1'>{% trans "x_multiple_choice" %}</option>
+                            <option value='2'>{% trans "x_judgment_problem" %}</option>
+                            <option value='3'>{% trans "x_operation_problem" %}</option>
+
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-2 no-padding-left">
+                        <input class="form-control m-b" id="title_list" placeholder="{% trans 'x_task_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2 no-padding-left" >
+                        <a class="btn btn-primary" id="table_refresh" style="margin-bottom: 10px" onclick="table.refresh();">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div style="width: 101%;">
+                    <div class="form-group clearfix">
+                            <div class="input-group col-lg-4 col-md-5 col-sm-5 pull-left" style="margin-right: 30px;">
+                                <div class="input-group-addon">{% trans "x_random_import" %}</div>
+                                <input class="form-control"  value="1" name="event_name_num" required="required" min="1" type="number">
+                                <div class="input-group-addon">{% trans "x_questions" %}</div>
+                            </div>
+
+                            <div class="input-group col-lg-4 col-md-5 col-sm-5 pull-left"  style="margin-right: 14px;">
+                                <div class="input-group-addon">{% trans "x_each_question" %}</div>
+                                <input class="form-control"  name="event_name_score"   value="1" type="number" step="0.5" min="0" required="required">
+                                <div class="input-group-addon">{% trans "x_score" %}</div>
+                            </div>
+                        <input type="button" class="btn btn-primary " value="{% trans 'x_import' %}"
+                               name="generate_testpaper"
+                               style="" onclick="CALLBACK.generate_testpaper()">
+                    </div>
+                </div>
+
+            </div>
+
+            <table id="table"
+                   data-toggle="table"
+                   data-toolbar="#tableToolbar"
+                   data-toolbar-align="center"
+                   data-show-refresh="false"
+                   data-search="false"
+                   data-pagination="true"
+                   data-checkbox="true"
+                   data-click-to-select="true"
+                   data-side-pagination="server"
+                   data-url="{% url 'cms_practice_theory:cms_api:choice-task-list' %}"
+            >
+                <thead>
+                <tr>
+                    <th class="bs-checkbox" data-checkbox="true" data-formatter="operatorFormatter"></th>
+                    <th data-field="title_dsc" data-formatter="titleFormatter" data-escape="true">{% trans "x_name" %}</th>
+                    <th data-field="category_name" data-escape="true">{% trans "x_question_direction" %}</th>
+                    <th data-field="question_type" data-escape="true">{% trans "x_question_type" %}</th>
+                    {#                    <th data-field="event_name" data-escape="true">{% trans "x_owned_question" %}</th>#}
+                    {#                    <th data-field="score">{% trans "x_score" %}</th>#}
+                    {#                    <th data-field="is_dynamic_env" data-formatter="table.boolFormatter">{% trans "x_dynamic_scenes" %}</th>#}
+                </tr>
+                </thead>
+            </table>
+            </div>
+        <div style="width: 48%;float: left;margin-left:3%;margin-top: -15px">
+            <div id="app_paper" v-cloak> {% comment %}vue主体{% endcomment %}
+                <div class="mail-content" id="mail-content">
+
+                    <div class="message" style="min-height: 500px">
+                            <div class="mrg10T" style="padding-left: 10px;"><b>{% trans 'x_total_score' %}: <span
+                                        id="allSocre" style="color: #0d141a">0</span> {% trans 'x_fraction_score' %}</b>
+                                </div>
+                        <div class="content" id="examcontent" tabindex="5002"
+                             style="overflow: hidden; outline: none;">
+                            <div class="form-group">
+
+                                <div class="scroll">
+                                    <div class="mrg10T ">
+                                        <div class="border-all pad5A"><b>{% trans "x_first" %}{% trans 'x_judgment_problem' %}</b>
+                                            ({% trans 'x_alls' %} [[ judgment_questions.length ]]
+                                            {% trans 'x_question_all' %}
+                                            [[getAllScore(judgment_questions)]] {% trans 'x_fraction_score' %})
+                                        </div>
+                                        <ol class="sortable-list  agile-list" id="judgment">
+                                            <li class="border-all"
+                                                v-for="analysis_question, index in judgment_questions"
+                                                :data-index="index">
+                                                <div class="clearfix questions">
+                                                    {#                                                    <span>[[ index +1 ]].</span>#}
+                                                    <span style="display: inline-block;vertical-align: text-top;">[[ analysis_question.title ]]</span>
+                                                    <span class="pull-right">{% trans 'x_this_task' %}
+                                                        <input class="score" maxlength=4
+                                                               style="ime-mode:disabled;"
+                                                                {#                                                               onkeyup="value=value.replace('/^0/g','')"#}
+                                                               v-model="analysis_question.score">PT</span>
+                                                </div>
+                                                <div v-html="marked(analysis_question.content)"></div>
+                                                <div class="text-right mrg10T">
+                                                    <span class="fa fa-arrows" style="margin:0px 10px;"></span>
+                                                    <span class="glyphicon glyphicon-trash"
+                                                          @click="remove_question(index, 'judgment')"></span>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    <div class="mrg10T">
+                                        <div class="border-all pad5A"><b>{% trans 'x_two' %}{% trans 'x_single_choice' %}</b>
+                                            ({% trans 'x_alls' %} [[ single_questions.length
+                                            ]] {% trans 'x_question_all' %}
+                                            [[getAllScore(single_questions)]] {% trans 'x_fraction_score' %})
+                                        </div>
+                                        <ol class="sortable-list agile-list" id="single">
+                                            <li class="border-all"
+                                                v-for="single_question, index in single_questions" :key="index"
+                                                :data-index="index">
+                                                <div class="questions clearfix">
+                                                    {#                                                    <span>[[ index +1 ]].</span>#}
+                                                    <span style="display: inline-block;vertical-align: text-top;"
+                                                          v-html="marked(single_question.content)"></span>
+                                                    <span class="pull-right">{% trans 'x_this_task' %}
+                                                        <input class="score" maxlength=4
+                                                               style="ime-mode:disabled;"
+                                                               v-model="single_question.score">PT</span>
+                                                </div>
+                                                <div v-for="value, key, index in single_question.options_dsc">
+                                                    <span style="display: inline-block;">[[ key ]]. </span><span
+                                                        style="display: inline-block;"
+                                                        v-html="marked(value)"></span>
+                                                </div>
+                                                <div class="text-right">
+                                                    <span class="fa fa-arrows" style="margin:0px 10px;"></span>
+                                                    <span class="glyphicon glyphicon-trash"
+                                                          @click="remove_question(index, 'single')"></span>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    <div class="mrg10T">
+                                        <div class="border-all pad5A"><b>{% trans 'x_three' %}{% trans 'x_multiple_choice' %}</b>
+                                            ({% trans 'x_alls' %} [[ multiple_questions.length
+                                            ]] {% trans 'x_question_all' %}
+                                            [[getAllScore(multiple_questions)]] {% trans 'x_fraction_score' %})
+                                        </div>
+                                        <ol class="sortable-list  agile-list" id="multiple">
+                                            <li class="border-all"
+                                                v-for="multiple_question, index in multiple_questions"
+                                                :data-index="index">
+                                                <div class="questions clearfix">
+                                                    {#                                                    <span>[[ index +1 ]].</span>#}
+                                                    <span style="display: inline-block;vertical-align: text-top;"
+                                                          v-html="marked(multiple_question.content)"></span>
+                                                    <span class="pull-right">{% trans 'x_this_task' %}
+                                                        <input class="score" maxlength=4
+                                                               style="ime-mode:disabled;"
+                                                                {#                                                               onkeyup="value=value.replace('/^0/g','')"#}
+                                                               v-model="multiple_question.score">PT</span>
+                                                </div>
+                                                <div v-for="value, key, index in multiple_question.options_dsc">
+                                                    <span style="display: inline-block;">[[ key ]]. </span><span
+                                                        style="display: inline-block;"
+                                                        v-html="marked(value)"></span>
+                                                </div>
+                                                <div class="text-right">
+                                                    <span class="fa fa-arrows" style="margin:0px 10px;"></span>
+                                                    <span class="glyphicon glyphicon-trash"
+                                                          @click="remove_question(index, 'multiple')"></span>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+                                    <div class="mrg10T">
+                                        <div class="border-all pad5A"><b>{% trans 'x_four' %}{% trans 'x_operation_problem' %}</b>
+                                            ({% trans 'x_alls' %} [[ analysis_questions.length ]]
+                                            {% trans 'x_question_all' %}
+                                            [[getAllScore(analysis_questions)]] {% trans 'x_fraction_score' %})
+                                        </div>
+                                        <ol class="sortable-list  agile-list" id="analysis">
+                                            <li class="border-all"
+                                                v-for="analysis_question, index in analysis_questions"
+                                                :data-index="index">
+                                                <div class="clearfix questions">
+                                                    {#                                                    <span>[[ index +1 ]].</span>#}
+                                                    <span style="display: inline-block;vertical-align: text-top;">[[ analysis_question.title ]]</span>
+                                                    <span class="pull-right">{% trans 'x_this_task' %}
+                                                        <input class="score" maxlength=4
+                                                               style="ime-mode:disabled;"
+                                                                {#                                                               onkeyup="value=value.replace('/^0/g','')"#}
+                                                               v-model="analysis_question.score">PT</span>
+                                                </div>
+                                                <div v-html="marked(analysis_question.content)"></div>
+                                                <div class="text-right mrg10T">
+                                                    <span class="fa fa-arrows" style="margin:0px 10px;"></span>
+                                                    <span class="glyphicon glyphicon-trash"
+                                                          @click="remove_question(index, 'analysis')"></span>
+                                                </div>
+                                            </li>
+                                        </ol>
+                                    </div>
+
+                                </div>
+
+                                <div align="center">
+                                    <button id="submitbtn" type="button" v-on:click="submit_paper()"
+                                            class="btn btn-greensea">{% trans "x_save" %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+
+
+        var category_url = "{% url 'cms_practice:practice_categories' 0 %}";
+        var returnUrl = "{% url 'cms_practice_capability:testpaper' %}";
+
+        var lesson_category_url = '{% url "cms_practice_capability:api:test-paper-lesson-categories" %}';
+
+        var theory_task_url = "{% url 'cms_practice_theory:cms_api:choice-task-list' %}";
+        var real_vuln_task_url = "{% url 'cms_practice_real_vuln:cms_api:real-vuln-task-list' %}";
+        var exercise_task_url = "{% url 'cms_practice_exercise:cms_api:practice-exercise-task-list' %}";
+        var attack_defense_url = "{% url 'cms_practice_attack_defense:cms_api:practice-attack-defense-task-list' %}";
+        {#var infiltrstion_url = "{% url 'cms_practice_infiltration:cms_api:practice-infiltration-task-list' %}";#}
+
+        var handler_exam_url = '{% url "cms_practice_capability:handler_task_list" testpaper_id %}';
+
+        var home_work_url = '{% url "cms_practice_capability:api:test-paper-get-homework" %}';
+
+        var mode = "{{ mode }}";
+        var generate_testpaper_url = "{% url 'cms_practice_theory:cms_api:choice-task-generate-testpaper' %}";
+
+        var event_list = "{% url 'cms_practice:cms_api:task-event-list' %}";
+
+        var course_list = "{% url 'cms_course:api:course-list' %}";
+
+        var lesson_list = "{% url 'cms_course:api:lesson-list' %}";
+
+        var questionIdArray = new Array();
+        $.ajax({
+            url: handler_exam_url,
+            datatype: "json",
+            method: "GET",
+            async: false,
+            success: function (res) {
+                for (var i = 0; i < res.length; i++) {
+                    if (res[i].hasOwnProperty('multiple')) {
+                        questionIdArray[i] = res[i].content;
+                    } else {
+                        questionIdArray[i] = res[i].title;
+                    }
+                }
+            }
+        });
+
+        function operatorFormatter(value, row, index) {
+            if (row.hasOwnProperty('multiple')) {
+                if (questionIdArray.indexOf(row.content) != -1) {
+                    return {
+                        checked: true
+                    }
+                }
+            } else {
+                if (questionIdArray.indexOf(row.title) != -1) {
+                    return {
+                        checked: true
+                    }
+                }
+            };
+
+            return '<input id="task' + index + '" name="checkTask" taskid=' + row.hash
+                + ' type="checkbox" value="0" hidden>';
+        }
+
+        function titleFormatter(value, row, index) {
+            var nameString = "";
+            if (value.length > 20) {
+                nameString = value.substring(0, 20) + '...';
+            } else {
+                nameString = value;
+            }
+            return [
+                '<span id="thread"  data-toggle="tooltip" title="' + value.replace('\n', '').replace(/\\/g,'') + '">' + nameString + '</span>',
+            ].join('');
+        };
+
+        var table = bsTableClass($('#table'));
+        $("#table").bootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {//设置查询参数
+                params.is_copy = 0;
+                params.source_question = $("#source_question").val(); //来源
+                params.event = $("#course_list").val(); //课程id or 习题集id
+                params.lesson = $("#lesson_id").val(); //课时
+                params.category = $("#category_list").val(); //全部方向
+                params.question_type_list = $("#question_type_list").val(); //题目类型(单选，判断， 多选，操作)
+
+                params.public_statue = $("#public_statue").val();
+                params.search = $("#title_list").val();
+                return params;
+            },
+            onLoadSuccess: function (data) {
+                // 隐藏头部复选框
+                $("input[name='btSelectAll']:checkbox").hide();
+            }
+
+        });
+
+        $("#title_list").keydown(function (e) {
+            if (e.keyCode == 13) {
+                table.refresh();
+            }
+        });
+
+        $(function () {
+            $(".image_upload_widget").bindLocalCropImgUpload({aspectRatio: 7 / 4});
+            $(".image_upload_widget").bindLocalImgUpload();
+            // 初始化表格数据
+            CALLBACK.init_model_select(category_url, 1, 0);
+
+            if (mode == "1") {
+                CALLBACK.init_exam_data();
+            }
+
+            $("#course_list").change(function () { //题库名称
+                var course_id = Number($(this).val());
+                var source_type = Number($("#source_question").val());  //题目来源id
+
+                if (source_type == 2){ //如果是课后练习
+                    CALLBACK.get_lesson(course_id);
+                    $("#question_type_list").empty();
+                    $("#question_type_list").append('<option value="" selected="selected">{% trans "x_question_type" %}</option>\n' +
+                        '                            <option value="0">{% trans "x_single_choice" %}</option>\n' +
+                        '                            <option value="1">{% trans "x_multiple_choice" %}</option>\n' +
+                        '                            <option value="2">{% trans "x_judgment_problem" %}</option>\n' +
+                        '                            <option value="3">{% trans "x_operation_problem" %}</option>')
+                }
+                else {
+                    //获取选中习题集的类别（真实漏洞，理论基础...)
+                    var event_type_id = document.getElementById('type'+course_id);
+                    var event_type = event_type_id.dataset.event_type;
+
+                    if (event_type == 0) {
+                        CALLBACK.init_model_category(category_url, 0);
+                        CALLBACK.init_model_table(theory_task_url);
+                        $("#question_type_list").empty();
+                        $("#question_type_list").append('<option value="" selected="selected">{% trans "x_question_type" %}</option>\n' +
+                            '                            <option value="0">{% trans "x_single_choice" %}</option>\n' +
+                            '                            <option value="1">{% trans "x_multiple_choice" %}</option>\n' +
+                            '                            <option value="2">{% trans "x_judgment_problem" %}</option>')
+
+                    } else if (event_type == 1) {
+                        CALLBACK.init_model_category(category_url, 1);
+                        CALLBACK.init_model_table(real_vuln_task_url);
+                    } else if (event_type == 2) {
+                        CALLBACK.init_model_category(category_url, 2);
+                        CALLBACK.init_model_table(exercise_task_url);
+                        $("#question_type_list").empty();
+                        $("#question_type_list").append('<option value="" selected="selected">{% trans "x_question_type" %}</option>\n' +
+                            '                            <option value="3">{% trans "x_operation_problem" %}</option>')
+                    }else if (event_type == 4){
+                        CALLBACK.init_model_category(category_url, 4);
+                        CALLBACK.init_model_table(attack_defense_url);
+                    }
+                    {% comment %}else if (event_type == 5){
+                        CALLBACK.init_model_category(category_url, 5);
+                        CALLBACK.init_model_table(infiltrstion_url)
+                    }{% endcomment %}
+                }
+            });
+            $("#lesson_id").change(function () {
+                var lesson_id = $(this).val();
+                if (lesson_id != 0) {
+                    CALLBACK.init_lesson_category(lesson_category_url, lesson_id);
+                    CALLBACK.init_model_table(home_work_url);
+                }
+            });
+            $("#examform").mvalidate(validateDic);
+            $(document).ready(function () {
+                $(".sortable-list").sortable(sortableDic).disableSelection()
+            });
+        });
+
+        // 添加选中题目
+        $('#table').on('check.bs.table', function (e, row, element) {
+            CALLBACK.addExamData(row, app.single_questions, app.multiple_questions, app.judgment_questions, app.analysis_questions, 'add');
+            if (row.hasOwnProperty('multiple')) {
+                questionIdArray[questionIdArray.length] = row.content;
+            } else {
+                questionIdArray[questionIdArray.length] = row.title;
+            }
+        });
+        // 取消选中题目
+        $('#table').on('uncheck.bs.table', function (e, row, element) {
+            var questionsType = row.hash.indexOf(".0");
+            if (questionsType > 0) {
+                var is_multiple_choice = row.multiple;
+                if (is_multiple_choice == 1) {
+                    CALLBACK.deleteAppQuestion(app.multiple_questions, row)
+                } else if(is_multiple_choice == 0)  {
+                    CALLBACK.deleteAppQuestion(app.single_questions, row)
+                }else if(is_multiple_choice == 2){
+                    CALLBACK.deleteAppQuestion(app.judgment_questions, row)
+                }
+            } else {
+                CALLBACK.deleteAppQuestion(app.analysis_questions, row)
+            }
+            if (row.hasOwnProperty('multiple')) {
+                questionIdArray.splice(questionIdArray.indexOf(row.content), 1);
+            } else {
+                questionIdArray.splice(questionIdArray.indexOf(row.title), 1);
+            }
+        });
+
+        var app = new Vue({
+            el: '#app_paper',
+            delimiters: ['[[', ']]'],
+            data: {
+                single_questions: [],
+                multiple_questions: [],
+                analysis_questions: [],
+                judgment_questions:[]
+            },
+            methods: {
+                getAllScore: function (data) {
+                    var score = 0;
+                    for (var i = 0; i < data.length; i++) {
+                        {#data[i].score = parseFloat(data[i].score.toString());#}
+                        if (isNaN(data[i].score) || data[i].score.toString() === '') {
+                            data[i].score = 0
+                        }
+                        if (data[i].score.length > 1) {
+                            if (/^0[0-9]/.test(data[i].score)) {
+                                data[i].score = parseFloat(data[i].score.slice(1))
+                            }
+                            {% comment %}if (data[i].score.indexOf(".") !== -1){
+                                data[i].score  = parseFloat(data[i].score.replace(/'\.*'/, '.5'))
+                            }{% endcomment %}
+                        }
+                        score += Number(data[i].score)
+                    }
+                    return score
+                },
+                submit_paper: function () {
+                    CALLBACK.submitPaper()
+                },
+                remove_question: function (evt, type) {
+                    if (type == 'single') {
+
+                        questionIdArray.splice(questionIdArray.indexOf(app.single_questions[evt].content), 1);
+                        deleteChecked(app.single_questions[evt].content);
+
+                        app.single_questions.splice(evt, 1)
+                    } else if (type == 'multiple') {
+
+                        questionIdArray.splice(questionIdArray.indexOf(app.multiple_questions[evt].content), 1);
+                        deleteChecked(app.multiple_questions[evt].content);
+
+                        app.multiple_questions.splice(evt, 1)
+                    } else if (type == 'analysis') {
+
+                        questionIdArray.splice(questionIdArray.indexOf(app.analysis_questions[evt].title), 1);
+                        deleteChecked(app.analysis_questions[evt].title);
+
+                        app.analysis_questions.splice(evt, 1)
+                    }else if (type == 'judgment'){
+
+                        questionIdArray.splice(questionIdArray.indexOf(app.judgment_questions[evt].content), 1);
+                        deleteChecked(app.judgment_questions[evt].content);
+
+                        app.judgment_questions.splice(evt, 1)
+                    }
+                }
+            },
+            filters: {
+                getMarked: function (value) {
+                    return marked(value)
+                },
+                default_if_none: function (value) {
+                    if (value == '0') {
+                        value = 0;
+                    }
+                    return value
+                }
+            },
+        });
+
+        app.$watch('single_questions', function () {
+            // 监控数据变化，重新注册使用jquery ui
+            $(document).ready(function () {
+                $(".sortable-list").sortable(sortableDic).disableSelection()
+            });
+            CALLBACK.watchAllScore();
+
+        }, {deep: true});
+        app.$watch('multiple_questions', function () {
+            // 监控数据变化，重新注册使用jquery ui
+            $(document).ready(function () {
+                $(".sortable-list").sortable(sortableDic).disableSelection()
+            });
+            CALLBACK.watchAllScore();
+
+        }, {deep: true});
+        app.$watch('analysis_questions', function () {
+            // 监控数据变化，重新注册使用jquery ui
+            $(document).ready(function () {
+                $(".sortable-list").sortable(sortableDic).disableSelection()
+            });
+            CALLBACK.watchAllScore();
+
+        }, {deep: true});
+        app.$watch('judgment_questions', function () {
+            // 监控数据变化，重新注册使用jquery ui
+            $(document).ready(function () {
+                $(".sortable-list").sortable(sortableDic).disableSelection()
+            });
+            CALLBACK.watchAllScore();
+
+        }, {deep: true});
+
+        function event_options(callback) {
+            http.get(event_list, {}, function (res) {
+                var event_options = '<option value= "">{% trans 'x_select_set' %}</option>';
+                $.each(res.rows, function (i, event) {
+                    if (event.type == 0 || event.type == 2){
+                       event_options += '<option data-event_type = "' + event.type + '" value = "' + event.id + '" id="type' + event.id + '">' +  codeUtil.htmlEncode(event.name) + '</option>';
+                    }
+                });
+                if (callback) {
+                    callback(event_options);
+                }
+            });
+        }
+
+        function course_options(callback) {
+            http.get(course_list, {}, function (res) {
+                var course_options = '<option value = "">' + gettext("x_please_select_course") + '</option>';
+                $.each(res.rows, function (i, course) {
+                    course_options += '<option value = "' + course.id + '"> ' + course.name + '</option>';
+                });
+                if (callback) {
+                    callback(course_options);
+                }
+            });
+        }
+
+        var CALLBACK = {
+            init_model_select: function (category_url, select_type, type_id) {
+                // 更新selectToorbar的数据
+                $("#course_list").empty(); //题库名称
+                $("#category_list").empty(); //题目方向
+
+                $.ajax({
+                    url: category_url.replace("0", type_id),
+                    type: "get",
+                    datatype: "json",
+                    data: {"type_id": type_id},
+                    success: function (data) {
+                        var categorys = data.data;
+                        $("#category_list").append("<option value='' selected='selected'>{% trans "x_question_direction" %}</option>");
+                        for (var i in categorys) {
+                            {% if LANGUAGE_CODE == 'zh-hans' %}
+                                $("#category_list").append("<option value='" + categorys[i].id + "'>" + codeUtil.htmlEncode(categorys[i].cn_name) + "</option>");
+                            {% else %}
+                                $("#category_list").append("<option value='" + categorys[i].id + "'>" + codeUtil.htmlEncode(categorys[i].en_name) + "</option>");
+                            {% endif %}
+                        }
+                    }
+                });
+
+                if (select_type == 1) {
+                    event_options(function (event_options) {
+                        $("#course_list").append(event_options);
+
+                    });
+                }
+                else if (select_type == 2){
+                    course_options(function (course_options) {
+                        $("#course_list").append(course_options)
+                    })
+                }
+
+            },
+            init_model_category:function (category_url, type_id) {
+                $("#category_list").empty(); //题目方向
+
+                $.ajax({
+                    url: category_url.replace("0", type_id),
+                    type: "get",
+                    datatype: "json",
+                    data: {"type_id": type_id},
+                    success: function (data) {
+                        var categorys = data.data;
+                        $("#category_list").append("<option value='' selected='selected'>{% trans "x_question_direction" %}</option>");
+                        for (var i in categorys) {
+                            {% if LANGUAGE_CODE == 'zh-hans' %}
+                                $("#category_list").append("<option value='" + categorys[i].id + "'>" + codeUtil.htmlEncode(categorys[i].cn_name) + "</option>");
+                            {% else %}
+                                $("#category_list").append("<option value='" + categorys[i].id + "'>" + codeUtil.htmlEncode(categorys[i].en_name) + "</option>");
+                            {% endif %}
+                        }
+                    }
+                });
+            },
+            init_lesson_category: function (category_url, lesson_id) {
+               $("#category_list").empty(); //题目方向
+               $.ajax({
+                    url: category_url,
+                    type: "get",
+                    datatype: "json",
+                    data: {"lesson_id": lesson_id},
+                    success: function (data) {
+                        var categorys = data.rows;
+                        $("#category_list").append("<option value='' selected='selected'>{% trans "x_question_direction" %}</option>");
+                        for (var i in categorys) {
+                            {% if LANGUAGE_CODE == 'zh-hans' %}
+                                $("#category_list").append("<option value='" + categorys[i].id + "'>" + codeUtil.htmlEncode(categorys[i].cn_name) + "</option>");
+                            {% else %}
+                                $("#category_list").append("<option value='" + categorys[i].id + "'>" + codeUtil.htmlEncode(categorys[i].en_name) + "</option>");
+                            {% endif %}
+                        }
+                    }
+                });
+            },
+            init_exam_data: function () {
+                $.ajax({
+                    type: "GET",
+                    url: handler_exam_url,
+                    dataType: "json",
+                    success: function (data) {
+                        {#console.log(data);#}
+                        // 填充数据
+                        for (var i = 0; i < data.length; i++) {
+                            CALLBACK.addExamData(data[i], app.single_questions, app.multiple_questions, app.judgment_questions, app.analysis_questions, 'false')
+                        }
+                    },
+                    error: function (data) {
+                        console.log(data)
+
+                    }
+
+                })
+            },
+            init_model_table: function (url) {
+                    // 刷新表数据
+                    $("#table").bootstrapTable('refresh', {url: url + "?solving_mode=2"});
+                },
+            deleteAppQuestion: function (appData, row) {
+                // 删除vue中的数据app.$data
+                for (var i = 0; i < appData.length; i++) {
+                    if (appData[i].hasOwnProperty('multiple')) {
+                        if (appData[i].content == row.content) {
+                            appData.splice(i, 1)
+                        }
+                    } else {
+                        if (appData[i].title == row.title) {
+                            appData.splice(i, 1)
+                        }
+                    }
+                }
+            },
+            submitPaper: function () {
+                var singleData = CALLBACK.getChangeData(app.single_questions, 'single');
+                var multipleData = CALLBACK.getChangeData(app.multiple_questions, 'multiple');
+                var analysisData = CALLBACK.getChangeData(app.analysis_questions, 'analysis');
+                var judgmentData = CALLBACK.getChangeData(app.judgment_questions, 'judgment');
+                var data = singleData.concat(multipleData).concat(analysisData).concat(judgmentData);
+                var examname = $('#examname').val().trim();
+                var examDescription = $("#examDescription").val().trim();
+                var file_url = $("input[name=logo]").val();
+                {#console.log(data);#}
+                var jsondata = {
+                    'examname': examname,
+                    'examDescription': examDescription,
+                    "logo": file_url,
+                    'data': JSON.stringify(data),
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: handler_exam_url,
+                    data: jsondata,
+                    traditional: true,
+                    {#contentType: "application/json;charset=utf-8",#}
+                    dataType: "json",
+                    success: function (message) {
+                        swal({
+                            title: "{% trans 'x_saved_successfully' %}",
+                            type: 'success',
+                            confirmButtonText: "{% trans 'x_confirm' %}"
+                        }, function () {
+                            setTimeout(function () {
+                                window.location.href = returnUrl;
+                            });
+                        });
+
+                    },
+                    error: function (data) {
+                        if (data.responseJSON == undefined) {
+                            var text = "{% trans 'x_saved_fail' %}"
+                        } else {
+                            var text = data.responseJSON["detail"]['message']
+                        }
+                        swal({
+                            title: text,
+                            type: "error",
+                            confirmButtonText: "{% trans "x_confirm" %}"
+                        });
+                    }
+                });
+            },
+            getChangeData: function (appDate, typeId) {
+                // 提交前获取每个模块的数据
+                var changeLi = $('#' + typeId + '>li');
+                var listLi = [];
+                var changData = [];
+                for (var i = 0; i < changeLi.length; i++) {
+                    listLi.push(changeLi[i].attributes['data-index'].value)
+                }
+                for (var x = 0; x < listLi.length; x++) {
+                    var tempeDate = appDate[listLi[x]];
+                    changData.push(tempeDate)
+                }
+                return changData
+            },
+            addExamData: function (row, singleData, multipleData, judgmentData, analysisData,  BoolType) {
+                var questionsType = row.hash.indexOf(".0");
+                {% comment %}if (BoolType === 'true') {
+                    row.score = 10;
+                }{% endcomment %}
+                if (questionsType > 0) {
+                    var is_multiple_choice = row.multiple;
+                    if (BoolType === 'first' || BoolType === 'add') {
+                        if (row.multiple == ModelConstant.ChoiceTask.Type.SINGLE | row.multiple == ModelConstant.ChoiceTask.Type.JUDGMENT) {
+                            row.score = 0.5
+                        }
+                        else {
+                            row.score = 1
+                        }
+                        {#                        row.score = is_multiple_choice ? 1 : 0.5#}
+                    }
+                    if (is_multiple_choice == ModelConstant.ChoiceTask.Type.MULTPILE) {
+                        multipleData.push(row)
+                    }
+                    else if (is_multiple_choice == ModelConstant.ChoiceTask.Type.SINGLE) {
+                        singleData.push(row)
+                    }
+                    else if (is_multiple_choice == ModelConstant.ChoiceTask.Type.JUDGMENT) {
+                        judgmentData.push(row)
+                    }
+                } else {
+                    // 技能分析题
+                    analysisData.push(row)
+                }
+            },
+            watchAllScore: function () {
+                var single_questions_score = app.getAllScore(app.single_questions);
+                var multiple_questions_score = app.getAllScore(app.multiple_questions);
+                var analysis_questions_score = app.getAllScore(app.analysis_questions);
+                var judgment_questions_score = app.getAllScore(app.judgment_questions);
+                var score = single_questions_score + multiple_questions_score + analysis_questions_score + judgment_questions_score;
+                $("#allSocre").text(score)
+            },
+            generate_testpaper: function () {
+                var $event_num = $('[name="event_name_num"]');
+                var $event_score = $("[name='event_name_score']");
+
+                var first_value = $('#source_question').val(); //第一个框的值
+                var second_value = $('#course_list').val();  //第二框的值
+                var third_value = $("#lesson_id").val(); //第三个（课时）的值
+                var category_value = $("#category_list").val(); //题目方向
+                var question_type_value = $("#question_type_list").val(); //题型
+                var title_value = $("#title_list").val(); //关键词
+
+                $event_num.removeClass('check');
+                if (!$event_num.val() || !$event_score.val()) {
+                    buttonClicks("x_select_quantity_score");
+                    return false;
+                }
+                if (second_value == '' && first_value == 1){
+                    buttonClicks("x_select_set");
+                    return false;
+                }
+                if (second_value == '' && first_value == 2){
+                    buttonClicks("x_please_select_course");
+                    return false;
+                }
+
+                if (first_value == 2 && third_value == ''){
+                    buttonClicks("x_please_select_lesson");
+                    return false;
+                }
+
+                $('[name="generate_testpaper"]').val(gettext('x_generated'));
+
+                var datas = {
+                    first_value: first_value,
+                    second_value: second_value,
+                    third_value:third_value,
+                    category_value:category_value,
+                    types: question_type_value,
+                    title_value:title_value,
+                    num: $event_num.val(),
+                    score: $event_score.val(),
+                };
+
+                $.ajax({
+                    type: "GET",
+                    url: generate_testpaper_url,
+                    traditional: true,
+                    data: datas,
+                    dataType: 'json',
+                    success: function (data) {
+                        // 生成试卷需要清空原来的数据
+                        $('[name="generate_testpaper"]').val(gettext('导入试卷'));
+                        data === [] ? console.log('生成试卷有数据') : console.log('生成试卷没有数据');
+                        for (var i = 0; i < data.rows.length; i++) {
+                            CALLBACK.addExamData(data.rows[i], app.single_questions, app.multiple_questions, app.judgment_questions, app.analysis_questions, 'change_first');
+
+                            if (data.rows[i].hasOwnProperty('multiple')) {
+                                questionIdArray.push(data.rows[i].content);
+                                var quesContent = data.rows[i].content.replace('\n', '').replace(/\\/g,'');
+                                quesContent = escapeJquery(quesContent);
+                                var selector = '\[title=\"' + quesContent + '\"\]';
+                                if ($(selector).length>0){
+                                    $(selector).parent().siblings().children()[0].setAttribute('checked', 'checked')
+                                }
+                            } else {
+                                questionIdArray.push(data.rows[i].title);
+                                var quesContent = data.rows[i].title.replace('\n', '').replace(/\\/g,'');
+                                quesContent = escapeJquery(quesContent);
+                                var selector = '\[title=\"' + quesContent + '\"\]';
+                                if ($(selector).length>0){
+                                    $(selector).parent().siblings().children()[0].setAttribute('checked', 'checked')
+                                }
+                            }
+                        }
+                        if (data.errors) {
+                            buttonClicks("x_insufficient_number_reconfigure");
+                        }
+                    },
+                    error: function (data) {
+                        buttonClicks("x_configuration_error");
+                        return false;
+                    }
+                })
+            },
+            select_source: function () {
+                var select_val = $("#source_question").val();
+                if (select_val == 1){
+                    $("#course_list").empty();
+                    event_options(function (event_options) {
+                        $("#course_list").append(event_options)
+                    });
+                    if ($('#third_list').hasClass("hidden") == false){
+                        $('#third_list').addClass("hidden")
+                    }
+                    CALLBACK.init_model_table(theory_task_url);
+
+                }
+                else {
+                    $("#course_list").empty();
+                    course_options(function (course_options) {
+                        $("#course_list").append(course_options)
+                        var course_id = $("#course_list").val()
+{#                        CALLBACK.get_lesson(course_id)#}
+                    });
+                    if ($('#third_list').hasClass("hidden")){
+                        $('#third_list').removeClass("hidden")
+                    }
+{#                    CALLBACK.init_model_table(home_work_url)#}
+                }
+            },
+            get_lesson: function (course_id) {
+                http.get(lesson_list, {'course_id': course_id}, function (res) {
+                    $("#third_list [name='lesson_name_value']").empty();
+                    var options = '<option value="">{% trans 'x_please_select_lessons' %}</option>';
+                    $.each(res.rows, function (i, lesson) {
+                        options += '<option value=' + lesson.id + '>' + lesson.name + '</option>';
+                    });
+                    $('#third_list [name="lesson_name_value"]').append(options);
+                })
+            }
+        };
+
+        var validateDic = {
+            debug: true,
+            rules: {
+                examname: {
+                    required: true,
+                    maxlength: 50
+                }
+            },
+            messages: {
+                examname: {
+                    required: gettext("x_capability_name_required"),
+                    maxlength: "{% trans 'x_length_not_greater_30' %}"
+                }
+            }
+        };
+
+        var sortableDic = {
+            delay: 150, // 时间延迟
+            distance: 15, // 距离延迟
+            cursor: "move", // 鼠标展示类型
+            items: "> li", // 下面哪种元素要排序用
+            revert: true, // 降落的时候会添加过渡效果
+            update: function (event, ui) {
+                {#a[1].attributes['data-index'].value#}
+                var changeLi = $('#single>li');
+                var listLi = [];
+                var changData = [];
+                for (var i = 0; i < changeLi.length; i++) {
+                    listLi.push(changeLi[i].attributes['data-index'].value)
+                }
+                for (var x = 0; x < listLi.length; x++) {
+                    var tempeDate = app.single_questions[listLi[x]];
+                    changData.push(tempeDate)
+                }
+                console.log(changData)
+            }
+        };
+        function deleteChecked(key) {
+            // 删除题目的同时取消勾选
+            var quesContent = key.replace('\n', '').replace(/\\/g,'');
+            quesContent = escapeJquery(quesContent);
+            selector = '\[title="' + quesContent + '"\]';
+            if ($(selector).parent().prev().children()) {
+                $(selector).parent().prev().children().first().removeAttr('checked');
+                $(selector).parent().parent().first().removeClass();
+            }
+        };
+
+         function buttonClicks(str) {
+            var config = {
+                title: gettext(str),
+                type: 'warning',
+                showCancelButton: false,
+                cancelButtonText: gettext('x_confirm'),
+                showConfirmButton: true,
+                cancelButtonColor: '#DD6B55',
+                confirmButtonText: gettext('x_confirm'),
+            };
+            var popConfig = $.extend(true, {}, config);
+            var showPending = true;
+            if (showPending) {
+                var pendingConfig = $.extend(true, {}, popConfig, {
+                    title: '',
+                    text: '',
+                });
+            }
+
+            swal(popConfig, function () {
+                if (showPending) {
+                    swal(pendingConfig);
+                }
+            });
+        };
+
+
+        function escapeJquery(srcString) {
+            // 转义之后的结果
+            var escapseResult = srcString;
+
+            // javascript正则表达式中的特殊字符
+            var jsSpecialChars = ["\\", "^", "$", "*", "?", ".", "+", "(", ")", "[",
+                "]", "|", "{", "}"];
+
+            // jquery中的特殊字符,不是正则表达式中的特殊字符
+            var jquerySpecialChars = ["~", "`", "@", "#", "%", "&", "=", "'", "\"",
+                ":", ";", "<", ">", ",", "/"];
+
+            for (var i = 0; i < jsSpecialChars.length; i++) {
+                escapseResult = escapseResult.replace(new RegExp("\\"
+                    + jsSpecialChars[i], "g"), "\\"
+                    + jsSpecialChars[i]);
+            }
+
+            for (var i = 0; i < jquerySpecialChars.length; i++) {
+                escapseResult = escapseResult.replace(new RegExp(jquerySpecialChars[i],
+                    "g"), "\\" + jquerySpecialChars[i]);
+            }
+
+            return escapseResult;
+        };
+    </script>
+{% endblock %}

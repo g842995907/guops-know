@@ -1,0 +1,171 @@
+msgid "x_total_score"
+msgstr "试卷总分"
+
+msgid "x_total_task_count"
+msgstr "题目总数"
+
+msgid "x_score_manage"
+msgstr "成绩管理"
+
+msgid "x_writeup_score"
+msgstr "题解得分"
+
+msgid "x_task"
+msgstr "赛题"
+
+msgid "x_add_exam"
+msgstr "新建考试"
+
+msgid "x_edit_exam"
+msgstr "编辑考试"
+
+msgid "x_exam_cannot_operation"
+msgstr "考试正在进行，不能操作"
+
+msgid "x_answer_show_mode"
+msgstr "答案显示方式"
+
+msgid "x_submit_show"
+msgstr "交卷显示答案"
+
+msgid "x_exam_end_show"
+msgstr "考试结束显示答案"
+
+msgid "x_no_show"
+msgstr "不显示答案"
+
+msgid "x_review_jiancha"
+msgstr "检查"
+
+msgid "x_input_score"
+msgstr "输入分数"
+
+msgid "x_score_not_gt_all_score"
+msgstr "得分不得超过试卷总得分"
+
+msgid "x_confirm_submission"
+msgstr "确认提交？"
+
+msgid "x_end_greater_start"
+msgstr "考试结束时间必须大于开始时间"
+
+msgid "x_exams_name_already_exists"
+msgstr "比赛名称已存在"
+
+msgid "x_exam_name_not_empty"
+msgstr "考试名称不能为空"
+
+msgid "x_start_time_fields_required"
+msgstr "起止时间字段必填"
+
+msgid "x_exam_end_greater_current_time"
+msgstr "考试结束时间必须大于当前时间"
+
+
+msgid "x_exam_start_greater_current_time"
+msgstr "考试开始时间必须大于当前时间"
+
+msgid "x_edit_exam_start_time"
+msgstr "编辑进行中的考试，开始时间必须小于当前时间"
+
+msgid "x_edit_not_start_time"
+msgstr "编辑未开始的考试，开始时间必须大于当前时间"
+
+msgid "x_edit_exam_end_time"
+msgstr "编辑进行中的考试，结束时间必须大于当前时间"
+
+msgid "x_no_exam_questions"
+msgstr "没有考试题"
+
+msgid "x_not_found_exam"
+msgstr "没有找到该考试"
+
+msgid "x_students_handed_after_the_public"
+msgstr "学员交卷后公开答案"
+
+msgid "x_open_answer_after_exam"
+msgstr "考试结束后公开答案"
+
+msgid "x_open_answer"
+msgstr "不公开答案"
+
+msgid "x_show_score"
+msgstr "是否显示成绩"
+
+msgid "x_show_rankings"
+msgstr "是否显示排名"
+
+msgid "x_exam_has_done"
+msgstr "考试已使用无法修改"
+
+msgid "x_question_direction"
+msgstr "题目方向"
+
+msgid "x_question_type"
+msgstr "题型"
+
+msgid "x_exam_description"
+msgstr "考试描述"
+
+msgid "x_this_task"
+msgstr "本题"
+
+msgid "x_allquestions_allscore"
+msgstr "共 {question}题, 共 {score}分"
+
+msgid "x_alls"
+msgstr "共"
+
+msgid "x_question_all"
+msgstr "题, 共"
+
+msgid "x_choose_test_paper"
+msgstr "请选择一张试卷"
+
+msgid "x_chose_paper"
+msgstr "选择试卷"
+
+msgid "x_exam_over"
+msgstr "考试结束"
+
+msgid "x_re_selection"
+msgstr "重新选择"
+
+msgid "x_editor_test_paper"
+msgstr "编辑试卷"
+
+msgid "x_successful_delivery"
+msgstr "交卷成功"
+
+msgid "x_unknown_mistake"
+msgstr "未知错误"
+
+msgid "x_whether_review"
+msgstr "是否回顾"
+
+msgid "x_show_score_after"
+msgstr "考试结束之后是否显示得分。"
+
+msgid "x_show_answer"
+msgstr "是否显示答案"
+
+msgid "x_show_answer_after"
+msgstr "考试结束之后是否显示正确答案。"
+
+msgid "x_is_over_no_sub"
+msgstr "考试已结束，不能提交答案！"
+
+msgid "x_dynamic_answer"
+msgstr "动态答案"
+
+msgid "x_answer_not_generated"
+msgstr "答案未生成"
+
+msgid "x_answering"
+msgstr "答题中"
+
+msgid "x_submit_over"
+msgstr "已交卷"
+
+msgid "x_testpaper_abnormal"
+msgstr "试卷存在异常"

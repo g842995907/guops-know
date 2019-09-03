@@ -1,0 +1,458 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    <a href="{% url 'cms_x_tools:tool_list' %}">{% trans "x_tool" %}</a>>
+    {% if tool %}
+        {% trans 'x_edit_tool' %}
+    {% else %}
+        {% trans 'x_new_tool' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if tool %}
+              action="{% url 'cms_x_tools:api:tool-detail' tool.id %}"
+              method="patch"
+                {% else %}
+              action="{% url 'cms_x_tools:api:tool-list' %}"
+              method="post"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-6">
+                        <input name="name" class="form-control" type="text" id="name" value="{{ tool.name }}">
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_type' %}</label>
+                    <div class="col-sm-6">
+                        <select class="selectpicker" multiple data-actions-box="true" id="category"
+                                name="category" title="{% trans 'x_select_type' %}"
+                                data-style="btn-white">
+                            {% for c in categories %}
+                                <option value="{{ c.id }}"
+                                        {% if c.id in tool.category_ids %}selected{% endif %}>{% if LANGUAGE_CODE == 'zh-hans' %}{{ c.cn_name }}{% else %}{{ c.en_name }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans "x_knowledge_point" %}</label>
+                    {% if knowledges_list %}
+                        {% for knowledge in knowledges_list %}
+                        <div name="konwl">
+                            <div class="col-sm-1 know-label toolTipBox" style="position: relative">
+                                <input class="btn btn-info" value="{{ knowledge }}" name="knowledges" data-form-fixed="1"
+                                onkeydown="change_tip(this)">
+                                <div class="toolTip">{{ knowledge }}</div>
+                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>
+                            </div>
+                        </div>
+                        {% endfor %}
+{#                    {% else %}#}
+{#                        <div name="points">#}
+{#                            <div class="col-sm-1 know-label">#}
+{#                                <input class="btn btn-info" name="knowledges">#}
+{#                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>#}
+{#                            </div>#}
+{#                        </div>#}
+                    {% endif %}
+                    <div name="second"></div>
+                    <div class="col-sm-1" style="width: 5px">
+                        <a style="font-size:20px;" class="text-danger" id="faPlus" onclick="add_point()">+</a>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_platform' %}</label>
+                    <div class="col-sm-6">
+                        <select class="selectpicker" multiple data-actions-box="true" id="platforms"
+                                name="platforms" title="{% trans 'x_select_platform' %}"
+                                data-style="btn-white">
+                            <option value="windows" {% if "windows" in tool.platforms %}selected{% endif %}>Windows
+                            </option>
+                            <option value="linux" {% if "linux" in tool.platforms %}selected{% endif %}>Linux</option>
+                            <option value="mac" {% if "mac" in tool.platforms %}selected{% endif %}>Mac OS</option>
+                            <option value="android" {% if "android" in tool.platforms %}selected{% endif %}>Android
+                            </option>
+                            <option value="ios" {% if "ios" in tool.platforms %}selected{% endif %}>IOS</option>
+                            <option value="others"
+                                    {% if "others" in tool.platforms %}selected{% endif %}>{% trans "x_other" %}</option>
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_language' %}</label>
+                    <div class="col-sm-6">
+                        <select class="selectpicker" multiple data-actions-box="true" id="language"
+                                name="language" title="{% trans 'x_select_languag' %}"
+                                data-style="btn-white">
+                            <option value="zh-hans"
+                                    {% if "zh-hans" in tool.language %}selected{% endif %}>{% trans "x_zh-han" %}</option>
+                            <option value="en"
+                                    {% if "en" in tool.language %}selected{% endif %}>{% trans "x_English" %}</option>
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_authorized' %}</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name="license_model" id="license_model" style="width: 220px;">
+                            <option value="">{% trans 'x_select_authorization' %}</option>
+                            <option value="free">{% trans 'x_free' %}</option>
+                            <option value="trial">{% trans 'x_limit' %}</option>
+                            <option value="non-free">{% trans 'x_charge' %}</option>
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_cover' %}</label>
+                    <div class="col-sm-6">
+                        <div class="image_upload_widget">
+                            <div>
+                                <div class="btn btn-primary btn_image_upload image_upload" id="cover">
+                                    {% trans "x_select_pic" %}
+                                    <input type="text" class="form-control image_upload hidden" name="cover"/>
+                                </div>
+                                {% if tool.cover %}
+                                <button type="button" name="delete-cover" class="btn btn-danger" onclick="deleteCover()">
+                                    {% trans "x_del_pic" %}
+                                </button>
+                                {% endif %}
+                            </div>
+                            <a href="{% if tool.cover %}{{ tool.cover.url }} {% endif %}" class="image_show"
+                               title="图片" name="cover"
+                               data-gallery=""><img {% if tool.cover %}src="{{ tool.cover.url }}"{% endif %}></a>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev"><</a>
+                                <a class="next">></a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_whether_online' %}</label>
+                    <div class="col-sm-6">
+                        <input type="checkbox" class="form-control js-switch" id="online" name="online"
+                                {% if tool.online %} checked="" {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+            <div name="filediv">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_file' %}</label>
+                    <div class="col-sm-6" id="uploadFile"
+                         style="display: {% if tool.save_path %}block{% else %}none{% endif %};">
+                        {% if tool.save_path %}
+                            <a class="btn btn-success"
+                               href="javascript:window.open('{{ tool.save_path.url }}', '_blank')">
+                                {% trans "x_download_file" %}
+                            </a>
+                        {% else %}
+                            <a></a>
+                        {% endif %}
+                        <button type="button" class="btn btn-danger" onclick="deleteToolFile()">
+                            {% trans "x_del_file" %}
+                        </button>
+                    </div>
+                    <div class="col-sm-6" id="toolAttach-div"
+                         style="display: {% if tool.save_path %}none{% else %}block{% endif %};">
+                        <input type="file" class="form-control" id="save_path" name="save_path" onchange="autoAddSize(this.files)">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group" name="size">
+                    <label class="col-sm-2 control-label">{% trans 'x_size' %}</label>
+                    <div class="col-sm-6">
+                        <input name="size" class="form-control" type="text" id="size" value="{% if tool.size %}{{ tool.size }}{% endif %}">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_version_Num' %}</label>
+                    <div class="col-sm-6">
+                        <input name="version" class="form-control" type="text" value="{% if tool.version %}{{ tool.version }}{% endif %}" />
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+            </div>
+            <div name="homepage">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_address' %}</label>
+                    <div class="col-sm-6">
+                        <input name="homepage" class="form-control" type="url" value="{% if tool.homepage %}{{ tool.homepage }}{% endif %}" />
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+            </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_introduced' %}</label>
+                    <div class="col-sm-6">
+                        <textarea name="introduction" id="introduction" class="form-control">{% if tool.introduction %}{{ tool.introduction }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-6">
+                        <input type="checkbox" class="form-control js-switch" id="public" name="public" data-form-fixed="1"
+                                {% if tool.public %} checked="" {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group upload-progress" style="display: none;">
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-6">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="percent"></span>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_x_tools:tool_list' %}">{% trans 'x_cancel' %}</a>
+                        <input class="btn btn-primary" type="submit" value="{% trans 'x_save' %}" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        $(".image_upload_widget").bindLocalCropImgUpload({aspectRatio: 7/4});
+        var listUrl = "{% url 'cms_x_tools:tool_list' %}";
+
+        $(function () {
+            $("#validateForm").mvalidate({
+                rules: {
+                    name: {
+                        required: true
+                    },
+                    category: {
+                        required: true
+                    },
+                    platforms: {
+                        required: true
+                    },
+                    language: {
+                        required: true
+                    },
+                    license_model: {
+                        required: true
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "{% trans 'x_required_name' %}"
+                    },
+                    category: {
+                        required: "{% trans 'x_type_select_type' %}"
+                    },
+                    platforms: {
+                        required: "{% trans 'x_platform_select_platform' %}"
+                    },
+                    language: {
+                        required: "{% trans 'x_language_select_language' %}"
+                    },
+                    license_model: {
+                        required: "{% trans 'x_authorized_select_authorized' %}"
+                    }
+                }
+            });
+            $("#validateForm").ajaxFormProgressDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {}, "save_path");
+
+            add_minus();
+        });
+
+        function chooseOption(item, value) {
+            item.val(value);
+        }
+        
+        function autoAddSize(files) {
+            var file = files[0];
+            $("#size").val(renderSize(file.size));
+        }
+
+        function deleteCover() {
+            swal({
+                title: "{% trans 'x_confirm_delete'  %}",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "{% trans 'x_cancel' %}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{% trans 'x_confirm' %}",
+                closeOnConfirm: true
+            },
+            function () {
+                {% if tool %}
+                    $.ajax({
+                        url: "{% url 'cms_x_tools:custom_tool_detail' tool.id %}",
+                        type: "PUT",
+                        data: {"cover": null},
+                        success: function (data) {
+{#                            $("a[name='cover']>img").attr("src", "");#}
+                            $("a[name='cover']>img").removeAttrs('src'); //修改img为空chrome回显示会出现问题
+                            $("input[name='cover']").val("");
+                        }
+                    });
+                {% else %}
+                    $("a[name='cover']>img").attr("src", "");
+                    $("input[name='cover']").val("");
+                {% endif %}
+            }
+            );
+        }
+
+        function deleteToolFile() {
+            swal({
+                title: "{% trans 'x_confirm_delete' %}",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "{% trans 'x_cancel' %}",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{% trans 'x_confirm' %}",
+                closeOnConfirm: true
+            },
+            function () {
+                {% if tool %}
+                    $.ajax({
+                        url: "{% url 'cms_x_tools:custom_tool_detail' tool.id %}",
+                        type: "PUT",
+                        data: {"save_path": null},
+                        success: function (data) {
+                            $("#uploadFile").css('display','none');
+                            $("#toolAttach-div").css('display','block');
+                        }
+                    });
+                {% else %}
+                    $("input[name='save_path']").val("");
+                {% endif %}
+            }
+            );
+        }
+
+        function toggleOnline() {
+            if ($("#online").prop('checked')) {
+                $("div[name='filediv']").hide();
+                $("div[name='homepage']").show();
+            } else {
+                $("div[name='filediv']").show();
+                $("div[name='homepage']").hide();
+            }
+        }
+
+        $().ready(function () {
+            $('input[name="save_path"]').prettyFile(); //页面中有两个文件的处理，不需要同时一起初始化
+            $("#introduction").initMarkdown();
+
+            var elems = Array.prototype.slice.call($('.js-switch'));
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+            });
+
+            chooseOption($("#license_model"), "{{ tool.license_model }}");
+
+            toggleOnline();
+            $("#online").change(function () {
+                toggleOnline();
+            });
+        });
+
+        function add_minus() {
+            $(".know-label").mouseenter(function () {
+                $(this).find(".delete").show();
+
+            });
+            $(".know-label").mouseleave(function () {
+                $(this).find(".delete").hide();
+            });
+        }
+
+        function less_div(elem) {
+            $(elem).parent().parent().remove();
+        }
+
+        function add_point() {
+            var point_div = $("[name='points']").parent();
+            var addHtml = "<div name='points' class='toolTipBox'>" +
+                "                            <div class='col-sm-1 know-label'>" +
+                "                                <input class='btn btn-info' onkeydown='change_tip(this)' name='knowledges'>" +
+                "                                    <div class='toolTip'></div>" +
+                "                                <a class='delete' onclick='less_div(this)'><i class='fa fa-minus-square'></i></a>" +
+                "                            </div>" +
+                "                        </div>";
+
+            $("[name='second']").append(addHtml);
+            add_minus();
+            $('[name="knowledges"]').focus();
+        }
+
+        function change_tip(elem) {
+            var tip = $(elem).parent().find('.toolTip')
+            tip.html($(elem).val())
+        }
+    </script>
+{% endblock %}

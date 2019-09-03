@@ -1,0 +1,42 @@
+@charset "utf-8";
+.team-edit-box {
+  .team-edit-form label {
+    font-weight: normal;
+    vertical-align: top;
+  }
+}
+
+.team-edit-form input, .team-edit-form textarea {
+  border: none;
+  width: 83% !important;
+}
+
+.team-info-edit-btn,
+.team-info-edit-btn:hover,
+.team-info-edit-btn:link,
+.team-info-edit-btn:visited,
+.team-dismiss-btn,
+.team-dismiss-btn:hover,
+.team-dismiss-btn:link,
+.team-dismiss-btn:visited {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  border: none;
+  letter-spacing: 12px;
+  text-indent: 12px;
+}
+
+.team-member {
+  span {
+    display: inline-block;
+    text-align: center;
+    width: 50px;
+    height: 20px;
+    border: 1px solid #ff9900;
+    font-size: 14px;
+    border-radius: 4px;
+    margin-left: 10px;
+    color: #ff9900;
+  }
+}

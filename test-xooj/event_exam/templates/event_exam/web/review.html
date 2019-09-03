@@ -1,0 +1,839 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load static_v %}
+{% load i18n %}
+
+
+{% block title %}
+    {{ event.name }}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'web/css/media.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'event_exam/web/css/answer.css' %}"/>
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/sweetalert/sweetalert.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'event_exam/web/css/exam-new.css' %}">
+
+    <script src="{% static 'practice/js/radialIndicator.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/sweetalert/sweetalert.min.js" %}"></script>
+    <script type="text/javascript" src="{% static_v 'practice/widgets/task_env/js/network.js' %}"></script>
+    {#    <script src="{% static 'choice_task/web/js/tween.js' %}"></script>#}
+    {#    <script src="{% static 'choice_task/web/js/time.js' %}"></script>#}
+    <style>
+        header {
+            transform: translateY(0px) !important;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .head-show {
+            width: 120px;
+            height: 120px;
+        }
+    .ts_topic_tag_v1 {
+        border: 1px solid #101444;
+        color: #101444;
+        border-radius: 3px;
+        font-size: 20px;
+        line-height: 30px;
+        min-width: 65px;
+        height: 30px;
+        text-align: center;
+        padding: 0 5px;
+    }
+      .bread{
+        color: #fff;
+    }
+
+    #Election{
+        color: #fff;
+    }
+    .exam-description{
+        color: #1fa0fb;
+    }
+      .content-bgc{
+        background-color: #162D4C;
+    }
+      .right>div,.wrong>div{
+        cursor: pointer;
+        font-size: 12px;
+    }
+    .content > div:nth-of-type(1){
+        width:380px;
+    }
+    .number-list>div{
+    margin-left: 16px;
+    margin-bottom: 16px;
+    }
+    .content > div:nth-of-type(2){
+        width: calc(103% - 420px - 20px)
+    }
+    .border-btm{
+        margin-bottom:2px;
+    }
+    .inform-box span{
+        margin-right:40px;
+    }
+    .border-btm-dashed{
+        font-size:16px;
+    }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class='main container mrg93T' id="main">
+        {# 状态栏信息部分   #}
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="{% url 'event:list' %}">{% trans 'x_contest' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active'>{{ event.name }}</a>
+            <a id="ExamCountdown" style="float:right"></a>
+        </div>
+
+        <div id="Election" v-cloak>
+            <div class="content-bgc clearfix" style="padding: 20px;padding-bottom:10px;margin-top: 20px">
+                <div class="pull-left inform-box">
+                    <div style="margin: 7px 0">{% trans "x_name_exam" %}:<span class="orangeC">{{ event.name }}</span>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <span>{% trans 'x_name_surname' %}：{{ request.user.first_name }}</span>&nbsp;
+                        <span>{{ ORGANIZATION.Second_level }}：{{ request.user.faculty.name }}</span>
+                        <span>{{ ORGANIZATION.Third_level }}：{{ request.user.major.name }}</span>
+                        <span>{{ ORGANIZATION.Fourth_level }}：{{ request.user.classes.name }}</span>
+                    </div>
+                </div>
+                {% verbatim %}
+                <div v-if="responses.show_score" class="pull-right mrg20R" style="position: relative">
+                    <span class="blue-clr " style="font-size: 30px;position: absolute;top: 0;right: 22px;font-style: italic;color: #E90525;"> {{ responses.get_score }}</span>
+                    <img :src="img_url" alt="">
+                </div>
+                <div v-else-if="responses.is_over" class="pull-right mrg20R" style="position: relative;margin-top: 48px;">
+                    <div style="font-size: 18px;top: -38px;position:absolute;right: -18px;width:80px;color: #E90525; ">{{ "exam_review" | trans }}</div>
+                    <div class="blue-clr " style="font-size: 16px;top: 0;right: 22px;font-style: italic;color: #E90525; "> {{ "x_already_handed_over" | trans }}</div>
+                </div>
+                <div v-else class="pull-right mrg20R" style="position: relative;margin-top: 48px;">
+                    <div style="font-size: 18px;top: -38px;position:absolute;right: -6px;width:80px;color: #E90525; ">{{ "exam_review" | trans }}</div>
+                    <div class="blue-clr " style="font-size: 16px;top: 0;right: 22px;font-style: italic;color: #E90525; "> {{ "x_did_take_test" | trans }}</div>
+                </div>
+            </div>
+            <div class="content font-defalut-color mrg20T clearfix">
+                <div class="pull-left white-bg">
+                    <div class="inform-reivew content-bgc" v-if="responses.rank_status">
+                        <span>{{ "x_right" | trans }}</span>
+                        <span>{{ "x_wrong" | trans }}</span>
+                        <span>{{ "x_not_answered" | trans }}</span>
+                        <span>{{ "x_current" | trans }}</span>
+                    </div>
+                    <div class="inform content-bgc" v-else>
+                        <span>{{ "x_answered" | trans }}</span>
+                        <span>{{ "x_not_answered" | trans }}</span>
+                        <span>{{ "x_current" | trans }}</span>
+                    </div>
+                    <div class="classfication border-btm content-bgc"
+                         v-bind:class="responses.judgment_list.length == 0 ? 'hidden':''">
+
+                        <div class="title">
+                            <div class="border-btm-dashed">{{ "x_judgment_problem" | trans }}</div>
+                        </div>
+
+                        <div class="number-list clearfix" v-if="responses.rank_status">
+                            <div v-for="(value,key,index) in responses.judgment_list"
+                                 v-bind:class="value == 2?  'unfinished' : (value == 1? 'right': 'wrong')"
+                                 v-on:click="get_data(key)">
+                                <div>{{ key+1 }}
+                                        <div v-bind:class="key + 1 == responses.num_done_task? 'current-review':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="number-list clearfix" v-else>
+                            <div v-for="(value,key,index) in responses.judgment_list"
+                                 v-bind:class="value == 1? 'done': 'unfinished' "
+                                 v-on:click="get_data(key)">
+                                <div>{{ key+1 }}
+                                        <div v-bind:class="key + 1 == responses.num_done_task? 'current':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="classfication border-btm content-bgc"
+                         v-bind:class="responses.single_list.length == 0 ? 'hidden':''">
+
+                        <div class="title">
+                            <div class="border-btm-dashed">{{ "x_single_choice" | trans }}</div>
+                        </div>
+
+                        <div class="number-list clearfix" v-if="responses.rank_status">
+                            <div v-for="(value,key,index) in responses.single_list"
+                                 v-bind:class="value == 2?  'unfinished' : (value == 1? 'right': 'wrong')"
+                                 v-on:click="get_data(judgment_length + key)">
+                                <div>{{ judgment_length + key + 1 }}
+                                    <div v-bind:class="key + judgment_length + 1 == responses.num_done_task? 'current-review':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="number-list clearfix" v-else>
+                            <div v-for="(value,key,index) in responses.single_list"
+                                 v-bind:class="value == 1? 'done': 'unfinished' "
+                                 v-on:click="get_data(judgment_length + key)">
+                                <div>{{ judgment_length + key + 1 }}
+                                    <div v-bind:class="key + judgment_length + 1 == responses.num_done_task? 'current':''"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="classfication border-btm content-bgc"
+                         v-bind:class="responses.multiple_list.length == 0 ? 'hidden':''">
+
+                        <div class="title">
+                            <div class="border-btm-dashed">{{ "x_multiple_choice" | trans }}</div>
+                        </div>
+
+                        <div class="number-list clearfix" v-if="responses.rank_status">
+                            <div v-for="(value,key,index) in responses.multiple_list "
+                                 v-bind:class="value == 2?  'unfinished' : (value == 1? 'right': 'wrong')"
+                                 v-on:click="get_data(single_length + key)">
+                                <div>{{ single_length + key + 1 }}
+                                    <div v-bind:class="key + single_length + 1 == responses.num_done_task? 'current-review':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="number-list clearfix" v-else>
+                            <div v-for="(value,key,index) in responses.multiple_list "
+                                 v-bind:class="value == 1? 'done': 'unfinished' "
+                                 v-on:click="get_data(single_length + key)">
+                                <div>{{ single_length + key + 1 }}
+                                    <div v-bind:class="key + single_length + 1 == responses.num_done_task? 'current':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="classfication border-btm content-bgc"
+                         v-bind:class="responses.operational_list.length == 0 ? 'hidden':''">
+
+                        <div class="title">
+                            <div class="border-btm-dashed">{{ "x_operation_problem" | trans }}</div>
+                        </div>
+
+                        <div class="number-list clearfix" v-if="responses.rank_status">
+                            <div v-for="(value,key,index) in responses.operational_list "
+                                  v-bind:class="value == 2?  'unfinished' : (value == 1? 'right': 'wrong')"
+                                 v-on:click="get_data(multiple_length + key)">
+                                <div>{{ multiple_length + key+1 }}
+                                    <div v-bind:class="key + multiple_length + 1 == responses.num_done_task? 'current-review':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="number-list clearfix" v-else>
+                            <div v-for="(value,key,index) in responses.operational_list "
+                                 v-bind:class="value == 1? 'done': 'unfinished' "
+                                 v-on:click="get_data(multiple_length + key)">
+                                <div>{{ multiple_length + key+1 }}
+                                    <div v-bind:class="key + multiple_length + 1 == responses.num_done_task? 'current':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right white-bg content-bgc">
+                    <div class="inform border-btm orangeC" v-if="responses.multiple==2">{{ "x_judgment_problem" | trans }}
+                    </div>
+                    <div class="inform border-btm orangeC" v-if="responses.multiple==0">{{ "x_single_choice" | trans }}
+                    </div>
+                    <div class="inform border-btm orangeC" v-if="responses.multiple==1">{{ "x_multiple_choice" | trans }}
+                    </div>
+                    <div class="inform border-btm orangeC" v-if="responses.multiple==4">{{ "x_operation_problem" | trans }}
+                    </div>
+                    <div class="exam-content">
+                        <div v-if="responses.multiple==4">
+                            <div class="exam-description">{{ responses.num_done_task }}. {{ responses.title }}</div>
+                            <div v-if="responses.content">{{ responses | marked_option }}
+                                <div class="option_marked markdown-img"></div>
+                            </div>
+
+                            <input type="hidden" class="operational_problem_id" v-bind:value="topic_id">
+                            <div class="mrg30T" v-bind:style="{'display': responses.file_url ? '' : 'none' }">
+                                <div class="row mrg20B pad30L "
+                                     v-bind:style="{'display': responses.file_url ? '' : 'none' }">
+                                    <a :href="responses.attach_url" class="download-file fa-download"
+                                       target="_blank"
+                                       id="task_content_url">{{ "x_download_attachment" | trans }}</a>
+                                </div>
+
+                                <div class="row mrg20B pad30L "
+                                     v-bind:style="{'display': responses.url ? '' : 'none' }">
+                                    <a :href="responses.url" class="download-file" target="_blank"
+                                       id="task_content_url">{{ "x_click_visit_URL" | trans }}</a>
+                                </div>
+                            </div>
+                            <div class="apply-env" id="task_env"
+                                 v-bind:class="responses.is_dynamic_env? '':'hidden'">
+                                <p class="mrg20B whiteC"></p>
+                                <div data-widget-id="common-env" v-bind:data-task-hash="responses.hash"></div>
+                            </div>
+
+                            <div class="clearfix" name="submit_answer">
+                                <input type="text" id="task_answer" name="flag-submit"
+                                       v-bind:value="responses.user_answer" disabled>
+                                <div class="pull-right">
+
+                                            <span class="orangeC" style="vertical-align: middle;"
+                                                  id="answer-status"></span>
+                                </div>
+                                <div v-if="responses.rank_status">{{ "x_right_answer" | trans }}：{{ responses.correct_answer }}</div>
+
+                            </div>
+                            <div class="col-lg-offset-11 col-md-offset-8 col-sm-offset-8 col-xs-offset-8"><span
+                                    id="repeat_record"></span></div>
+                            <div class="btn-wrap text-right">
+                                <div class="btn-common" v-if="responses.num_done_task !== 1"
+                                     v-on:click="get_data(responses.num_done_task-2)">{{ "x_previous_question" |
+                                    trans }}
+                                </div>
+                                <div class="btn-common" v-if="responses.num_done_task !== responses.num_task"
+                                     v-on:click="get_data(responses.num_done_task)">{{ "x_next_question" | trans }}
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div v-if="responses.multiple==1">
+                                <div class="exam-description">{{ responses | marked }}
+                                    <div class="multiple_marked markdown-img"></div>
+                                </div>
+                                <div class="multiple_template"
+                                     v-for="(value,key,index) in serialization(responses.option)">
+                                    <input :id="topic_id+key" class="mrg10T mrg10B mrg10R"
+                                           type="checkbox" name="multiple" v-bind:value="topic_id"
+                                           v-bind:data-key="key"
+                                           :checked="option_restore(key, topic_id,responses) ? 'checked':''" disabled>
+                                    <label :for="topic_id+key" class="markdown-img">{{ value, topic_id, key | solution_mark }}</label>
+                                </div>
+                                <div v-if="responses.rank_status">{{ "x_right_answer" | trans }}：{{ responses.correct_answer | answer_separate }}</div>
+                            </div>
+                            <div v-if="responses.multiple==0 ">
+                                <div class="exam-description">{{ responses | marked }}
+                                    <div class="single_marked markdown-img"></div>
+                                </div>
+                                <div class="sigle_template"
+                                     v-for="(value,key,index) in serialization(responses.option)">
+                                    <input class="mrg10T mrg10B mrg10R" type="radio" :id="topic_id+key" name="radio"
+                                           v-bind:value="topic_id" v-bind:data-key="key"
+                                           :checked="option_restore(key, topic_id, responses) ? 'checked':''" disabled>
+                                    <label :for="topic_id+key" class="markdown-img">{{ value, topic_id, key |
+                                        solution_mark }}</label>
+
+                                </div>
+                                <div v-if="responses.rank_status">{{ "x_right_answer" | trans }}：{{ responses.correct_answer }}</div>
+                            </div>
+                            <div v-if="responses.multiple==2">
+                                <div class="exam-description">{{ responses | marked }}
+                                    <div class="judgment_marked markdown-img"></div>
+                                </div>
+                                <div class="sigle_template1"
+                                     v-for="(value,key,index) in serialization(responses.option)">
+                                    <div v-if="key ==='A'">
+                                        <input class="mrg10T mrg10B mrg10R" :id="topic_id+key" type="radio"
+                                               name="judgment" v-bind:value="topic_id" v-bind:data-key="key"
+                                               :checked="option_restore(key, topic_id, responses) ? 'checked':''" disabled>
+                                        <label :for="topic_id+key">√</label>
+                                    </div>
+                                    <div v-if="key ==='B'">
+                                        <input class="mrg10T mrg10B mrg10R" :id="topic_id+key" type="radio"
+                                               name="judgment" v-bind:value="topic_id" v-bind:data-key="key"
+                                               :checked="option_restore(key, topic_id, responses) ? 'checked':''" disabled>
+                                        <label :for="topic_id+key">×</label>
+                                    </div>
+
+                                </div>
+                                <div v-if="responses.rank_status">
+                                    <div v-if="responses.correct_answer=='A'">{{ "x_right_answer" | trans }}：√</div>
+                                    <div v-else>{{ "x_right_answer" | trans }}：×</div>
+                                </div>
+                            </div>
+                            <div class="btn-wrap text-right">
+                                <div class="btn-common" v-if="responses.num_done_task !== 1"
+                                     v-on:click="get_data(responses.num_done_task-2)">{{ "x_previous_question" |
+                                    trans }}
+                                </div>
+                                <div class="btn-common" v-on:click="get_data(responses.num_done_task)"
+                                     v-if="responses.num_done_task !== responses.num_task">{{ "x_next_question" |
+                                    trans }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endverbatim %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block document_ready %}
+   <script>
+    var radio_choice_vue = undefined;
+    var res_response = undefined;
+    var json_name = "{{ event.hash }}.json";
+    var event_datas = undefined;
+    var img_url = "{% static 'event_exam/web/img/score.jpg' %}";
+    var responses = undefined;
+
+    function get_data(key) {
+        var data = event_datas;
+        if (key >= data.length) {
+            key = data.length - 1
+        }
+        responses = data[key];
+        var topic_id = responses.id;
+        var num_done_task = key + 1;
+        responses["num_done_task"] = num_done_task;
+        responses["num_task"] = data.length;
+
+        if (res_response.show_score) {
+            responses["get_score"] = res_response.get_score;
+        }
+        if (res_response.rank_status) {
+            if (res_response.correct_answer[topic_id]){
+                responses["correct_answer"] = res_response.correct_answer[topic_id].split("|").join(",");
+            }
+            else {
+                responses["correct_answer"] = ""
+            }
+
+            var type = wrong_or_right(data, res_response.correct_answer, res_response.flag_is_right);
+        }
+        else {
+            var type = type_judgment(data);
+        }
+        responses["is_over"] = res_response.is_over;
+        responses["rank_status"] = res_response.rank_status;
+        responses["show_score"] = res_response.show_score;
+        responses["rank_status"] = res_response.rank_status;
+        responses["answer"] = res_response.answer;
+        if (res_response.answer == ""){
+            responses["user_answer"] = []
+        }
+        else if (JSON.parse(res_response.answer)[responses.id] != undefined){
+            responses["user_answer"] = JSON.parse(res_response.answer)[responses.id];
+        }
+        else {
+            responses["user_answer"] = []
+        }
+
+        var judgment_list = type[2];
+        var single_list = type[0];
+        var multiple_list = type[1];
+        var operational_list = type[4];
+
+
+        if ($.inArray(responses.multiple, [0, 1, 2, 4]) != -1) {
+            var judgment_length = judgment_list.length;
+            var single_length = single_list.length + judgment_length;
+            var multiple_length = multiple_list.length + single_length;
+        }
+        responses['judgment_list'] = judgment_list;
+        responses['single_list'] = single_list;
+        responses['multiple_list'] = multiple_list;
+        responses['operational_list'] = operational_list;
+
+
+        $("#repeat_record").html("");
+        $("[name='submit_answer']").removeClass("hidden");
+        $("#task_answer").val('');
+
+        //数据加载
+        if (radio_choice_vue) {
+            radio_choice_vue.responses = responses;
+            radio_choice_vue.topic_id = topic_id;
+            if ($.inArray(radio_choice_vue.responses.multiple, [0, 1, 2, 4]) != -1) {
+                radio_choice_vue.judgment_length = judgment_length;
+                radio_choice_vue.single_length = single_length;
+                radio_choice_vue.multiple_length = multiple_length;
+                radio_choice_vue.img_url = img_url
+            }
+        }
+    }
+
+    function sort(data){
+        var judgment_list = [];
+        var single_list = [];
+        var multiple_list = [];
+        var operational_list = [];
+        var data_list = []
+        for (i=0; i<data.length;i++){
+            if (data[i].multiple == 0){
+                single_list.push(data[i])
+            }
+            else if (data[i].multiple == 1){
+                multiple_list.push(data[i])
+            }
+            else if (data[i].multiple == 2){
+                judgment_list.push(data[i])
+            }
+            else {
+                operational_list.push(data[i])
+            }
+
+        }
+        data_list = judgment_list.concat(single_list).concat(multiple_list).concat(operational_list)
+        return data_list
+    }
+
+    function type_judgment(data){
+        var judgment_list = [];
+        var single_list = [];
+        var multiple_list = [];
+        var operational_list = [];
+        if (res_response.answer != "") {
+            var submit_answer = JSON.parse(res_response.answer);
+        }
+        else {
+            var submit_answer = []
+        }
+
+        var type ={
+            2:judgment_list,
+            0: single_list,
+            1: multiple_list,
+            4: operational_list
+        };
+
+        for (i=0; i<data.length;i++){
+            if (data[i].multiple != 4) {
+                if (submit_answer != []) {
+                    if (submit_answer[data[i].id] != null) {
+                        type[data[i].multiple].push(1)
+                    }
+                    else {
+                        type[data[i].multiple].push(0)
+                    }
+                } else {
+                    type[data[i].multiple].push(0)
+                }
+            }
+            else{
+                if (submit_answer != []) {
+                    if (submit_answer[data[i].id] != null) {
+                        operational_list.push(1)
+                    }
+                    else {
+                        operational_list.push(0)
+                    }
+                }
+                else {
+                    operational_list.push(0)
+                }
+
+            }
+        }
+        return type
+    }
+
+    function wrong_or_right(data, correct_answer, flag_is_right) {
+        var judgment_list = [];
+        var single_list = [];
+        var multiple_list = [];
+        var operational_list = [];
+        var key = {{ pk }} +"_" + {{ request.user.id }} +"_is_do";
+        if (res_response.answer != ""){
+            var submit_answer = JSON.parse(res_response.answer);
+        }
+        else {
+            var submit_answer = []
+        }
+        var correct_answer = correct_answer;
+
+        var type = {
+            2: judgment_list,
+            0: single_list,
+            1: multiple_list,
+            4: operational_list
+        };
+
+        for (i = 0; i < data.length; i++) {
+            var topic_id = data[i].id;
+            if (data[i].multiple != 4) {
+                if (submit_answer[topic_id] != undefined) {
+                    var submit_answer_list = submit_answer[topic_id].split("").sort();
+                    var correct_answer_list = correct_answer[topic_id].split("|").sort();
+                    if (submit_answer_list.toString() == correct_answer_list.toString()) {
+                        type[data[i].multiple].push(1)
+                    }
+                    else {
+                        type[data[i].multiple].push(0)
+                    }
+                }
+                else {
+                    type[data[i].multiple].push(2)
+                }
+            }
+            else {
+                if (submit_answer[topic_id] != undefined) {
+                    hash = data[i].hash;
+                    if (flag_is_right[hash] != undefined) {
+                        if (flag_is_right[hash] == true){
+                            operational_list.push(1)
+                        }
+                        else {
+                            operational_list.push(0)
+                        }
+                    }
+                    else {
+                        operational_list.push(0)
+                    }
+                }
+                else {
+                    operational_list.push(2)
+                }
+
+            }
+        }
+        return type
+    }
+
+    //加载场景
+    function dynamic_env(responses) {
+        if ($('[data-widget-id=common-env]').attr('a')) {
+            return;
+        }
+        $('[data-widget-id=common-env]').attr('a', 1);
+        if (responses.is_dynamic_env) {
+            $ENV(function () {
+                var $env = $('[data-widget-id=common-env]');
+                $env.registerEnvWidget({
+                    common: {
+                        lang: '{{ LANGUAGE_CODE }}',
+                    }
+                });
+                $env.getEnv();
+            });
+        }
+
+    }
+
+    //进度条
+    function operating_schedule(responses) {
+        if (responses.multiple == 4 && responses.solving_mode) {
+            $('#answer-status').empty();
+            $("#radialIndicator").empty();
+
+            getRadialIndicator = radialIndicator('#radialIndicator', {
+                radius: 18,
+                barWidth: 2,
+                barColor: '#FF9900',
+                barBgColor: "rgba(0, 24, 54, 0.35)",
+                fontWeight: 'normal',
+                fontSize: "14px",
+                percentage: true
+            });
+            getRadialIndicator.animate(Math.round(responses.score_per * 100));
+            $('#radialIndicator').show('slow');
+        }
+        else if (responses.multiple == 4) {
+            $("#radialIndicator").empty()
+        }
+    }
+
+    //获取数据
+    function get_task() {
+        http.get("{% url 'event_exam:api:event-review' pk %}", {}, function (res) {
+            if (res.error_code == 0) {
+                $.getJSON("/media/event_exam/json/0".replace('0', json_name), function (data, status) {
+                    if (status == "success") {
+                        data = sort(data);
+                        event_datas = data;
+                        responses = data[0];
+                        responses["num_done_task"] = 1;
+                        responses["num_task"] = data.length;
+                        var topic_id = responses.id;
+                        $("#repeat_record").html("");
+
+
+                        responses["rank_status"] = res["response"].rank_status;
+                        responses["show_score"] = res["response"].show_score;
+                        responses["rank_status"] = res["response"].rank_status;
+
+                        res_response = res["response"];
+                        if (res["response"].show_score) {
+                            responses["get_score"] = res["response"].get_score;
+                        }
+                        if (res_response.answer == "") {
+                            responses["user_answer"] = [];
+                        }
+                        else if (JSON.parse(res_response.answer)[responses.id] != undefined) {
+                            responses["user_answer"] = JSON.parse(res_response.answer)[responses.id];
+                        }
+                        else {
+                            responses["user_answer"] = [];
+                        }
+
+                        if (res["response"].rank_status) {
+                            responses["correct_answer"] = res["response"].correct_answer[topic_id];
+                            var type = wrong_or_right(data, res["response"].correct_answer, res["response"].flag_is_right);
+                        }
+                        else {
+                            var type = type_judgment(data);
+                        }
+
+
+                        responses["answer"] = res["response"].answer;
+                        responses["is_over"] = res["response"].is_over;
+
+
+                        var judgment_list = type[2];
+                        var single_list = type[0];
+                        var multiple_list = type[1];
+                        var operational_list = type[4];
+
+                        if ($.inArray(responses['multiple'], [0, 1, 2, 4]) != -1) {
+                            var judgment_length = judgment_list.length;
+                            var single_length = single_list.length + judgment_length;
+                            var multiple_length = multiple_list.length + single_length;
+                        }
+
+                        responses['judgment_list'] = judgment_list;
+                        responses['single_list'] = single_list;
+                        responses['multiple_list'] = multiple_list;
+                        responses['operational_list'] = operational_list;
+
+
+                        //数据加载
+                        if (radio_choice_vue) {
+                            radio_choice_vue.responses = responses;
+                            radio_choice_vue.topic_id = topic_id;
+                            if ($.inArray(radio_choice_vue.responses.multiple, [0, 1, 2, 4]) != -1) {
+                                radio_choice_vue.judgment_length = judgment_length;
+                                radio_choice_vue.single_length = single_length;
+                                radio_choice_vue.multiple_length = multiple_length;
+                                radio_choice_vue.img_url = img_url
+                            }
+                        } else {
+                            radio_choice_vue = new Vue({
+                                el: '#Election',
+                                data: {
+                                    responses: responses,
+                                    topic_id: topic_id,
+                                    judgment_length: judgment_length,
+                                    single_length: single_length,
+                                    multiple_length: multiple_length,
+                                    img_url: img_url
+                                },
+                                methods: {
+                                    serialization: function (obj) {
+                                        var obj = JSON.parse(obj);
+                                        var opt_list = [];
+                                        for (var opt in obj) {
+                                            opt_list.push(opt)
+                                        }
+                                        opt_list = opt_list.sort();
+                                        var opt_obj = {};
+                                        for (var i = 0; i < opt_list.length; i++) {
+                                            opt_obj[opt_list[i]] = obj[opt_list[i]]
+                                        }
+                                        return opt_obj
+                                    },
+                                    option_restore: function (value, topic_id, responses) {
+
+                                        var submit_answer = responses.answer;
+                                        if (submit_answer != "" && JSON.parse(submit_answer)[topic_id] != undefined) {
+                                            answer_obj = JSON.parse(submit_answer);
+                                            if ($.inArray(value, answer_obj[topic_id]) != -1) {
+                                                return true;
+                                            }
+                                            else {
+                                                return false;
+                                            }
+                                        }
+                                        else {
+                                            return false
+                                        }
+                                    },
+
+                                    dynamic_env: function (responses) {
+                                        dynamic_env(responses)
+                                    },
+                                    operating_schedule: function (responses) {
+                                        operating_schedule(responses)
+                                    }
+                                },
+                                filters: {
+                                    detailUrl: function () {
+                                        return reviewUrl;
+                                    },
+                                    marked: function (response) {
+
+                                        var html = '<li>' + marked(response['num_done_task'] + '.&nbsp;' + response.content + '<span class="orangeC">(' + (gettext("x_this_task")) + response.score + ' PT)</span>') + '</li>';
+                                        if (response['multiple'] == 0) {
+                                            setTimeout(function () {
+                                                $(".single_marked").html(html);
+                                            }, 1);
+                                        }
+                                        else if (response.multiple == 1) {
+                                            setTimeout(function () {
+                                                $(".multiple_marked").html(html);
+                                            }, 1);
+                                        }
+                                        else if (response.multiple == 2) {
+                                            setTimeout(function () {
+                                                $(".judgment_marked").html(html);
+                                            }, 1);
+                                        }
+
+                                    },
+                                    marked_option: function (response) {
+                                        var html = '<li>' + marked(gettext('x_subject_desc') + response.content + '(' + (gettext("x_this_task")) + response.score + ' PT)') + '</li>';
+                                        setTimeout(function () {
+                                            $(".option_marked").html(html);
+                                        }, 1);
+                                    },
+                                    solution_mark: function (value, id, key) {
+                                        setTimeout(function () {
+                                            $('[for="' + id + key + '"]').html(marked(key + ". " + value));
+                                        }, 1);
+                                    },
+                                    answer_separate: function (value) {
+                                        var result = value.split("|");
+                                        result = result.join(",")
+                                        return result
+                                    }
+                                },
+                                mounted: function () {
+                                    $('.sigle_template').unbind('click');
+                                    $('.gs_submit_answer').unbind('click');
+                                    {#gs_submit_answer();#}
+                                    dynamic_env(responses);
+                                    operating_schedule(responses)
+
+                                },
+                                updated: function () {
+                                    $('.sigle_template').unbind('click');
+                                    $('.gs_submit_answer').unbind('click');
+                                    dynamic_env(responses);
+                                    {#gs_submit_answer();#}
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+        })
+    }
+
+    $(document).ready(function () { //双击下一题
+        $(document).dblclick(function () {
+            get_data(responses.num_done_task)
+        });
+    });
+
+    $(function () {
+        get_task();
+    });
+
+</script>
+{% endblock %}

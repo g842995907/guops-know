@@ -1,0 +1,241 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'event/web/css/event.css' %}"/>
+    <style>
+        .event h3 {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .text-nowrap {
+            white-space: nowrap;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    {% verbatim %}
+    <div class='container mrg93T' id="main">
+        <div class="bread" v-cloak>
+            <a :href="homeUrl">{{ home }}</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active font15'>{{ type ? eventType[type] : competition }}</a>
+        </div>
+        <div class="mrg20T content pad10T clearfix" id="eventList" v-if="events" v-cloak>
+            <div class="event col-sm-12 col-md-12 col-lg-6 mrg30B" 　v-for="event in events">
+                <div class="row pad25A mrg0A oj_card posRelative"
+                     :class="{'ing': event.process == 0, 'future': event.process == 1, 'finish': event.process == 2}">
+                    <div class="col-md-5">
+                        <img :src="event.logo" alt="" class='width100 larger-img'>
+                    </div>
+                    <div class="col-md-7 whiteC">
+                        <h3 class='mrg10T font22' :title="event.name"><i class="oj-icon font20P"
+                                                                         :class="{'oj-icon-E905': event.type == 1, 'oj-icon-E906': event.type == 2, 'oj-icon-E907': event.type == 3, 'oj-icon-E908': event.type == 4, 'oj-icon-E920':event.type == 5}"></i>&nbsp;&nbsp;{{
+                            event.name }}</h3>
+                        <div class="clearfix">
+                            <div class="pull-left">
+                                <div class='font14 mrg5B text-nowrap'>
+                                    <span>{{ compition_style }}：{{ eventType[event.type] }}</span>
+                                </div>
+                                <div class='font14 mrg5B text-nowrap'>
+                                    <span>{{ way_of_entry }}：{{ eventMode[event.mode] }}</span>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+                                <div class='font14 mrg5B text-nowrap'>
+                                    <span>{{ integral_way }}：{{ eventIntegralMode[event.integral_mode] }}</span>
+                                </div>
+                                <div class='font14 mrg5B text-nowrap'>
+                                    <span>{{ points_reward }}：{{ eventRewardMode[event.reward_mode] }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--
+                        <div class='font14 mrg15B'>
+                            <time>{{ event.start_time | formatYMDHM }}~{{ event.end_time | formatYMDHM }}</time>
+                        </div>
+                        -->
+
+                        <div class='font14 mrg15B'>
+                            <time>{{ event.start_time | formatYMDHM }}~{{ event.end_time | formatYMDHM }}</time>
+                        </div>
+                        <div v-if="event.process != 1 || event.type != 1">
+                            <a :href="event | detailUrl" target="_blank"
+                               class="btn-common oj_competitionBtn">
+                                <div class="left-right-line">{{ event | accessFormat }}</div>
+                            </a>
+                        </div>
+                        <div v-else>
+                            <button v-on:click="showError" class='btn-common oj_competitionBtn'>
+                                <div class="left-right-line">{{ event |accessFormat }}</div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="oj_label whiteC">
+                        {{ event | processFormat }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center;">
+            <div class="pagination"></div>
+        </div>
+    </div>
+    {% endverbatim %}
+
+    <script src="{% static 'web/js/paginator.js' %}"></script>
+    <script type="text/javascript">
+        var eventType = {
+            '1': gettext('x_exam'),
+            '2': gettext('x_jeopardy'),
+            '3': gettext('x_share_game'),
+            '4': gettext('x_trial_game'),
+            '5': gettext('x_ad_game'),
+        };
+        var eventMode = {
+            '1': gettext('x_personal'),
+            '2': gettext('x_team'),
+        };
+        var eventIntegralMode = {
+            '1': gettext('x_cumulative_points'),
+            '2': gettext('x_dynamic_integration'),
+        };
+        var eventRewardMode = {
+            '0': gettext('x_none'),
+            '1': gettext('x_123_blood'),
+        };
+        var eventDetailUrl = {
+            '1': '{% url "event_exam:detail" 0 %}',
+            '2': {% if x_jeopardy_url %}"{{ x_jeopardy_url }}"{% else %}""{% endif %},
+            '3': '',
+            '4': {% if x_trial_url %}"{{ x_trial_url }}"{% else %}""{% endif %},
+            '5': {% if x_ad_url %}"{{ x_ad_url }}"{% else %}""{% endif %},
+        };
+
+        var type = '{{ type }}';
+        var listVue;
+        var pageSize = 12;
+        getList(0, pageSize);
+
+        function getList(offset, limit) {
+            $('div.pagination').empty();
+            var data = {
+                offset: offset,
+                limit: limit
+            };
+            if (type) {
+                data.type = type;
+            }
+            http.get('{% url "event:api:event-list" %}', data, function (res) {
+                var events = res.rows;
+                {#                alert(typeof(events[0].start_time));#}
+                {#                alert(events[0].start_time.replace('T',' '));#}
+                if (listVue) {
+                    listVue.events = events;
+                } else {
+                    listVue = new Vue({
+                        el: '#main',
+                        data: {
+                            events: events,
+                            eventType: eventType,
+                            eventMode: eventMode,
+                            eventIntegralMode: eventIntegralMode,
+                            eventRewardMode: eventRewardMode,
+                            homeUrl: "{% url 'common_web:home' %}",
+                            type: type,
+                            home: gettext('x_home'),
+                            competition: gettext('x_contest'),
+                            compition_style: gettext('x_competition_form'),
+                            integral_way: gettext('x_integral_mode'),
+                            way_of_entry: gettext('x_game_mode'),
+                            points_reward: gettext('x_reward_points'),
+
+                        },
+                        methods: {
+                            showError: function () {
+                                $('#hint-msg').html(gettext('x_sorry_not_start'));
+                                $("#hint-msg-warp").attr("data-backdrop", "static");
+                                $("#hint-msg-warp").modal();
+                                $("#hint-msg-warp").show();
+                                {#                                $("#remind-button").click(function () {#}
+                                {#                                    window.location.href = "{% url 'event_exam:list' %}";#}
+                                {#                                });#}
+                                {#                                $("[type=button]").click(function () {#}
+                                {#                                    window.location.href = "{% url 'event_exam:list' %}";#}
+                                {#                                })#}
+                            }
+                        },
+                        filters: {
+                            processFormat: function (event) {
+                                if (event.type == 5) {
+                                    switch (event.status) {
+                                        case 1:
+                                            return gettext("x_upcoming");
+                                        case 2:
+                                            return gettext("x_paused");
+                                        case 3:
+                                            return gettext("x_underway");
+                                        case 4:
+                                            return gettext("x_archive");
+                                    }
+                                    return "";
+                                }
+                                if (event.process == 0) {
+                                    if (event.status == 2) {
+                                        return gettext("x_paused");
+                                    } else {
+                                        return gettext("x_underway");
+                                    }
+                                } else if (event.process == 1) {
+                                    return gettext("x_upcoming");
+                                } else if (event.process == 2) {
+                                    return gettext("x_archive");
+                                }
+                            },
+                            accessFormat: function (event) {
+                                if (event.type == 5) {
+                                    if (event.status == 4) {
+                                        return gettext("x_review");
+                                    }
+                                }
+                                else if (event.process == 2) {
+                                    return gettext("x_review");
+                                }
+
+                                return event.type == 1 ? gettext("x_exam") : gettext("x_participate");
+                            },
+                            detailUrl: function (event) {
+                                return eventDetailUrl[event.type].replace('0', event.id);
+                            },
+                            {#                            formatYMDHM :function (data) {#}
+                            {#                              return  dateUtil.formatYMDHM(data);#}
+                            {#                            }#}
+                        }
+                    });
+                }
+
+                if (res.total > 0) {
+                    $('div.pagination').bootstrapPaginator({
+                        currentPage: (offset / limit) + 1,
+                        totalPages: Math.ceil(res.total / limit),
+                        onPageClicked: function (event, originalEvent, type, page) {
+                            if ((1 / limit) + 1 == page) {
+                                return;
+                            }
+                            offset = (page - 1) * limit;
+                            getList(offset, limit);
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+{% endblock %}
+
+<!-- container end-->
+

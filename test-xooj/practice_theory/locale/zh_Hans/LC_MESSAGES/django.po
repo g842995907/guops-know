@@ -1,0 +1,56 @@
+msgid "x_option_count"
+msgstr "选项数量"
+
+msgid "x_is_muliple_select"
+msgstr "是否多选"
+
+msgid "x_option_required"
+msgstr "选项：每个选项都必填"
+
+msgid "x_options_1024"
+msgstr "选项：请确保该字段长度不超过 1024 个字符。"
+
+msgid "x_import"
+msgstr "上传"
+
+msgid "x_task_import"
+msgstr "上传题目"
+
+msgid "x_task"
+msgstr "题目"
+
+msgid "x_task_export"
+msgstr "导出题目"
+
+msgid "x_import_successfully"
+msgstr "上传成功"
+
+msgid "x_upload_format_error"
+msgstr "上传格式错误"
+
+msgid "x_please_select_a_file"
+msgstr "请选择一个文件"
+
+msgid "x_select_task_event_category"
+msgstr "选择习题集和分类"
+
+msgid "x_supports_xls_txt_format_files_such_as"
+msgstr "支持(.xls, .txt)格式文件, 列如"
+
+msgid "x_format_error"
+msgstr "格式错误"
+
+msgid "x_accurate_format_error"
+msgstr "第{}行,第{}列 格式错误"
+
+msgid "x_accurate_format_error_no_col"
+msgstr "第{}行, 格式错误"
+
+msgid "x_current_topic_is_empty"
+msgstr "当前题目为空，请从新选择"
+
+msgid "x_the_topic_option_is_up_to_8"
+msgstr "题目选项数最大为8个"
+
+msgid "x_inconsistent_answers_and_options"
+msgstr "该题『{}』答案和选项不一致"

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+{% load static i18n %}
+{% load static_v %}
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    {% get_current_language as LANGUAGE_CODE %}
+    <linK rel="stylesheet" href="{% static 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/common.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/default.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'common_env/lib/vis/vis-network.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'common_env/lib/vis/vis.min.css' %}"/>
+
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'course/js/jquery-ui/jquery-ui.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/network.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/markdown/bootstrap-markdown.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/markdown.css' %}"/>
+
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+
+    <script src="{% static 'lib/hplus/js/jquery.min.js' %}"></script>
+    {#    <script src="{% static 'web/js/jquery-3.2.1.min.js' %}"></script>#}
+    <script src="{% static 'web/js/jquery.form.js' %}"></script>
+    <script src="{% static "web/js/ajax.csrf.js" %}"></script>
+    <script src="{% static 'web/vue/vue.min.js' %}"></script>
+    <script src="{% static 'lib/websocket/reconnecting-websocket.min.js' %}"></script>
+
+    <script src="{% static 'lib/html2canvas/html2canvas.js' %}"></script>
+    <script src="{% static 'lib/jquery/jquery.filedrop.js' %}"></script>
+    <script src="{% static 'web/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/markdown/bootstrap-markdown.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/markdown/marked.js' %}"></script>
+    <script src="{% static 'course/js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'lib/dragula/dragula.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'common_env/lib/vis/vis.min.js' %}"></script>
+    <script src="{% static 'common_env/lib/vis/vis.min.js' %}"></script>
+
+    <script src="{% static 'web/js/base.js' %}"></script>
+    <script src="{% static 'course/js/network.js' %}"></script>
+    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
+    <script src="{% static 'web/js/utils.js' %}"></script>
+
+    <script src="{% static 'web/js/pdfobject.min.js' %}"></script>
+    <script src="{% static_v 'common_remote/js/remote.js' %}"></script>
+
+    <script type="text/javascript" src="{% static_v 'course/widgets/lesson_env/js/network.js' %}"></script>
+
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <script src="{% static 'lib/hplus/js/plugins/markdown/bootstrap-markdown.zh.js' %}"></script>
+    {% else %}
+    {% endif %}
+
+    <style>
+        #mynetwork {
+            background-color: #333333;
+        }
+
+        .clipboard {
+            display: none;
+        }
+
+        .md-editor .md-footer, .md-editor > .md-header {
+            background: transparent;
+        }
+
+        .btn-white {
+            color: #fff;
+            background-color: #FF9900;
+            border-color: #FF9900;
+        }
+
+        .md-editor {
+            border: 1px solid #569bf2;
+        }
+
+{#        .md-editor > textarea {#}
+{#            border-top: 1px dashed #569bf2;#}
+{#            border-bottom: 1px dashed #569bf2;#}
+{#        }#}
+
+        .md-editor > textarea,
+        .md-editor > .md-preview {
+            background: transparent !important;
+        }
+
+        .ui-resizable-se {
+            right: 15px;
+        }
+        .action-btn li{
+            cursor: pointer;
+        }
+        .camera-icon {
+            cursor: pointer;
+        }
+        .md-preview img{
+            width: 100%;
+        }
+        #drag {
+            width: 50%!important;
+        }
+        #drag .tab-wrap, #drag .tabs {
+            width: 100%!important;
+        }
+        .clearfix ul li{
+            list-style:circle;
+            margin-left: 25px;
+        }
+        .firstBtn>div {
+            position: absolute;
+            left: 80px;
+            top: 16px;
+            background: #001836;
+            min-width: 70px;
+            min-height: 25px;
+            border-radius: 5px;
+            color: #fff;
+            text-align: center;
+            line-height: 25px;
+            z-index: -1;
+            padding: 0 5px;
+            white-space: nowrap;
+            opacity: 0;
+        }
+        .firstBtn>div:after {
+            content: '';
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-left: 5px solid #001836;
+            position: absolute;
+            right: -5px;
+            top: 5px;
+        }
+    </style>
+
+
+</head>
+<body>
+<script>
+    $(function () {
+        var iframe = $('iframe[name=env_guacamole]')[0];
+        // guacamole重新获取焦点, 响应键盘输入
+        $(iframe).mouseenter(function () {
+            remoteUtil.focus(iframe);
+        });
+        $('iframe[name="env_guacamole"]').height($(window).height()-45)
+    });
+</script>
+<iframe src="" frameborder='0' scrolling='auto'
+        style="position:fixed;width: 100%;z-index: -5;top: 45px;" name="env_guacamole">
+</iframe>
+{#相机特效#}
+<div class="photo-mask" style="display: none;">
+    <img class="photo" src="">
+</div>
+
+<div class="network">
+    <div class="top-wrap">
+        <div class="network-top pad30L pad30R pad10T pad10B pad">
+            <div class="row">
+                <div class="btn-group col-lg-4 pad0R">
+                    <div class="back-btn radius-all text-center cursor"><a
+                            href="{% url 'course:markdown_new' %}?course_id={{ course_id }}&lesson_id={{ lesson_id }}"><i
+                            class="fa fa-mail-reply mrg5R"></i>{% trans "x_return_to_course" %}</a></div>
+                    <div class="mainBg radius-all white-color text-center cursor" id="env-btn" style="color: #f5f4f4;"><span
+                            class="fa fa-arrows-alt mrg5R "></span>{% trans 'x_view_topology' %}
+                    </div>
+                    <div class="radius-all white-color text-center cursor btn-primary" id="help-btn" style="color: #f5f4f4;display: inline-block;" ><span
+                            class="fa fa-plus-square mrg5R "></span>{% trans 'x_help_assistance' %}
+                    </div>
+                </div>
+                <div class="btn-group col-lg-3 pad0R">
+                    <div class="icon-group font20">
+{#                        <div class="mrg10L" title="{% trans 'x_use_ctrl_shift_alt_to_copy' %}" id="clipboard-modal"><i#}
+{#                                class="fa fa-copy"></i></div>#}
+{#                        <div class="mrg10L" title="屏幕分享"><i class="fa fa-share-alt"></i></div>#}
+{#                        <div class="mrg10L" title="频目录象"><i class="fa fa-video-camera"></i></div>#}
+{#                        <div class="mrg10L" title="截屏"><i class="fa fa-cut"></i></div>#}
+{#                        <div class="shortcut mrg10L posRelative" title="发送指令(Ctrl+Alt+Del，Ctrl+Alt+F1~F7)"><i#}
+{#                                class="shortcut-icon fa fa-keyboard-o"></i>#}
+{#                            <ul class="shortcut-list cursor">#}
+{#                                <li class="active pad5T pad5B">Ctrl+Alt+Del</li>#}
+{#                                <li class="pad5T pad5B">Ctrl+Alt+F1~F7</li>#}
+{#                            </ul>#}
+{#                        </div>#}
+{#                        <div>{% trans 'x_use_ctrl_shift_alt_to_copy' %}</div>#}
+                    </div>
+                </div>
+                <div class="btn-group col-lg-4 text-right">
+                    <div class="env-time-count-down">
+                        <span class="hint">{% trans 'x_remaining_time' %}：</span>
+                        <span><strong class="orangeC font18" data-time-id="hour_sync">00</strong> {% trans 'x_hour' %} </span>
+                        <span><strong class="orangeC font18"
+                                      data-time-id="minute_sync">00</strong> {% trans 'x_minutes' %}
+                    </span>
+                        <span><strong class="orangeC font18"
+                                      data-time-id="second_sync">00</strong>{% trans "x_seconds" %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#查看拓扑弹出层#}
+    <div class="env">
+        <div class="env-head tab-head clearfix">
+            <div class="white-color font18 pull-left mrg10L">{% trans 'x_course' %} >> {{ lesson_obj.course.name }}
+                >> {{ lesson_obj.name }}</div>
+            <span class="close-tab fa fa-minus-square-o mrg5R cursor pull-right"></span>
+        </div>
+
+        <div data-widget-id="common-env" data-lesson-hash="{{ lesson_id }}"></div>
+
+    </div>
+
+    {#按钮组#}
+    <div class='action-btn-wrapper'>
+        <div class="camera-icon default-bg text-center whiteC firstBtn"
+            style="margin-top: 0;" onclick="show_help()"
+            >
+            <i class="fa-paper-plane-o"></i>
+            <div>{% trans "x_operation_description" %}</div>
+        </div>
+
+        <ul class='action-btn default-bg'>
+{#            <li class="whiteC" onclick="show_help()" style=" display:flex;align-items:center;justify-content: center;">#}
+{#                 <i class="fa-paper-plane-o"></i>#}
+{#                <div class='action-btn-text'>{% trans "x_operation_description" %}</div>#}
+{#            </li>#}
+            <li class="active" media-name="pdf">
+                <a class='action-icon'></a>
+                <div class='action-btn-text'>{% trans "x_experimental_guidance" %}</div>
+            </li>
+            <li class="" media-name="note">
+                <a class='action-icon'></a>
+                <div class='action-btn-text'>{% trans "x_note" %}</div>
+            </li>
+            <li class="" media-name="QandA">
+                <a class='action-icon'></a>
+                <div class='action-btn-text'>{% trans "x_Q_A" %}</div>
+            </li>
+            <li class="" media-name="env">
+                <a class='action-icon'></a>
+                <div class='action-btn-text'>{% trans "x_experimental_report" %}</div>
+            </li>
+{#            <li id="screenShot" class="whiteC" media-name="screen" style=" display:flex;align-items:center;justify-content: center;">#}
+{#                <i class='fa fa-camera'></i>#}
+{#                <div class='action-btn-text'>{% trans "x_screen_capture" %}</div>#}
+{#            </li>#}
+            {% if lesson_obj.attachment %}
+                    <li class="" media-name="attachment">
+                        <a  href="{{ lesson_obj.attachment.url }}" download="{{ lesson_obj.name |truncatewords:50 }}" class='action-icon' id="download_attachment"></a>
+                        <div class='action-btn-text'>{% trans "x_download_annex" %}</div>
+                    </li>
+            {% endif %}
+        </ul>
+    <div id="screenShot" class="camera-icon default-bg text-center whiteC firstBtn">
+        <i class="fa fa-camera"></i>
+        <div>{% trans "x_screen_capture" %}</div>
+    </div>
+    {% verbatim %}
+    <div id="recordingAction" style="display: none;" v-cloak>
+        <div class="camera-icon default-bg text-center whiteC"
+             style="margin-top: 0;"
+             title="开始录制"
+             @click="enableRecording"
+             v-if="!isEnableRecording">
+            <i class="fa fa-video-camera"></i>
+        </div>
+        <div class="camera-icon default-bg text-center whiteC"
+             style="margin-top: 0;"
+             title="录制中，点击停止录制"
+             @click="disableRecording"
+             v-else="isEnableRecording">
+            <i class="fa fa-stop" style="color: #f00;"></i>
+        </div>
+    </div>
+    {% endverbatim %}
+
+    </div>
+    <script src="{% static 'web/js/pdfobject.min.js' %}"></script>
+    {#按钮弹出层#}
+    <div id="drag" style="position: fixed;right: 20px;top: 70px;">
+        <div class="tab-wrap">
+            <div class="tab-head clearfix">
+                <div class="white-color font18 pull-left mrg10L">{% trans 'x_course' %} >> {{ lesson_obj.course.name }} >> {{ lesson_obj.name }}</div>
+                <span class="close-tab fa fa-minus-square-o mrg5R cursor pull-right"></span>
+            </div>
+            <div class="tabs">
+                <ul class="tab-title pad10L pad10R cursor">
+                    <li class="active">{% trans "x_guide_lecture" %}</li>
+                    <li>{% trans "x_note" %}</li>
+                    <li>{% trans "x_Q_A" %}</li>
+                    <li>{% trans "x_experimental_report" %}</li>
+                </ul>
+                <div class="tab-content-wrap">
+                    <div class="tab-content pad20B pad10L pad10R pad15T">
+
+                        <div class="tab-block">
+                            {#                    显示markdown, 显示pdf#}
+                            {#                    <div>{{ lesson_obj.pdf }}</div>#}
+                            {% if lesson_obj.html %}
+                                <iframe id="md_pdf" src="{{ lesson_obj.html.url }}"
+                                        width="100%"
+                                        scrolling="no" frameborder=0
+                                        {% if lesson_obj.html_type == 1 %}
+                                        style="background-color: #fff;min-height: 900px"
+                                        {% else %}
+                                        style="background-color: #fff;min-height: 600px"
+                                        {% endif %}></iframe>
+                            {% elif lesson_obj.markdown %}
+                                <div class="markdown-wrapper">{{ lesson_obj.markdown |safe }}</div>
+                            {% elif lesson_obj.pdf %}
+                                <div class='content mrg10T mrg10B'>
+                                    <div id="mypdf" style="height: 600px"></div>
+                                </div>
+                            {% else %}
+                                <div>{% trans 'x_no_guide' %}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="tab-content pad20B pad10L pad10R pad15T">
+                        <div class="tab-block">
+                            <form id="mynote-form">
+                                <div>
+                                    <input type="text" name="hash" value="" hidden="hidden" readonly/>
+                                    <textarea id="mynote" name="content"></textarea>
+                                </div>
+                                <div class="text-right mrg10T">
+                                    <input type="button" class="btn mainBg whiteC no-radius" id="addNote-btn"
+                                           style="width: 120px;" value="{% trans 'x_save' %}">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="tab-content pad20B pad10L pad10R pad15T">
+                        <div class="tab-block">
+                            {% include "web/comment_template.html" %}
+                        </div>
+                    </div>
+                    <div class="tab-content pad20B pad10L pad10R pad15T">
+                        <div class="tab-block">
+                            <form id="report-form">
+                                <div>
+                                    <input type="text" name="report_hash" value="" hidden="hidden" readonly/>
+                                    <textarea id="report" name="content"></textarea>
+                                </div>
+                                <div class="text-right mrg10T">
+                                    <input type="button" class="btn mainBg whiteC no-radius" id="addReport-btn"
+                                           style="width: 120px;" value="{% trans 'x_save' %}">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {#        <div class="drag-icon text-right"><i class="fa fa-arrows-alt"></i></div>#}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="showHelp" style="top: 25%" tabindex="-1" role="dialog" aria-labelledby="myModalLable"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" >
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                <h4 class="modal-title" style="color: #6692c1"><i class="fa-paper-plane-o"> </i>{% trans 'x_operation_description' %}</h4>
+            </div>
+            <div class="modal-body">
+{#                <ul id="helpTab" class="nav nav-tabs">#}
+{#                    <li>#}
+{#                        <a data-toggle="tab" href="#tab-1" aria-expanded="false">Windows</a>#}
+{#                    </li>#}
+{#                    <li>#}
+{#                        <a data-toggle="tab" href="#tab-2" aria-expanded="false">Linux</a>#}
+{#                    </li>#}
+{#                </ul>#}
+                <div class="clearfix">
+                    <div id="tab-1" class="">
+                        <div style="color: black;">
+                            <h4>{% trans 'x_caps_and_input' %}</h4>
+                            <h5>Windows:</h5>
+                            <p>{% trans 'x_win_caps' %}</p>
+                            <h5>{% trans 'x_kali_caps' %}</h5>
+                            <ul>
+                                <li>{% trans 'x_kali_caps_first_method' %}</li>
+                                <li>{% trans 'x_kali_caps_second_method' %}</li>
+                                <li>{% trans 'x_kali_caps_third_method' %}</li>
+                                <li>{% trans 'x_kali_caps_fourth_method' %}</li>
+                                <li>{% trans 'x_kali_caps_fifth_method' %}</li>
+                            </ul>
+                            <hr/>
+                            <h4>{% trans 'x_copy_paste' %}</h4>
+                            <ul>
+                                <li>{% trans 'x_open_textarea' %}</li>
+                                <li>{% trans 'x_close_textarea' %}</li>
+                                <li>{% trans 'x_copy_paste_vir' %}</li>
+                            </ul>
+                            <hr/>
+                            <h4>{% trans 'x_file_copy' %}</h4>
+                            <p>{% trans 'x_first_way' %}</p>
+                            <p>{% trans 'x_second_way' %}</p>
+                            <h4>{% trans 'x_cautions' %}</h4>
+                            <ul>
+                                <li>{% trans 'x_file_limit' %}</li>
+                            </ul>
+                            <hr/>
+                            <h4>{% trans 'x_file_download' %}</h4>
+                            <h5>Windows:</h5>
+                            <p>{% trans 'x_trans_move' %}</p>
+                            <h5>Linux:</h5>
+                            <p>{% trans 'x_trans_ssh' %}</p>
+                            <h4>{% trans 'x_cautions' %}</h4>
+                            <ul>
+                                <li>{% trans 'x_cautions_win' %}</li>
+                                <li>{% trans 'x_cautions_linux' %}</li>
+                            </ul>
+                        </div>
+                    </div>
+{#                    <div id="tab-2" class="tab-pane">#}
+{#                        <img class="photo" src="{% static 'course/img/linux_up.gif' %}">#}
+{#                    </div>#}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% include 'web/message_modal.html' %}
+
+
+<script>
+    var isEn = {% if LANGUAGE_CODE == 'en' %}true{% else %}false{% endif %};
+    var imgUploadUrl = "{% url 'common_cms:common_upload_image' %}";
+    var markdownUploadUrl = "{% url 'common_cms:common_upload_markdown' %}";
+</script>
+
+<script type="text/javascript">
+        var LANGUAGE_CODE = '{{ LANGUAGE_CODE }}';
+        $LESSON_ENV(function () {
+            $('[data-widget-id=common-env]').registerLessonEnvWidget({
+                common: {
+                    lang: LANGUAGE_CODE,
+                    alert: ialert,
+                    confirm: iconfirm,
+                    webAccessTargets: ['_blank'],
+                }
+            });
+
+            $('[data-widget-id=common-env]').getLessonEnv();
+        });
+
+</script>
+
+<script type="text/javascript">
+    var UserLessonIsHelpUrl = '{% url "course:api:lesson-need-help" lesson_id %}';
+    var user_id = '{{ request.user.id }}';
+
+    $("#download_attachment").click(function () {
+        console.log('download attachment')
+    });
+
+    function setIframeHeight(iframe) {
+        if (iframe) {
+            var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+            if (iframeWin.document.body) {
+                iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+            }
+        }
+    };
+
+    // 初始化用户笔记数据
+    function init_course_detail() {
+        $.ajax({
+            url: "{% url 'course:api:course-detail' course_id %}",
+            type: "get",
+            datatype: "json",
+            success: function (data) {
+
+                // 初始化评论列表
+                init_comment_list(data.hash);
+            },
+            error: function () {
+                showPopMsg("{% trans 'x_unable_get_details' %}");
+            }
+        });
+    }
+    function init_course_note(resource_id) {
+        $("#mynote-form input[name='hash']").val(resource_id);
+        $.ajax({
+            url: "{% url 'common_web:note:mynote' %}",
+            type: "get",
+            data: {"resource": resource_id},
+            datatype: "json",
+            async: true,
+            success: function (data) {
+                // console.info(data);
+                $("#mynote").val(data.content);
+            },
+        });
+
+        $('#mynote').initMarkdown();
+        //  获取富文本焦点
+        {#$('.note-editable').mouseover(function(){$(this).focus()});#}
+
+    }
+
+    // 初始化实验报告数据
+    function init_lesson_report(resource_id) {
+        $("input[name='report_hash']").val(resource_id + "_report");
+        $.ajax({
+            url: "{% url 'common_web:note:mynote' %}",
+            type: "get",
+            data: {"resource": resource_id + "_report"},
+            datatype: "json",
+            async: true,
+            success: function (data) {
+                // console.info(data);
+                $("#report").val(data.content);
+            },
+        });
+        $("#report").initMarkdown();
+        //  获取富文本焦点
+        {#$('.note-editable').mouseover(function(){$(this).focus()});#}
+
+    }
+
+
+    function save_note() {
+        $("#mynote-form").ajaxSubmit({
+            url: "{% url 'common_web:note:save_note' %}",
+            type: "post",
+            traditional: true,
+            beforeSubmit: function () {
+            },
+            success: function (json) {
+                showHintMsg("{% trans 'x_saved_successfully' %}");
+            },
+            error: function (json) {
+                showPopMsg("{% trans 'x_saved_fail' %}");
+            }
+        });
+        return false;
+    }
+    function save_report() {
+        $("#report-form").ajaxSubmit({
+            url: "{% url 'common_web:note:save_note' %}",
+            type: "post",
+            traditional: true,
+            beforeSubmit: function () {
+            },
+            success: function (json) {
+                showHintMsg("{% trans 'x_saved_successfully' %}");
+            },
+            error: function (json) {
+                showPopMsg("{% trans 'x_saved_fail' %}");
+            }
+        });
+        return false;
+    }
+
+    function sync_time() {
+        var hour = $('span[data-time-id="hour"]').text();
+        var minute = $('span[data-time-id="minute"]').text();
+        var second = $('span[data-time-id="second"]').text();
+        if (hour) {
+            $('strong[data-time-id="hour_sync"]').text(hour);
+            $('strong[data-time-id="minute_sync"]').text(minute);
+            $('strong[data-time-id="second_sync"]').text(second);
+        }
+    }
+
+    function show_help() {
+        $("#showHelp").modal("show");
+    }
+
+    $('.firstBtn').hover(function () {
+        var currentWidth = $(this).find('div').width();
+        $(this).find('div').animate({
+            left: -currentWidth - 20  ,
+            opacity: '1'
+        }, "slow");
+    }, function () {
+        var currentWidth = $(this).find('div').width();
+        $(this).find('div').animate({
+            left: currentWidth + 20 ,
+            opacity: '0'
+        }, "slow");
+    });
+
+    $(function () {
+        $('#helpTab li:eq(0) a').tab('show')
+        $('.tab-wrap').css({
+            'width': $(window).width() / 2,
+            'height': $(window).height() * 0.8,
+        });
+        $('.tabs').css({
+            'width': $('.tab-wrap').width(),
+            'height': $('.tab-wrap').height() - $('.tab-head').height(),
+        });
+        $(window).resize(function () {
+            $('.tabs').css({
+                'width': $('.tab-wrap').width(),
+                'height': $('.tab-wrap').height() - $('.tab-head').height(),
+            });
+        })
+        $('#drag').css({
+            'width': $(window).width() / 2,
+            'height': $(window).height() * 0.8,
+        })
+        $('.env').css({
+            'width': $(window).width() / 2,
+        });
+        $("#screenShot").on("click", function () {
+            snapshot();
+        });
+
+
+        {% if lesson_obj.pdf %}
+            var options = {
+                pdfOpenParams: {view: 'FitV', toolbar: '0'},
+                width: "100%",
+                {#height: "2rem"#}
+            };
+            PDFObject.embed("/media/" + "{{ lesson_obj.pdf }}", $("#mypdf"), options);
+        {% endif %}
+
+        init_course_detail();
+        // 初始化笔记和实验报告
+        init_lesson_report('{{ lesson_obj.hash }}');
+        init_course_note('{{ lesson_obj.hash }}');
+
+        $("#addNote-btn").click(save_note);
+        $("#addReport-btn").click(save_report);
+
+
+        $(".env").draggable();
+{#        $(".env").resizable();#}
+        $("#drag").draggable();
+{#        $("#drag").resizable({alsoResize: ".tab-wrap"});#}
+
+        //添加guacamole的显示链接
+        // http://10.10.52.170:8080/guacamole/#/client/NQBjAG15c3Fs
+        {#$("iframe[name='env_guacamole']").attr("src", "http://10.10.52.170:8080/guacamole/#/client/NjgAYwBteXNxbA%3D%3D");#}
+        $("iframe[name='env_guacamole']").attr("src", "{{ guacamole_url }}");
+
+        // 每秒钟执行
+        setInterval(sync_time, 1000)
+
+
+        function snapshot() {
+            remoteUtil.captureScreen($('iframe')[0], function (dataURL) {
+                $('.photo-mask .photo').attr('src', dataURL);
+                $('.photo-mask').show();
+                $(".photo-mask").animate({
+                    "width": 0,
+                    "height": 0,
+                    "right": 0,
+                    "top": "15%",
+                }, "swing slow", null, function () {
+                    $(".photo-mask").hide();
+                    $(".photo-mask").css({
+                        "width": "100%",
+                        "height": "100%",
+                        "right": 0,
+                        "top": 0,
+                    });
+                });
+
+                var imageFile = fileUtil.dataURLtoBlob(dataURL);
+                imageFile.name = 'tmp.png';
+                var formData = new FormData();
+                formData.append('image_file', imageFile);
+                http.post('{% url "common_cms:common_upload_image" %}', formData, function(res){
+                    console.log(res.url);
+                    var report = $("#report").val();
+                    report = report + '\n![](' + res.url + ')';
+                    $("#report").val(report);
+                    http.post('{% url "x_note:save_note" %}', {
+                        hash: '{{ lesson_obj.hash }}_report',
+                        content: report,
+                    }, function(){});
+                }, null, {
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                });
+            });
+        }
+    });
+
+    $("#help-btn").click(function () {
+        // 请求协助api
+        http.get(UserLessonIsHelpUrl, {'connectionId': recordingVue.connectionId}, function (res) {
+            ialert(gettext("x_has_send"));
+        });
+    })
+</script>
+
+<script>
+    var recordingVue = new Vue({
+        el: '#recordingAction',
+        data: {
+            isEnableRecording: false,
+            hostIp: urlparser.getQueryString('host_ip'),
+            connectionId: remoteUtil.getConnectionId(urlparser.getQueryString('url')),
+        },
+        methods: {
+            getConnectionInfo: function () {
+                remoteUtil.getConnectionInfo(this.connectionId, function (res) {
+                    recordingVue.isEnableRecording = res.is_enable_recording;
+                });
+            },
+
+            enableRecording: function(){
+                var connectionId =  this.connectionId;
+                $('#hint-msg-confirm #confirm-msg').html("操作系统会被注销，请提前保存数据， 确定开始录像？");
+                $('#hint-msg-confirm').modal('show');
+                $('#hint-msg-confirm .btn-confirm').off('click').on('click', function () {
+                    remoteUtil.enableRecording(connectionId, function () {
+                        recordingVue.getConnectionInfo();
+                        recordingVue.reloadScreen();
+                    });
+                });
+
+            },
+
+            disableRecording: function () {
+                remoteUtil.disableRecording(this.connectionId, function (res) {
+                    recordingVue.getConnectionInfo();
+                    recordingVue.reloadScreen();
+
+                    var recordingName = res.recording_name;
+                    if (recordingName) {
+                        recordingVue.convertRecording(recordingName);
+                    }
+                });
+            },
+
+            convertRecording: function (recordingName) {
+                var $iframe = $('iframe[name=env_guacamole]');
+                var screenSize = $iframe.width() + 'x' + $iframe.height();
+
+                remoteUtil.convertRecording({
+                    host_ip: this.hostIp,
+                    recording_name: recordingName,
+                    convert_key: 'WEB_LESSON_NOTE',
+                    convert_params: JSON.stringify({
+                        resource: '{{ lesson_obj.hash }}',
+                        user_id: {{ user.id }},
+                    }),
+                    screen_size: screenSize,
+                }, function (res) {
+
+                });
+            },
+
+            reloadScreen: function () {
+                var iframe = $('iframe[name=env_guacamole]')[0];
+                remoteUtil.reload(iframe);
+            },
+        },
+        mounted: function () {
+            this.getConnectionInfo();
+        },
+    });
+
+    wsutil('/course/websocket/lesson/{{ lesson_obj.hash }}/').bind({
+        10000: function () {
+            init_lesson_report('{{ lesson_obj.hash }}');
+        },
+    });
+</script>
+
+</body>

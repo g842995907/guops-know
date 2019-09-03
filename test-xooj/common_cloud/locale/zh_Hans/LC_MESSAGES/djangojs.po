@@ -1,0 +1,5 @@
+msgid "x_input_name"
+msgstr "名称： 请输入名称"
+
+msgid "x_must_input_description"
+msgstr "更新说明： 必填"

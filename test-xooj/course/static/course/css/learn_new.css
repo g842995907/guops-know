@@ -1,0 +1,120 @@
+.learn-title {
+
+}
+
+.content{
+    width: 100%;
+    height: 100%;
+}
+
+.action-btn-wrapper {
+    position: fixed;
+    right: 0;
+    /*top:135px;*/
+    top:50%;
+    transform: translateY(-50%);
+    transform-origin:50% 50%;
+}
+
+.action-btn li ,
+.apply-env-action-btn{
+    width: 48px;
+    height: 52px;
+    position: relative;
+    transition: .4s linear;
+    z-index: 999;
+}
+
+.action-btn li a.active,
+.apply-env-action-btn a.active{
+    background-color: #fb9b11;
+}
+
+.action-btn li .action-icon,
+.apply-env-action-btn .action-icon{
+    width: 100%;
+    height: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.action-btn li[media-name="next_lesson"] .action-icon {
+    background-image: url(../img/next.png);
+}
+
+.action-btn li[media-name="prev_lesson"] .action-icon {
+    background-image: url(../img/next.png);
+    transform: rotate(180deg);
+}
+
+.action-btn li[media-name="pdf"] .action-icon {
+    background-image: url(../img/document.png);
+}
+
+.action-btn li[media-name="markdown"] .action-icon {
+    background-image: url(../img/document.png);
+}
+
+.action-btn li[media-name="video"] .action-icon {
+    background-image: url(../img/shiping.png);
+}
+
+.action-btn li[media-name="attachment"] .action-icon {
+    background-image: url(../img/fujian.png);
+}
+
+.action-btn li[media-name="env"] .action-icon {
+    background-image: url(../img/shiyan.png);
+}
+
+.action-btn li[media-name="note"] .action-icon {
+    background-image: url(../img/biji.png);
+}
+
+.action-btn li[media-name="report"] .action-icon {
+    background-image: url(../img/zuoye.png);
+}
+
+.action-btn li[media-name="QandA"] .action-icon {
+    background-image: url(../img/icon_exchange_big.png);
+}
+
+.action-btn li[media-name="exercise"] .action-icon {
+    background-image: url(../img/exercise.jpg);
+}
+
+.action-btn li[media-name="double_screen"] .action-icon {
+    background-image: url(../img/icon_double_big.png);
+}
+
+.apply-env-action-btn[media-name="apply-env-action-btn"] .action-icon {
+    background-image: url(../img/shiyan.png);
+}
+.action-btn li .action-btn-text,
+.apply-env-action-btn .action-btn-text{
+    position: absolute;
+    left: 80px;
+    top: 16px;
+    background: #001836;
+    min-width: 70px;
+    min-height: 25px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+    line-height: 25px;
+    z-index:-1;
+    padding: 0 5px;
+    white-space:nowrap;
+}
+
+.action-btn li .action-btn-text:after,
+.apply-env-action-btn .action-btn-text:after{
+    content: '';
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #001836;
+    position: absolute;
+    right: -5px;
+    top: 5px;
+}

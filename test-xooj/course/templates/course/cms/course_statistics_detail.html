@@ -1,0 +1,308 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v static %}
+
+{% block title %}
+    <a href="{% url 'cms_course:class_statistics_list' %}">{% trans 'x_learning_statistics' %}</a> >
+    <a href="{% url 'cms_course:statistics' course.id %}">{{ course.name }}</a> > {{ user.first_name }}
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static 'lib/jstree/css/style.css' %}"/>
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <style>
+        #introduction {
+            height: 400px;
+            resize: none;
+            margin-bottom: 20px;
+            overflow: auto;
+            background-color: #eee;
+            opacity: 1;
+            padding: 10px;
+            border: 1px solid transparent;
+        }
+     #introduction img{
+         width: 100%;
+         height: 100%;
+     }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left col-md-2 col-sm-2">
+                        <select class="form-control m-b sticky" id="lesson_name" onchange="table.refresh();">
+                            <option value="" selected="selected">{% trans 'x_please_select_lessons' %}</option>
+                            {% for lesson in lesson_list %}
+                                <option value={{ lesson.id }}>{{ lesson.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <input class="form-control m-b sticky" id="search"
+                               placeholder={% trans 'x_lesson_name' %} type="text">
+                        </input>
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_course:api:course-statistics-detail' user.id %}?course_id={{ course.id }}"
+        >
+            <thead>
+            <tr>
+                <th data-field="first_name" data-escape="true" >{% trans 'x_name_surname' %}</th>
+                <th data-field="lesson_name" data-escape="true">{% trans 'x_class_hours' %}</th>
+                <th data-field="lesson_type" data-formatter="table.reportFormatter">{% trans 'x_experimental_report' %}</th>
+                <th data-field="experiment_mark_score" data-formatter="table.markscoreFormatter">{% trans 'x_experiment_mark_score' %}</th>
+                <th data-field="mark_score_teacher" >{% trans 'x_mark_score_teacher' %}</th>
+                <th data-field="update_time">{% trans 'x_update_time' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <!-- 实验报告模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width:60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_experimental_report' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="validateForm"
+                          action=""
+                          method="patch"
+                          class="form-horizontal">
+                        {% csrf_token %}
+                        <div class="ibox-content">
+{#                            <div class="hr-line-dashed"></div>#}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{% trans 'x_experimental_report' %}</label>
+
+                                <div class="col-sm-10" id="report_div">
+{#                                    <input type="text" name="hash" value="" hidden="hidden" readonly/>#}
+{#                                    <textarea class="form-control" id="content" name="content"></textarea>#}
+                                    <div class="form-control" id="introduction" name="introduction">
+                                </div>
+
+                            </div>
+{#                              <div class="hr-line-dashed"></div>#}
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{% trans 'x_mark_score' %}</label>
+                                <div class="col-sm-2 pull-left" >
+                                    <input type="number" class="form-control" min="0" max="100" id="score"
+                                           name="score"
+                                           placeholder="0~100"
+                                           value="0"/>
+
+                                </div>
+                                   <div style="padding-top:1px;font-size:25px">
+                                    <span class="text-danger pull-left">*</span>
+                                </div>
+                                <div style="padding-top:1px;font-size:25px">
+                                    <span class="text-danger">*</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{% trans 'x_is_pass' %}</label>
+                                <div class="col-sm-2">
+                                    <input type="hidden" name="ispass" data-form-fixed="1"
+                                           value="0">
+                                    <input type="checkbox" class="form-control js-switch" id="ispass"
+                                           data-name="ispass" {% comment %}checked{% endcomment %}>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{% trans 'x_mark_comment' %}</label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" id="markcomment" name="markcomment"
+                                              placeholder="{% trans 'x_please_enter_your_comment' %}"
+                                    ></textarea>
+                                </div>
+
+                                <div style="padding-top:1px;font-size:25px">
+                                    <span class="text-danger">*</span>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-2">
+                                    <div class="alert alert-danger server-error" id="server-error">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <a class="btn btn-white return" data-dismiss="modal">{% trans 'x_cancel' %}</a>
+                                    <button class="btn btn-primary" type="submit"
+                                            id="save">{% trans 'x_save' %}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+{#                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>#}
+{#                    <button type="button" class="btn btn-primary">提交更改</button>#}
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_course:statistics_detail' course.id user.id %}";
+        var updateNoteUrl = "{% url 'cms_x_note:api:note-detail' 0 %}";
+    </script>
+    <script type="text/javascript">
+        {#pageWidgets.registerCheckTableRow($("#table"));#}
+        {#$("#content").initMarkdown();#}
+        var elems = Array.prototype.slice.call($('.js-switch'));
+
+        elems.forEach(function (html) {
+            switchery = new Switchery(html, {color: "#1AB394"});
+
+            $(html).change(function () {
+                var name = $(this).attr('data-name');
+                var $input = $(this).siblings('[name=' + name + ']');
+                if ($(this).prop('checked')) {
+                    $input.val(1);
+                } else {
+                    $input.val(0);
+                }
+            });
+        });
+
+        $('#testEnvModal').on('hidden.bs.modal', function () {
+            $('[data-widget-id=common-env]').empty();
+            $('[data-widget-id=common-env]').clearLessonEnvInstance();
+        });
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.reportFormatter = function(value, row, index) {
+                if(value){
+                    if (row.ispass == undefined) {
+                        return "<div class='text-danger'>"+gettext('x_not_submit')+"</div>";
+                    }
+                    return [
+                        '<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" data-value="',
+                        row.lesson_hash + '" data-user-id=' + row.user_id +'>',
+                        '{% trans "x_view_report" %}',
+                        '</button>',
+                    ].join('');
+                }
+            };
+
+            this.markscoreFormatter = function (value, row, index) {
+                if (!row.lesson_type {% comment %}|| row.ispass == undefined{% endcomment %}) return;
+
+                if (!row.mark_score_teacher){
+                    return '<div class="text-warning">'+gettext("x_not_mark_score")+'</div>';
+                }
+                if (row.ispass){
+                    return ['<div class="text-info">'+
+                            row.experiment_mark_score +
+                            '</div>'].join("");
+                }else {
+                    return '<div class="text-danger">'+ gettext('x_not_pass')+'</div>';
+                }
+
+            }
+
+        });
+
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.lesson_name = $("#lesson_name").val();
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        $("#myModal").on("show.bs.modal", function (e) {
+            var btn = $(e.relatedTarget);
+            var value = btn.data("value");
+            var reportvalue = value + '_report';
+            var user_id_value = {{ user.id }};
+
+            $("#report_div input[name='hash']").val(reportvalue);
+            $.ajax({
+                url: "{% url 'cms_x_note:api:note-list' %}",
+                type: "get",
+                data: {"search_resource": reportvalue, "user_id": user_id_value},
+                datatype: "json",
+                async: true,
+                success: function (data) {
+                    // console.info(data);
+                    if (data.total !== 1){
+                        return
+                    }
+                    var rows  = data.rows[0];
+                    $("#validateForm").attr('action', updateNoteUrl.replace(0, rows.id));
+                    {#$("#content").val(rows.content);#}
+                    $("#introduction").html(marked(rows.content));
+                    $("#score").val(rows.score);
+                    $("#markcomment").val(rows.markcomment);
+
+                    $("input[name='ispass']").val(rows.ispass ? 1: 0);
+
+                    if (rows.ispass == true ){
+                        setSwitchery(switchery, true)
+                    }else {
+                        setSwitchery(switchery, false)
+                    }
+
+                },
+            });
+
+        });
+
+        $("#validateForm").ajaxFormDialog(function () {
+            setTimeout(function () {
+                window.location.href = listUrl;
+            }, ajaxDialog.defaultDelayTime);
+        });
+
+        /**
+         * 切换Switchery开关函数  switchElement Switchery对象,checkedBool 选中的状态
+         */
+        function setSwitchery(switchElement, checkedBool) {
+            if ((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
+                switchElement.setPosition(true);
+                switchElement.handleOnchange(true);
+            }
+        }
+
+    </script>
+{% endblock %}

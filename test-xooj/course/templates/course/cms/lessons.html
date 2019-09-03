@@ -1,0 +1,730 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v static %}
+
+{% block title %}
+    <a href="{% url 'cms_course:course' %}">{% trans "x_course" %}</a> >
+    {{ course.name }} > {% trans 'x_class_management' %}
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static 'lib/jstree/css/style.css' %}"/>
+    <script type="text/javascript" src="{% static_v 'course/widgets/lesson_env/js/network.js' %}"></script>
+    <script src="{% static 'lib/jstree/js/jstree.js' %}"></script>
+    <style>
+    .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn){
+        width: 90%;
+    }
+    .btnHover,.spanStyle{
+        display: inline-block;
+         width: 90px;
+        height: 30px;
+        line-height: 30px;
+        padding-left: 6px;
+        {#text-align: center;#}
+    }
+    .btnHover:hover{
+        border: 1px solid #00AADC;
+        border-radius: 5px;
+    }
+    .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+    .m-l-15 {
+        margin-left: -15px;
+    }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b select_search" id="search_type" refresh_id="table">
+                            <option value="">{% trans 'x_all_type' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ModelConstant.Lesson.Type'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b select_search" refresh_id="table" id="search_difficulty">
+                            <option value="">{% trans 'x_all_difficulty' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ModelConstant.Lesson.Difficulty'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b" id="search" placeholder="{% trans 'x_lesson_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-md-12 col-sm-12 m-l-15">
+                        <a class="btn btn-primary" href="{% url 'cms_course:lesson_detail' course.id 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                        <span class="btn btn-info" data-toggle="modal" data-target="#other_select_add">
+                            <i class="fa fa-copy"></i>{% trans 'x_import' %}
+                        </span>
+
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_course:api:lesson-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                        <a class="btn btn-success" href="{% url 'cms_course:lesson_sort' course.id %}"
+                           data-toggle="modal" data-target="#sortModal">
+                            <i class="glyphicon glyphicon-indent-left"></i> {% trans 'x_sorting' %}
+                        </a>
+                        <button class="btn btn-primary"
+                                data-url="{% url 'cms_course:api:lesson-batch-public' %}"
+                                onclick="table.batchPublic(this, 1);">
+                            <i class="fa fa-eye"></i> {% trans 'x_public' %}
+                        </button>
+                        <button class="btn btn-default"
+                                data-url="{% url 'cms_course:api:lesson-batch-public' %}"
+                                onclick="table.batchPublic(this, 0);">
+                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}
+                        </button>
+                        <button class="btn btn-primary"
+                                data-url="{% url 'cms_course:api:lesson-batch-public-exercise' %}"
+                                onclick="table.batchPublic(this, 1);">
+                            <i class="fa fa-eye"></i> {% trans 'x_public_ex' %}
+                        </button>
+                        <button class="btn btn-default"
+                                data-url="{% url 'cms_course:api:lesson-batch-public-exercise' %}"
+                                onclick="table.batchPublic(this, 0);">
+                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide_ex' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_course:api:lesson-list' %}?course_id={{ course.id }}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true" >{% trans 'x_name' %}</th>
+{#                <th data-field="en_name">{% trans 'x_en_name' %}</th>#}
+                <th data-field="course_name" data-escape="true">{% trans 'x_belong_course' %}</th>
+                <th data-field="type" data-formatter="table.lessonTypeFormatter" data-sortable="true">{% trans 'x_type' %}</th>
+                <th data-field="id" data-formatter="table.courseFormatter">{% trans 'x_courseware_content' %}</th>
+                <th data-field="difficulty" data-formatter="table.difficultyFormatter" data-sortable="true">{% trans 'x_difficulty' %}</th>
+                <th data-field="lesson_type" data-formatter="table.studyTypeFormatter" data-sortable="true">{% trans 'x_learning_type' %}</th>
+                <th data-field="duration" data-formatter="table.lessonDurationFormatter">{% trans 'x_learning_time' %}</th>
+{#                <th data-field="practice_name">{% trans '随堂测验' %}</th>#}
+{#                <th data-field="homework_name">{% trans '课后练习' %}</th>#}
+                <th data-field="public" data-formatter="table.publicFormatter" data-sortable="true">{% trans 'x_public' %}</th>
+                <th data-field="exercise_public" data-formatter="table.publicExerciseFormatter" data-sortable="true">{% trans 'x_exercise_status' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="sortModal">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="testEnvModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_test_experimental_environment' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <div data-widget-id="common-env" data-lesson-hash="0" data-from-backend="1"></div>
+                </div>
+                <div class="clearfix modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="select_add_new_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style='top: 100px; font-size: 14px'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans "x_select_model_add" %}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <h2 class="row">
+                        <div class="col-md-6 text-center"  style="border-right: 2px solid;"><a
+                                href="{% url 'cms_course:lesson_detail' course.id 0 %}">{% trans "x_custom_add" %}</a></div>
+                        <div class="col-md-6 text-center">
+                            <a data-toggle="modal" data-target="#other_select_add" data-dismiss="modal">{% trans 'x_other_lesson_import' %}</a>
+                        </div>
+                    </h2>
+                </div>
+                <div class="modal-footer">
+                    {#                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "x_close" %}</button>#}
+                    {#                <button type="button" class="btn btn-primary">{% trans 'x_confirm' %}</button>#}
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="other_select_add" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style='top: 0px; font-size: 14px;width: 65%; min-width: 800px;'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_import' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="tableToolbarImport">
+                        <div class="form-group">
+                            <div class="clearfix">
+                                <div class="m-r pull-left col-md-2">
+                                    <select class="form-control m-b" id="search_direction">
+                                        <option value="">{% trans 'x_all_directions' %}</option>
+                                        <option data-id="option-rendering" data-load='loadDirections'
+                                                    async>{% trans 'x_loading' %}</option>
+                                    </select>
+                                </div>
+                                <div class="m-r pull-left col-md-2">
+                                    <select class="form-control m-b select_search" id="search_course">
+                                        <option value="">{% trans 'x_all_course' %}</option>
+                                        </option>
+                                        <option data-id="option-rendering" data-load='loadCourses' async-data-reload="course-reload"
+                                                    async>{% trans 'x_loading' %}</option>
+                                    </select>
+                                </div>
+                                <div class="m-r pull-left">
+                                    <input class="form-control m-b select_search" refresh_id="table_import" id="search_lesson_name" placeholder="{% trans 'x_lesson_name' %}"
+                                           type="text"/>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <a class="btn btn-primary" onclick="table_import.refresh();">
+                                        <i class="fa fa-search"></i>{% trans 'x_search' %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="table_import"
+                           data-toggle="table_import"
+                           data-toolbar="#tableToolbarImport"
+                           data-toolbar-align="center"
+                           data-show-refresh="false"
+                           data-search="false"
+                           data-pagination="true"
+                           data-side-pagination="server"
+                           data-url="{% url 'cms_course:api:lesson-list' %}?except_course={{ course.id }}"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="name" data-escape="true">{% trans 'x_name' %}</th>
+                            <th data-field="course_name" data-escape="true">{% trans 'x_belong_course' %}</th>
+                            <th data-field="type" data-formatter="table.lessonTypeFormatter">{% trans 'x_type' %}</th>
+                            <th data-field="id"
+                                data-formatter="table_import.courseFormatter">{% trans 'x_courseware_content' %}</th>
+                            <th data-field="difficulty"
+                                data-formatter="table.difficultyFormatter">{% trans 'x_difficulty' %}</th>
+                            <th data-field="duration"
+                                data-formatter="table.lessonDurationFormatter">{% trans 'x_learning_time' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    <!-- 类型 -->
+{#                    <div class="hr-line-dashed"></div>#}
+{#                    <div class="form-group " >#}
+{#                        <label class="col-sm-2 control-label" style="padding-left: 35px">{% trans 'x_course' %}</label>#}
+{#                        <div class="col-md-8" style="margin-top: -5px; font-size: 15px;">#}
+{#                            <select class="selectpicker "  id="select_course" name="select_course" data-form-fixed="1"#}
+{#                                    onchange="course_changed(this.value)">#}
+{#                            </select>#}
+{#                        </div>#}
+{#                        <div style="padding-top:1px;font-size:25px">#}
+{#                            <span class="text-danger">*</span>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <div class="hr-line-dashed"></div>#}
+{#                    <div class="form-group ">#}
+{#                        <label class="col-sm-2 control-label " style="padding-left: 35px">{% trans 'x_lesson' %}</label>#}
+{##}
+{#                        <div class="col-md-8" style="margin-top: -5px; font-size: 15px">#}
+{#                            <select class="selectpicker" multiple data-actions-box="true" id="select_course_lesson"#}
+{#                                    data-form-fixed="1"#}
+{#                                    name="select_course_lesson"#}
+{#                                    title="{% trans 'x_please_select' %}"#}
+{#                                    data-style="btn-white">#}
+{#                            </select>#}
+{#                        </div>#}
+{#                        <div style="padding-top:1px;font-size:25px">#}
+{#                            <span class="text-danger">*</span>#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                    <div class="hr-line-dashed"></div>#}
+                    <div class="form-group">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" style="margin-bottom: auto;" data-dismiss="modal">{% trans "x_close" %}</button>
+                    <button type="button" class="btn btn-primary" style="margin-bottom: auto;" onclick="addNewLesson()" id="addNewLesson">{% trans 'x_confirm' %}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript" src="{% static_v 'course/cms/js/constants.js' %}"></script>
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_course:lesson_detail' course.id -1 %}";
+        var exercisesUrl = "{% url 'cms_course:lesson_exercises' 0 %}";
+        var reportUrl = "{% url 'cms_course:report_list' course.id -1 %}";
+        var lesson_monitor_url = "{% url 'cms_course:lesson_monitor' 0 %}";
+        var DEBUG ="{{ DEBUG }}";
+        var courseListUrl = "{% url 'cms_course:api:course-list' %}";
+        var lessonListUrl = "{% url 'cms_course:api:lesson-list' %}";
+        var addNewLessonUrl = "{% url 'cms_course:api:lesson-new-create' 0 %}";
+        var CourseId = "{{ course.id }}";
+        {#var NOVIDEO = '0';#}
+        var SUCCESS = '1';
+        var CHANGEING = '2';
+        var FAIL = '3';
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+        pageWidgets.registerCheckTableRow($("#table_import"));
+
+        $LESSON_ENV(function () {
+            $('[data-widget-id=common-env]').registerLessonEnvWidget({
+                common: {
+                    lang: LANGUAGE_CODE,
+                    alert: popUtil.warningHint,
+                    confirm: popUtil.confirm,
+                }
+            });
+        });
+        $('#testEnvModal').on('hidden.bs.modal', function () {
+            $('[data-widget-id=common-env]').empty();
+            $('[data-widget-id=common-env]').clearLessonEnvInstance();
+        });
+
+        $("#sortModal").on("hidden.bs.modal", function() {
+            $(this).removeData("bs.modal");
+        });
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.showTestEnv = function (lessonHash) {
+                $('[data-widget-id=common-env]').attr('data-lesson-hash', lessonHash);
+                $('#testEnvModal').off('shown.bs.modal').on('shown.bs.modal', function () {
+                    $('[data-widget-id=common-env]').getLessonEnv();
+                });
+                $('#testEnvModal').modal();
+            };
+
+            var fakeLessonUrl = '{% url "cms_course:api:lesson-detail" 0 %}';
+            this.setLessonEnvType = function (lessonId, type) {
+                var url = fakeLessonUrl.replace('0', lessonId);
+                http.patch(url, {lesson_env__type: type}, function (res) {
+                    table.reload();
+                });
+            };
+
+            this.toVideoMonitor = function(lessonId){
+                if (/^\d+$/g.test(lessonId)) {
+                    window.location.href = lesson_monitor_url.replace(0, lessonId)
+                }
+            };
+
+            this.toExercise = function (lessonId) {
+                window.location.href = exercisesUrl.replace(0, lessonId)
+            }
+
+            this.operatorFormatter = function(value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        url: listUrl.replace(-1, value),
+                        builtin: row.builtin,
+                    },
+                    {% comment %}{
+                        type: 'link',
+                        class: 'btn-info',
+                        icon: 'fa-bars',
+                        text: "{% trans 'x_lesson_exercises' %}",
+                        url: exercisesUrl.replace(0, value)
+                    }{% endcomment %}
+                ];
+
+                if (row.type=="1"){
+                    if (row.lesson_env) {
+                        {% comment %}btns.push({
+                            type: 'btn',
+                            class: 'btn-warning',
+                            icon: 'fa-spinner',
+                            text: "{% trans 'x_test_experimental_environment' %}",
+                            click: 'table.showTestEnv("' + row.id + '")',
+                        });{% endcomment %}
+
+                        var setLessonEnvIcon;
+                        var setLessonEnvTypeText;
+                        var setLessonEnvType;
+                        if (row.lesson_env.type == 0) {
+                            setLessonEnvTypeText = gettext("x_setting_private_environment");
+                            setLessonEnvType = 1;
+                            setLessonEnvIcon = 'fa-user';
+                        } else {
+                            setLessonEnvTypeText = gettext('x_set_shared_environment');
+                            setLessonEnvType = 0;
+                            setLessonEnvIcon = 'fa-users';
+                        }
+                        // 暂时隐藏
+{% comment %}                        btns.push({
+                            type: 'btn',
+                            class: 'btn-success',
+                            icon: setLessonEnvIcon,
+                            text: setLessonEnvTypeText,
+                            click: 'table.setLessonEnvType("' + row.id + '", ' + setLessonEnvType + ')',
+                        });{% endcomment %}
+                        btns.push({
+                            type: 'btn',
+                            class: 'btn-info',
+                            icon: 'fa-video-camera',
+                            text: gettext("x_video_monitor"),
+                            click: "table.toVideoMonitor('" + row.id + "')"
+                        })
+                    }
+                    if (row.has_report) {
+                        btns.push({
+                            type: 'link',
+                            class: 'btn-primary',
+                            icon: 'fa-files-o',
+                            text: gettext('x_experimental_report'),
+                            url: reportUrl.replace(-1, value)
+                        });
+                    }
+                }
+                return bsTable.getOperatorHtml(btns);
+            };
+
+            this.getCorseware = function(content, showName, icon, is_button, clickfunc) {
+                if (content === 0){
+                    content = '-1'
+                }
+                if (content != null && content != undefined && content != '') {
+                    if (is_button == true) {
+                        return [
+                            {#'<img title="{0}" src="{1}"/>'.format(showName, icon),#}
+                            '<a class="btnHover" onclick={click} style="margin-right: 10px;"><i class="fa fa-circle" style="color:#1ab394;"></i> {name}</a>'.format({name:showName, click: clickfunc}),
+                        ].join('');
+                    } else {
+                        return [
+                            '<span class="spanStyle" style="margin-right: 10px;"><i class="fa fa-circle" style="color:#1ab394;"></i> {0}</span>'.format(showName),
+                        ].join('');
+                    }
+                }
+            };
+
+            this.getLessonEnvIcon = function (row) {
+                if (row.lesson_env) {
+                    if (row.lesson_env.type == 0) {
+                        return table.getCorseware(row.lesson_env, "{% trans 'x_shared_environment' %}", "{% static_v "course/img/shared_env.png" %}");
+                    } else if (row.lesson_env.type == 1) {
+                        return table.getCorseware(row.lesson_env, "{% trans 'x_private_environment' %}", "{% static_v "course/img/private_env.png" %}");
+                    }
+                }
+                return '';
+            }
+
+            this.lessonTypeFormatter = function(value, row, index) {
+                if(value == "0"){
+                    return "{% trans "x_heoretical_lesson" %}";
+                }else if(value == "1"){
+                    return "{% trans "x_experiment_lesson" %}";
+                }else if(value == "2"){
+                    return "{% trans 'x_practice_lesson' %}";
+                }else if(value == "3"){
+                    return "{% trans 'x_exam_lesson' %}";
+                }
+                return "-";
+            }
+
+            this.publicExerciseFormatter = function (value, row, index) {
+                if (value == true || value == 'true') {
+                    return "<span style='color: #00AAAA' class='glyphicon glyphicon-eye-open'>&nbsp;" + gettext('x_public') + "</span>";
+                } else {
+                    return '<span class="glyphicon glyphicon-eye-close">&nbsp;' + gettext('x_hide') + '</span>'
+                }
+            };
+
+            this.lessonDurationFormatter = function(value, row, index) {
+                if (value){
+                    return value+" {% trans "x_minute" %}";
+                }else{
+                    return "0 {% trans "x_minute" %}";
+                }
+            }
+            this.studyTypeFormatter = function (value, row, index) {
+                if (value === undefined) {
+                  return ModelConstant.Lesson.LearnType.NOT_CONFIGURED.text
+                }
+                return DictModelConstant.Lesson.LearnType[value]
+            }
+            this.getVideoState = function (video, videostate) {
+                var value = '';
+                var color_styel = '';
+                if (videostate == SUCCESS) {
+                    value = gettext('x_video_transcoding_success');
+                    color_styel = 'green'
+                }else if (videostate == CHANGEING){
+                    value = gettext('x_video_is_transcoding');
+                    color_styel = 'red'
+                }else if (videostate == FAIL){
+                    value = gettext('x_video_transcoding_failure');
+                    color_styel = 'blue'
+                }
+                if (video) {
+                    if (DEBUG == "True") {
+                        return [
+                            '<p style=\'color:{0}\'>{1}</p>'.format(color_styel, value),
+                        ].join('');
+                    }
+                }
+            };
+
+            this.courseFormatter = function(value, row, index) {
+                var rowtemp = row.html || row.pdf || row.markdown;
+                var temp_video = null;
+                if (row.video_state == SUCCESS){
+                    temp_video = row.video_state;
+                }else if(row.video){
+                    temp_video = row.video;
+                }
+                if (row.type=="0"){
+                    return [
+                        '<div>',
+                        {#table.getCorseware(row.pdf, "{% trans 'x_handouts' %}", "{% static_v "course/img/pdf_course.png"  %}"),#}
+                        {#table.getCorseware(row.markdown, "{% trans 'x_handouts' %}", "{% static_v "course/img/mkdown_lesson.png"  %}"),#}
+                        table.getCorseware(rowtemp, "{% trans 'x_course_handouts' %}", "{% static_v "course/img/mkdown_lesson.png"  %}"),
+                        table.getCorseware(temp_video, "{% trans 'x_video' %}", "{% static_v "course/img/video_course.png" %}"),
+                        table.getCorseware(row.attachment, "{% trans 'x_annex' %}", "{% static_v "course/img/fujian_course.png" %}"),
+                        table.getCorseware(row.exercise_count, "{% trans 'x_practice' %}" + "("+ row.exercise_count+ ")", "{% static_v "course/img/video_course.png" %}", true, 'table.toExercise("' + row.id + '")'),
+                        table.getVideoState(row.video, row.video_state),
+                        '</div>'
+                    ].join('');
+                }else{
+                    return [
+                        '<div>',
+                        {#table.getCorseware(row.pdf, "{% trans 'x_experimental_guidance' %}", "{% static_v "course/img/pdf_course.png"  %}"),#}
+                        {#table.getCorseware(row.markdown, "{% trans 'x_experimental_guidance' %}", "{% static_v "course/img/mkdown_lesson.png"  %}"),#}
+                        table.getCorseware(rowtemp, "{% trans 'x_experimental_guidance' %}", "{% static_v "course/img/mkdown_lesson.png"  %}"),
+                        table.getCorseware(temp_video, "{% trans 'x_video' %}", "{% static_v "course/img/video_course.png" %}"),
+                        table.getCorseware(row.attachment, "{% trans 'x_annex' %}", "{% static_v "course/img/fujian_course.png" %}"),
+                        table.getCorseware(row.lesson_env, "{% trans 'x_experiment' %}", "{% static_v "course/img/shiyan_course.png" %}", true, 'table.showTestEnv("' + row.id + '")'),
+                        table.getCorseware(row.exercise_count, "{% trans 'x_practice' %}" + "("+ row.exercise_count+ ")", "{% static_v "course/img/video_course.png" %}", true, 'table.toExercise("' + row.id + '")'),
+                        table.getVideoState(row.video, row.video_state),
+                        {#table.getLessonEnvIcon(row),#}
+                        '</div>'
+                    ].join('');
+                }
+            }
+        });
+
+
+        var table_import = bsTable.getTableModule($("#table_import"), function () {
+            this.courseFormatter = function (value, row, index) {
+                var rowtemp = row.html || row.pdf || row.markdown;
+                if (row.type == "0") {
+                    return [
+                        '<div>',
+                        {#table.getCorseware(row.pdf, "{% trans 'x_handouts' %}", "{% static_v "course/img/pdf_course.png"  %}"),#}
+                        {#table.getCorseware(row.markdown, "{% trans 'x_handouts' %}", "{% static_v "course/img/mkdown_lesson.png"  %}"),#}
+                        table.getCorseware(rowtemp, "{% trans 'x_handouts' %}", "{% static_v "course/img/mkdown_lesson.png"  %}"),
+                        table.getCorseware(row.video, "{% trans 'x_video' %}", "{% static_v "course/img/video_course.png" %}"),
+                        table.getCorseware(row.attachment, "{% trans 'x_annex' %}", "{% static_v "course/img/fujian_course.png" %}"),
+                        table.getCorseware(row.exercise_count, "{% trans 'x_practice' %}" + "("+ row.exercise_count+ ")", "{% static_v "course/img/video_course.png" %}"),
+                        '</div>'
+                    ].join('');
+                } else {
+                    return [
+                        '<div>',
+                        {#table.getCorseware(row.pdf, "{% trans 'x_experimental_guidance' %}", "{% static_v "course/img/pdf_course.png"  %}"),#}
+                        {#table.getCorseware(row.markdown, "{% trans 'x_experimental_guidance' %}", "{% static_v "course/img/mkdown_lesson.png"  %}"),#}
+                        table.getCorseware(row.attachment, "{% trans 'x_annex' %}", "{% static_v "course/img/fujian_course.png" %}"),
+                        table.getCorseware(row.video, "{% trans 'x_video' %}", "{% static_v "course/img/video_course.png" %}"),
+                        table.getCorseware(rowtemp, "{% trans 'x_guidance' %}", "{% static_v "course/img/mkdown_lesson.png"  %}"),
+                        table.getCorseware(row.lesson_env, "{% trans 'x_experiment' %}", "{% static_v "course/img/shiyan_course.png" %}"),
+                        table.getCorseware(row.exercise_count, "{% trans 'x_practice' %}" + "("+ row.exercise_count+ ")", "{% static_v "course/img/video_course.png" %}"),
+                        {#table.getLessonEnvIcon(row),#}
+                        '</div>'
+                    ].join('');
+                }
+            };
+        });
+
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                params.type = $("#search_type").val();
+                params.difficulty = $("#search_difficulty").val();
+                return params;
+            },
+        });
+
+        $('#table_import').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search_direction = $("#search_direction").val();
+                params.course_id = $("#search_course").val();
+                params.search = $.trim($("#search_lesson_name").val());
+                return params;
+            },
+        });
+
+        $("#search_direction").change(function () {
+            optionRender.renderAsyncSelect($("[async-data-reload=course-reload]"));
+            $("#search_course").val("");
+            table_import.reload();
+        });
+        $("#search_course").change(function () {
+            table_import.reload();
+        });
+
+        $("#other_select_add").on("shown.bs.modal", function () {
+            $("#select_course_lesson").html("");
+            $("#select_course_lesson").selectpicker('refresh');
+            var option_html = '<option value="" selected>{% trans "x_please_select" %}</option>';
+
+            ajax_select($("#select_course"), courseListUrl, {'except_course': CourseId}, option_html);
+        });
+
+        function course_changed(course_id) {
+            var option_html = '';
+
+            if (!course_id){
+                $("#select_course_lesson").html(option_html);
+                $("#select_course_lesson").selectpicker('refresh');
+                return
+            }
+
+            ajax_select($("#select_course_lesson"), lessonListUrl, {'course_id': course_id}, option_html);
+        }
+
+        function ajax_select($event, ajaxUrl, courseData, option_html){
+            $.ajax({
+                type: 'GET',
+                url: ajaxUrl,
+                data: courseData,
+                dataType: "json",
+                success: function (data) {
+                    var rows = data.rows;
+                    for (var option in rows){
+                        option_html += '<option value="'+ rows[option].id +'">'+ codeUtil.htmlDecode(rows[option].name) +'</option>'
+                    }
+                    $event.html(option_html);
+                    $event.selectpicker('refresh');
+                }
+            })
+        }
+
+        function addNewLesson() {
+            {#var lesson_ids = $('#select_course_lesson').val();#}
+            var lesson_ids = table_import.getCheckedValues();
+            if (lesson_ids == null || lesson_ids === ""){
+                $("#server-error").text("{% trans 'x_please_select_lesson' %}");
+                $('#server-error').removeClass('server-error');
+            }else {
+                $('#server-error').addClass('server-error');
+                $("#addNewLesson").attr('disabled', true);
+                $.ajax({
+                    type: 'POST',
+                    url: addNewLessonUrl.replace(0, CourseId),
+                    data: {'lesson_ids': lesson_ids},
+                    dataType: "json",
+                    traditional:true,
+                    success: function (data) {
+                        $("#other_select_add").modal('hide');
+                        $("#addNewLesson").attr('disabled', false);
+                        swal({
+                            title: "{% trans 'x_saved_successfully' %}",
+                            type: 'success',
+                            confirmButtonText: "{% trans 'x_confirm' %}"
+                        }, function () {
+                            table.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        $("#addNewLesson").attr('disabled', false);
+                    }
+                });
+            }
+            table_import.reload();
+        };
+
+        function loadDirections(callback) {
+            http.get("{% url 'cms_course:api:direction-list' %}", {}, function (res) {
+                var options = [];
+                $.each(res.rows, function (i, module) {
+                    options.push({
+                        value: module.id,
+                        text: module.name,
+                    });
+                });
+                callback(options);
+            });
+        }
+
+        function loadCourses(callback) {
+            http.get("{% url 'cms_course:api:course-list' %}", {"except_course": CourseId, "search_direction": $("#search_direction").val()}, function (res) {
+                var options = [];
+                $.each(res.rows, function (i, module) {
+                    options.push({
+                        value: module.id,
+                        text: module.name,
+                    });
+                });
+                callback(options);
+            });
+        }
+    </script>
+{% endblock %}

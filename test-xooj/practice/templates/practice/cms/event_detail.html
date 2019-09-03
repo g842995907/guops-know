@@ -1,0 +1,189 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    <a href="{% url 'cms_practice:event_list' %}">{% trans "x_task_event" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_add_event' %}
+    {% else %}
+        {% trans 'x_edit_event' %}
+    {% endif %}
+{% endblock %}
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_practice:cms_api:task-event-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_practice:cms_api:task-event-detail' event.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ event.name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <!-- 类型 -->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_type' %}</label>
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="type" name="type" data-form-fixed="1"
+                                onchange="type_changed()">
+                            {% for k,v in type_list.items %}
+                                <option value="{{ k }}"
+                                        {% if k == event.type %}selected{% endif %}>{{ v }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <!-- 比赛权重-->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group" id="contest_weight">
+                    <label class="col-sm-2 control-label">{% trans 'x_weight' %}</label>
+
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" id="weight"
+                               name="weight" min="0" max="100" style="width: 220px;"
+                                {% if event.weight != None %} value="{{ event.weight }}" {% endif %}>
+                    </div>
+                </div>
+
+                <!-- 背景图-->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Logo</label>
+                    <div class="col-sm-4">
+                        <div class="image_upload_widget">
+                            <div>
+                                <div class="btn btn-primary btn_image_upload image_upload" id="logo">
+                                    {% trans "x_select_pic" %}
+                                    <input type="text" class="form-control hidden" name="logo">
+                                </div>
+                            </div>
+                            <a href="{% if event.logo_url %}{{ event.logo_url }}{% endif %}" class="image_show"
+                               data-gallery="">
+                                <img {% if event.logo_url %}src="{{ event.logo_url }}"{% endif %}>
+                            </a>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev"><</a>
+                                <a class="next">></a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 是否公开-->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="public" value="{% if event.public %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" data-form-fixed="1" id="public"
+                               data-name="public"
+                                {% if event.public %} checked {% endif %}>
+                    </div>
+                </div>
+                <div class="col-sm-8 col-sm-offset-2">
+                    <div class="alert alert-danger server-error" id="server-error">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_practice:event_list' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_practice:event_list' %}";
+    </script>
+    <script>
+        $(".image_upload_widget").bindLocalCropImgUpload({aspectRatio: 1.75});
+
+        $(function () {
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+
+                $(html).change(function () {
+                    var name = $(this).attr('data-name');
+                    var $input = $(this).siblings('[name=' + name + ']');
+                    if ($(this).prop('checked')) {
+                        $input.val(1);
+                    } else {
+                        $input.val(0);
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+
+        $(function () {
+            $("#validateForm").mvalidate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 30,
+                    },
+                },
+                messages: {
+                    name: {
+                        required: '{% trans "x_name_required" %}',
+                        maxlength: '{% trans "x_name_len_lt_30" %}'
+                    },
+                },
+            });
+
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {})
+
+        })
+    </script>
+{% endblock %}

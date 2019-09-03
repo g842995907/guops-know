@@ -1,0 +1,25 @@
+
+{% verbatim %}
+<script id="bs_confirm" type="text/html">
+<div class="modal fade common-msg-modal" id="bsConfirmModal" tabindex="-1" role="dialog" aria-labelledby="bsConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="bsConfirmModalLabel">{{title}}</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+            </div>
+            <div class="modal-body centerDiv hint-msg">
+                 <p id="hint-msg">{{content}}</p>
+            </div>
+            <div class="modal-footer deal-btn">
+                <button type="button" class="btn-confirm mainBg" id='bs_confirm_btn'>{{txtConfirm}}</button>
+                {{if showCancel}}
+                <button type="button" class="btn-cancel" data-dismiss="modal">{{txtCancel}}</button>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+{% endverbatim %}
+

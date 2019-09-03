@@ -1,0 +1,177 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans 'x_role_manage' %}
+{% endblock %}
+{% block other_css_js %}
+    {#    <link href="{% static 'x_person/css/1.0.8/iconfont.css' %}" rel="stylesheet" type="text/css" />#}
+    {#    <link href="{% static 'x_person/css/iconfont/iconfont.css' %}" rel="stylesheet" type="text/css" />#}
+    {#    <link rel="stylesheet" href="{% static 'x_person/css/Font-Awesome-3.2.1/bootstrap.min.css' %}">#}
+    <link href="{% static 'lib/font-awesome/font-awesome.min.css' %}" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        <!--
+        .STYLE1 {
+            font-size: 12px
+        }
+
+        a:link {
+            color: #FFFFFF;
+            text-decoration: none;
+        }
+
+        a:visited {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        a:active {
+            text-decoration: none;
+        }
+
+        -->
+    </style>
+{% endblock %}
+
+
+{% block container %}
+    <div class="ibox-content" >
+        <table id="table" ></table>
+    </div>
+    <script>
+        $('#table').bootstrapTable({
+            columns: [{
+                field: 'permissions',
+                title: '{% trans "x_permissions_page" %}'
+            }, {
+                field: 'students',
+                title: '{% trans "x_student" %}'
+            }, {
+                field: 'teacher',
+                title: '{% trans "x_teacher" %}'
+            }, {
+                field: 'admin',
+                title: '{% trans "x_administrator" %}'
+            }],
+            data:
+                [{
+                    permissions: '{% trans "x_heoretical_lesson" %}',
+                    students: "<i class='icon'>yes</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_experiment_lesson" %}',
+                    students: "<i class='icon'>yes</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_theory" %}',
+                    students: "<i class='icon'>yes</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_real_vuln" %}',
+                    students: "<i class='icon'>yes</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_exercise" %}',
+                    students: "<i class='icon'>yes</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_exam" %}',
+                    students: "<i class='icon'>yes</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_course_management" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_event_manage" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_theoretical_basis_management" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_real_vuln_management" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_exercise_management" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_exam_management" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_user_manage" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_organizational_structure_manage" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_scene_management" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_target_management" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>yes</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_system_configuration" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>no</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_copyright_information" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>no</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }, {
+                    permissions: '{% trans "x_system_operation_maintenance" %}',
+                    students: "<i class='icon'>no</i>",
+                    teacher: '<i class=\'icon\'>no</i>',
+                    admin: '<i class=\'icon\'>yes</i>'
+                }]
+        });
+
+    </script>
+    <script>
+        $(function () {
+            $('.icon').each(function () {
+                types = $(this).text()
+                if (types == 'yes') {
+                    $(this).addClass("icon-ok").css('color', '#00B293');
+                    $(this).text("")
+                }
+                else {
+                    $(this).addClass("icon-remove").css('color', '#F25667');
+                    $(this).text('')
+                }
+
+            })
+        });
+    </script>
+{% endblock %}
+

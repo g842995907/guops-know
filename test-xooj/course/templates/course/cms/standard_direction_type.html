@@ -1,0 +1,496 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    <a href="{% url 'cms_course:course' %}">{% trans "x_course" %}</a> > {% trans 'x_type_management' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/jstree/css/style.min.css" %}" rel="stylesheet">
+
+    <script src="{% static "lib/jstree/js/jstree.min.js" %}"></script>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div style="width: 100%;font-size: 12px;margin: 25px 0 0 20px;">
+        <span style="margin-right: 30px;">
+            <i class="jstree-icon jstree-themeicon glyphicon glyphicon-list jstree-themeicon-custom"
+               role="presentation"></i>
+            {% trans 'x_represents_first-level_type' %}
+        </span>
+            <span style="margin-right: 30px;">
+                <i class="jstree-icon jstree-themeicon glyphicon glyphicon-tasks jstree-themeicon-custom"
+                   role="presentation"></i>
+                {% trans 'x_represents_second-level_type' %}
+            </span>
+        </div>
+        <div id="jstree">
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block modal %}
+    <div class="modal fade" id="device_type_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="min-width: 600px">
+            <div class="modal-content">
+                <form id="device_type_form" action="" method="">{% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">{% trans 'x_first_type_management' %}</h4>
+                        <div class="wrapper wrapper-content">
+                            <div class="row animated fadeInRight">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="form-group">
+                                            <label style="line-height: 36px"
+                                                   class="col-sm-8 control-label">{% trans "x_zh_name"　 %}</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="cn_name"
+                                                       name="cn_name" data-organization-name="device_type_cn_name">
+                                            </div>
+                                            <div style="padding-top:45px;font-size:25px">
+                                                <span class="text-danger">*</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="line-height: 36px"
+                                                   class="col-sm-8 control-label">{% trans "x_en_name"　 %}</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="en_name"
+                                                       name="en_name" data-organization-name="device_type_en_name">
+                                            </div>
+                                            <div style="padding-top:45px;font-size:25px">
+                                                <span class="text-danger">*</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="alert alert-danger server-error" id="server-error-one">
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'x_cancel' %}</button>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_confirm' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="device_sub_type_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="height: 200px;width: 600px">
+            <div class="modal-content">
+                <form id="device_sub_type_form" action="" method="">{% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">{% trans 'x_second_type_management' %}</h4>
+                        <div class="wrapper wrapper-content">
+                            <div class="row animated fadeInRight">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="form-group">
+                                            <label style="line-height: 36px"
+                                                   class="col-sm-8 control-label">{% trans "x_zh_name"　 %}</label>
+                                            <div class="col-sm-8">
+                                                <input type="hidden" id="parent" name="parent" data-form-fixed="1"
+                                                       value="">
+                                                <input type="text" class="form-control" id="cn_name"
+                                                       name="cn_name" data-organization-name="device_sub_type_cn_name">
+                                            </div>
+                                            <div style="padding-top:45px;font-size:25px">
+                                                <span class="text-danger">*</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label style="line-height: 36px"
+                                                   class="col-sm-8 control-label">{% trans "x_en_name"　 %}</label>
+                                            <div class="col-sm-8">
+                                                <input type="hidden" id="parent" name="parent" data-form-fixed="1"
+                                                       value="">
+                                                <input type="text" class="form-control" id="en_name"
+                                                       name="en_name" data-organization-name="device_sub_type_en_name">
+                                            </div>
+                                            <div style="padding-top:45px;font-size:25px">
+                                                <span class="text-danger">*</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="alert alert-danger server-error" id="server-error-two">
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'x_cancel' %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans 'x_confirm' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="height: 200px;width: 600px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_error_message' %}</h4>
+                    <div class="wrapper wrapper-content">
+                        <div class="row animated fadeInRight">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+                                    <div class="form-group">
+                                        <h4 id="errinfo"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans 'x_confirm' %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script>
+        var device_type_id;
+        var device_sub_type_id;
+        var js_tree_data ={{ jstree| safe }};
+    </script>
+    <script>
+        var CALLBACK = {
+            GetMenuTreeData: function () {
+                $('#jstree').data('jstree', false);
+
+                var length = js_tree_data.length;
+                for (var i = 0; i < length; i++) {
+                    js_tree_data[i].a_attr = {"title": gettext('x_right_click_switch')}
+                }
+                $('#jstree').jstree({
+                    'core': {
+                        "themes": {
+                            "variant": "large",
+                        },
+                        'data': js_tree_data,
+                    },
+                    'plugins': ["wholerow", "contextmenu", "types", "themes"],
+                    "types": {
+                        "#": {
+                            "max_children": 1,
+                            "max_depth": 4,
+                            "valid_children": ["root"]
+                        },
+                        "root": {
+                            "icon": "glyphicon glyphicon-home",
+                            "valid_children": ["default"]
+                        },
+                        "device_type": {
+                            "icon": "glyphicon glyphicon-list",
+                            "valid_children": ["default"]
+                        },
+                        "device_sub_type": {
+                            "icon": "glyphicon glyphicon-tasks",
+                            "valid_children": ["default"]
+                        },
+                        "default": {
+                            "valid_children": ["default", "file"]
+                        },
+                    },
+                    "contextmenu": {
+                        "items": CALLBACK.customMenu
+                    }
+
+                }).on("ready.jstree", function (e, data) {
+                    data.instance.open_all();
+                });
+            },
+
+            common_delete: function (url, id) {
+                var data = {'id': id};
+                ajaxDialog.buttonClick(http.delete, url, {}, function () {
+                    window.location.reload()
+                });
+            },
+            device_type_submit: function () {
+                if (device_type_id.toString() == '0') {
+                    $("#device_type_form").attr("action", "{% url 'cms_course:api:direction-list' %}");
+                    $("#device_type_form").attr("method", "post");
+                } else {
+                    $("#device_type_form").attr("action", "{% url 'cms_course:api:direction-list' %}" + device_type_id + '/');
+                    $("#device_type_form").attr("method", "patch");
+                }
+
+            },
+            device_sub_type_submit: function () {
+                $("#device_sub_type_form").find('[id=parent]').val(device_type_id);
+                if (device_sub_type_id.toString() == '0') {
+                    $("#device_sub_type_form").attr("action", "{% url 'cms_course:api:sub-direction-list' %}");
+                    $("#device_sub_type_form").attr("method", "post");
+                } else {
+                    $("#device_sub_type_form").attr("action", "{% url 'cms_course:api:sub-direction-list' %}" + device_sub_type_id + '/');
+                    $("#device_sub_type_form").attr("method", "patch");
+                }
+            },
+            customMenu: function (node) {
+                var items = {
+                    "create": null,
+                    "rename": null,
+                    "remove": null,
+                    "ccp": null,
+                    "add": {
+                        "label": gettext("x_add"),
+                        "action": function (obj) {
+                            var inst = jQuery.jstree.reference(obj.reference);
+                            var clickedNode = inst.get_node(obj.reference);
+                            if (clickedNode.id == "rootnode") {
+                                $('#server-error-one').html('').css("display", "none");
+                                device_type_id = '0';
+                                CALLBACK.device_type_submit();
+                                $("[data-organization-name=device_type_cn_name]").val("");
+                                $("[data-organization-name=device_type_en_name]").val("");
+                                $("#device_type_Modal").attr("data-backdrop", "static");
+                                $("#device_type_Modal").modal()
+                            }
+                            else {
+                                if ((clickedNode.id).indexOf(":") > 0) {
+                                    $("#errinfo").html(gettext('x_cannot_add_subnode'));
+                                    $("#errorModal").attr("data-backdrop", "static");
+                                    $("#errorModal").modal()
+                                } else {
+                                    $('#server-error-two').html('').css("display", "none");
+                                    device_type_id = clickedNode.id;
+                                    device_sub_type_id = '0';
+                                    CALLBACK.device_sub_type_submit();
+                                    $("[data-organization-name=device_sub_type_cn_name]").val("");
+                                    $("[data-organization-name=device_sub_type_en_name]").val("");
+                                    $("#device_sub_type_Modal").attr("data-backdrop", "static");
+                                    $("#device_sub_type_Modal").modal()
+                                }
+
+                            }
+
+                        }
+                    },
+                    "rename": {
+                        "label": gettext("x_rename"),
+                        "action": function (obj) {
+                            var inst = jQuery.jstree.reference(obj.reference);
+                            var clickedNode = inst.get_node(obj.reference);
+                            if (clickedNode.id == "rootnode") {
+                                $("#errinfo").html(gettext('x_cannot_edit_node'));
+                                $("#errorModal").attr("data-backdrop", "static");
+                                $("#errorModal").modal()
+                            }
+                            else {
+                                if ((clickedNode.id).indexOf(":") > 0) {
+                                    var arr = (clickedNode.id).split(":");
+                                    if (arr.length == 2) {
+                                        //二级目录修改
+                                        $('#server-error-two').html('').css("display", "none");
+                                        device_type_id = arr[0];
+                                        device_sub_type_id = arr[1];
+                                        CALLBACK.device_sub_type_submit();
+                                        $("[data-organization-name=device_sub_type_cn_name]").val(clickedNode.original.cn_name);
+                                        console.info(clickedNode);
+                                        $("[data-organization-name=device_sub_type_en_name]").val(clickedNode.original.en_name);
+                                        {#                                                CALLBACK.device_sub_type_submit();#}
+                                        $("#device_sub_type_Modal").attr("data-backdrop", "static");
+                                        $("#device_sub_type_Modal").modal()
+                                    }
+
+                                } else {
+                                    //一级目录修改
+                                    $('#server-error-one').html('').css("display", "none");
+                                    device_type_id = clickedNode.id;
+                                    CALLBACK.device_type_submit();
+                                    $("[data-organization-name=device_type_cn_name]").val(clickedNode.original.cn_name);
+                                    console.info(clickedNode);
+                                    $("[data-organization-name=device_type_en_name]").val(clickedNode.original.en_name);
+                                    {#                                            CALLBACK.device_type_submit();#}
+                                    $("#device_type_Modal").attr("data-backdrop", "static");
+                                    $("#device_type_Modal").modal()
+                                }
+                            }
+                        }
+                    },
+                    "delete": {
+                        "label": gettext("x_delete"),
+                        "action": function (obj) {
+                            var inst = jQuery.jstree.reference(obj.reference);
+                            var clickedNode = inst.get_node(obj.reference);
+                            if (clickedNode.id == "rootnode") {
+                                $("#errinfo").html(gettext('x_cantnot_del_rootnode'))
+                                $("#errorModal").attr("data-backdrop", "static");
+                                $("#errorModal").modal()
+                            }
+                            else {
+                                if ((clickedNode.id).indexOf(":") > 0) {
+                                    var arr = (clickedNode.id).split(":")
+                                    if (arr.length == 2) {
+                                        device_sub_type_id = arr[1];
+                                        return CALLBACK.common_delete("{% url 'cms_course:api:sub-direction-list' %}" + device_sub_type_id + '/', device_sub_type_id);
+                                    }
+
+                                } else {
+                                    device_type_id = clickedNode.id;
+                                    return CALLBACK.common_delete("{% url 'cms_course:api:direction-list' %}" + device_type_id + '/', device_type_id);
+                                }
+                            }
+                        }
+                    }
+                };
+                if (node.type === 'device_sub_type') {
+                    delete items.add;
+                } else if (node.type === 'root') {
+                    delete items.delete;
+                    delete items.rename;
+                }
+                return items;
+            }
+        };
+
+        $().ready(function () {
+                $('#jstree').on('loaded.jstree', function (e, data) {
+                    data.instance.open_all();//默认展开所有节点
+
+                });
+                CALLBACK.GetMenuTreeData();
+
+                $("#device_type_form").ajaxFormDialog(function () {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, ajaxDialog.defaultDelayTime);
+                }, null, {
+                    error: function (xhr, ts, et) {
+                        var $error = $('#server-error-one');
+                        dialogErrorCallback(null, xhr, ts, et, $error);
+                    },
+                });
+
+                $("#device_sub_type_form").ajaxFormDialog(function () {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, ajaxDialog.defaultDelayTime);
+                }, null, {
+                    error: function (xhr, ts, et) {
+                        var $error = $('#server-error-two');
+                        dialogErrorCallback(null, xhr, ts, et, $error);
+                    },
+                });
+            }
+        )
+
+        var dialogErrorCallback = function (errorCallback, xhr, ts, et, ele) {
+            var res = xhr.responseJSON;
+            var errorHtml = '';
+            var $error = ele;
+            var hasErrorContainer = $error.length == 1 ? true : false;
+            if (xhr.status == 400) {
+                $.each(res, function (name, messages) {
+                    var labelName = $('[id=' + name + ']').parents('.form-group').find('.control-label').eq(0).text();
+                    if (Array.isArray(messages)) {
+                        $.each(messages, function (i, message) {
+                            if (typeof (message) == "object") {
+                                message = message.message
+                            }
+                            if (hasErrorContainer) {
+                                errorHtml = errorHtml + '<div class="error">' + labelName + ': ' + message + '<div>';
+                            } else {
+                                errorHtml = errorHtml + labelName + ': ' + message + '\n';
+                            }
+                        });
+                    } else if (typeof (messages) == "object") {
+                        errorHtml = errorHtml + messages.message
+                    } else {
+                        errorHtml = errorHtml + messages
+                    }
+
+                });
+            } else {
+                errorHtml = (!!res && !!res.detail) ? res.detail : gettext("x_server_error");
+            }
+
+            if (hasErrorContainer) {
+                $error.html(errorHtml);
+                $error.show();
+                $('.sweet-alert .cancel').click();
+            } else {
+                swal({
+                    title: errorHtml,
+                    type: 'error',
+                    confirmButtonText: gettext("x_confirm")
+                });
+            }
+            if (!!errorCallback) {
+                errorCallback(xhr, ts, et);
+            }
+        };
+
+        $('#device_type_form').mvalidate({
+            rules: {
+                cn_name: {
+                    required: true
+                },
+                en_name: {
+                    required: true
+                }
+            },
+            messages: {
+                cn_name: {
+                    required: gettext('x_enter_chinese')
+                },
+                en_name: {
+                    required: gettext("x_enter_english")
+                }
+            }
+        });
+        $('#device_sub_type_form').mvalidate({
+            rules: {
+                cn_name: {
+                    required: true
+                },
+                en_name: {
+                    required: true
+                }
+            },
+            messages: {
+                cn_name: {
+                    required: gettext('x_enter_chinese')
+                },
+                en_name: {
+                    required: gettext("x_enter_english")
+                }
+            }
+        });
+    </script>
+{% endblock %}

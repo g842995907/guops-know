@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Hankaln">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>自定义上传 - 场景引擎系统</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u81ea\u5b9a\u4e49\u4e0a\u4f20";
+    var mkdocs_page_input_path = "upload-target.md";
+    var mkdocs_page_url = "/upload-target/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> 场景引擎系统</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">场景引擎系统</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../target/">标靶</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">自定义上传</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#vmware">VMware虚拟机</a></li>
+    
+
+    <li class="toctree-l2"><a href="#virtualbox">Virtualbox虚拟机</a></li>
+    
+
+    <li class="toctree-l2"><a href="#kvm">KVM虚拟机</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l3" href="#_1">虚拟机设置方法</a></li>
+        
+        </ul>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../sense/">基础场景</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../adsense/">攻防场景</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../make-scene/">场景创建</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../operation-guide/">虚拟机操作指南</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../qa/">QA</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">场景引擎系统</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>自定义上传</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h2 id="vmware"><span id='upload-vmware'>VMware虚拟机</span></h2>
+<ul>
+<li><a href="#upload-vmware-windowxp">Windows-XP</a></li>
+<li><a href="#upload-vmware-window7-and-2008">Windows-7 &amp;&amp; Windows Server 2008</a></li>
+<li><a href="#upload-vmware-kali">kali</a></li>
+<li><a href="#upload-vmware-onter-linux">其他Linux</a></li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-vmware-windowxp'>Windows-XP</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统虚拟磁盘存储方式为 ”单个文件”  </li>
+<li>安装系统虚拟磁盘类型为IDE， 若为其他，如SATA，需要手动修改为IDE</li>
+<li>修改MTU值为1450</li>
+<li>执行<a href="../attachment/MergeIDE.zip">MergeIDE.bat</a>文件, </li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>打开远程桌面，并确认是否允许无密码登录</li>
+<li>释放IP配置</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>      </li>
+<li>虚拟网卡型号   <strong>rtl8139</strong></li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-vmware-window7-and-2008'>Windows-7 &amp;&amp; Windows Server 2008</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统虚拟磁盘存储方式为 ”单个文件”  </li>
+<li>安装系统虚拟磁盘类型为IDE， 若为其他，如SATA，需要手动修改为IDE</li>
+<li>修改MTU值为1450</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>打开远程桌面，并确认是否允许无密码登录</li>
+<li>释放IP配置</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>      </li>
+<li>虚拟网卡型号   <strong>rtl8139</strong></li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-vmware-kali'>kali</strong></p>
+<p><font color=#ff0000 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统虚拟磁盘存储方式为 ”单个文件”  </li>
+<li>安装系统虚拟磁盘类型为IDE， 若为其他，如SATA，需要手动修改为IDE</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>关闭防火墙或放开防火墙22端口</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>      </li>
+<li>视频图像驱动   <strong>vga</strong></li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-vmware-onter-linux'>其他linux</strong></p>
+<p><font color=#ff0000 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统虚拟磁盘存储方式为 ”单个文件”  </li>
+<li>安装系统虚拟磁盘类型为IDE， 若为其他，如SATA，需要手动修改为IDE</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>关闭防火墙或放开防火墙22端口</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>  </li>
+</ul>
+<hr />
+<h2 id="virtualbox"><span id='upload-virtualbox'>Virtualbox虚拟机</span></h2>
+<ul>
+<li><a href="#upload-virtualbox-windowxp">Windows-XP</a></li>
+<li><a href="#upload-virtualbox-window7-and-2008">Windows-7 &amp;&amp; Windows Server 2008</a></li>
+<li><a href="#upload-virtualbox-kali">kali</a></li>
+<li><a href="#upload-virtualbox-other-linux">其他linux</a></li>
+</ul>
+<p><strong size=4 id='upload-virtualbox-windowxp'>Windows-XP</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统虚拟磁盘类型为IDE， 若为其他，如SATA，需要手动修改为IDE</li>
+<li>修改MTU值为1450</li>
+<li>执行<a href="../attachment/MergeIDE.zip">MergeIDE.bat</a>文件, </li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>打开远程桌面，并确认是否允许无密码登录</li>
+<li>释放IP配置</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>      </li>
+<li>虚拟网卡型号   <strong>rtl8139</strong></li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-virtualbox-window7-and-2008'>Windows-7 &amp;&amp; Windows Server 2008</strong></p>
+<p><font color=#ff0000 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统虚拟磁盘类型为IDE， 若为其他，如SATA，需要手动修改为IDE</li>
+<li>修改MTU值为1450</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>打开远程桌面，并确认是否允许无密码登录</li>
+<li>释放IP配置</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>      </li>
+<li>虚拟网卡型号   <strong>rtl8139</strong></li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-virtualbox-kali'>kali</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统虚拟磁盘类型为IDE， 若为其他，如SATA，需要手动修改为IDE</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>关闭防火墙或放开防火墙22端口</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>      </li>
+<li>视频图像驱动   <strong>vga</strong>      </li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-virtualbox-other-linux'>其他Linux</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统虚拟磁盘类型为IDE， 若为其他，如SATA，需要手动修改为IDE</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>关闭防火墙或放开防火墙22端口</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>     </li>
+</ul>
+<hr />
+<h2 id="kvm"><span id='upload-kvm'>KVM虚拟机</span></h2>
+<ul>
+<li><a href="#upload-kvm-windowxp">Windows-XP</a></li>
+<li><a href="#upload-kvm-window7-and-2008">Windows-7 &amp;&amp; Windows Server 2008</a></li>
+<li><a href="#upload-kvm-kali">kali</a></li>
+<li><a href="#upload-kvm-other-linux">其他Linux</a></li>
+</ul>
+<p><strong size=4 id='upload-kvm-windowxp'>Windows-XP</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统需要手动指定虚拟硬盘、网卡模式为virtio，并加载virtio驱动文件</li>
+<li>修改MTU值为1450</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>打开远程桌面，并确认是否允许无密码登录</li>
+<li>释放IP配置</li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-kvm-window7-and-2008'>Windows-7 &amp;&amp; Windows Server 2008</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统需要手动指定虚拟硬盘、网卡模式为virtio，并加载virtio驱动文件</li>
+<li>修改MTU值为1450</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>打开远程桌面，并确认是否允许无密码登录</li>
+<li>释放IP配置</li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-kvm-kali'>kali</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统需要手动指定虚拟硬盘、网卡模式为virtio，并加载virtio驱动文件</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>关闭防火墙或放开防火墙22端口</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<ul>
+<li>磁盘控制器类型  <strong>ide</strong>      </li>
+<li>视频图像驱动   <strong>vga</strong>           </li>
+</ul>
+<hr />
+<p><strong size=4 id='upload-kvm-other-linux'>其他Linux</strong></p>
+<p><font color=#FF3333 ><strong>前置要求</strong></font></p>
+<ul>
+<li>安装系统需要手动指定虚拟硬盘、网卡模式为virtio，并加载virtio驱动文件</li>
+<li>关闭防火墙或放开防火墙3389端口</li>
+<li>关闭防火墙或放开防火墙22端口</li>
+</ul>
+<p><font color=#FF3333 ><strong>导入参数</strong></font></p>
+<p>无         </p>
+<hr />
+<h3 id="_1"><span id='upload-vm-setting'>虚拟机设置方法</span></h3>
+<ul>
+<li><a href="#vm-setting-vmware-signal-disk">VMware 单个文件磁盘存储</a></li>
+<li><a href="#vm-setting-disk-control-vmware">VMware 设置虚拟磁盘控制器类型</a></li>
+<li><a href="#vm-setting-disk-control-viturlbox">ViturlBox设置虚拟磁盘控制器类型</a></li>
+<li><a href="#vm-setting-winxp-mtu">Windows-XP 设置MTU</a></li>
+<li><a href="#vm-setting-win7-mtu">Windows-7 设置MTU</a></li>
+<li><a href="#vm-setting-windows-auto-login">Windows配置用户自动登陆</a></li>
+<li><a href="#vm-setting-winserver-2008-mtu">Windows-Server-2008 设置MTU</a></li>
+<li><a href="#vm-setting-winows-ip-release">Windows 释放IP配置</a></li>
+<li><a href="#vm-setting-windows-shutdown-firewall">Windows 关闭防火墙</a></li>
+<li><a href="#vm-setting-windowxp-remote">Windows-XP 远程桌面</a></li>
+<li><a href="#vm-setting-window7-remote">Windows-7 远程桌面</a></li>
+<li><a href="#vm-setting-windows-server-2008-remote">Windows-Server-2008 远程桌面</a></li>
+<li><a href="#vm-setting-windows-qemu-guest-agent">Windows安装qemu-guest-agent插件</a></li>
+<li><a href="#vm-setting-windowserver2008-and-2012-password-complex">Windows server 2008/2012 解除密码复杂度限制</a></li>
+<li><a href="#vm-setting-yanzheng-qemu-guest-agent">验证qemu-guest-agent是否安装成功</a></li>
+<li><a href="#vm-setting-linux-open-port">Linux配置开放端口</a></li>
+<li><a href="#vm-setting-windows-open-port">Windows配置开放端口</a></li>
+<li><a href="#vm-setting-windows-allow-empty-password">Windows允许无密码远程登录</a></li>
+<li><a href="#vm-setting-windowxp-virtio">Windows XP加载virtio驱动</a></li>
+<li><a href="#vm-setting-window7-and-2008-virtio">Windows 7/2008/2012 加载virtio驱动</a></li>
+<li><a href="#vm-setting-windowsXP-and-2003-cloudbase-init">Windows xp/2003安装cloudbase-init</a></li>
+<li><a href="#vm-setting-linux-qemu-guest-agent">Linux安装qemu-guest-agent插件</a></li>
+<li><a href="#vm-setting-linux-allow-empty-password-and-root">Linux允许root远程登录</a></li>
+<li><a href="#vm-setting-linux-allow-empty-password-and-root">Linux允许无密码登录</a></li>
+</ul>
+<p><strong size=4 id='vm-setting-vmware-signal-disk'>VMware 单个文件磁盘存储 </strong></p>
+<p>安装系统虚拟磁盘存储方式为 ”单个文件” </p>
+<p><img alt="" src="../img/1.png" /> </p>
+<p>如当前为多文件转换方法(转换前需要删除虚拟机快照)</p>
+<div class="codehilite"><pre><code><span></span>vmware-vdiskmanager.exe -r 需要转换的源文件.vmdk -t 0 需要转换的目标文件.vmdk
+</code></pre></div>
+
+
+<hr />
+<p><strong size=4 id='vm-setting-disk-control-vmware'>VMware设置虚拟磁盘控制器类型</strong></p>
+<p><img alt="" src="../img/2.png" /> </p>
+<hr />
+<p><strong size=4 id='vm-setting-disk-control-viturlbox'>ViturlBox设置虚拟磁盘控制器类型</strong></p>
+<p><img alt="" src="../img/3.png" /> </p>
+<p><img alt="" src="../img/4.png" /> </p>
+<hr />
+<p><strong size=4 id='vm-setting-winxp-mtu'>Windows-XP 设置MTU</strong>
+方法1在部分虚拟机中找不到该项配置</p>
+<ul>
+<li>方法1</li>
+</ul>
+<p><img alt="" src="../img/5.png" /></p>
+<p><img alt="" src="../img/6.png" /> </p>
+<ul>
+<li>
+<p>方法2</p>
+<ol>
+<li>按Win+R组合键，调出“运行”菜单，输入regedit，然后回车； </li>
+<li>选择“HKEY_Local_Machine&gt;SYSTEM&gt;CurrentControlSet&gt;Services&gt;Tcpip&gt;Parameters&gt;interface”；</li>
+<li>在 interface 中下可能有很多项，需要逐个观察键值，会有一个项与你的网卡IP一致，选中该项；</li>
+<li>然后在该项上点击右键，选择“编辑&gt;新建&gt;DWORD值”，然后在右侧将其命名为“MTU”；</li>
+<li>右键点击MTU，选择“修改”，在弹出的窗口中选择“十进制”，填入你得出的合理MTU值即可。</li>
+</ol>
+</li>
+</ul>
+<hr />
+<p><strong size=4 id='vm-setting-win7-mtu'>Windows-7 设置MTU</strong></p>
+<ol>
+<li>进入系统盘:\Windows\System32\找到cmd.exe，右键“以管理员身份运行”；</li>
+<li>在出现的“命令提示符”窗口中输入“netsh interface ipv4 show subinterfaces”并回车来查看当前的MTU值</li>
+<li>接下来输入“netsh interface ipv4 set subinterface &ldquo;需修改的连接名&rdquo; mtu=你得出的合理值 store=persistent”并回车即可
+例如：“netsh interface ipv4 set subinterface &ldquo;本地连接&rdquo; mtu=1450 store=persistent”</li>
+</ol>
+<p><img alt="" src="../img/11.png" /> </p>
+<hr />
+<p><strong size=4 id='vm-setting-windows-auto-login'>Windows配置用户自动登陆</strong></p>
+<ul>
+<li>命令行执行 control userpasswords2</li>
+</ul>
+<p><img alt="" src="../img/auto_login.png" /></p>
+<ul>
+<li>取消勾选，点击右下角的应用，弹出框，设置要自动登陆的用户设置密码</li>
+</ul>
+<p><img alt="" src="../img/set_autologinuser_password.png" /></p>
+<ul>
+<li>重启系统，查看用户是否自动登陆</li>
+</ul>
+<hr />
+<p><strong size=4 id='vm-setting-winserver-2008-mtu'>Windows-Server-2008 设置MTU</strong></p>
+<ol>
+<li>进入系统盘:\Windows\System32\找到cmd.exe，右键“以管理员身份运行”；</li>
+<li>在出现的“命令提示符”窗口中输入“netsh interface ipv4 show subinterfaces”并回车来查看当前的MTU值</li>
+<li>接下来输入“netsh interface ipv4 set subinterface &ldquo;需修改的连接名&rdquo; mtu=你得出的合理值 store=persistent”并回车即可
+例如：“netsh interface ipv4 set subinterface &ldquo;本地连接&rdquo; mtu=1450 store=persistent”</li>
+</ol>
+<p><img alt="" src="../img/11.png" /> </p>
+<hr />
+<p><strong size=4 id='vm-setting-winows-ip-release'>Windows 释放IP配置</strong></p>
+<ol>
+<li>运行cmd</li>
+<li>执行命令 “ipconfig /release”</li>
+</ol>
+<hr />
+<p><strong size=4 id='vm-setting-windows-shutdown-firewall'>Windows 关闭防火墙</strong></p>
+<p><img alt="" src="../img/7.png" /> </p>
+<hr />
+<p><strong size=4 id='vm-setting-windowxp-remote'>Windows-XP 远程桌面</strong></p>
+<p><img alt="" src="../img/8.png" /></p>
+<hr />
+<p><strong size=4 id='vm-setting-window7-remote'>Windows-7 远程桌面</strong></p>
+<p><img alt="" src="../img/10.png" /></p>
+<ul>
+<li>允许任意版本请选择 <strong>RDP</strong> 模式</li>
+<li>网络级别身份认证请选择 <strong>NLA</strong> 模式</li>
+</ul>
+<hr />
+<p><strong size=4 id='vm-setting-windows-server-2008-remote'>Windows-Server-2008 远程桌面</strong></p>
+<p><img alt="" src="../img/10.png" /></p>
+<ul>
+<li>允许任意版本请选择 <strong>RDP</strong> 模式</li>
+<li>网络级别身份认证请选择 <strong>NLA</strong> 模式</li>
+</ul>
+<hr />
+<p><strong size=4 id='vm-setting-windows-qemu-guest-agent'>Windows安装qemu-guest-agent插件</strong></p>
+<ul>
+<li>搜素文件系统中是否有virtio-win文件夹(如果没有则<a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.141-1/virtio-win-0.1.141.iso">下载virtio-win</a>,更多virtio版本<a href="https://docs.fedoraproject.org/quick-docs/en-US/creating-windows-virtual-machines-using-virtio-drivers.html">请查看</a> )</li>
+<li>找到virtio-win可以看到下图</li>
+</ul>
+<p><img alt="" src="../img/virtio_install_01.jpeg" /></p>
+<ul>
+<li>先更新 virto-serail driver 更新 pci 简单通讯控制器 (使用 vioserail 目录中的驱动)</li>
+</ul>
+<p><img alt="" src="../img/virtio_viserial.jpeg" /></p>
+<ul>
+<li>安装virto-serail driver (<strong>注意选择与系统版本对应的驱动</strong> )</li>
+</ul>
+<p><img alt="" src="../img/virtio_serial_install_01.jpeg" /></p>
+<p><img alt="" src="../img/virtio_serial_install_02.jpeg" /></p>
+<ul>
+<li>安装balloon pci 驱动 (<strong>注意选择与系统版本对应的驱动</strong> )</li>
+</ul>
+<p><img alt="" src="../img/virtio_balloon_01.jpeg" /></p>
+<p><img alt="" src="../img/virtio_balloon_02.jpeg" /></p>
+<ul>
+<li>安装guest-agent 驱动 (<strong>注意选择与系统版本对应的驱动</strong> )
+根据系统版本(x64,x86) 双击virtio-win目录下的 guest-agent 目录下的 qemu-ga-x86.msi 或 qemu-ga-x64.msi进行安装 执行完毕之后，命令行执行services.msc查看相关服务状态,启动qemu-guest-agent VSS provider服务，并改为自启动</li>
+</ul>
+<p><img alt="" src="../img/virtio_guest_agent_01.jpeg" /></p>
+<p><strong>此时会发现，qemu-guest-agent服务没有启动，手动启动也会报错 1053：服务没有及时响应启动或控制请求。这个不用管，等到镜像做好之后给镜像加上metadata ,hw_qemu_guest_agent 为yes之后服务会正常自启动</strong></p>
+<p><img alt="" src="../img/glance_metadata.png" /></p>
+<hr />
+<p><strong size=4 id='vm-setting-windowserver2008-and-2012-password-complex'>Windows server 2008/2012 解除密码复杂度限制</strong></p>
+<ul>
+<li>gpedit 打开本地组策略编辑器</li>
+<li>选择计算机设置&mdash;windows 设置&mdash;安全设置&mdash;帐号策略&mdash;密码策略</li>
+<li>第一个密码复杂度策略，将密码复杂度要求改为禁用</li>
+</ul>
+<hr />
+<p><strong size=4 id='vm-setting-yanzheng-qemu-guest-agent'>验证qemu-guest-agent是否安装成功</strong></p>
+<p>在openstack 上启动镜像实例，找到实例对应的domain</p>
+<p>方法1:*   执行 virsh qemu-agent-command domain &lsquo;{&ldquo;execute&rdquo;:&rdquo;guest-ping&rdquo;}&rsquo;,如果返回{&ldquo;return&rdquo;:{}}则说明服务正常</p>
+<p>方法2:*   执行 virsh set-user-password &ndash;domain domain&ndash;user user &ndash;password password ,如果返回“Password set successfully ”则说明插件安装正常</p>
+<p><img alt="" src="../img/qemu_guest_agent_yanzheng.png" /></p>
+<hr />
+<hr />
+<p><strong size=4 id='vm-setting-linux-open-port'>Linux配置开放端口</strong></p>
+<p><strong>Iptables</strong></p>
+<div class="codehilite"><pre><code><span></span>vi/etc/sysconfig/iptables
+
+-A INPUT -m state --state NEW -m tcp -p tcp--dport 3389 -j ACCEPT
+</code></pre></div>
+
+
+<p>Firewall</p>
+<div class="codehilite"><pre><code><span></span>firewall-cmd --zone=public --add-port=3389 /tcp --permanent 
+</code></pre></div>
+
+
+<hr />
+<p><strong size=4 id='vm-setting-windows-open-port'>Windows配置开放端口</strong></p>
+<ol>
+<li>打开防火墙高级设置</li>
+</ol>
+<p><img alt="" src="../img/12.png" /></p>
+<ol>
+<li>新建入站规则</li>
+</ol>
+<p><img alt="" src="../img/13.png" /></p>
+<ol>
+<li>选择端口</li>
+</ol>
+<p><img alt="" src="../img/14.png" /></p>
+<ol>
+<li>设置端口</li>
+</ol>
+<p><img alt="" src="../img/15.png" /></p>
+<hr />
+<p><strong size=4 id='vm-setting-windows-allow-empty-password'>Windows允许无密码远程登录</strong></p>
+<p>配置Windows组策略</p>
+<p><img alt="" src="../img/9.png" /></p>
+<hr />
+<p><strong size=4 id='vm-setting-windowxp-virtio'>Windows XP加载virtio驱动</strong></p>
+<ol>
+<li>安装时指定硬盘、网卡模式为virtio，并加载virtio驱动文件</li>
+<li>系统启动时，点击F6加载第三方驱动</li>
+</ol>
+<p><img alt="" src="../img/16.png" /></p>
+<p><img alt="" src="../img/17.png" /></p>
+<ol>
+<li>选择对应版本的驱动程序（WinXP），点击“ENTER”之后继续安装系统</li>
+</ol>
+<p><img alt="" src="../img/18.png" /></p>
+<hr />
+<p><strong size=4 id='vm-setting-window7-and-2008-virtio'>Windows 7/2008/2012 加载virtio驱动</strong></p>
+<ol>
+<li>安装时指定硬盘、网卡模式为virtio，并加载virtio驱动文件</li>
+<li>安装过程中在选择硬盘驱动器时点击“加载驱动程序”</li>
+</ol>
+<p><img alt="" src="../img/19.png" /></p>
+<ol>
+<li>点击“确定”后选择系统对应的驱动程序，“下一步”之后即可看到一块未分配的硬盘</li>
+</ol>
+<p><img alt="" src="../img/20.png" /></p>
+<p><img alt="" src="../img/21.png" /></p>
+<hr />
+<p><strong size=4 id='vm-setting-windowsXP-and-2003-cloudbase-init'>Windows xp/2003安装cloudbase-init</strong></p>
+<p>Windows XP 和Windows server 2003默认不支持cloudbase-init,在安装时需要更改一些设置</p>
+<ul>
+<li>
+<p>编辑C:\Program Files\Cloudbase Solutions\Cloudbase-Init\Python\Lib\site-packages\serial\win32.py ，注释掉包含’CancelIOEx’的三行。</p>
+</li>
+<li>
+<p>删除cloudbase-init服务   sc delete cloudbase-init</p>
+</li>
+<li>
+<p>导入注册表文件（或者手动添加），内容为：
+Windows Registry Editor Version 5.00</p>
+</li>
+</ul>
+<p>[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run]
+&ldquo;Cloudbase-init&rdquo;=&rdquo;"C:\Program Files\Cloudbase Solutions\Cloudbase-Init\Python\Scripts\cloudbase-init.exe" &ndash;config-file "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf"&ldquo;</p>
+<ul>
+<li>删除注册表子建：
+检查注册表HKLM/Software/Cloudbase Solutions/Cloudbase-Init/下面是否有子键，有就删掉，否则新虚拟机启动时Cloudbase-init认为已经执行过，不再执行</li>
+</ul>
+<hr />
+<p><strong size=4 id='vm-setting-linux-qemu-guest-agent'>Linux安装qemu-guest-agent插件</strong></p>
+<p><strong> kali和ubuntu上 </strong></p>
+<ol>
+<li>执行命令 sudo apt-get install qemu-guest-agent安装插件</li>
+<li>systemctl enable qemu-guest-agent设置插件自启动</li>
+<li>systemctl start qemu-guest-agent 启动服务</li>
+</ol>
+<p><strong>   centos上  </strong></p>
+<ol>
+<li>执行命令 yum install -y qemu-guest-agent安装插件</li>
+<li>systemctl enable qemu-guest-agent设置插件自启动</li>
+<li>systemctl start qemu-guest-agent 启动服务</li>
+</ol>
+<hr />
+<p><strong size=4 id='vm-setting-linux-allow-empty-password-and-root'>Linux允许root/无密码远程登录</strong></p>
+<p>配置/etc/ssh/sshd_config 文件配置项</p>
+<div class="codehilite"><pre><code><span></span>PermitEmptyPasswords no 
+PasswordAuthentication yes
+PermitRootLogin no
+</code></pre></div>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../sense/" class="btn btn-neutral float-right" title="基础场景">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../target/" class="btn btn-neutral" title="标靶"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>CyberPeace.cn</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../target/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../sense/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

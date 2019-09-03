@@ -1,0 +1,123 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    <a href="{% url 'cms_course:exp_lesson' experiment_id %}">{% trans "x_courseware" %}</a> >
+    {{ lesson.name }} > {% trans 'x_experimental_report' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="col-md-2 col-sm-2">
+                        <input class="form-control m-b sticky" id="search_username" placeholder={% trans "x_user_name" %}
+                               type="text"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <input class="form-control m-b sticky" id="search_content" placeholder={% trans "x_notes_content" %}
+                               type="text"/>
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <a class="btn btn-primary" onclick="table.refresh();" name="search">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-md-6 col-sm-6">
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_x_note:api:note-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+{#                        <button class="btn btn-success"#}
+{#                                data-url="{% url 'cms_x_note:api:note-batch-public' %}"#}
+{#                                onclick="table.batchPublic(this, 1);">#}
+{#                            <i class="fa fa-eye"></i> {% trans 'x_public' %}#}
+{#                        </button>#}
+{#                        <button class="btn btn-default"#}
+{#                                data-url="{% url 'cms_x_note:api:note-batch-public' %}"#}
+{#                                onclick="table.batchPublic(this, 0);">#}
+{#                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}#}
+{#                        </button>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_x_note:api:note-list' %}?search_resource={{ lesson.hash }}"
+               >
+            <thead>
+            <tr>
+                <th data-field="username">{% trans "x_user_name" %}</th>
+{#                <th data-field="resource" data-formatter="resourceFormat">{% trans "资源类型" %}</th>#}
+                <th data-field="content_abstract">{% trans "x_notes_content" %}</th>
+                <th data-field="public" data-formatter="table.publicFormatter">{% trans "x_is_public" %}</th>
+                <th data-field="update_time" data-formatter="table.datetimeFormatter">{% trans "x_update_time" %}</th>
+                <th data-field="id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="detailModel">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        function resourceFormat(value, row, index) {
+            var type = value.split(".")[1];
+            return type;
+        }
+
+        var $table = $('#table');
+        pageWidgets.registerCheckTableRow($table);
+
+        var table = bsTable.getTableModule($table, function(){});
+
+        function operatorFormatter(value, row, index) {
+            return [
+                    '<div>',
+                    '<a class="btn btn-primary" href="'+"{% url "cms_course:report_detail" 0 %}".replace(0, value)+'" ' +
+                    'style="margin-left: 5px; margin-right: 5px;" data-toggle="modal" data-target="#detailModel">',
+                    '<i class="fa fa-edit"></i> {% trans "x_details" %}',
+                    '</a>',
+                    '</div>'
+                ].join('');
+        }
+
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search_username = $("#search_username").val();
+                params.search_resource = $("#search_resource").val();
+                params.search_content = $("#search_content").val();
+                return params;
+            }
+        });
+
+        function showDetailModel() {
+
+        }
+    </script>
+{% endblock %}

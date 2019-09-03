@@ -1,0 +1,153 @@
+body {
+    background-size: 100% 100% !important;
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    margin: 0;
+}
+
+.markdown-wrapper ul li,.markdown-wrapper ul,.markdown-wrapper li{
+    list-style: inherit;
+}
+.markdown-wrapper ol li{
+    list-style: decimal;
+}
+.markdown-wrapper {
+    margin-top: 0;
+    color: #b2b6bf;
+    padding-bottom: 10px;
+}
+
+.markdown-bg {
+    background: rgba(0, 24, 54, .5);
+}
+
+.markdown-wrapper img {
+    width: 100% !important;
+}
+
+.col-md-9 {
+    padding-bottom: initial;
+}
+
+
+.markdown-wrapper h1 > center {
+    color: #76aee7 !important;
+    padding-top: 40px;
+    font-size: 30px;
+}
+
+.markdown-wrapper h2,
+.markdown-wrapper h3 {
+    background: -webkit-linear-gradient(left, #3b72bb 0%, transparent 25%, transparent);
+    border-left: 5px solid #569bf2;
+    padding: 10px 0 10px 5px;
+    color: #fff;
+    font-size: 20px;
+}
+
+.markdown-wrapper h2 > strong, .markdown-wrapper h3 > strong {
+    font-weight: 500;
+}
+
+.markdown-wrapper h4 {
+    color: #fff;
+}
+
+.markdown-wrapper pre {
+    background: rgba(31, 31, 31, .7);
+    border: 1px solid #5d5c5c;
+    color: #fff;
+}
+
+.markdown-wrapper .table > tbody > tr > td,
+.markdown-wrapper .table > tbody > tr > th,
+.markdown-wrapper .table > tfoot > tr > td,
+.markdown-wrapper .table > tfoot > tr > th,
+.markdown-wrapper .table > thead > tr > td,
+.markdown-wrapper .table > thead > tr > th {
+    border-top: 1px solid #5d5c5c;
+}
+
+.markdown-wrapper .table > thead > tr > th {
+    border-bottom: 2px solid rgba(31, 31, 31, .7);
+}
+
+.markdown-wrapper .table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: rgba(31, 31, 31, .7);
+}
+
+.markdown-wrapper .table-hover > tbody > tr:hover {
+    background-color: transparent;
+}
+
+/* 设置滚动条的样式 */
+.frame-warp ::-webkit-scrollbar {
+    width: 12px;
+}
+
+/* 滚动槽 */
+/*.frame-warp ::-webkit-scrollbar-track {*/
+/*-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);*/
+/*border-radius: 10px;*/
+/*}*/
+
+/* 滚动条滑块 */
+/*.frame-warp ::-webkit-scrollbar-thumb {*/
+/*border-radius: 10px;*/
+/*background: rgba(0, 0, 0, 0.1);*/
+/*-webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb:window-inactive {*/
+/*background: rgba(255, 0, 0, 0.4);*/
+/*}*/
+
+.markdown-wrapper .apply-env-btn {
+    width: 180px;
+    height: 40px;
+    color: #fff;
+    line-height: 40px;
+    position: absolute;
+    right: 22px;
+    top: 2px;
+    cursor: pointer;
+    background-color: #fc941a;
+}
+
+#mynote-form {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 10px;
+}
+
+/*env加载页面*/
+.load-page,
+.load-page > div {
+    /*background: rgba(14, 20, 31, 0.95);*/
+    width: 100%;
+    height: 100%;
+}
+
+.load-page .progress {
+    width: 445px;
+}
+
+.load-page .progress-bar {
+    background: -webkit-linear-gradient(left, rgba(255, 166, 26, .4), rgba(255, 166, 26, 1));
+}
+
+.load-page .reflect {
+    -webkit-box-reflect: below 0 -webkit-linear-gradient(transparent, transparent 50%, rgba(255, 255, 255, .3));
+    text-transform: uppercase;
+}
+
+.hljs-keyword, .css .rule .hljs-keyword, .hljs-winutils, .nginx .hljs-title, .hljs-subst, .hljs-request, .hljs-status {
+    color: #fff !important;
+}
+
+.md-editor .md-controls{
+    display: none!important;
+}

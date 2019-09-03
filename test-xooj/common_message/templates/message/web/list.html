@@ -1,0 +1,80 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+<link rel="stylesheet" type="text/css" href="{% static 'message/css/list.css' %}">
+<script src="{% static 'message/js/message.js' %}"></script>
+{% endblock %}
+{% block container %}
+<div class='container mrg93T'>
+    <div class="bread">
+        <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+        <span >&gt;&gt;</span>
+        <a href="" class='mainColor font18'>{% trans 'x_message_list' %}</a>
+    </div>
+    <div class="row mrg0A centerDiv pad50T">
+        <div class="col-md-8 col-sm-10 col-xs-12">
+            <ul class="row" id="message-list-div">
+            </ul>
+        </div>
+    </div>
+</div>
+<div id="message-template-div" style="display: none;">
+    <li class="row mrg40B posRelative mrg20B oj_message">
+        <div class="messIco"></div>
+        <div class="messInner mesBg1 pad20R posRelative">
+            <div class="col-md-10" style="color: rgb(1, 248, 255);">
+                <div class="megCon mrg10B whiteC" name="content"></div>
+                <div class="megTime orangeC" name="create_time"></div>
+            </div>
+            <span class='oj_talkLabel'></span>
+        </div>
+        <span class="connectLine"></span>
+    </li>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 初始化消息列表
+        function init_message_list(offset, limit) {
+            var message_list_div = $("#message-list-div");
+            var message_tpl = $("#message-template-div");
+            message_list_div.empty();
+
+            $.ajax({
+                url: "/message/api/list/",
+                type: "get",
+                data: {"offset": offset, "limit": limit},
+                datatype: "json",
+                success: function (data) {
+                    // console.info(data);
+                    var message_list = data.rows;
+                    for (var i in message_list){
+                        message_tpl.find("div[name='content']").html(message_list[i].content);
+                        message_tpl.find("div[name='create_time']").html(message_list[i].create_time);
+                        if (message_list[i].read){
+                            message_tpl.find("span.oj_talkLabel").html("{% trans '已读' %}");
+                            message_tpl.children("li").addClass("aleady_talk");
+                        }else{
+                            message_tpl.find("span.oj_talkLabel").html("{% trans '未读' %}");
+                            message_tpl.children("li").addClass("no_talk");
+                        }
+                        message_list_div.append(message_tpl.html());
+
+                        message_tpl.children("li").removeClass("aleady_talk no_talk");
+                    }
+                }
+            })
+        }
+
+        init_message_list("", "");
+    });
+</script>
+{% endblock %}
+
+<!-- container end-->
+
+
+
+

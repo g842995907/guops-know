@@ -1,0 +1,266 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static '/x_person/css/layout.css' %}"/>
+    <script src="{% static 'web/bootstrap-table/bootstrap-table.min.js' %}"></script>
+{#    <script src="{% static 'x_person/js/team.js' %}"></script>#}
+    <script src="{% static '/x_person/js/common.js' %}"></script>
+    <style>
+        .bootstrap-table {
+            margin-bottom: 20px;
+        }
+
+        .OriginC {
+            background: #FF9900!important;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <section class="container layout-color mrg130T">
+        <div class="bread layout-color"><a class="layout-color"
+                                           href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            >> <a href="{% url 'x_person:team' %}"
+                  class="active font15">{% trans 'x_my_tram' %}</a>
+        </div>
+        <div class="team-hint default-bg mrg20T clearfix">
+            <span class="pull-left">{% trans 'x_no_team_create_team' %}</span>
+            <a class="pull-right" href="{% url 'x_person:create_team' %}">{% trans 'x_create_team' %}</a>
+        </div>
+        {# =====join team======#}
+        <div class="mrg20T">
+            <div class="row mrg0A">
+                <div class="col-md-12 default-bg">
+                    <div class="clearfix row join-team-tool-box mrg20B">
+                        <h3 class="font18 pull-left">{% trans 'x_join_team' %}</h3>
+                        <div class="search default-bg pull-right mrg10T">
+                            <input class="search-text pad10L fl" placeholder="{% trans 'x_search' %}" type="text"
+                                   id="search-text">
+                            <span onclick="CALLBACK.table_refresh()"
+                                  class="search-bg mainBg fr font18 text-center cursor" id="tool-search">
+                        <span class="oj-icon search-btn whiteC oj-icon-E911"></span>
+                    </span>
+                        </div>
+                    </div>
+                    <table class="table join-team hidden">
+                        <thead>
+                        <tr>
+                            <th class="text-center">{% trans 'x_ranking' %}</th>
+                            <th class="text-center">{% trans 'x_team_name' %}</th>
+                            <th class="text-center">{% trans 'x_name_captain' %}</th>
+                            <th class="text-center">{% trans 'x_num_players' %}</th>
+                            <th class="text-center">{% trans 'x_operation' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="text-center">1</td>
+                            <td class="text-center">AAA</td>
+                            <td class="text-center">admin</td>
+                            <td class="text-center">2543.15</td>
+                            <td class="text-center"><span>{% trans 'x_apply_admission' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">2</td>
+                            <td class="text-center">AAA</td>
+                            <td class="text-center">admin</td>
+                            <td class="text-center">2543.15</td>
+                            <td class="text-center"><span>{% trans 'x_apply_admission' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">3</td>
+                            <td class="text-center">AAA</td>
+                            <td class="text-center">admin</td>
+                            <td class="text-center">2543.15</td>
+                            <td class="text-center"><span>{% trans 'x_apply_admission' %}</span></td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">4</td>
+                            <td class="text-center">AAA</td>
+                            <td class="text-center">admin</td>
+                            <td class="text-center">2543.15</td>
+                            <td class="text-center"><span>{% trans 'x_apply_admission' %}</span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <table id="table" style="width:90%; margin:0 auto;" class="table default-table join-team"
+                           data-toggle="table"
+                           data-escape="true"
+                           data-pagination="true"
+                           data-side-pagination="server"
+                           data-pagination-pre-text="<"
+                           data-pagination-next-text=">"
+                           data-url="{% url 'x_person:api:team-list' %}"
+                    >
+                        <thead>
+                        <tr>
+                            <th class="text-center" data-field="name">{% trans 'x_team_name' %}</th>
+                            <th class="text-center" data-field="team_leader_name">{% trans 'x_name_captain' %}</th>
+                            <th class="text-center" data-field="team_member_number">{% trans 'x_num_players' %}</th>
+                            <th class="text-center" data-field="id"
+                                data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {#    邀请队员弹框#}
+    {% verbatim %}
+    <div class="modal fade team-deal-modal" tabindex="-1" role="dialog" id="accept-new-members-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <h4 class="modal-title font18">
+    {% endverbatim %}
+                        {% trans "x_inviting_information" %}
+    {% verbatim %}</h4>
+                </div>
+                <div class="modal-body member-apply-modal">
+                    <div class="new-member-apply-list clearfix" v-for="user in user_list">
+                        <span class="pull-left new-member-apply-name">{{ user.team_name }}
+    {% endverbatim %}
+                            {% trans "x_invite_join_team" %}
+    {% verbatim %}
+                        </span>
+                        <div class="pull-right deal-btn" id="button-27">
+                            <span class="agree-btn mrg0T" v-on:click="accept_team_apply(user.id,1)"
+                                  style="cursor: pointer">
+    {% endverbatim %}
+                    {% trans 'x_agree' %}
+    {% verbatim %}
+                            </span><span
+                                class="refuse-btn mrg0T" v-on:click="accept_team_apply(user.id,2)"
+                                style="cursor: pointer">
+    {% endverbatim %}
+                {% trans "x_refuse" %}
+    {% verbatim %}
+                        </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endverbatim %}
+
+    <script>
+        var teamUserApiList = "{% url 'x_person:api:team-user-list'%}"
+        var listUrl = "{% url 'x_person:team' %}";
+    </script>
+
+    <script>
+        log = console.log.bind(console)
+        var debug;
+        var joined_team = new Set({{ joined_team }})
+        var apply_modal = new Vue({
+            el: '#accept-new-members-modal',
+            data: {
+                user_list: '',
+            },
+            methods: {
+                accept_team_apply: function (id, operate) {
+                    var data = {
+                        type: operate
+                    };
+                    http.patch(teamUserApiList + id.toString() + '/', data, function (data) {
+                        setTimeout(function () {
+                            window.location.href = listUrl;
+                        }, ajaxDialog.defaultDelayTime);
+                    }, function (xhr, ts, et) {
+                        $('#error-msg').parent().addClass('wrong-msg')
+                        $('#error-msg').html(JSON.parse(xhr.responseText).detail);
+                        $("#error-msg-warp").modal();
+                        $("#error-msg-warp").show();
+                    });
+                },
+            },
+        });
+
+
+        var CALLBACK = {
+            table_refresh: function () {
+                $('#table').bootstrapTable('refreshOptions', {pageNumber: 1});
+                $('#table').bootstrapTable('refresh');
+            },
+            apply_team: function (team, index) {
+                var data = {
+                    is_apply: 1,
+                    user:{{ user.id }},
+                    team: team,
+                };
+                team_span_id = '#applying' + team
+                http.post(teamUserApiList, data, function () {
+                    $('#error-msg').parent().addClass('hint-msg')
+                    $('#error-msg').html(gettext('x_apply_success'));
+                    $("#error-msg-warp").modal();
+                    $("#error-msg-warp").show();
+                    $(team_span_id).replaceWith('<span id="already-applied">' + gettext('x_have_applied') + '</span>')
+                    joined_team.delete(team)
+                }, function (xhr, ts, et) {
+                    $('#error-msg').parent().addClass('wrong-msg')
+                    $('#error-msg').html(JSON.parse(xhr.responseText).detail);
+                    $("#error-msg-warp").modal();
+                    $("#error-msg-warp").show();
+                })
+            },
+            have_apply_info: function () {
+                var data = {
+                    'invite': 1
+                };
+                http.get(teamUserApiList, data, function (data) {
+                    if (Number(data.total) > 0) {
+                        $('#accept-new-members-modal').modal();
+                        apply_modal.user_list = data.rows;
+                    }
+
+                });
+            }
+        };
+
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search = $("#search-text").val();
+                return params;
+            },
+        });
+
+        function operatorFormatter(value, row, index) {
+            if (joined_team.has(value)) {
+                return [
+                    '<span id="already-applied">' + gettext('x_have_applied') + '</span>'
+                ].join('');
+            } else {
+                return [
+                    '<span class="OriginC" id="applying' + value + '"onclick="CALLBACK.apply_team(' + value + ',' + index + ')">' + gettext('x_apply_admission') + '</span>'
+
+                ].join('');
+            }
+
+        }
+
+        {% comment %}$(function () {
+            CALLBACK.have_apply_info()
+        }){% endcomment %}
+        window.onload = function () {
+            CALLBACK.have_apply_info()
+        }
+    </script>
+{% endblock %}
+

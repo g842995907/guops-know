@@ -1,0 +1,32 @@
+p, h3, h4 {
+    padding: 15px 0 15px 10px;
+    margin-bottom: 20px;
+    border-top: 4px solid #3a4b83;
+    font-size: 18px;
+    color: #3a4b83;
+    font-weight: bold;
+    background: #edf4fc;
+    margin-bottom: 20px;
+}
+
+span,
+ul li > p,
+h3 + p,
+h4 + p {
+    display: block;
+    padding: 10px 0 10px 10px;
+    border-top: 0px solid #3a4b83;
+    margin-bottom: 20px;
+    font-weight: bold;
+    background: #edf4fc;
+    font-size: 15px;
+}
+
+ul, table {
+    margin-bottom: 20px !important;
+}
+
+pre {
+    background-color: #002a36;
+    color: #93a1a1;
+}

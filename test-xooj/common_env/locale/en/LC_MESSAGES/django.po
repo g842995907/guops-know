@@ -1,0 +1,645 @@
+#msgid "x_env_manage"
+#msgstr "Scene Manage"
+
+msgid "x_add_env"
+msgstr "New Scene"
+
+msgid "x_edit_env"
+msgstr "Edit Scene"
+
+#msgid "x_std_device_manage"
+#msgstr "Node Manage"
+
+msgid "x_add_std_device"
+msgstr "New Node"
+
+msgid "x_edit_std_device"
+msgstr "Edit Node"
+
+msgid "x_config_doc"
+msgstr "Config Doc"
+
+msgid "x_active_env_manage"
+msgstr "Active Env Management"
+
+msgid "x_env_name"
+msgstr "Scene Name"
+
+msgid "x_snapshot_status"
+msgstr "Snapshot Status"
+
+msgid "x_expect_time"
+msgstr "Expect Time"
+
+msgid "x_none_snapshot"
+msgstr "No Snapshot"
+
+msgid "x_delete_snapshot"
+msgstr "Delete Snapshot"
+
+msgid "x_recreate_snapshot"
+msgstr "Recreate Snapshot"
+
+msgid "x_creating_snapshot"
+msgstr "Creating Snapshot"
+
+msgid "x_create_snapshot"
+msgstr "Create Snapshot"
+
+msgid "x_env_huizhi"
+msgstr "Scene drawing"
+
+msgid "x_resource_file"
+msgstr "Resource File"
+
+msgid "x_reupload"
+msgstr "Reload"
+
+msgid "x_upload"
+msgstr "Upload"
+
+msgid "x_click_doc"
+msgstr "Click to see detailed documentation"
+
+msgid "x_manual_set"
+msgstr "Manual Set"
+
+msgid "x_resource_zip"
+msgstr "Please compress the resource file into a zip file,the system will automatically upload to the virtual machine,Windows in C:/Cloud (hidden directory), Linux system in the /tmp directory"
+
+msgid "x_sence_terminator_count"
+msgstr "This senario can only add up to %(count)d terminals"
+
+msgid "x_env_vister"
+msgstr "Visitor"
+
+msgid "x_oj_node_name"
+msgstr "OJ Platform"
+
+msgid "x_only_show_unexpect_env"
+msgstr "Show incorrect environment only"
+
+msgid "x_machine_status"
+msgstr "Machine Status"
+
+msgid "x_create_time"
+msgstr "Create time"
+
+msgid "x_spend_time"
+msgstr "Spend Time"
+
+msgid "x_m1.1c-0.5g-8g"
+msgstr "1c/512M/8G"
+
+msgid "x_m1.1c-1g-8g"
+msgstr "1c/1G/8G"
+
+msgid "x_m2.1c-0.5g-10g"
+msgstr "1c/512M/10G"
+
+msgid "x_m2.1c-1g-10g"
+msgstr "1c/1G/10G"
+
+msgid "x_m2.2c-2g-10g"
+msgstr "2c/2G/10G"
+
+msgid "x_m2.2c-4g-10g"
+msgstr "2c/3G/10G"
+
+msgid "x_m3.1c-1g-20g"
+msgstr "1c/1G/20G"
+
+msgid "x_m3.1c-2g-20g"
+msgstr "1c/2G/20G"
+
+msgid "x_m3.2c-4g-20g"
+msgstr "2c/4G/20G"
+
+msgid "x_m3.4c-4g-20g"
+msgstr "4c/4G/20G"
+
+msgid "x_m4.1c-1g-40g"
+msgstr "1c/1G/40G"
+
+msgid "x_m4.2c-2g-40g"
+msgstr "2c/2G/40G"
+
+msgid "x_m4.4c-4g-40g"
+msgstr "4c/4G/40G"
+
+msgid "x_m4.4c-8g-40g"
+msgstr "4c/8G/40G"
+
+msgid "x_m5.4c-4g-80g"
+msgstr "4c/4G/80G"
+
+msgid "x_m5.4c-8g-80g"
+msgstr "4c/8G/80G"
+
+msgid "x_std_device_name"
+msgstr "Node Name"
+
+msgid "x_system_type"
+msgstr "System Category"
+
+msgid "x_default_size"
+msgstr "Default Size"
+
+msgid "x_system_visit_type"
+msgstr "Visit Category"
+
+msgid "x_help"
+msgstr "Help"
+
+msgid "x_system_user_info"
+msgstr "System User Info"
+
+msgid "x_show_adv_config"
+msgstr "Advanced Config"
+
+msgid "x_is_support_ci"
+msgstr "Support Cloud-init"
+
+msgid "x_hard_control_type"
+msgstr "Disk Controller Category"
+
+msgid "x_img_status"
+msgstr "Image Status"
+
+msgid "x_env_edit_node"
+msgstr "Edit Metadata"
+
+msgid "x_edit_img"
+msgstr "Edit Image"
+
+msgid "x_view_img_machine"
+msgstr "View Image Machine"
+
+msgid "x_restart_img_machine"
+msgstr "Restart Image Machine"
+
+msgid "x_free_img_machine"
+msgstr "Free Image Machine"
+
+msgid "x_save_img"
+msgstr "Save Image"
+
+msgid "x_img_saving"
+msgstr "Image Saving"
+
+msgid "x_resave_img"
+msgstr "Re-save Image"
+
+msgid "x_img_machine_creating"
+msgstr "Image Machine Creating"
+
+msgid "x_img_machine_starting"
+msgstr "Image Machine Starting"
+
+msgid "x_invalid_value"
+msgstr "Invalid Value"
+
+msgid "x_no_env_config"
+msgstr "No Env Config"
+
+msgid "x_env_name_exists"
+msgstr "Sense Name Exist"
+
+msgid "x_no_tmp_env"
+msgstr "There is no machine that can be saved"
+
+msgid "x_no_base_image"
+msgstr "Please select and save the base image first"
+
+msgid "x_unsupported_access_mode"
+msgstr "Unsupported connection method"
+
+msgid "x_tmp_env_conflict"
+msgstr "There is a mirror machine"
+
+msgid "x_image_saving"
+msgstr "Image is saving"
+
+msgid "x_standard_device_no_logo"
+msgstr "The target can not be without a logo"
+
+msgid "x_standard_device_type_exists"
+msgstr "Category already exists"
+
+msgid "x_name_have_existed"
+msgstr "This name already exists"
+
+msgid "x_standard_device_accessmode_error"
+msgstr "The target access method is wrong"
+
+msgid "x_no_image_file"
+msgstr "No Image File"
+
+msgid "x_conflict_with_base_image_name"
+msgstr "Can not have the same name as the base image"
+
+msgid "x_required_field"
+msgstr "Required Field"
+
+msgid "x_no_disk_format"
+msgstr "Need disk format"
+
+msgid "x_select_default_logo"
+msgstr "Default Logo"
+
+msgid "x_system"
+msgstr "System"
+
+msgid "x_upload_image_hint"
+msgstr "HTTP is the largest support for 10G, and larger files are recommended to be uploaded by FTP"
+
+msgid "x_custom_upload"
+msgstr "Custom Upload"
+
+msgid "x_img_format"
+msgstr "Image Format"
+
+msgid "x_img_info"
+msgstr "Image Information"
+
+msgid "x_network_card_type"
+msgstr "Virtual network card model"
+
+msgid "x_video_device"
+msgstr "Video Device"
+
+msgid "x_custom_img"
+msgstr "Custom Image"
+
+msgid "x_sys_visit"
+msgstr "System Visit"
+
+msgid "x_login_img_machine"
+msgstr "Login Image Machine"
+
+msgid "x_qcow2"
+msgstr "QCOW2 - QEMU "
+
+msgid "x_vmdk"
+msgstr "VMDK - VM Hard"
+
+msgid "x_docker_image"
+msgstr "Docker - Docker Image"
+
+msgid "x_vdi"
+msgstr "VDI - Virtual Hard Imae"
+
+msgid "x_vhd"
+msgstr "VHD - Virtual Hard"
+
+msgid "x_ami"
+msgstr "AMI - Amazon Image"
+
+msgid "x_ari"
+msgstr "ARI - Amazon Ramdisk Image"
+
+msgid "x_iso"
+msgstr "ISO - ISO"
+
+msgid "x_ova"
+msgstr "OVA - Open virtual device"
+
+msgid "x_origin"
+msgstr "Origin"
+
+msgid "x_name_len_lt_60"
+msgstr "Name Length(0~100)"
+
+msgid "x_invalid_network_ID"
+msgstr "Invalid Network ID: {id}"
+
+msgid "x_duplicate_network_ID"
+msgstr "Duplicate Network ID: {id}"
+
+msgid "x_invalid_gateway_ID"
+msgstr "Invalid Gateway ID: {id}"
+
+msgid "x_duplicate_gateway_ID"
+msgstr "Duplicate Gateway ID: {id}"
+
+msgid "x_gateway_invalid_network"
+msgstr "Invalid network configuration on gateway  [{gateway_id}] : {nets}"
+
+msgid "x_duplicated_terminal_ID"
+msgstr "Duplicate Terminal ID: {id}"
+
+msgid "x_terminal_invalid_network"
+msgstr "Invalid network configuration on terminal  [{terminal_id}] : {nets}"
+
+msgid "x_terminal_network_more"
+msgstr "More than 1(one) network configured on terminal  [{terminal_id}] : {nets}"
+
+msgid "x_checker_terminal_not_exist"
+msgstr "Checker Terminal {terminal_id} Not Exist"
+
+msgid "x_attacker_terminal_not_exist"
+msgstr "Attacker Terminal {terminal_id} Not Exist"
+
+msgid "x_ad_terminal_number_limit"
+msgstr "Attack defense scene must have {target_limit} target and no more than {executer_limit} executer"
+
+msgid "x_password_illegal_setup"
+msgstr "Password {password} is illegal, must contain letters, numbers, special characters, at least 8 characters, up to 30 characters"
+
+msgid "x_scene_terminal_number"
+msgstr "The scene can only add {terminal_number_limit} terminal"
+
+msgid "x_scene_not_configured"
+msgstr "Scene is not configured yet"
+
+msgid "x_deployment_file_not_cinfigured"
+msgstr "Scenario deployment files have not been configured yet"
+
+msgid "x_invalid_parameters"
+msgstr "Invalid parameter"
+
+msgid "x_invalid_virtual_state"
+msgstr "Invalid virtual machine state"
+
+msgid "x_scene_not_exist"
+msgstr "Scene does not exist"
+
+msgid "x_virtual_not_exist"
+msgstr "Virtual machine does not exist"
+
+msgid "x_update_failure"
+msgstr "Update failure"
+
+msgid "x_no_operation_permissions"
+msgstr "No operation permissions"
+
+msgid "x_num_scenes_full"
+msgstr "The number of scenes is full"
+
+msgid "x_num_personal_scenes_full"
+msgstr "The number of personal scenes is full"
+
+msgid "x_test_scene_have_existed"
+msgstr "Test scenario already exists"
+
+msgid "x_test_scene_not_existed"
+msgstr "Test scenario does not exist"
+
+msgid "x_create_test_scenario_failure"
+msgstr "Failed to create test scenario"
+
+msgid "x_del_test_scenario_failure"
+msgstr "Failure to delete test scenario"
+
+msgid "x_scene_not_need_create_snapshot"
+msgstr "Scene does not need to create a snapshot"
+
+msgid "x_repeated_submission"
+msgstr "Duplicate submission"
+
+msgid "x_icon"
+msgstr "Icon"
+
+msgid "x_scene_instance"
+msgstr "Scene Instance"
+
+msgid "x_sys_user"
+msgstr "System User"
+
+msgid "x_sys_user_passwd"
+msgstr "User Password"
+
+msgid "x_getting_console_access"
+msgstr "Getting Console Access"
+
+msgid "x_access_console"
+msgstr "Access Console"
+
+msgid "x_quick_get_start"
+msgstr "Quick Get Start"
+
+msgid "x_no_attacker_config"
+msgstr "No Attacker Config"
+
+msgid "x_env_attacker_management"
+msgstr "Attacker"
+
+msgid "x_all_attacker_type"
+msgstr "All Attacker Type"
+
+msgid "x_attacker_name"
+msgstr "Attacker Name"
+
+msgid "x_attacker_type"
+msgstr "Attacker Type"
+
+msgid "x_add_attacker"
+msgstr "Add Attacker"
+
+msgid "x_edit_attacker"
+msgstr "Edit Attacker"
+
+msgid "x_attacker_server"
+msgstr "Attacker Server"
+
+msgid "x_select_standard_device"
+msgstr "Select Standard Device"
+
+msgid "x_env_not_prepared"
+msgstr "Env Not Prepared"
+
+msgid "x_attack_net_not_found"
+msgstr "Attach Net Not Found"
+
+msgid "x_select_env_attacker"
+msgstr "Select Attacker"
+
+msgid "x_flag_index_error"
+msgstr "{val} index error"
+
+msgid "x_parse_script_variable_error"
+msgstr "Parse script variable[{val}] error"
+
+msgid "x_network_not_exist"
+msgstr "Network not exists"
+
+msgid "x_gateway_not_exist"
+msgstr "Gateway not exists"
+
+msgid "x_envattacker_not_exist"
+msgstr "Attacker not exists"
+
+msgid "x_create_envattacker_error"
+msgstr "Create attacker error"
+
+msgid "x_delete_envattacker_error"
+msgstr "Delete attacker error"
+
+msgid "x_cannot_access_to_external_net"
+msgstr "External network is not reachable from {terminal}"
+
+msgid "x_create_env_start"
+msgstr "Create scene start"
+
+msgid "x_create_env_error"
+msgstr "Create scene error"
+
+msgid "x_create_env_end"
+msgstr "Create scene end"
+
+msgid "x_create_network_start"
+msgstr "Create network [{name}] ..."
+
+msgid "x_create_network_error"
+msgstr "Create network [{name}] error"
+
+msgid "x_create_network_end"
+msgstr "Create network [{name}] end"
+
+msgid "x_create_router_start"
+msgstr "Create router [{name}] ..."
+
+msgid "x_create_router_error"
+msgstr "Create router [{name}] error"
+
+msgid "x_create_router_end"
+msgstr "Create router [{name}] end"
+
+msgid "x_create_firewall_start"
+msgstr "Create firewall [{name}] ..."
+
+msgid "x_create_firewall_error"
+msgstr "Create firewall [{name}] error"
+
+msgid "x_create_firewall_end"
+msgstr "Create firewall [{name}] end"
+
+msgid "x_create_qos_start"
+msgstr "Create qos for terminal[{terminal_name}] on network[{net_name}] ..."
+
+msgid "x_create_qos_error"
+msgstr "Create qos for terminal[{terminal_name}] on network[{net_name}] error"
+
+msgid "x_create_qos_end"
+msgstr "Create qos for terminal[{terminal_name}] on network[{net_name}] end"
+
+msgid "x_create_terminal_start"
+msgstr "Create terminal [{name}] ..."
+
+msgid "x_create_terminal_error"
+msgstr "Create terminal [{name}] error"
+
+msgid "x_create_terminal_end"
+msgstr "Create terminal [{name}] end"
+
+msgid "x_bind_floating_ip"
+msgstr "Bind floating ip for terminal [{name}] ..."
+
+msgid "x_port_number"
+msgstr "Port Number"
+
+msgid "x_wan_number"
+msgstr "Wan Number"
+
+msgid "x_lan_number"
+msgstr "Lan Number"
+
+msgid "x_no_enough_floating_ips"
+msgstr "No enough internet ips"
+
+msgid "x_image_status"
+msgstr "Image Status"
+
+msgid "x_desc"
+msgstr "Description"
+
+msgid "x_router_not_prepared"
+msgstr "Router Not Prepared"
+
+msgid "x_invalid_static_route"
+msgstr "Invalid Static Route"
+
+msgid "x_exist_static_route"
+msgstr "Static Route Exists"
+
+msgid "x_firewall_not_prepared"
+msgstr "Firewall Not Prepared"
+
+msgid "x_invalid_firewall_rule"
+msgstr "Invalid Firewall Rule"
+
+msgid "x_exist_firewall_rule"
+msgstr "Firewall Rule Exists"
+
+msgid "x_standard_device_error"
+msgstr "Error"
+
+msgid "x_node_scale"
+msgstr "Node Scale"
+
+msgid "x_attacker_count"
+msgstr "Total Attacker(s)"
+
+msgid "x_entire_type"
+msgstr "Entire Type"
+
+msgid "x_all_image_type"
+msgstr "All Image Type"
+
+msgid "x_belong_target"
+msgstr "Belong Target"
+
+msgid "x_installer_resource_not_found"
+msgstr "Resource Not Found"
+
+msgid "x_create_pool_full"
+msgstr "Create pool is full"
+
+msgid "x_node_memory"
+msgstr "Node Memory"
+
+msgid "x_node_disk"
+msgstr "Node Disk"
+
+msgid "x_checker_script_path_null"
+msgstr "Checker Script Path is Null"
+
+
+msgid "x_vm_status_no_state"
+msgstr "No State"
+
+msgid "x_vm_status_running"
+msgstr "Running"
+
+msgid "x_vm_status_blocked"
+msgstr "Blocked"
+
+msgid "x_vm_status_paused"
+msgstr "Paused"
+
+msgid "x_vm_status_shutdown"
+msgstr "Shutdown"
+
+msgid "x_vm_status_shutoff"
+msgstr "Shutoff"
+
+msgid "x_vm_status_crashed"
+msgstr "Crashed"
+
+msgid "x_vm_status_suspended"
+msgstr "Suspended"
+
+msgid "x_vm_status_failed"
+msgstr "Failed"
+
+msgid "x_vm_status_building"
+msgstr "Building"
+
+msgid "x_export_env_data"
+msgstr "Export Scene Data"
+
+msgid "x_snapshot_ban_upload"
+msgstr "Standdard device has snapshot, upload is not allowed"
+
+msgid "x_image_not_found"
+msgstr "Image not found"

@@ -1,0 +1,316 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    <a href="{% url 'cms_x_person:team_list' %}">{% trans "x_team_manage" %}</a> >
+    {% trans 'x_edit_team' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+{% endblock %}
+
+
+{% block container %}
+
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_x_person:cms_api:team-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_x_person:cms_api:team-detail' team.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_team_name' %}</label>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="name" name="name" data-form-fixed="1"
+                               value="{{ team.name }}" style="float: left; width: 95% ;"/>
+                        <div style="padding-top:1px;font-size:25px;float: right">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'Logo' %}</label>
+                    <div class="col-sm-4">
+                        <div class="image_upload_widget">
+                            <div>
+                                <div class="btn btn-primary btn_image_upload image_upload" id="logo">
+                                    {% trans "x_select_pic" %}
+                                    {#                                    <input type="button" class="image_upload" id="logo"/>#}
+                                    <input type="text" class="form-control hidden" name="logo">
+                                </div>
+                            </div>
+                            <a href="{% if team.logo_url %}{{ team.logo_url }}{% endif %}" class="image_show"
+                               title="图片"
+                               data-gallery="">
+                                <img {% if team.logo_url %}src="{{ team.logo_url }}"{% endif %}>
+                            </a>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev"><</a>
+                                <a class="next">></a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_time_establishment' %}</label>
+                    <div class="col-sm-4">
+                        <input type="text" name="create_time" id='create_time' data-form-fixed="1"
+                               value="{{ team.create_time }}"
+                               class="default-bg form-control layer-date laydate-icon layout-color"
+                               placeholder="{% trans 'x_time_establishment' %}" style="float: left; width: 95% ;"/>
+                        <div style="padding-top:1px;font-size:25px;float: right">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_team_profile' %}</label>
+                    <div class="col-sm-4">
+                        <textarea style="word-break:break-all;width: 95%;" type="text" name="brief_introduction"
+                                  id="brief_introduction" data-form-fixed="1"
+                                  class="default-bg layout-color form-control layout-color"
+                                  placeholder="{% trans 'x_team_profile' %}">{{ team.brief_introduction | default_if_none:'' }}</textarea>
+                    </div>
+                </div>
+                {% if mode == 0 %}
+                  <div class="hr-line-dashed"></div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans "x_captain" %}</label>
+                    <div class="col-sm-4">
+                      <input type="hidden" id="team_leader" name="team_leader" value=""/>
+                      <span type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-team-leader-modal">{% trans 'x_choose_caption' %}</span>
+                      <span class="hint">
+                      </span>
+                        <div style="padding-top:1px;font-size:25px;float: right">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                  </div>
+                {% endif %}
+                {% if mode == 1 %}
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group" id="optionsCount">
+                        <label class="col-sm-2 control-label">{% trans 'x_player' %}</label>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                {% for user in team_user %}
+                                    <span class="simple_tag">{{ user.real_name }}
+                                      {% if user.team_leader %}<span class="label label-danger">{% trans "x_captain" %}</span>{% endif %}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white" href="{% url 'cms_x_person:team_list' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+        {% comment %}选择队长{% endcomment %}
+    <div class="modal fade" id="add-team-leader-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+              <span class="current-user-name"></span> {% trans 'x_choose_caption' %}
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div id="tableToolbarUser">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b" id="user_name"
+                               placeholder={% trans 'x_user_name' %} type="text" />
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <a class="btn btn-primary" onclick="userTable.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <table id="userTable"
+                   data-toggle="userTable"
+                   data-toolbar="#tableToolbarUser"
+                   data-toolbar-align="center"
+                   data-show-refresh="false"
+                   data-search="false"
+                   data-pagination="true"
+                   data-side-pagination="server"
+                   data-url="{% url 'cms_x_person:cms_api:user-list' %}"
+            >
+              <thead>
+              <tr>
+                <th data-field="username" data-escape="true" data-sortable="true">{% trans 'x_user_name' %}</th>
+                <th data-field="first_name" data-escape="true" data-sortable="true">{% trans 'x_name_surname' %}</th>
+                <th data-field="id" data-formatter="orgFormatter">{% trans 'x_org' %}</th>
+                <th data-field="group_name" data-formatter="groupFormatter">{% trans 'x_role' %}</th>
+              </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" style="margin-bottom: auto;" data-dismiss="modal">{% trans "x_close" %}</button>
+            <button type="button" class="btn btn-primary" style="margin-bottom: auto;" onclick="addTeamLeader()" id="addTeamLeader">{% trans 'x_confirm' %}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_x_person:team_list' %}";
+        $(".image_upload_widget").bindLocalCropImgUpload({aspectRatio: 1});
+    </script>
+
+    <script>
+
+        pageWidgets.registerCheckTableRow($("#userTable"));
+        var userTable = bsTableClass($('#userTable'));
+        $('#userTable').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search = $("#user_name").val();
+                params.no_team = true;
+                return params;
+            },
+        });
+
+        function groupFormatter(value, row, index) {
+            return gettext(value);
+        }
+
+        function orgFormatter(value, row, index) {
+            if (!row.faculty_name) {
+                return '-';
+            }
+            var orgs = [row.faculty_name];
+            if (row.major_name) {
+                orgs.push(row.major_name);
+            }
+            if (row.classes_name) {
+                orgs.push(row.classes_name);
+            }
+            var data = '<span style="color: #f7a54a">' + orgs[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + orgs[1] + '</span>' + ' / ' + orgs[2];
+            return data;
+        }
+        $("#user_name").keydown(function (e) {
+          if (e.keyCode == 13) {
+            userTable.refresh();
+          }
+        });
+
+        function addTeamLeader(){
+            $("#addTeamLeader").attr('disabled', true);
+            var user_ids = userTable.getCheckedValues();
+            if (user_ids.length !== 1){
+                $("#addTeamLeader").attr('disabled', false);
+                swal({
+                  title: "{% trans 'x_please_choose_a_team_leader' %}",
+                  type: 'error',
+                  confirmButtonText: "{% trans 'x_confirm' %}"
+                });
+                return false
+            }else {
+              var user_id = user_ids[0]
+              var user_value = userTable.getData(user_id);
+              $("#team_leader").val(user_id);
+              $(".hint").text(user_value.first_name);
+              $("#addTeamLeader").attr('disabled', false);
+              $('#add-team-leader-modal').modal('hide');
+            }
+        }
+        $(function () {
+            $("#validateForm").validate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 30
+                    },
+                    create_time: {
+                        required: true,
+                        maxlength: 30,
+                    }
+                },
+                messages: {
+                    name: {
+                        required: gettext("x_required"),
+                        maxlength: gettext("x_max_length_30"),
+                    },
+                    create_time: {
+                        required: gettext("x_required"),
+                        maxlength: gettext("x_max_length_30"),
+                    },
+                },
+
+            });
+
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {});
+
+
+            var now_date = new Date();
+            laydate.render({
+              elem: '#create_time',
+              type: 'datetime',
+             max: 'now_date',
+            });
+            //$('#create_time').val(now_date);
+        })
+    </script>
+{% endblock %}

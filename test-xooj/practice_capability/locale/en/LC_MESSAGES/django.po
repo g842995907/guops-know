@@ -1,0 +1,83 @@
+msgid "x_add_test_paper"
+msgstr "New test paper"
+
+msgid "x_edit_test_paper"
+msgstr "Edit test paper"
+
+msgid "x_test_paper_name"
+msgstr "Test paper name"
+
+msgid "x_pre_show"
+msgstr "Show"
+
+msgid "x_not_found_testpaper"
+msgstr "Not found testpaper"
+
+msgid "x_testpaper_description"
+msgstr "Test paper description"
+
+msgid "x_list_questions"
+msgstr "List of questions"
+
+msgid "x_Scores"
+msgstr "score"
+
+msgid "x_idea_of_solving_problem"
+msgstr "idea of solving problem"
+
+msgid "x_enter_correct_answer"
+msgstr "Input Answer"
+
+msgid "x_self_test_paper_library"
+msgstr "Test Bank"
+
+msgid "x_topic_status"
+msgstr "Challenges Status"
+
+msgid "x_title_difficulty"
+msgstr "Title Difficulty"
+
+msgid "x_judge_paper"
+msgstr "Part 1:Judgment Problem"
+
+msgid "x_single_paper"
+msgstr "Part 2:Single Choice"
+
+msgid "x_multiple_paper"
+msgstr "Part 3:Multiple Choice"
+
+msgid "x_operation_paper"
+msgstr "Part 4:Operation Problem"
+
+msgid "x_add_configuration"
+msgstr "Add configuration"
+
+msgid "x_question_bank"
+msgstr "Question bank"
+
+msgid "x_bank_name"
+msgstr "Question bank name"
+
+msgid "x_topic_num"
+msgstr "Challenges"
+
+msgid "x_score_per_question"
+msgstr "Score per question"
+
+msgid "x_select_set"
+msgstr "Please select a problem set"
+
+msgid "x_test_already_exists"
+msgstr "The test name already exists"
+
+msgid "x_testpaper_cannot_empty"
+msgstr "The test paper name cannot be empty"
+
+msgid "x_random_import"
+msgstr "Random import"
+
+msgid "x_questions"
+msgstr "Questions"
+
+msgid "x_each_question"
+msgstr "Each question"

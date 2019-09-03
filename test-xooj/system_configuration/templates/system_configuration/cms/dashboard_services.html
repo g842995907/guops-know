@@ -1,0 +1,463 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load static %}
+{% load i18n sizeformat %}
+
+{% block super_title %}
+{#    {% trans '运维服务' %}#}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cms/css/common.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/ojicon.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+    <link href="{% static 'lib/font-awesome/font-awesome.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'lib/bootstrap-icheck/css/icheck-bootstrap.css' %}" type="text/css" rel="stylesheet"/>
+
+{#    <script src="{% static 'lib/echarts/echarts.js' %}"></script>#}
+{#    <script src="{% static 'dashboard/js/dashboard.js' %}"></script>#}
+    <script src="{% static 'lib/hplus/js/plugins/jsKnob/jquery.knob.js' %}"></script>
+    <script>
+        $(function () {
+            $('.knob').each(function () {
+                var knob_value = $(this).val();
+                if (knob_value > 90) {
+                    $(this).knob({
+                        fgColor: '#F25667'
+                    });
+                }
+                else if (knob_value > 60) {
+                    $(this).knob({
+                        fgColor: '#FCAB62'
+                    });
+                }
+                else {
+                    $(this).knob({
+                        fgColor: '#00B293'
+                    });
+                }
+            })
+        })
+    </script>
+    <style>
+        .ibox-content {
+            padding: 5px 20px 10px;
+        }
+
+        .sweet-alert h2 {
+            color: #DD6B55;
+            font-size: 25px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: none;
+            position: relative;
+            margin: 25px 0;
+            padding: 0;
+            line-height: 40px;
+            display: block;
+        !important;
+        }
+
+        .sweet-alert p {
+            color: #DD6B55;
+            font-size: 16px;
+            text-align: center;
+            font-weight: 300;
+            position: relative;
+            text-align: inherit;
+            float: none;
+            margin: 0;
+            padding: 0;
+            line-height: normal;
+        }
+
+        .icheck-danger > input:first-child:checked + label::before, .icheck-danger > input:first-child:checked + input[type="hidden"] + label::before {
+            background-color: #ed5565;
+            border-color: #ed5565;
+        }
+    </style>
+{% endblock %}
+{% block wrapper %}
+    <div class="wrapper">
+{% endblock %}
+
+{% block container %}
+    <div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dashboard-middle">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+
+                        <div id="main"></div>
+                        <div class="mrg20T">
+                            <div class="ibox-title clearfix" style="position:relative;">
+                                <h5 class="pull-left">{% trans 'x_cluster_status' %}({% trans 'x_vm_used' %})</h5>
+                                <h5 class="pull-right">
+                                    <div class="icheck-danger icheck-inline" style="vertical-align: top;">
+                                        <input type="checkbox" id="clearall"/>
+                                        <label for="clearall" class="text-danger">{% trans "x_clearall_scene" %}</label>
+                                    </div>
+                                    <button type="button" class="btn btn-warning"
+                                            onclick="start_close_computer(this, '', 'restart')">{% trans 'x_restart_service' %}</button>
+                                </h5>
+                            </div>
+                            <div class="row mrg0A ibox-content " id="cluster_div">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <div>{% trans "x_vm_count" %}</div>
+                                            <div class="m-r-md inline mrg20T">
+                                                <input class="knob change"
+                                                   type="text" value="0"
+                                                   id="vm_count"
+                                                   data-width="100"
+                                                   data-max="500"
+                                                   data-fgColor="rgb(26, 179, 148)"
+                                                   data-skin="tron"
+                                                   data-thickness=".1"
+                                                   data-angleOffset="0"
+                                                   readOnly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <div>{% trans "Vcpu" %} (%)</div>
+                                            <div class="m-r-md inline mrg20T">
+                                                <input class="knob change" type="text"
+                                                     id="cpu_used" value=0
+                                                     data-width="100"
+                                                     data-fgColor="rgb(248, 172, 89)"
+                                                     data-skin="tron"
+                                                     data-thickness=".1"
+                                                     data-angleOffset="0" readOnly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <div>{% trans "x_memory" %} (%)</div>
+                                            <div class="m-r-md inline mrg20T">
+                                                <input class="knob change" type="text"
+                                                     id="ram_used" value=0
+                                                     data-width="100"
+                                                     data-fgColor="rgb(237, 85, 101)"
+                                                     data-skin="tron"
+                                                     data-thickness=".1"
+                                                     data-angleOffset="0" readOnly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <div>{% trans "x_disk" %} (%)</div>
+                                            <div class="m-r-md inline mrg20T">
+                                                <input class="knob change" type="text"
+                                                     id="disk_used" value=0
+                                                     data-width="100"
+                                                     data-fgColor="rgb(35, 198, 200)"
+                                                     data-skin="tron"
+                                                     data-thickness=".1"
+                                                     data-angleOffset="0" readOnly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#&&&&&&&&&&&&=================#}
+    <div class="mrg20T">
+        <div class="ibox-title">
+            <h5>{% trans 'x_node_status' %}({% trans 'x_vm_used' %})</h5>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="row mrg0A">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dashboard-bottom">
+                <table class="table table-hover dashboard-table">
+                    <thead>
+                    <tr>
+                        <th>{% trans "x_node_name" %}</th>
+                        <th>{% trans "x_node_IP" %}</th>
+                        <th>{% trans "x_service_status" %}</th>
+                        <th>{% trans "x_node_status" %}</th>
+                        <th>{% trans "CPU" %}</th>
+                        <th>{% trans "x_memory" %}</th>
+                        <th>{% trans "x_hard_disk" %}</th>
+                        <th>{% trans "x_vm_count" %}</th>
+                        <th>{% trans "x_container_count" %}</th>
+                        <th>
+                            <div align="right">
+                                <button type="button" class="btn btn-danger"
+                                        onclick="start_close_computer(this,'', 'close')">{% trans 'x_all_shut' %}</button>
+                                <button type="button" class="btn btn-warning"
+                                        onclick="start_close_computer(this,'','start')">{% trans 'x_all_restart' %}</button>
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for hyperv in hypervisors %}
+                        <tr>
+
+                            <td>{{ hyperv.hypervisor_hostname }}</td>
+                            <td>{{ hyperv.host_ip }}</td>
+                            <td><i class="icon"></i> {{ hyperv.status|change_state:hyperv.state }}</td>
+                            <td><i class="icon"></i> {{ hyperv.state }}</td>
+                            <td>
+
+                                 <span class="cpu_used">{% if hyperv.state == 'up' %}
+                                    {% widthratio hyperv.vcpus_used hyperv.vcpus    100 %}{% else %}
+                                    0{% endif %}%</span>
+                            </td>
+                            <td>
+{#                          {{ hyperv.memory_mb_used|mb_float_format|change_state:hyperv.state }}/{{ hyperv.memory_mb|mb_float_format }}#}
+                                <span class="hyper_number">{% if hyperv.state == 'up' %}
+                                    {% widthratio hyperv.memory_mb_used hyperv.memory_mb    100 %}{% else %}
+                                    0{% endif %}%</span>
+                            </td>
+                            <td>{% comment %}{{ hyperv.local_gb_used|diskgbformat|change_state:hyperv.state }}/{{ hyperv.local_gb|diskgbformat }}{% endcomment %}
+                                <span class="hyper_number">{% if hyperv.state == 'up' %}
+                                    {% widthratio hyperv.local_gb_used hyperv.local_gb 100 %}{% else %}
+                                    0{% endif %}%</span>
+                            </td>
+
+
+                            <td>
+                                <span class="hyper_number">
+                                    {{  hyperv.running_vms  }}
+                                  </span>
+                            </td>
+                            <td>
+                                <span class="hyper_number">
+                                    {{   hyperv.container_count }}
+                                   </span>
+                            </td>
+
+                            <td align="right">
+                                {% if hyperv.state == 'up' %}
+                                    <button type="button" class="btn btn-danger" style="min-width: 82px"
+                                            onclick="start_close_computer(this,'{{ hyperv.host_ip }}', 'close', '{{ hyperv.hypervisor_hostname }}')">
+                                        {% trans 'x_shut' %}</button>
+{#                                    <div style="display: inline-block;">#}
+                                    <button type="button" class="btn btn-warning" style="min-width: 82px"
+                                            data-hostname="{{ hyperv.hypervisor_hostname }}"
+                                            onclick="start_close_computer(this,'{{ hyperv.host_ip }}', 'restart', '{{ hyperv.hypervisor_hostname }}')">{% trans 'x_restart' %}</button>
+{#                                </div>#}
+                                {% else %}
+{#                                    <div style="display: inline-block; width: 82px;text-align:center">#}
+                                    <button type="button" class="btn btn-default" style="min-width: 82px;color:#55606e;">
+                                        <i class="glyphicon glyphicon-off" style="margin-right: 3px; margin-top: 5px;"></i>{% trans 'x_shut_down' %}
+                                    </button>
+{#                                    </div>#}
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{#    <div class="mrg20T">#}
+{#        <div class="ibox-title">#}
+{#            <h5>{% trans 'x_proportional_description' %}</h5>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="ibox-content">#}
+{#        <div class="row mrg0A">#}
+{#            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dashboard-bottom">#}
+{#                <p><b>{% trans "CPU" %}</b> {% trans "x_virtual_proportion" %} : 1 : {{ cpu_allocation_ratio }}</p>#}
+{#                <p><b>{% trans "x_memory" %}</b> {% trans "x_virtual_proportion" %} : 1 : {{ ram_allocation_ratio }}</p>#}
+{#                <p><b>{% trans "x_hard_disk" %}</b> {% trans "x_virtual_proportion" %} : 1 : {{ disk_allocation_ratio }}</p>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+
+
+    <style type="text/css">
+        span {
+            color: #00B293;
+        }
+    </style>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var Url = '{% url 'cms_system_configuration:hander_services_ssh' %}';
+        var start_close_computer = function (btn, ip, status, hostname) {
+            var $this = $(btn);
+            var html_val = $this.html();
+            var title = '';
+            var IsClearAll = $("#clearall").is(":checked");
+            var text = '{% trans 'x_determine_relevant_complete_execution' %}';
+            if (status === 'start') {
+                title = '{% trans "x_reboot_5_min" %}';
+            }
+            else if (status === 'close') {
+                title = '{% trans "x_determine_shutdown" %}';
+            } else {
+                title = '{% trans 'x_reboot_5_min' %}'
+            }
+
+            if (hostname === 'compute1' && status === 'close') {
+                title = '{% trans "x_determine_shutdown" %}';
+                text = '{% trans "x_determine_relevant_complete_execution" %}'
+            }
+
+            var data = {
+                'ip': ip,
+                'status': status,
+                'clearall': IsClearAll,
+                {#                'csrfmiddlewaretoken': '{{ csrf_token }}'#}
+            };
+            swal({
+                    title: title,
+                    text: text,
+                    type: "input",
+                    showCancelButton: true,
+                    cancelButtonText: "{% trans "x_cancel" %}",
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "{% trans "x_confirm" %}",
+                    closeOnConfirm: false,
+                    inputPlaceholder: '{% trans "x_input_1" %}',
+                    inputAutoTrim: true
+
+                },
+                function (inputValue) {
+                    var inputValue = $.trim(inputValue);
+                    if (inputValue) {
+                        if (inputValue !== '1') {
+                            swal.showInputError("{% trans 'x_input_1' %}");
+                            return false
+                        } else {
+                            $.ajax({
+                                url: Url,
+                                type: "POST",
+                                data: data,
+                                beforeSend: function (xhr, settings) {
+                                    var csrftoken = getCookie('oj_csrftoken');
+                                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                                    $this.html('处理中<span class="icon-spinner icon-spin icon-1x pull-right" style="color:#f9f3f0"></span>');
+                                    $this.css('color', '#f9f3f0');
+                                    $('button').attr('disabled', true);
+                                    $('button').css({'opacity': '1'})
+                                },
+                                success: function (data) {
+                                    if (data.status === 'success') {
+                                        var waitTime = 5 * 60 * 1000;
+                                        if (status === gettext('close')) {
+                                            waitTime = 5 * 1000
+                                        }
+                                        setTimeout(function () {
+                                            {#                                $this.html(html_val);#}
+                                            {#                                $('button').attr('disabled', false);#}
+                                            location.reload()
+                                        }, waitTime);
+                                    } else {
+                                        $this.html(html_val);
+                                        $('button').attr('disabled', false);
+                                        $.each($('button'), function (index, value) {
+                                            if (value.innerText === gettext('x_shut_down')) {
+                                                value.setAttribute('disabled', 'true');
+                                                value.style.opacity = '1'
+                                            }
+                                        });
+                                        swal('{% trans "x_re_enforced" %}', '', 'error');
+                                    }
+
+                                }
+                            });
+                        }
+                    } else {
+                        swal.showInputError("{% trans 'x_input_not_empty' %}");
+                        return false
+
+                    }
+                }
+            );
+        };
+
+        $("#cluster_div").ready(function () {
+              $.ajax({
+                  url: "{% url 'cms_dashboard:hyperv_stats'  %}",
+                  type: "GET",
+                  cache: false,
+                  async: true,
+                  dataType: "json",
+                  success: function (result) {
+                      if(result.hasOwnProperty('cluster_state')) {
+                          var cluster_state = result.cluster_state;
+                          $("#vm_count").val(cluster_state.vms).trigger('change');
+                          $("#cpu_used").val(cluster_state.vcpu).trigger('change');
+                          $("#ram_used").val(cluster_state.ram).trigger('change');
+                          $("#disk_used").val(cluster_state.disk).trigger('change');
+                      }
+                  },
+                  error: function () {
+                      console.info("error");
+                  }
+              });
+        })
+
+        $(function () {
+            $.each($('button'), function (index, value) {
+                if (value.innerText === gettext('x_shut_down')) {
+                    value.setAttribute('disabled', 'true');
+                    value.style.opacity = '1'
+                }
+            });
+
+            $('.icon').each(function () {
+                var status_icon = $(this).parent().text();
+                if (status_icon == " enabled") {
+                    $(this).addClass("icon-circle-blank").css('color', '#00B293');
+                }
+                else if (status_icon == " disabled") {
+                    $(this).addClass("icon-circle-blank").css('color', '#F25667');
+                }
+                else if (status_icon == " down") {
+                    $(this).addClass("icon-ban-circle").css('color', '#F25667');
+                }
+                else {
+                    $(this).addClass("icon-refresh").css('color', '#00B293');
+                }
+            });
+
+            $(".cpu_used").each(function () {
+                var cpu_used = $(this).text();
+                cpu_used = Number(cpu_used);
+                var vcpus_used = $(this).parent().text();
+                var cpu_used_count = vcpus_used.replace(/(.*)\//, '');
+                cpu_used_count = Number(cpu_used_count);
+                if (cpu_used / cpu_used_count == 0) {
+                    $(this).css("color", "#F25667");
+                }
+                else if (cpu_used / cpu_used_count >= 0.9) {
+                    $(this).css('color', "#F25667");
+                }
+                else if (cpu_used / cpu_used_count >= 0.6) {
+                    $(this).css('color', "#FCAB62")
+                }
+            });
+
+            $('.hyper_number').each(function () {
+                var hyper_number = $(this).text();
+                var newstr_mb = hyper_number.replace(/%/, '');
+                var newstrs_mb = Number(newstr_mb);
+                if (newstrs_mb > 90) {
+                    $(this).css("color", "#F25667")
+                }
+                else if (newstrs_mb >= 60) {
+                    $(this).css("color", "#FCAB62")
+                }
+                else if (newstrs_mb == 0) {
+                    $(this).css("color", "#F25667")
+                }
+            })
+        });
+
+
+    </script>
+{% endblock %}

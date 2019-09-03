@@ -1,0 +1,50 @@
+msgid "x_ongoing_scene"
+msgstr "正在进行的场景"
+
+msgid "x_no_longer_reminding"
+msgstr "不再提示"
+
+msgid "x_delete_scene"
+msgstr "删除场景"
+
+msgid "x_click_to_go"
+msgstr "点击前往"
+
+msgid "x_confirm_delete_scene"
+msgstr "确认删除该场景？"
+
+msgid "x_please_enter_initial_password"
+msgstr "请输入初始密码"
+
+msgid "x_password_length_8"
+msgstr "密码长度不能小于 8 个字符"
+
+msgid "x_please_enter_new_password"
+msgstr "请输入新密码"
+
+msgid "x_please_confirm_new_password"
+msgstr "请确认新密码"
+
+msgid "x_password_inconsistent_twice"
+msgstr "两次密码输入不一致"
+
+msgid "x_reply"
+msgstr "回复"
+
+msgid "x_no_messages"
+msgstr "暂无消息"
+
+msgid "x_select_all"
+msgstr "全选"
+
+msgid "x_selected"
+msgstr "已选"
+
+msgid "x_handle"
+msgstr "前往处理"
+
+msgid "x_go_page"
+msgstr "跳转到第"
+
+msgid "x_page"
+msgstr "页"

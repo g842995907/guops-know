@@ -1,0 +1,326 @@
+{% load staticfiles %}
+{% load static_v %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<head>
+    {% get_current_language as LANGUAGE_CODE %}
+    <meta charset="UTF-8"/>
+    <title>{% trans 'x_registered'|capfirst %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/css/powerFloat.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/css/default.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/css/login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" media="screen" href="{% static_v 'web/css/styleLogin.css' %}">
+    <script src="{% static_v 'web/js/jquery-3.2.1.min.js' %} "></script>
+    <script src="{% static_v 'web/js/jquery.form.js' %}"></script>
+    <script src="{% static "web/js/ajax.csrf.js" %}"></script>
+    <script type="text/javascript" src="{% static "web/js/jquery-1.4.2.min.js" %}"></script>
+    <script type="text/javascript">
+        var $142 = jQuery.noConflict();
+    </script>
+    <script type="text/javascript" src="{% static "web/js/jquery-powerFloat.js" %}"></script>
+
+</head>
+<style type="text/css">
+    html, body {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+    {#        background: url(../../static/img/bg.jpg);#} background-size: 100% 100%;
+    }
+
+    h1 {
+        margin: 0;
+        position: absolute;
+        left: 50px;
+        top: 20px;
+    }
+
+    h4 {
+        margin: 0;
+        position: absolute;
+        right: 50px;
+        bottom: 30px;
+    }
+
+    #floatBox_remind {
+        background: white;
+        border: none;
+        color: rgba(4, 7, 12, 0.96);
+    }
+</style>
+<body>
+<div class="count-particles hidden">
+    <span class="js-count-particles">--</span>
+</div>
+<!-- particles.js container -->
+<div id="particles-js"></div>
+<h1 class='fl'>
+{#    <img id="platform_logo" class="hidden left-top-logo"#}
+{#         src="{% static_v 'web/img/xlogo_'|add:LANGUAGE_CODE|add:'.png' %}" alt="">#}
+     <img id="platform_logo" alt="Brand" class="left-top-logo"
+         {% if request.platform_logo %}
+         src="/media/system_logo/{{ request.platform_logo }}"
+         {% else %}
+         src="{% static_v 'web/img/xlogo_'|add:LANGUAGE_CODE|add:'.png' %}"
+         {% endif %}
+    >
+</h1>
+<div class="logoin-warpper">
+    <div class="centerDiv">
+        <div class="oj_banner posRelative mrg50R">
+            <img src="{% static_v 'web/img/login0.png' %}" alt="" class='width100' id='snOj_img'>
+        </div>
+        <div class="register-box">
+            <form id="registerForm" method="post" action="{% url 'common_web:submit_register' %}">
+                {% csrf_token %}
+                <div class='logoMain' id="register">
+                    <div class='font26 whiteC text-center mrg40B'>
+                        {% trans 'x_new_user_registration'|capfirst %}
+                    </div>
+                    <div class='mrg50B'>
+                        <div class="write mrg30T">
+                            <div class="">
+                                <span class="person pad25L pad15R inLine human" style="vertical-align: top"></span>
+                                <input class="font16 pad15R" id="username" name="username"
+                                       value="" type="text"
+                                       placeholder="{% trans 'x_set_user_name' %}">
+                            </div>
+                        </div>
+                        <div class="write mrg30T">
+                            <div class="">
+                                <span class="person pad25L pad15R inLine suo" style="vertical-align: top"></span>
+                                <input class="font16 pad15R" id="password" name="password" value="" type="password"
+                                       placeholder="{% trans 'x_enter_password' %}">
+                            </div>
+                        </div>
+                        <div class="write mrg30T">
+                            <div class="">
+                                <span class="person pad25L pad15R inLine suo" style="vertical-align: top"></span>
+                                <input class="font16 pad15R" id="password" name="confirm_password" value=""
+                                       type="password"
+                                       placeholder="{% trans 'x_confirm_password' %}">
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <div class="write mrg30T pull-left" style="width: 240px;">
+                                <div class="">
+                                    <span class="person pad25L pad15R inLine suo" style="vertical-align: top"></span>
+                                    <input style="width: 130px;" class="font16 pad15R" id="password" name="captcha"
+                                           value=""
+                                           type="text"
+                                           placeholder="{% trans 'x_verification_code' %}"><br><br>
+                                </div>
+                            </div>
+                            <img class="mrg30T pull-left" style="margin:0px 0px 0px 30px;width:70px;height:44px;"
+                                 src="{% url 'cms_system_configuration:captcha' %}"
+                                 id="captcha_img" alt="验证码"/>
+                        </div>
+                        <br>
+                        <div class="write mrg30T">
+                            <input type="submit" value="{% trans 'x_confirm' %}"
+                                   class='clickLogin pad10T pad10B text-center whiteC font18 mrg15B posRelative'>
+                        </div>
+                    </div>
+                    <div style='text-align:center'><font id="error_info" size='3' color='red'></font></div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<form id="languageForm" action="{% url 'set_language' %}" method="post">{% csrf_token %}
+    <input name="language" id="language" style="display: none"/>
+    <div class='language whiteC'>
+        <a onclick="showLanguage('zh-hans')" class='whiteC'>{% trans "中文" %}</a>
+        <span class='line inLine'></span>
+        <a onclick="showLanguage('en')" class='whiteC'>English</a>
+    </div>
+</form>
+
+<span id="copyright" class='font12 sn_oj'>{{ request.copyright }}</span>
+
+</body>
+<script>
+    $(document).ready(function () {
+        var n = 0;
+        var srcs = new Array()
+        srcs.push("{% static_v 'web/img/login0.png' %}")
+        srcs.push("{% static_v 'web/img/login1.png' %}")
+        srcs.push("{% static_v 'web/img/login2.png' %}")
+        setInterval(function () {
+            n++;
+            n %= 3;
+            document.getElementById('snOj_img').src = srcs[n]
+        }, 1000)
+    });
+</script>
+<script src="{% static_v 'web/js/particles.min.js' %}"></script>
+<script src="{% static_v 'web/js/app.js' %}"></script>
+<script src="{% static_v 'web/js/stats.js' %}"></script>
+<script>
+    var system_url = "{% url 'system_configuration:api:system-configuration-list' %}"
+</script>
+<script>
+    var captchaUrl = "{% url 'cms_system_configuration:captcha' %}";
+    $('#captcha_img').click(function () {
+        this.src = captchaUrl + '?time=' + Math.random();
+    });
+
+    $142(function () {
+        $142("#username").powerFloat({
+            eventType: "focus",
+            targetMode: "remind",
+            target: "{% trans 'x_user_name_prompt' %}",
+            position: "6-8",
+            width: 220
+        });
+        $142("#password").powerFloat({
+            eventType: "focus",
+            targetMode: "remind",
+            target: "{% trans 'x_password_claim' %}",
+            position: "6-8",
+            width: 220
+        });
+    });
+
+
+    $("#registerForm").submit(function () {
+        var options = {
+            success: function (data) {
+                if (data.error_code == 0) {//注册成功
+                    var info = data.info;
+                    $('#error_info').html(info);
+                    setTimeout(function () {
+                        window.location = "{% url 'common_web:login' %}";
+                    }, 1000);
+                } else if (data.error_code == 1) {//用户名已存在
+                    var error_info = data.info;
+                    $('#error_info').html(error_info);
+                    $('#registerForm').resetForm();
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                } else if (data.error_code == 3) {//用户名格式错误
+                    var error_info = data.info;
+                    $('#error_info').html(error_info);
+                    $('#username').val('');
+                    {#                    $('#registerForm').resetForm();#}
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                } else if (data.error_code == 4) {//密码格式错误
+                    var error_info = data.info;
+                    $('#error_info').html(error_info);
+                    $('#password').val('');
+                    $('input[name="confirm_password"]').val('');
+
+                    {#                    $('#registerForm').resetForm();#}
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                }
+                else if (data.error_code == 2) {
+                    var error_info = data.info;//验证码输入错误
+                    $('#error_info').html(error_info);
+                    $('input[name="captcha"]').val('');
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                }
+                else {
+                    var error_info = data.info;//验证码未输入
+                    $('#error_info').html(error_info);
+                    $('input[name="captcha"]').val('');
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                }
+
+            },
+            beforeSubmit: function () {
+                if ($('#register').find('input').eq(0).val().toString().length == 0) {
+                    $('#error_info').html("{% trans 'x_enter_username' %}");
+                    $('#registerForm').resetForm();
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                    return false;
+                }
+
+                else if ($('#register').find('input').eq(1).val() == '') {
+                    $('#error_info').html("{% trans 'x_enter_password' %}");
+                    $('#register').find('input').eq(3).val('');
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                    return false;
+                }
+                else if ($('#register').find('input').eq(1).val() != $('#register').find('input').eq(2).val()) {
+                    $('#error_info').html("{% trans 'x_password_twice_different' %}");
+                    $('#register').find('input').eq(1).val('');
+                    $('#register').find('input').eq(2).val('');
+                    $('#register').find('input').eq(3).val('');
+                    $('#captcha_img')[0].src = captchaUrl + '?time=' + Math.random();
+                    return false;
+                }
+            }
+        };
+        $(this).ajaxSubmit(options);
+
+        return false
+
+
+    })
+
+
+</script>
+<script>
+    var count_particles, stats, update;
+    stats = new Stats;
+    stats.setMode(0);
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+    document.body.appendChild(stats.domElement);
+    count_particles = document.querySelector('.js-count-particles');
+    update = function () {
+        stats.begin();
+        stats.end();
+        if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
+            count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+        }
+        requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+
+    function showLanguage(language) {
+        $('#language').val(language);
+        $('#languageForm').submit();
+
+        // set guacamole language
+        var languageGpMapping = {
+            'zh-hans': 'zh',
+            'en': 'en',
+        }
+        var gp = JSON.parse(localStorage.getItem('GUAC_PREFERENCES') || '{"emulateAbsoluteMouse":true,"inputMethod":"none","language":"zh"}');
+        gp.language = languageGpMapping[language];
+        localStorage.setItem('GUAC_PREFERENCES', JSON.stringify(gp));
+    }
+
+{#    $(function () {#}
+{#        $.ajax({#}
+{#            url: system_url,#}
+{#            type: "GET",#}
+{#            dataType: "json",#}
+{#            async: false,#}
+{#            success: function (data) {#}
+{#                if (data.rows.length > 0) {#}
+{#                    $.each(data.rows, function (index, value, array) {#}
+{#                        if (value.key == "copyright") {#}
+{#                            $("#copyright").html(value.esc_value);#}
+{#                        }#}
+{#                        ;#}
+{#                        if (value.key == "logo") {#}
+{#                            var logo_url = '/media/system_logo/' + value.value#}
+{#                            $("#platform_logo").attr('src', logo_url);#}
+{#                        }#}
+{#                    });#}
+{#                }#}
+{#                $("#platform_logo").removeClass('hidden')#}
+{#            }#}
+{#        });#}
+{#    })#}
+
+</script>
+</html>

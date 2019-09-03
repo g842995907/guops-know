@@ -1,0 +1,366 @@
+@font-face {
+    src: url(../fonts/UnidreamLED.ttf);
+    font-family: timefont;
+}
+
+
+
+.content > div:nth-of-type(1) {
+    width: 420px;
+}
+
+.inform {
+    height: 60px;
+    line-height: 60px;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-bottom: 1px solid #7390af;
+}
+
+.inform span:before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: text-bottom;
+    margin-right: 8px;
+}
+
+.inform span:nth-of-type(1):before {
+    border: 1px solid #1d72d9;
+    background: rgba(29, 122, 217, .16);
+}
+
+.inform span:nth-of-type(2):before {
+    border: 1px solid #d7d7d7;
+    background: rgba(215, 215, 215, .16);
+}
+
+.inform span:nth-of-type(3):before {
+    background: url("../img/icon_now.png");
+}
+.inform-reivew {
+    height: 60px;
+    line-height: 60px;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-bottom: 1px solid #7390af;
+}
+.inform-reivew  span:before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: text-bottom;
+    margin-right: 8px;
+}
+.inform-reivew span:nth-of-type(1):before {
+    border: 1px solid #1d72d9;
+    background: rgba(29, 122, 217, .16);
+}
+.inform-reivew span:nth-of-type(3):before {
+    border: 1px solid #d7d7d7;
+    background: rgba(215, 215, 215, .16);
+}
+.inform-reivew span:nth-of-type(4):before {
+    background: url("../img/icon_now.png");
+}
+.inform-reivew span:nth-of-type(2):before {
+    background: url("../img/wrong_review.jpg");
+}
+
+.classfication {
+
+}
+
+.multiple_template {
+    font-size: 14px;
+    color: #c8ccd7;
+}
+
+.sigle_template {
+    font-size: 14px;
+    color: #c8ccd7;
+}
+
+.classfication .title {
+    height: 50px;
+    line-height: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 18px;
+}
+.number-list{
+   margin-top: 4px;
+}
+.number-list>div{
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    line-height: 20px;
+    float: left;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+}
+.done{
+    border: 1px solid #1d72d9;
+    background: rgba(29, 122, 217, .16);
+}
+.unfinished{
+    border: 1px solid #d7d7d7;
+    background-color: rgba(215, 215, 215, .16);
+}
+.unfinished>div{
+    cursor: pointer;
+    font-size:10px;
+}
+.right{
+    background: url("../img/right.jpg");
+    color: #09cbfe;
+}
+.wrong{
+   /*border: 1px solid #1d72d9;*/
+    /*background: rgba(29, 122, 217, .16);*/
+    /*background-color: rgba(215, 215, 215, .16);*/
+    background: url("../img/wrong.jpg");
+    /*color: red;*/
+    color: #FF3366;
+
+}
+.current{
+    background: url("../img/icon_now_larger.png") no-repeat center;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: -3px;
+    top: -3px;
+}
+.current-review{
+    background: url("../img/icon_now_larger.png") no-repeat center;
+    width: 25px;
+    height: 25px;
+    position: absolute;
+    left: -3px;
+    top: -3px;
+}
+.content > div:nth-of-type(2) {
+    width: calc(103% - 420px - 20px);
+}
+.exam-content{
+    padding: 20px 30px 30px 20px;
+}
+.exam-description{
+    color: #1d7ad9;
+    margin-bottom: 20px;
+}
+/*//美化checkbox和radio框*/
+
+@keyframes hover-color {
+  from {
+    border-color: #c0c0c0;
+  }
+  to {
+    border-color: #1c7bd9;
+  }
+}
+
+input[type=radio],
+input[type=checkbox] {
+  position: absolute;
+  display: none;
+}
+
+input[type=radio][disabled],
+input[type=checkbox][disabled] {
+  cursor: not-allowed;
+}
+
+input[type=radio] + label,
+input[type=checkbox] + label {
+  position: relative;
+  display: inline-block;
+  padding-left: 30px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+input[type=radio] + label:hover:before,
+input[type=checkbox] + label:hover:before {
+  animation-duration: 0.4s;
+  animation-fill-mode: both;
+  animation-name: hover-color;
+}
+
+input[type=radio] + label:before,
+input[type=checkbox] + label:before {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  content: '';
+  border: 1px solid #c0c0c0;
+}
+
+input[type=radio] + label:after,
+input[type=checkbox] + label:after {
+  position: absolute;
+  display: none;
+  content: '';
+}
+
+input[type=radio][disabled] + label,
+input[type=checkbox][disabled] + label {
+  cursor: not-allowed;
+  color: #e4e4e4;
+}
+
+input[type=radio][disabled] + label:hover, input[type=radio][disabled] + label:before, input[type=radio][disabled] + label:after,
+input[type=checkbox][disabled] + label:hover,
+input[type=checkbox][disabled] + label:before,
+input[type=checkbox][disabled] + label:after {
+  cursor: not-allowed;
+}
+
+input[type=radio][disabled] + label:hover:before,
+input[type=checkbox][disabled] + label:hover:before {
+  border: 1px solid #1c7bd9;
+  animation-name: none;
+}
+
+input[type=radio][disabled] + label:before,
+input[type=checkbox][disabled] + label:before {
+  border-color: #e4e4e4;
+}
+
+input[type=radio]:checked + label:before,
+input[type=checkbox]:checked + label:before {
+  animation-name: none;
+}
+
+input[type=radio]:checked + label:after,
+input[type=checkbox]:checked + label:after {
+  display: block;
+}
+
+input[type=radio] + label:before {
+  border-radius: 50%;
+}
+
+input[type=radio] + label:after {
+  top: 4.6px;
+  left: 3.2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #1c7bd9;
+}
+
+input[type=radio]:checked + label:before {
+  border: 1px solid #1c7bd9;
+}
+
+input[type=radio]:checked[disabled] + label:before {
+  border: 1px solid #c9e2f9;
+}
+
+input[type=radio]:checked[disabled] + label:after {
+  background: #c9e2f9;
+}
+
+input[type=checkbox] + label:before {
+  border-radius: 3px;
+}
+
+input[type=checkbox] + label:after {
+  top: 3px;
+  left: 4px;
+  box-sizing: border-box;
+  width: 6px;
+  height: 12px;
+  transform: rotate(45deg);
+  border-width: 2px;
+  border-style: solid;
+  border-color: #fff;
+  border-top: 0;
+  border-left: 0;
+}
+
+input[type=checkbox]:checked + label:before {
+  border: #1c7bd9;
+  background: #1c7bd9;
+}
+
+input[type=checkbox]:checked[disabled] + label:before {
+  border: #a5a5a5;
+  background: #a5a5a5;
+}
+/*//上一题下一题公用按钮*/
+.btn-common {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 0;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid #1d7bd8;
+  vertical-align: bottom;
+  margin-top: 20px;
+  margin-left: 10px;
+}
+
+.btn-common:hover {
+    background: #1d7ad9;
+    color: #fff;
+}
+input[name='flag-submit']{
+    width: calc(100% - 200px - 20px - 10px );
+    margin-right:20px;
+    border:1px solid #d8dde1;
+    background: rgba(216,221,225,.16);
+    height: 30px;
+    margin-top: 20px;
+}
+.report-card{
+    display: -webkit-box;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+    height: calc(100% - 20px - 60px);
+}
+.report-card > div{
+    background: rgba(255, 255, 255, 0.2);
+    width: 600px;
+    height: 300px;
+}
+.report-card > div >div{
+    padding-left: 50px;
+    padding-right: 50px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    margin-top:15px;
+}
+
+.modal-content{
+    margin-top:200px;
+}
+
+.hint-msg{
+    height: 100px;
+    line-height:66px;
+}
+.modal-content button{
+    width: 70px;
+    margin-right:10px;
+}
+

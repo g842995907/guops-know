@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Hankaln">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>基础场景 - 场景引擎系统</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u57fa\u7840\u573a\u666f";
+    var mkdocs_page_input_path = "sense.md";
+    var mkdocs_page_url = "/sense/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> 场景引擎系统</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">场景引擎系统</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../target/">标靶</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../upload-target/">自定义上传</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">基础场景</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#_1">场景结构</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_2">变量</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_3">自定义场景</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_4">访问模式</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_5">管理员模式</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_6">字段详解</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_7">注意项</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_8">实例</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../adsense/">攻防场景</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../make-scene/">场景创建</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../operation-guide/">虚拟机操作指南</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../qa/">QA</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">场景引擎系统</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>基础场景</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>仿真场景是用来描述虚拟网络中拓扑和节点属性的结构化数据，由<strong>场景拓扑</strong>和<strong>资源文件</strong>组成。场景能够在系统中持久化存储、快速恢复。</p>
+<hr />
+<h3 id="_1"><span id='sense-structure'>场景结构</span></h3>
+<p>场景由<strong>场景拓扑</strong>和<strong>资源文件</strong>组成，资源文件按照规定的格式打包成zip文件即可。该zip内文件结构如下：</p>
+<div class="codehilite"><pre><code><span></span>xxx.zip ---<span class="p">|</span>--- server1/ ---<span class="p">|</span>---install.sh
+                         ---<span class="p">|</span>---init.sh
+                         ---<span class="p">|</span>---www/ 
+                         ---<span class="p">|</span>---db.sql
+           <span class="p">|</span>--- server2/ ---<span class="p">|</span> 文件夹不是必须的，文件或文件夹名称也无需固定，此处仅为目录清晰.txt
+</code></pre></div>
+
+
+<hr />
+<p><strong size=4 >资源文件</strong></p>
+<ul>
+<li>运行场景需要的资源文件,如Web代码、二进制文件等</li>
+<li>可选的安装脚本文件</li>
+<li>可选的初始化脚本文件</li>
+</ul>
+<hr />
+<h3 id="_2"><span id='sense-variable'>变量</span></h3>
+<p>资源文件脚本可传递变量</p>
+<p><strong size=4 >变量调用形式</strong></p>
+<p>{我是变量名}</p>
+<p><strong size=4 >全局变量</strong></p>
+<ul>
+<li>
+<p>PLATFORM_IP、PLATFORM_PORT</p>
+<p>OJ平台地址ip和prot，作用范围： 初始化脚本</p>
+</li>
+<li>
+<p>FLAG[*]</p>
+<p>平台发放给场景的动态flag  FLAG[0] 为第一个flag, 作用范围： 初始化脚本 </p>
+</li>
+</ul>
+<p><strong size=4 >局部变量</strong></p>
+<ul>
+<li>
+<p>网络元件id</p>
+</li>
+<li>
+<p>服务器ip</p>
+<p>虚拟机在网络上分配的ip,预先分配的，调用初始化脚本时已获得 例vm-op.network-in.ip,作用范围： 初始化脚本</p>
+</li>
+</ul>
+<hr />
+<h3 id="_3"><span id='sense-selfdefine'>自定义场景</span></h3>
+<ul>
+<li>页面DIY</li>
+</ul>
+<p><img alt="" src="../img/diy.png" /></p>
+<p>新建场景时选择场景类型为仿真
+添加节点：选择左侧节点，拖入右侧，编辑属性。
+添加网络连接：右键节点，选择添加连线。</p>
+<hr />
+<h3 id="_4"><span id='sense-user-access-mode'>访问模式</span></h3>
+<p>系统支持<strong>私有环境/共享环境</strong>两种访问模式</p>
+<ul>
+<li><strong>共享环境</strong>即每个场景只有一个实例，第二个用户申请的场景会返回第一个用户已经申请好的场景，所有人共享一个环境。</li>
+<li><strong>私有环境</strong>每个用户申请的环境都是私有的，互不干扰。</li>
+</ul>
+<blockquote>
+<p>具体课程/练习/竞赛中私有环境或共享环境的请根据实际情况进行选择。</p>
+</blockquote>
+<hr />
+<h3 id="_5"><span id='sense-admin-mode'>管理员模式</span></h3>
+<p>管理员在后台测试申请时，除场景配置的登录方式以外，额外提供管理员所有标靶默认的<a href="../target/#target-remote-access">接入方式</a></p>
+<hr />
+<h3 id="_6"><span id='sense-variable-detail'>字段详解</span></h3>
+<p><strong size=4 id='sense-role'>节点角色</strong></p>
+<ul>
+<li><strong>操作机/operator</strong>：
+提供用户操作的机器，通常提供rdp/ssh远程接入方式，操作机会分配外网地址(floating_ip)。</li>
+<li><strong>靶机/target</strong>：
+提供用户进行攻击的标靶，通常运行一些Web或二进制服务,靶机默认不提供外网地址(floating_ip)，除非场景中缺少操作机。</li>
+<li><strong>僚机/wingman</strong>：
+场景中需要配合靶机构成完整场景的标靶，这些标靶一般不提供直接访问方式，而是需要用户攻破靶机，利用跳板渗透进入，僚机不分配外网地址(floating_ip)。</li>
+</ul>
+<hr />
+<p><strong size=4 id='sense-accessmode'>接入方式</strong></p>
+<p>场景中该标靶的访问模式，采用协议 + 端口的描述方式，特殊的rdp协议具有mode参数nla|rdp</p>
+<blockquote>
+<p>额外的针对远程访问方式 SSH、RDP 协议，系统会给出Web访问的链接
+支持Cloud-init的标靶支持用户自定义新增，不支持Cloud-init的标靶需标靶支持该用户</p>
+</blockquote>
+<hr />
+<p><strong size=4 id='sense-flavor'>镜像大小flavor支持列表</strong></p>
+<ul>
+<li>m1.1c-0.5g-8g  / 1核/512M内存/8G硬盘 </li>
+<li>m1.1c-1g-8g    / 1核/1G内存/8G硬盘 </li>
+<li>m2.1c-0.5g-10g / 1核/512M内存/10G硬盘 </li>
+<li>m2.1c-1g-10g / 1核/1G内存/10G硬盘 </li>
+<li>m2.2c-2g-10g / 2核/2G内存/10G硬盘 </li>
+<li>m2.2c-4g-10g / 2核/3G内存/10G硬盘</li>
+<li>m3.1c-1g-20g / 1核/1G内存/20G硬盘 </li>
+<li>m3.1c-2g-20g / 1核/2G内存/20G硬盘 </li>
+<li>m3.2c-4g-20g / 2核/4G内存/20G硬盘 </li>
+<li>m3.4c-4g-20g / 4核/4G内存/20G硬盘 </li>
+<li>m4.1c-1g-40g / 1核/1G内存/40G硬盘 </li>
+<li>m4.2c-2g-40g / 2核/2G内存/40G硬盘 </li>
+<li>m4.4c-4g-40g / 4核/4G内存/40G硬盘 </li>
+<li>m4.4c-8g-40g / 4核/8G内存/40G硬盘 </li>
+<li>m5.4c-4g-80g / 4核/4G内存/80G硬盘 </li>
+<li>m5.4c-8g-80g / 4核/8G内存/80G硬盘 </li>
+</ul>
+<hr />
+<h3 id="_7"><span id='sense-assert'>注意项</span></h3>
+<ul>
+<li>目前仅支持一个网卡，多网卡无法智能判断添加默认路由。</li>
+</ul>
+<h3 id="_8"><span id='sense-example'>实例</span></h3>
+<p><strong size=2 id='sense-example-helloworld'>HelloWorld</strong></p>
+<p>本实例目的，实现一个单个终端节点的Web访问场景，场景提供HTTP访问模式，用户打开场景即可直接看到答案。</p>
+<blockquote>
+<p>本实例顺带利用Cloud-init模块实现随机答案，可供参考。</p>
+</blockquote>
+<hr />
+<p><strong size=5 >文件结构</strong></p>
+<div class="codehilite"><pre><code><span></span>xxx.zip ---<span class="p">|</span>--- server1/ ---<span class="p">|</span>---install.sh          install文件，执行目录为当前目录
+                         ---<span class="p">|</span>---init.sh             init文件，执行目录为当前目录
+                         ---<span class="p">|</span>---bin/index.html      场景文件
+</code></pre></div>
+
+
+<hr />
+<p><strong size=5 >页面编辑拓扑</strong></p>
+<ol>
+<li>添加Internet网络，network网络</li>
+<li>添加router路由器，并连接网络</li>
+<li>找到ubuntu14-64-web镜像，拖入场景,</li>
+<li>右键标靶，编辑节点，设置节点属性如下：
+<img alt="" src="../img/helloworld.png" /></li>
+<li>右键标靶，添加连线，添加靶机network网络的连线</li>
+</ol>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../adsense/" class="btn btn-neutral float-right" title="攻防场景">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../upload-target/" class="btn btn-neutral" title="自定义上传"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>CyberPeace.cn</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../upload-target/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../adsense/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

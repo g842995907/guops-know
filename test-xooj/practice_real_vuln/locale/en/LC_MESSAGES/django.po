@@ -1,0 +1,29 @@
+msgid "x_vuln_id"
+msgstr "Vuln ID"
+
+msgid "writeup_markdown_only_zip"
+msgstr "Solution markdown: only accept the file format of zip"
+
+msgid "delete_markdown"
+msgstr "delete markdown"
+
+msgid "only_accept_markdown_zip"
+msgstr "only accept zip compressed by markdown(priority display)"
+
+msgid "writeup-custom-upload"
+msgstr "Solution-custom-upload"
+
+msgid "x_writeup_custom_upload_x_format_not_true"
+msgstr "Solution-custom-upload: incorrectly formatting"
+
+msgid "writeup-online-editing"
+msgstr "Solution-online-editing"
+
+msgid "markdown_only_zip"
+msgstr "Markdown: only accept the file format of zip"
+
+msgid "x_analysis_questions"
+msgstr "Analysis questions"
+
+msgid "x_operation_questions"
+msgstr "Operation questions"

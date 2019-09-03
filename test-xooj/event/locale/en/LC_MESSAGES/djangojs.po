@@ -1,0 +1,321 @@
+msgid "x_fantasy"
+msgstr "Fantasy"
+
+msgid "x_personal"
+msgstr "Personal"
+
+msgid "x_team"
+msgstr "My Team"
+
+msgid "x_score_fix"
+msgstr "Fix Score"
+
+msgid "x_score_dynamic"
+msgstr "Dynamic Score"
+
+msgid "x_score_cumulative"
+msgstr "Cumulative Score"
+
+msgid "x_game_announcement"
+msgstr "Game Announcement"
+
+msgid "x_game_task"
+msgstr "Game Task"
+
+msgid "x_game_trend"
+msgstr "Game Trend"
+
+msgid "x_end_gt_start_time"
+msgstr "The end time must be greater than the start time"
+
+msgid "x_inprogress"
+msgstr "In progress"
+
+msgid "x_comming"
+msgstr "Comming"
+
+msgid "x_pause"
+msgstr "Pause"
+
+msgid "x_over"
+msgstr "Closed"
+
+msgid "x_has_over"
+msgstr "Closed"
+
+msgid "x_has_fired"
+msgstr "Disbanded"
+
+msgid "x_forbidden_game"
+msgstr "Forbid"
+
+msgid "x_allow_game"
+msgstr "Allow"
+
+msgid "x_game_status"
+msgstr "Game status"
+
+msgid "x_select_task"
+msgstr "Select Task"
+
+msgid "x_reward_score"
+msgstr "Bonus point"
+
+msgid "x_cheat"
+msgstr "Cheat"
+
+msgid "x_123_blood"
+msgstr "123 Blood"
+
+msgid "x_show_rank"
+msgstr "Show Rank"
+
+msgid "x_no_show_rank"
+msgstr "Hide Rank"
+
+msgid "x_solved"
+msgstr "Solved"
+
+msgid "x_invalid"
+msgstr "Invalid"
+
+msgid "x_un_solved"
+msgstr "Unsolved"
+
+msgid "x_make_invalid"
+msgstr "Make Invalid"
+
+msgid "x_restore_score"
+msgstr "Restore Score"
+
+msgid "x_share_game"
+msgstr "Share Game"
+
+msgid "x_trial_game"
+msgstr "Trial Game"
+
+msgid "x_cumulative_points"
+msgstr "Cumulative"
+
+msgid "x_dynamic_integration"
+msgstr "Dynamic"
+
+msgid "x_contest"
+msgstr "Competition"
+
+msgid "x_competition_form"
+msgstr "Competition Mode"
+
+msgid "x_integral_mode"
+msgstr "Integral Mode"
+
+msgid "x_game_mode"
+msgstr "Game Mode"
+
+msgid "x_reward_points"
+msgstr "Reward"
+
+msgid "x_review"
+msgstr "Review"
+
+msgid "x_participate"
+msgstr "Join"
+
+msgid "x_enter_correct_answer"
+msgstr "Input Answer"
+
+msgid "x_score_display"
+msgstr "Score:{source}"
+
+msgid "x_ranking_display"
+msgstr "Ranking:{ranking}"
+
+msgid "x_not_join"
+msgstr "Not join"
+
+msgid "x_single_choice_cannot_empty"
+msgstr "Answer cannot be blank : single-choice question {num}"
+
+msgid "x_multiple_choice_cannot_empty"
+msgstr "Answer cannot be blank : multi-choice question {num}"
+
+msgid "x_fill_blank_cannot_empty"
+msgstr "Fill the blank question {num} answer can not be empty!"
+
+msgid "x_competition_introduction"
+msgstr "Competition Introduction"
+
+msgid "x_competition_brief_introduction"
+msgstr "Introduction to the competition"
+
+msgid "x_competition_information"
+msgstr "Competition information"
+
+msgid "x_competition_time"
+msgstr "Competing time"
+
+msgid "x_competition_rules"
+msgstr "Competition rules"
+
+msgid "x_game_over"
+msgstr "Game over"
+
+msgid "x_no_announcement"
+msgstr "No Bulletin"
+
+msgid "x_flag_wrong"
+msgstr "Submitted flag error！"
+
+msgid "x_game_suspended"
+msgstr "The game is suspended"
+
+msgid "x_to_start "
+msgstr "To Game Start "
+
+msgid "x_to_end"
+msgstr "Time Remain "
+
+msgid "x_submit"
+msgstr "Submit"
+
+msgid "x_scoreboard"
+msgstr "Scoreboard"
+
+msgid "x_solved_count"
+msgstr "Total Solved"
+
+msgid "x_first_place"
+msgstr "First Place"
+
+msgid "x_second_place"
+msgstr "Second Place"
+
+msgid "x_third_place"
+msgstr "Third Place"
+
+msgid "x_amount_team"
+msgstr "{amount} teams solved"
+
+msgid "x_upload_writeup_already"
+msgstr "Solution Writeup"
+
+msgid "x_please_hurry"
+msgstr "Please Hurry"
+
+msgid "x_click_here"
+msgstr "Click Here"
+
+msgid "x_re-upload"
+msgstr "Re-upload"
+
+msgid "x_upload_writeup"
+msgstr "Upload solution"
+
+msgid "x_notice"
+msgstr "Bulletin"
+
+msgid "x_start_vis"
+msgstr "Start"
+
+msgid "x_stop_vis"
+msgstr "Stop"
+
+msgid "x_vis_has_started"
+msgstr "Has Started"
+
+msgid "x_vis_has_stoped"
+msgstr "Has Stoped"
+
+msgid "x_show_all_positions"
+msgstr "Show all positions"
+
+msgid "x_not_show_all_positions"
+msgstr "Do not show all rankings"
+
+msgid "x_public_token"
+msgstr "Public token"
+
+msgid "x_private_token"
+msgstr "Private token"
+
+msgid "x_step_by_step_multiple_flags"
+msgstr "The current title supports step-by-step problem solving. There are multiple FLAG!"
+
+msgid "x_can_not_add_line"
+msgstr "Can not add line"
+
+msgid "x_incomplete_solution"
+msgstr "Incomplete solution"
+
+msgid "x_correct_answer"
+msgstr "Correct Answer"
+
+msgid "x_right_answer"
+msgstr "Right Answer"
+
+msgid "x_exam_countdown"
+msgstr "Time Remain"
+
+msgid "x_exam_over"
+msgstr "Examination Over"
+
+msgid "x_operation_problem"
+msgstr "Operation Problem"
+
+msgid "x_hand_over"
+msgstr "Hand Over"
+
+msgid "x_examination_countdown"
+msgstr "Examination Countdown"
+
+msgid "x_submit_next_question"
+msgstr "Submit, Next Question"
+
+msgid "x_judgment_problem"
+msgstr "Judgment Problem"
+
+msgid "x_click_visit_URL"
+msgstr "Click Visit URL"
+
+msgid "x_problem_solved"
+msgstr "The problem has been solved"
+
+msgid "x_next_question"
+msgstr "Next"
+
+msgid "x_correct_rate"
+msgstr "Correct Rate"
+
+msgid "x_over_submit"
+msgstr "The problem has been solved, whether the test paper is submitted!"
+
+msgid "x_submit_over"
+msgstr "After the examination paper is submitted, the exam is over!"
+
+msgid "x_hant_submit"
+msgstr "Confirm whether to hand over it!"
+
+msgid "x_account_number"
+msgstr "Account number"
+
+msgid "x_name_surname"
+msgstr "Name"
+
+msgid "x_class"
+msgstr "Classes"
+
+msgid "x_see_detail"
+msgstr "See detail"
+
+msgid "x_please_choose_answer"
+msgstr "Please choose an answer"
+
+msgid "x_right"
+msgstr "Right"
+
+msgid "x_wrong"
+msgstr "Wrong"
+
+
+msgid "x_event_infiltration"
+msgstr "Infiltration"

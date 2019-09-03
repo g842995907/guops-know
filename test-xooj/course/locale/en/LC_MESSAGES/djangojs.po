@@ -1,0 +1,233 @@
+msgid "x_must_course_name"
+msgstr "Course Name Require"
+
+msgid "x_choose_course_orientation"
+msgstr "Course Direction Require"
+
+msgid "x_choose_sourse_sub_orientation"
+msgstr "Course Sub Direction Require"
+
+msgid "x_choose_course_difficulty"
+msgstr "Course Difficulty Require"
+
+msgid "x_class_hours"
+msgstr "Classes"
+
+msgid "x_experiment"
+msgstr "Experiment"
+
+msgid "x_video_is_transcoding"
+msgstr "Video is transcoding"
+
+msgid "x_no_course_outline"
+msgstr "No Course Outline"
+
+msgid "x_video_transcoding_success"
+msgstr "Video transcoding success"
+
+msgid "x_video_transcoding_failure"
+msgstr "Video transcoding failure"
+
+msgid "x_application_environment"
+msgstr "Application environment"
+
+msgid "x_view_the_environment"
+msgstr "View the environment"
+
+msgid "x_NO_nbsp"
+msgstr "Chapter "
+
+msgid "x_chapter_nbsp"
+msgstr "  "
+
+msgid "x_root_node_not_allowed_delete"
+msgstr "Root node is not allowed to delete"
+
+msgid "x_existe_child_node_can_not_delete"
+msgstr "Existence of a child node that can not be deleted"
+
+msgid "x_please_select_a_node"
+msgstr "Please select a node"
+
+msgid "x_heoretical_lesson"
+msgstr "Theory Class"
+
+msgid "x_video_monitor"
+msgstr "Study Monitor"
+
+msgid "x_course_min"
+msgstr "mins"
+
+msgid "x_not_pass"
+msgstr "Not Pass"
+
+msgid "x_not_mark_score"
+msgstr "Not Mark Score"
+
+msgid "x_not_submit"
+msgstr "Not Submit"
+
+msgid "x_lesson"
+msgstr "Lesson"
+
+msgid "x_one"
+msgstr " "
+
+msgid "x_lesson_task"
+msgstr "Lesson Task"
+
+msgid "x_pass"
+msgstr "Pass"
+
+msgid "x_report_score"
+msgstr "Score"
+
+msgid "x_mark_comment"
+msgstr "Mark Comment"
+
+msgid "x_are_you_assistance"
+msgstr "Are You Sure ?"
+
+msgid "x_not_signed_in"
+msgstr "Not Signed In"
+
+msgid "x_signed_in"
+msgstr "Signed In"
+
+msgid "x_lessons"
+msgstr "Course"
+
+msgid "x_average_score"
+msgstr "Average Score"
+
+msgid "x_is_pass"
+msgstr "Pass"
+
+msgid "x_good"
+msgstr "Good"
+
+msgid "x_verygood"
+msgstr "Excellent"
+
+msgid "x_remote_assistance"
+msgstr "Remote Assistance"
+
+msgid "x_guide_lecture"
+msgstr "Experimental Guidance"
+
+msgid "x_unable_get_details"
+msgstr "Get Details Error"
+
+msgid "x_course_directory"
+msgstr "Get Course Contents Error"
+
+msgid "x_has_send"
+msgstr "Has Send"
+
+msgid "x_learning_status_statistics"
+msgstr "Learning statistics"
+
+msgid "x_sign_statistics"
+msgstr "Check-in statistics"
+
+msgid "x_staff_performance_map"
+msgstr "Staff performance map"
+
+msgid "x_top20_score"
+msgstr "TOP20 score"
+
+msgid "x_question_all"
+msgstr " question, all "
+
+msgid "x_alls"
+msgstr "all"
+
+msgid "x_today"
+msgstr "Today"
+
+msgid "x_no_guide"
+msgstr "No guide"
+
+msgid "x_enter_class"
+msgstr "Enter Classroom"
+
+msgid "x_save_seats"
+msgstr "Save seats"
+
+msgid "x_create_scene_onclick"
+msgstr "Create scenes"
+
+msgid "x_clear_scene_onclick"
+msgstr "Clear scenes"
+
+msgid "x_every"
+msgstr "Every"
+
+msgid "x_scene_to_person"
+msgstr " use one scene"
+
+msgid "x_creating"
+msgstr "Creating"
+
+msgid "x_seats_conf"
+msgstr "Seating arrangements"
+
+msgid "x_full_score"
+msgstr "Full Score"
+
+msgid "x_grade"
+msgstr "Grade"
+
+msgid "x_people"
+msgstr " person"
+
+msgid "x_fraction"
+msgstr " points"
+
+msgid "x_import_success"
+msgstr "import success"
+
+msgid "x_pagination_info"
+msgstr "Showing -1 to -2 of -3 rows"
+
+msgid "x_please_choose"
+msgstr "Please Choose"
+
+msgid "x_importing_please_wait"
+msgstr "Importing, please wait..."
+
+msgid "x_the_server_processing_please_wait"
+msgstr "the server is processing, please wait..."
+
+msgid "x_experiment_lesson"
+msgstr "Experiment Class"
+
+msgid "x_not_create"
+msgstr "Not Created"
+
+msgid "x_create_env"
+msgstr "Create Scene"
+
+msgid "x_in_create"
+msgstr "In Creation"
+
+msgid "x_recreate"
+msgstr "Recreat Scene"
+
+msgid "x_in_queue"
+msgstr "In Queue"
+
+msgid "x_change_group_tip"
+msgstr "There is still some scenes in running,please clear them and change group then."
+
+msgid "x_alls_course"
+msgstr " "
+
+msgid "x_elective"
+msgstr "Elective"
+
+msgid "x_compulsory"
+msgstr "Compulsory"
+
+msgid "x_not_configured"
+msgstr "Not Configured"

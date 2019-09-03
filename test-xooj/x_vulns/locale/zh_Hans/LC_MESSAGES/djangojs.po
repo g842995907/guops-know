@@ -1,0 +1,158 @@
+msgid "x_all_vulnerability"
+msgstr "所有漏洞"
+
+msgid "x_mobile_internet_vulnerability"
+msgstr "移动互联网漏洞库"
+
+msgid "x_internet_vulnerability"
+msgstr "物联网漏洞库"
+
+msgid "x_industrial_control_vulnerability"
+msgstr "工控漏洞库"
+
+msgid "x_big_data_vulnerability"
+msgstr "大数据漏洞库"
+
+msgid "x_search_options"
+msgstr "搜索选项"
+
+msgid "x_release"
+msgstr "Relase"
+
+msgid "x_updated"
+msgstr "更新"
+
+msgid "x_usability_implications"
+msgstr "可用性影响"
+
+msgid "x_attack_vector"
+msgstr "攻击向量"
+
+msgid "x_attack_complexity"
+msgstr "攻击复杂度"
+
+msgid "x_authentication"
+msgstr "Authentication"
+
+msgid "x_confidentiality_impact"
+msgstr "机密性影响"
+
+msgid "x_integrity_impact"
+msgstr "完整性影响"
+
+msgid "x_cvss_score"
+msgstr "CVSS分值"
+
+msgid "x_cvss_basis_points"
+msgstr "CVSS基础分"
+
+msgid "x_have_CH_data"
+msgstr "中文数据:有"
+
+msgid "x_vulnerability_title"
+msgstr "Vulnerability Title"
+
+msgid "x_vulnerability_overview"
+msgstr "Vulnerability Overview"
+
+msgid "x_environmental_simulation"
+msgstr "环境模拟"
+
+msgid "x_reference_link"
+msgstr "参考链接"
+
+msgid "x_mitigation_program"
+msgstr "缓解方案"
+
+msgid "x_affected_products"
+msgstr "影响的产品"
+
+msgid "x_numbering"
+msgstr "编号"
+
+msgid "x_resource_type"
+msgstr "资源类型"
+
+msgid "x_author"
+msgstr "作者"
+
+msgid "x_verify_status"
+msgstr "验证状态"
+
+msgid "x_resource_title"
+msgstr "资源标题"
+
+msgid "x_code_content"
+msgstr "代码内容"
+
+msgid "x_AV"
+msgstr "路径（AV）"
+
+msgid "x_AC"
+msgstr "复杂度（AC）"
+
+msgid "x_AU"
+msgstr "认证（AU）"
+
+msgid "x_C"
+msgstr "机密性（C）"
+
+msgid "x_I"
+msgstr "完整性（I）"
+
+msgid "x_A"
+msgstr "可用性（A）"
+
+msgid "x_risk_level"
+msgstr "风险级别"
+
+msgid "x_risk"
+msgstr "风险"
+
+msgid "x_type_statistics"
+msgstr "类型统计"
+
+msgid "x_quantity"
+msgstr "数量"
+
+msgid "x_time_distribution"
+msgstr "时间分布"
+
+msgid "x_time"
+msgstr "时间"
+
+msgid "x_low_risk"
+msgstr "低危"
+
+msgid "x_medium_risk"
+msgstr "中危"
+
+msgid "x_high_risk"
+msgstr "高危"
+
+msgid "x_no_chinese_data"
+msgstr "中文数据:暂无"
+
+msgid "x_have_xploit_code"
+msgstr "漏洞利用代码:有"
+
+msgid "x_no_xploit_code"
+msgstr "漏洞利用代码:暂无"
+
+msgid "x_vulnerability_details"
+msgstr "漏洞细节:有"
+
+msgid "x_no_vulnerability_details"
+msgstr "漏洞细节:暂无"
+
+msgid "x_vulnerabilit_arrier"
+msgstr "漏洞载体:有"
+
+msgid "x_no_vulnerabilit_arrier"
+msgstr "漏洞载体:暂无"
+
+msgid "x_vulnerability_detection_script"
+msgstr "漏洞检测脚本:有"
+
+msgid "x_no_vulnerability_detection_script"
+msgstr "漏洞检测脚本:暂无"

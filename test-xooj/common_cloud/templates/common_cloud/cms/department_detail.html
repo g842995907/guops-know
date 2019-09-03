@@ -1,0 +1,177 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}
+    <a href="{% url 'cms_common_cloud:department' %}">{% trans "x_bureau_management" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_new_bureau' %}
+    {% else %}
+        {% trans 'x_edit_bureau' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+    <script src="{% static 'lib/vue.js' %}"></script>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_common_cloud:api:department-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_common_cloud:api:department-detail' department.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ department.name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'ip' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="ip" name="ip"
+                               value="{{ department.ip }}"/>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_Licence_configuration_example' %}</label>
+
+                </div>
+
+                {% if mode == 0 %}
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">hardware info</label>
+                        <div class="col-sm-6">
+                            <textarea type="text" id="hardwareInfo" class="form-control"></textarea>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% for config in config_info %}
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% if LANGUAGE_CODE == 'en' %}{{  config.en_name }}{% else %}{{  config.cn_name }}{% endif %}</label>
+                        <div class="col-sm-6">
+                            {% if config.type == 0 %}
+                                <input type="text" class="form-control" id="{{ config.en_name }}"
+                                       value="{{ config.value }}"/>
+                            {% endif %}
+                            {% if config.type == 1 %}
+                                <input type="number" class="form-control" id="{{ config.en_name }}"
+                                       value="{{ config.value }}"/>
+                            {% endif %}
+                            {% if config.type == 2 %}
+                                <input type="text" class="form-control layer-date laydate-icon"
+                                       id="{{ config.en_name }}" value="{{ config.value }}" placeholder="{% trans 'x_authorization_date' %}"/>
+                            {% endif %}
+                            {% if config.type == 3 %}
+                                <select class="form-control m-b" id="{{ config.en_name }}">
+                                    <option value="2" {% if config.value == "2" %}selected{% endif %}>{% trans 'x_educational_edition' %}</option>
+                                    <option value="3" {% if config.value == "3" %}selected{% endif %}>{% trans 'x_professional_edition' %}</option>
+                                </select>
+                            {% endif %}
+                            {% if config.type == 4 %}
+                                <select class="form-control m-b" id="{{ config.en_name }}">
+                                    <option value="1" {% if config.value == "1" %}selected{% endif %}>{% trans 'x_trial_yes' %}</option>
+                                    <option value="0" {% if config.value != "1" %}selected{% endif %}>{% trans 'x_trial_no' %}</option>
+                                </select>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+
+
+                <div class="form-group hidden">
+                    <label class="col-sm-2 control-label">{% trans 'x_Licence_configuration_information' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="license_info" name="license_info"
+                               data-form-fixed="1"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                        href="{% url 'cms_common_cloud:department' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_common_cloud:department' %}";
+        var config_info = {{ json_config_info |safe }};
+
+        $(".layer-date").initDatetime();
+        $(function () {
+            $("#validateForm").mvalidate({
+                rules: {
+                    name: {
+                        required: true
+                    }
+                },
+                messages: {
+                    name: {
+                        required: gettext("x_input_bureau_name")
+                    }
+                }
+            });
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {
+                beforeSerialize: function () {
+                    var license_info = {};
+                    $.each(config_info, function (index, data) {
+                        license_info[data.en_name] = $("#" + data.en_name).val()
+                    });
+                    $("#license_info").val(JSON.stringify(license_info));
+                }
+            });
+        });
+
+        $('#hardwareInfo').bind('input propertychange','textarea',function(){
+            var url = '{% url "cms_common_cloud:api:department-get-hardware-info" %}'
+            http.get(url, {encrypt: $("#hardwareInfo").val()}, function (res) {
+              $("#series_number").val(res.disk);
+              $("#cpu").val(res.cpu);
+              $("#motherboard").val(res.motherboard);
+              $("#version").val(res.version);
+            });
+        });
+
+    </script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% load static i18n %}
+
+<script src="{% static 'web/js/jquery.form.js' %}"></script>
+<style>
+    .md-editor .md-footer, .md-editor > .md-header {
+        background: transparent;
+    }
+
+    .btn-white {
+        color: #fff;
+        background-color: #FF9900;
+        border-color: #FF9900;
+    }
+
+    .md-editor {
+        border: 1px solid #569bf2;
+    }
+
+    .md-editor > textarea {
+        border-top: 1px dashed #569bf2;
+        border-bottom: 1px dashed #569bf2;
+    }
+    .md-editor>textarea,
+    .md-editor>.md-preview{
+        background: transparent !important;
+    }
+</style>
+<form id="mynote-form">
+    <div>
+        <input type="text" name="hash" value="" hidden="hidden" readonly/>
+        <textarea id="mynote" name="content"></textarea>
+    </div>
+    <div class="text-right mrg20T">
+        <button type="button" class="btn-common" id="addNote-btn" style="width: 120px;"><div class="left-right-line">{% trans 'x_save' %}</div></button>
+    </div>
+</form>
+
+<script>
+    $('#mynote').initMarkdown();
+
+    function init_course_note(resource_id) {
+        $("input[name='hash']").val(resource_id);
+        $.ajax({
+            url: "{% url 'common_web:note:mynote' %}",
+            type: "get",
+            data: {"resource": resource_id},
+            datatype: "json",
+            async: false,
+            success: function (data) {
+                // console.info(data);
+                $("#mynote").val(data.content);
+            },
+        });
+    }
+
+    function save_note() {
+        $("#mynote-form").ajaxSubmit({
+            url: "{% url 'common_web:note:save_note' %}",
+            type: "post",
+            traditional: true,
+            beforeSubmit: function () {
+            },
+            success: function (json) {
+                showHintMsg("{% trans 'x_saved_successfully' %}");
+            },
+            error: function (json) {
+                showPopMsg("{% trans 'x_saved_fail' %}");
+            }
+        });
+        return false;
+    }
+
+    $(function () {
+        $("#addNote-btn").click(save_note);
+    })
+</script>

@@ -1,0 +1,1439 @@
+{% extends 'event/cms/iframe_layout.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load static_v %}
+
+{% block title %}
+    <a href="{% url 'cms_course:schedule_list' %}">{% trans 'x_my_lesson_schedule' %}</a>>
+    {% trans 'x_lesson_manager' %} > {{ lesson_name }}
+{% endblock %}
+
+{% block other_css_js %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/dragula/dragula.css' %}"/>
+
+    <script type="text/javascript" src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script type="text/javascript" src="{% static 'lib/dragula/dragula.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'practice/widgets/select_task/js/select_task.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'practice/widgets/task_env/js/network.js' %}"></script>
+    <script src="{% static 'lib/echarts/echarts.js' %}"></script>
+    <script src="{% static 'lib/echarts/macarons.js' %}"></script>
+    <style>
+           .outresult {
+            height :30px;
+
+            float :right;
+
+
+           }
+            .label{
+                    font-size: 12px;
+                    margin-right: 15px;
+                }
+
+        #classEnvs .group-envs{
+            background: #f2f2f2;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        #classEnvs .group-users{
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #999;
+            position: relative;
+            min-height: 100px;
+        }
+        #classEnvs .group-user, .group-user.gu-mirror{
+            display: inline-block;
+            margin-right: 10px;
+            margin-bottom: 5px;
+            padding: 10px 15px;
+            background-color: #6699FF;
+            color: #fff;
+            border-radius: 4px;
+            cursor: move;
+        }
+        #classEnvs .group-env{
+            display: inline-block;
+            margin-bottom: 20px;
+            vertical-align: middle;
+        }
+        #classEnvs .env-progress{
+            text-align: center;
+            border-top: 1px solid #999;
+            height: 20px;
+            position: relative;
+            background: #fff;
+            border: 1px solid #999;
+            border-top: none;
+            margin-bottom: 14px;
+        }
+        #classEnvs .env-progress .percent{
+            width: 0%;
+            height: 19px;
+            background: #FF9933;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 10;
+            transition: width 2s;
+        }
+        #classEnvs .env-progress .hint{
+            width: 100%;
+            height: 20px;
+            position: absolute;
+            text-align: center;
+            z-index: 11;
+            color: #999;
+        }
+        #classEnvs .group-action{
+            margin-top: 5px;
+        }
+        #classEnvs .delete-group-env-btn{
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            color: #f00;
+            cursor: pointer;
+        }
+        #classEnvs .create-group-env-btn{
+            padding: 2px 6px;
+        }
+        #classEnvs .create-group-env-status{
+            border: 1px solid transparent;
+            display: inline-block;
+            padding: 2px 0;
+        }
+        #classEnvs .action{
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .text-normal {
+            color: #333;
+        }
+        .text-gray {
+            color: #999;
+        }
+
+        .group-template{
+            display: inline-block;
+            width: calc(100% - 215px);
+        }
+        .group-template .btn {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .group-template input.btn {
+            width: 8em;
+            padding: 0 2px;
+            line-height: 32px;
+            background-color: #56b1ea;
+            border-color: #56b1ea;
+        }
+        .group-template input.btn.active{
+            background-color: #1c84c6;
+            border-color: #1c84c6;
+        }
+        .group-template input.btn:hover, .group-template input.btn:focus, .group-template input.btn:active {
+            background-color: #1c84c6;
+            border-color: #1c84c6;
+        }
+
+       #introduction {
+           height: 400px;
+           resize: none;
+           margin-bottom: 20px;
+           overflow: auto;
+           background-color: #eee;
+           opacity: 1;
+           padding: 10px;
+           border: 1px solid transparent;
+       }
+        .group-label {
+            display: inline-block;
+            position: relative;
+            margin-right: 18px;
+         }
+        .group-label>input{
+            width: 80%;
+            {#border-radius: 10px;#}
+        }
+        .group-label .delete{
+            color: #ed5565;
+            font-size: 16px;
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            width: 15px;
+            /*height: 50px;*/
+            display: none;
+        }
+
+        #introduction img {
+            max-width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <ul class="nav nav-tabs">
+            <li {% if not is_experiment %} style="display: none;"{% else %}class="active" {% endif %}>
+                <a data-toggle="tab" href="#tab-1" aria-expanded="false">{% trans 'x_environment_distribution' %}</a>
+            </li>
+            <li {% if not is_experiment %} class="active" {% endif %}>
+                <a data-toggle="tab" href="#tab-2" aria-expanded="false">{% trans 'x_lesson_monitor' %}</a>
+            </li>
+            <li {% if not is_experiment %} style="display: none" {% endif %}>
+                <a data-toggle="tab" href="#tab-3" aria-expanded="false">{% trans 'x_experimental_report' %}</a>
+            </li>
+            <li {% if not is_experiment %} style="display: none" {% endif %}>
+                <a data-toggle="tab" href="#tab-4" aria-expanded="false">{% trans 'x_learning_statistics' %}</a>
+            </li>
+        </ul>
+
+        <div class="clearfix tab-content">
+            <div id="tab-1" class="tab-pane {% if is_experiment %}active{% endif %}">
+                {% verbatim %}
+                <div id="classEnvs" style="margin-top: 10px;" v-cloak>
+                    <div>
+                        <div style="margin-right: 10px;display: inline-block;vertical-align: top;">
+                            <div class="input-group" style="width: 190px;">
+                                <div class="input-group-addon">{{ msg.every }}</div>
+                                <select class="form-control" style="outline: none;min-width: 64px;" @change="allocatGroup()" v-model.number="groupCapacity">
+                                    <option :value="value" v-for="value in groupChoices">{{ value }}</option>
+                                </select>
+                                <div class="input-group-addon">{{ msg.use }}</div>
+                            </div>
+                        </div>
+                        <div class="group-template">
+                            <template v-for="groupTemplate, i in groupTemplates">
+                                <div class="group-label" :key="groupTemplate.id" @mouseover="showMinus($event)" @mouseleave="hideMinus($event)">
+                                    <input type="text"
+                                           class="btn btn-success"
+                                           :class="{'active': groupTemplate.active}"
+                                           :data-active="groupTemplate.active"
+                                           @click="selectGroupTemplate($event, groupTemplate, i)"
+                                           @focusout="saveGroupTemplateName(groupTemplate)"
+                                           v-model="groupTemplate.name">
+                                    <a class="delete" @click="removeGroupTemplate($event,groupTemplate)"><i class="fa fa-minus-circle"></i></a>
+                                </div>
+                            </template>
+
+
+                            <button class="btn btn-primary" @click="saveTemplate">{{ msg.seats }}</button>
+                        </div>
+                    </div>
+                    <div class="group-envs">
+                        <div class="action">
+                            <button class="btn btn-success" @click="createClassEnvs">{{ msg.create }}</button>
+                            <button class="btn btn-danger" @click="deleteClassEnvs">{{ msg.clear }}</button>
+                        </div>
+                        <div class="groups row">
+                            <div class="group-env col-sm-3" v-for="group in groups">
+                                <div class="group-users" :data-id="group.key">
+                                    <span class="group-user" :data-id="user.id" v-for="user in group.users">{{ user.name }}</span>
+                                    <span class="delete-group-env-btn glyphicon glyphicon-remove"
+                                          title="删除场景"
+                                          @click="deleteGroupEnv(group)"
+                                          v-if="canDeleteGroupEnv(group)"></span>
+                                </div>
+                                <div class="env-progress" v-if="isEnvCreating(group)">
+                                    <div class="percent" :style="'width: ' + getEnvPercent(group) + '%;'"></div>
+                                    <div class="hint">{{ msg.statusCreate }}</div>
+                                </div>
+                                <div class="group-action clearfix" v-else>
+                                    <span class="create-group-env-status"
+                                          :class="getEnvStatusClass(group)"
+                                          :title="getEnvStatusError(group)">
+                                        {{ getEnvStatusText(group) }} <i class="fa fa-info-circle" v-if="isEnvStatusError(group)"></i>
+                                    </span>
+                                    <button class="btn btn-sm btn-success create-group-env-btn pull-right"
+                                            @click="createGroupEnv(group)">
+                                        {{ getEnvActionText(group) }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class='modal fade' id='checkGroupTemplateName' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+                         aria-hidden='true'>
+                        <div class='modal-dialog modal-lg' style='top: 200px;'>
+                            <div class='modal-content'>
+                                <div class='modal-header'>
+                                    <button type='button' class='close' data-dismiss='modal'><span
+                                            aria-hidden='true'>&times;</span><span
+                                            class='sr-only'>Close</span></button>
+                                    <h4 class='modal-title' id='myModalLabel'>{{ msg.seatsset }}</h4>
+                                </div>
+                                <div class='modal-body'>
+                                    <input type="text" v-model="saveingTemplateData.name" class="form-control" placeholder="座次名称">
+                                </div>
+                                <div class='clearfix modal-footer'>
+                                    <span class="btn btn-default" @click="cancelAddGroupTemplate" style="margin-bottom: 0;">{{ msg.cancel }}</span>
+                                    <span class="btn btn-success" @click="addGroupTemplate">{{ msg.confirm }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endverbatim %}
+            </div>
+            <div id="tab-2" class="tab-pane {% if not is_experiment %}active{% endif %}">
+                <div class='ibox-content'>
+                    <div class='tableToolbar'>
+                        <div class='form-group'>
+                            <div class='clearfix'>
+                                <button class='btn btn-primary'
+                                        onclick='monitorTable.reload()'>
+                                    <i class='fa fa-refresh'></i> {% trans 'x_refresh' %}
+                                </button>
+                                {% if is_experiment %}
+                                <a class="btn btn-success" href="{% url 'cms_course:lesson_monitor' lesson_id %}">
+                                    <i class='fa fa-television'></i> {% trans 'x_shared_monitor' %}
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <table id='monitorTable'
+                           data-toggle='table'
+                           data-show-refresh='false'
+                           data-search='false'
+                           data-pagination="true"
+                           data-side-pagination='server'
+                           data-url="{% url 'cms_course:api:course-schedule-classesroom-monitorl' id %}">
+                        <thead>
+                        <tr>
+                            <th data-field='first_name' data-escape="true">{% trans 'x_name_surname' %}</th>
+                            <th data-field='organization' data-formatter="monitorTable.unitFormatter">{% trans 'x_unit' %}</th>
+                            <th data-field='sign_in' data-formatter="monitorTable.signInFormatter">{% trans 'x_sign_status' %}</th>
+                            <th data-field='sign_in_time' data-formatter="monitorTable.signInTimeFormatter">{% trans 'x_sign_time' %}</th>
+                            <th data-field='id' data-formatter="monitorTable.operationFormatter">{% trans 'x_operation' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="tab-3" class="tab-pane">
+                <div class="ibox-content">
+                    <div id="tableToolbar">
+                        <div class="form-group">
+                            <div class="clearfix">
+                                <div class="col-md-2 col-sm-2">
+                                    <input class="form-control m-b sticky" id="search"
+                                           placeholder={% trans 'x_name_surname' %} type="text">
+                                    </input>
+                                </div>
+                                <div class="col-md-1 col-sm-1">
+                                    <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                                        <i class="fa fa-search"></i> {% trans 'x_search' %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="table"
+                           data-toggle="table"
+                           data-toolbar="#tableToolbar"
+                           data-toolbar-align="center"
+                           data-show-refresh="false"
+                           data-search="false"
+                           data-pagination="true"
+                           data-side-pagination="server"
+                           data-url="{% url 'cms_course:api:course-schedule-classesroom-report' id %}"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field="first_name" data-escape="true">{% trans 'x_name_surname' %}</th>
+                            <th data-field="organization" data-formatter="table.unitFormatter">{% trans 'x_unit' %}</th>
+                            <th data-field="lesson_type"
+                                data-formatter="table.reportFormatter">{% trans 'x_experimental_report' %}</th>
+                            <th data-field="experiment_mark_score"
+                                data-formatter="table.markscoreFormatter">{% trans 'x_experiment_mark_score' %}</th>
+                            <th data-field="mark_score_teacher">{% trans 'x_mark_score_teacher' %}</th>
+                            <th data-field="update_time">{% trans 'x_update_time' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <!-- 实验报告模态框（Modal） -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog" style="width:60%">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    &times;
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">{% trans 'x_experimental_report' %}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="validateForm"
+                                      action=""
+                                      method="patch"
+                                      class="form-horizontal">
+                                    {% csrf_token %}
+                                    <div class="">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">{% trans 'x_experimental_report' %}</label>
+
+                                            <div class="col-sm-8" id="report_div">
+{#                                                <input type="text" name="hash" value="" hidden="hidden" readonly/>#}
+{#                                                <textarea class="form-control" id="content"#}
+{#                                                          name="content" hidden="hidden"></textarea>#}
+                                                <div class="form-control" id="introduction" name="introduction">
+                                                </div>
+                                                <span id="full_screen" class="pull-right btn" style="margin-top: -12px;background-color: #c2c2c2; color: #0C0C0C">
+                                                    <i class="glyphicon glyphicon-fullscreen"></i> {% trans 'x_full_screen' %}
+                                                </span>
+                                            </div>
+
+                                            <div style="padding-top:1px;font-size:25px">
+                                                <span class="text-danger">*</span>
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">{% trans 'x_mark_score' %}</label>
+                                            <div class="col-sm-2">
+                                                <input type="number" class="form-control" min="0" max="100"
+                                                       data-form-fixed="1"
+                                                       id="score"
+                                                       name="score"
+                                                       placeholder="0~100"
+                                                       value="0"/>
+                                            </div>
+                                            <div style="padding-top:1px;font-size:25px">
+                                                <span class="text-danger">*</span>
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">{% trans 'x_is_pass' %}</label>
+                                            <div class="col-sm-2">
+                                                <input type="hidden" name="ispass" data-form-fixed="1"
+                                                       value="0">
+                                                <input type="checkbox" class="form-control js-switch" id="ispass"
+                                                       data-name="ispass" {% comment %}checked{% endcomment %}>
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">{% trans 'x_mark_comment' %}</label>
+                                            <div class="col-sm-8">
+                                    <textarea class="form-control" id="markcomment" name="markcomment"
+                                              placeholder="{% trans 'x_please_enter_your_comment' %}"
+                                    ></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-8 col-sm-offset-2">
+                                                <div class="alert alert-danger server-error" id="server-error">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hr-line-dashed"></div>
+                                        <div class="form-group">
+                                            <div class="col-sm-4 col-sm-offset-2">
+                                                <a class="btn btn-white return"
+                                                   data-dismiss="modal">{% trans 'x_cancel' %}</a>
+                                                <button class="btn btn-primary" type="submit"
+                                                        id="save">{% trans 'x_save' %}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal -->
+                </div>
+
+            </div>
+            <div id="tab-4" class="tab-pane">
+                <div class="row" style="margin: 25px auto auto 25px">
+                    <div class="col-md-2" style="margin: -6px auto auto 45px">
+                        <div>
+                            <h2 id="classes"></h2>
+                        </div>
+                        <br/>
+                        <div style="font-size: 15px">
+                            <label>{{ ORGANIZATION.Second_level }}：</label>
+                            <span id="faculty" ></span>
+                        </div>
+                        <div style="font-size: 15px">
+                            <label>{{ ORGANIZATION.Third_level }}：</label>
+                            <span id="grade"></span>
+                        </div>
+                        <div style="font-size: 15px">
+                          <label>{{ ORGANIZATION.Fourth_level }}<span id="group_name_label"></span>：</label>
+                            <span id="total_persons"></span>
+                        </div>
+                        <div style="font-size: 15px">
+                            <label>{% trans 'x_sign_users' %}：</label>
+                            <span id="sign_persons"></span>
+                        </div>
+                        <div style="font-size: 15px">
+                            <label>{% trans 'x_complete_users' %}：</label>
+                            <span id="complete_persons"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 pull-left" id="pieChart" style="width: 260px; height: 260px"></div>
+                    <div class="col-md-7 pull-left" id="barChart" style="width: 550px; height: 300px"></div>
+                </div>
+                <div class="row" style="margin: 25px auto auto -50px">
+                    <div id="lineChart" style="height: 400px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script src="{% static_v 'common_env/cms/js/constants.js' %}"></script>
+    <script type="text/javascript">
+    var msg = {
+        seats: gettext('x_save_seats'),
+        create:gettext('x_create_scene_onclick'),
+        clear: gettext('x_clear_scene_onclick'),
+        every: gettext('x_every'),
+        use: gettext('x_scene_to_person'),
+        statusCreate: gettext('x_creating'),
+        seatsset: gettext('x_seats_conf'),
+        cancel: gettext('x_cancel'),
+        confirm: gettext('x_confirm'),
+    };
+
+
+    var classEnvsVue = new Vue({
+        el: '#classEnvs',
+        data: {
+            oldGroupCapacity: 1,
+            groupCapacity: 1,
+            groupChoices: [1, 2, 3, 4, 5, 10],
+            groups: [],
+            users: [],
+            groupMapping: {},
+            userMapping: {},
+
+            activeGroupTemplate: null,
+            groupTemplates: [],
+            groupTemplateMapping: {},
+            fakedTemplateUrl: '{% url "cms_course:api:classroom-group-template-detail" 0 %}',
+            saveingTemplateData: {
+                classes: {{ classes_id }},
+                name: '',
+                groups: [],
+            },
+            msg: msg,
+
+            drake: null,
+        },
+        methods: {
+            getGroups: function (callback) {
+                http.get('{% url "cms_course:api:classroom-group-info-get-class-envs" %}', {
+                    schedule: {{ schedule_id }},
+                }, function(res){
+                    classEnvsVue.groups = res;
+                    classEnvsVue.refreshRelatedInfo();
+                    classEnvsVue.checkGroups();
+                    Vue.nextTick(function () {
+                        classEnvsVue.bindDrag();
+                        classEnvsVue.refixStyle();
+                    });
+                    classEnvsVue.getAvgGroupCapacity();
+                    if (callback) {
+                        callback();
+                    }
+                });
+            },
+            refreshRelatedInfo: function() {
+                var users = [];
+                var groupMapping = {};
+                var userMapping = {};
+                $.each(this.groups, function(i, group){
+                    groupMapping[group.key] = group;
+                    $.each(group.users, function(j, user){
+                        users.push(user);
+                        userMapping[user.id] = user;
+                    });
+                });
+                this.users = users;
+                this.groupMapping = groupMapping;
+                this.userMapping = userMapping;
+            },
+            getAvgGroupCapacity: function(){
+                var lengthCount = {};
+                $.each(this.groups, function(i, group){
+                    var originCount = lengthCount[group.users.length] || 0;
+                    lengthCount[group.users.length] = originCount + 1;
+                });
+                var countList = Object.values(lengthCount);
+                var maxCount = Math.max.apply(null, countList);
+                var maxLengthList = [];
+                $.each(lengthCount, function(length, count){
+                    if (count == maxCount) {
+                        maxLengthList.push(length);
+                    }
+                });
+                var avg = Math.max.apply(null, maxLengthList);
+                this.oldGroupCapacity = avg;
+                this.groupCapacity = avg;
+            },
+            checkGroups: function(){
+                var needCheck = false;
+                $.each(this.groups, function(i, group){
+                    if (group.wait) {
+                        needCheck = true;
+                        return true;
+                    }
+                    if (group.env) {
+                        if (group.env.status == ModelConstant.Env.Status.CREATING) {
+                            needCheck = true;
+                            return true;
+                        }
+                    }
+                });
+                if (needCheck) {
+                    setTimeout(function () {
+                        classEnvsVue.getGroups();
+                    }, 5000)
+                }
+            },
+            groupEnvWaitText: function(group){
+                if (group.wait) {
+                    var waitMinutes = Math.ceil(group.wait.wait_time / 60) || 1;
+                    return '队列位置：' + group.wait.queue_seq + '\n预计时间：' + waitMinutes + '分钟';
+                } else {
+                    return '';
+                }
+            },
+            createClassEnvs: function () {
+                ajaxDialog.buttonClick(http.post, '{% url "cms_course:api:classroom-group-info-create-class-envs" %}', {
+                    schedule: {{ schedule_id }},
+                }, function (res) {
+                    if (res.hint) {
+                        swal({
+                            title: res.hint,
+                            type: 'warning',
+                            confirmButtonText: gettext('x_confirm')
+                        })
+                        classEnvsVue.getGroups();
+                        return false;
+                    }
+                    classEnvsVue.getGroups();
+                }, function (xhr, ts, et) {
+                    setTimeout(function () {
+                        ajaxDialog.popError(xhr, ts, et);
+                    }, 100);
+                })
+            },
+            createGroupEnv: function (group) {
+                if (group.env && arrayUtil.in(group.env.status, [ModelConstant.Env.Status.USING, ModelConstant.Env.Status.PAUSE])) {
+                    this.recreateGroupEnv(group);
+                } else {
+                    ajaxDialog.buttonClick(http.post, '{% url "cms_course:api:classroom-group-info-create-group-env" %}', {
+                        schedule: {{ schedule_id }},
+                        group_key: group.key,
+                    }, function (res) {
+                        classEnvsVue.getGroups();
+                    }, function (xhr, ts, et) {
+                        setTimeout(function () {
+                            ajaxDialog.popError(xhr, ts, et);
+                        }, 100);
+                    })
+                }
+
+            },
+            recreateGroupEnv: function (group) {
+                ajaxDialog.buttonClick(http.delete, '{% url "cms_course:api:classroom-group-info-delete-group-env" %}', {
+                    schedule: {{ schedule_id }},
+                    group_key: group.key,
+                }, function (res) {
+                    ajaxDialog.buttonClickError(http.post, '{% url "cms_course:api:classroom-group-info-create-group-env" %}', {
+                        schedule: {{ schedule_id }},
+                        group_key: group.key,
+                    }, function (res) {
+                        classEnvsVue.getGroups();
+                    })
+                })
+            },
+            deleteClassEnvs: function () {
+                ajaxDialog.buttonClick(http.delete, '{% url "cms_course:api:classroom-group-info-delete-class-envs" %}', {
+                    schedule: {{ schedule_id }},
+                }, function (res) {
+                    classEnvsVue.getGroups();
+                })
+            },
+            deleteGroupEnv: function (group) {
+                ajaxDialog.buttonClick(http.delete, '{% url "cms_course:api:classroom-group-info-delete-group-env" %}', {
+                    schedule: {{ schedule_id }},
+                    group_key: group.key,
+                }, function (res) {
+                    classEnvsVue.getGroups();
+                })
+            },
+            getEnvPercent: function (group) {
+                var env = group.env;
+                if (!env) {
+                    return 0;
+                }
+
+                if (env.status == ModelConstant.Env.Status.CREATING) {
+                    var all = env.estimate_consume_time || 30;
+                    var rate = env.loaded_seconds / all * 100;
+                    if (rate >= 100) {
+                        rate = 99;
+                    }
+                    return rate;
+                } else if (arrayUtil.in(env.status, [ModelConstant.Env.Status.USING, ModelConstant.Env.Status.PAUSE])) {
+                    return 100;
+                } else {
+                    return 0;
+                }
+            },
+            isEnvCreating: function (group) {
+                return group.env && group.env.status == ModelConstant.Env.Status.CREATING;
+            },
+            getEnvStatusClass: function (group) {
+                var wait = group.wait;
+                var env = group.env;
+                if (wait) {
+                    return 'text-warning';
+                }
+
+                if (!env) {
+                    return 'text-normal';
+                }
+                if (env.status == ModelConstant.Env.Status.CREATING) {
+                    return 'text-warning';
+                } else if (env.status == ModelConstant.Env.Status.USING || env.status == ModelConstant.Env.Status.PAUSE) {
+                    return 'text-success';
+                } else if (env.status == ModelConstant.Env.Status.ERROR) {
+                    return 'text-danger';
+                } else if (env.status == ModelConstant.Env.Status.DELETED) {
+                    return 'text-gray';
+                } else {
+                    return 'text-gray';
+                }
+            },
+            getEnvStatusText: function (group) {
+                var wait = group.wait;
+                var env = group.env;
+                if (wait) {
+                    return gettext('x_in_queue');
+                }
+
+                if (!env) {
+                    return gettext('x_not_create');
+                }
+                return DictModelConstant.Env.Status[env.status];
+            },
+            getEnvStatusError: function (group) {
+                var wait = group.wait;
+                var env = group.env;
+                if (wait) {
+                    return this.groupEnvWaitText(group);
+                }
+
+                if (env && env.status == ModelConstant.Env.Status.ERROR) {
+                    return env.error;
+                } else {
+                    return this.getEnvStatusText(group);
+                }
+            },
+            getEnvActionText: function (group) {
+                var env = group.env;
+                if (!env) {
+                    return gettext('x_create_env');
+                }
+                if (env.status == ModelConstant.Env.Status.CREATING) {
+                    return gettext('x_in_create');
+                } else if (env.status == ModelConstant.Env.Status.USING || env.status == ModelConstant.Env.Status.PAUSE) {
+                    return gettext('x_recreate');
+                } else if (env.status == ModelConstant.Env.Status.ERROR) {
+                    return gettext('x_recreate');
+                } else if (env.status == ModelConstant.Env.Status.DELETED) {
+                    return gettext('x_create_env');
+                } else {
+                    return gettext('x_create_env');
+                }
+            },
+            isEnvStatusError: function(group) {
+                var env = group.env;
+                return env && env.status == ModelConstant.Env.Status.ERROR;
+            },
+            canDeleteGroupEnv: function (group) {
+                var env = group.env;
+                return group.wait || (group.env && arrayUtil.in(group.env.status, [
+                    ModelConstant.Env.Status.ERROR,
+                    ModelConstant.Env.Status.CREATING,
+                    ModelConstant.Env.Status.USING,
+                    ModelConstant.Env.Status.PAUSE,
+                ]));
+            },
+
+            allocatGroup: function (specifyGroups) {
+                if (this.hasActiveEnv()) {
+                    this.groupCapacity = this.oldGroupCapacity;
+                    popUtil.warningHint(gettext('x_change_group_tip'))
+                    return false;
+                }
+                this.oldGroupCapacity = this.groupCapacity;
+
+                var groups;
+                if (specifyGroups) {
+                    groups = specifyGroups;
+                } else {
+                    var userIds = [];
+                    $.each(this.users, function (i, user) {
+                        userIds.push(user.id);
+                    });
+                    groups = [];
+                    var time = Math.ceil(userIds.length/this.groupCapacity);
+                    for (var i=0; i < time; i++) {
+                        var groupUserIds = userIds.slice(this.groupCapacity * i, this.groupCapacity * (i + 1));
+                        groups.push({'users': groupUserIds});
+                    }
+                }
+
+                http.patch('{% url "cms_course:api:classroom-group-info-update-group-info" %}', {
+                    schedule: {{ schedule_id }},
+                    groups: JSON.stringify(groups),
+                }, function(res){
+                    classEnvsVue.getGroups();
+                });
+                return true;
+            },
+
+            getCurrentGroups: function () {
+                var groups = [];
+                $.each(this.groups, function (i, group) {
+                    var groupUserIds = [];
+                    $.each(group.users, function (i, user) {
+                        groupUserIds.push(user.id)
+                    });
+                    groups.push({'users': groupUserIds});
+                });
+                return groups;
+            },
+
+            hasActiveEnv: function() {
+                var flag = false;
+                $.each(this.groups, function(i, group){
+                    if (group.wait || (group.env && arrayUtil.in(group.env.status, [
+                        ModelConstant.Env.Status.CREATING,
+                        ModelConstant.Env.Status.USING,
+                        ModelConstant.Env.Status.PAUSE,
+                    ]))) {
+                        flag = true;
+                        return true;
+                    }
+                });
+                return flag;
+            },
+
+            bindDrag: function () {
+                if (this.drake) {
+                    this.drake.destroy();
+                }
+                var lastTarget;
+                var drake = dragula($(this.$el).find('.group-users').toArray(), {
+                    accepts: function (el, target, source, sibling) {
+                        lastTarget = target;
+                        return false;
+                    },
+                    invalid: function (el, handle) {
+                        if ($(el).hasClass('group-user')) {
+                            return false;
+                        }
+                        return true;
+                    }
+                });
+                drake.on('cancel', function (el, container, source) {
+                    var userId = Number($(el).attr('data-id'));
+                    var fromGroupKey = $(container).attr('data-id');
+                    var toGroupKey = $(lastTarget).attr('data-id');
+
+                    ajaxDialog.buttonClickError(
+                        http.post,
+                        '{% url "cms_course:api:classroom-group-info-transfer-group-user" %}',
+                        {
+                            schedule: {{ schedule_id }},
+                            user_id: userId,
+                            from_group_key: fromGroupKey,
+                            to_group_key: toGroupKey,
+                        },
+                        function (res) {
+                            var fromGroupUsers = classEnvsVue.groupMapping[fromGroupKey].users;
+                            var toGroupUsers = classEnvsVue.groupMapping[toGroupKey].users;
+                            var user = classEnvsVue.userMapping[userId];
+                            fromGroupUsers.splice(fromGroupUsers.indexOf(user), 1)
+                            toGroupUsers.push(user);
+                            Vue.nextTick(function () {
+                                classEnvsVue.refixStyle();
+                            });
+                        }
+                    );
+                });
+
+                this.drake = drake;
+            },
+
+            refixStyle: function () {
+                var heightList = [];
+                var $groupUsers = $(this.$el).find('.group-users');
+                $groupUsers.css('height', 'auto');
+                $.each($groupUsers, function (i, ele) {
+                    heightList.push($(ele).height());
+                });
+                var maxHeight = Math.max.apply(null, heightList);
+                $groupUsers.height(maxHeight);
+            },
+
+            getGroupTemplates: function () {
+                http.get('{% url "cms_course:api:classroom-group-template-list" %}', {
+                    classes: {{ classes_id }},
+                }, function(res){
+                    classEnvsVue.groupTemplates = res.rows;
+                    var groupTemplateMapping = {};
+                    $.each(classEnvsVue.groupTemplates, function (i, groupTemplate) {
+                        groupTemplate.active = false;
+                        groupTemplate.originName = groupTemplate.name;
+                        groupTemplateMapping[groupTemplate.id] = groupTemplate;
+                    });
+                    classEnvsVue.groupTemplateMapping = groupTemplateMapping;
+                });
+            },
+            saveTemplate: function () {
+                var groups = this.getCurrentGroups();
+                this.saveingTemplateData.groups = JSON.stringify(groups);
+
+                if (this.activeGroupTemplate) {
+                    this.saveingTemplateData.name = this.activeGroupTemplate.name;
+                    ajaxDialog.buttonClick(http.patch, this.fakedTemplateUrl.replace('0', this.activeGroupTemplate.id), this.saveingTemplateData, function(){
+                        classEnvsVue.getGroupTemplates();
+                    });
+                } else {
+                    this.saveingTemplateData.name = '';
+                    $('#checkGroupTemplateName').modal('show');
+                }
+
+            },
+            addGroupTemplate: function(){
+                $('#checkGroupTemplateName').modal('hide');
+                http.post('{% url "cms_course:api:classroom-group-template-list" %}', this.saveingTemplateData, function(res){
+                    res.active = false;
+                    res.originName = res.name;
+                    classEnvsVue.groupTemplates.push(res);
+                    classEnvsVue.groupTemplateMapping[res.id] = res;
+                });
+            },
+            cancelAddGroupTemplate: function(){
+                $('#checkGroupTemplateName').modal('hide');
+            },
+            saveGroupTemplateName: function(groupTemplate) {
+                if (groupTemplate.originName == groupTemplate.name) {
+                    return;
+                }
+                http.patch(this.fakedTemplateUrl.replace('0', groupTemplate.id), {
+                    name: groupTemplate.name
+                }, function(){
+                    groupTemplate.originName = groupTemplate.name;
+                });
+            },
+            selectGroupTemplate: function ($event, groupTemplate, i) {
+                if (groupTemplate.active) {
+                    this.activeGroupTemplate = null;
+                    $($event.currentTarget).blur();
+                } else {
+                    if (!this.allocatGroup(JSON.parse(groupTemplate.groups))) {
+                        return;
+                    }
+
+                    if (this.activeGroupTemplate) {
+                        this.activeGroupTemplate.active = false;
+                    }
+                    this.activeGroupTemplate = groupTemplate;
+                }
+                groupTemplate.active = !groupTemplate.active;
+                Vue.set(this.groupTemplates, i, this.groupTemplates[i]);
+            },
+            removeGroupTemplate: function ($event, groupTemplate) {
+                var _this = $event.currentTarget;
+                $(_this).parent().remove();
+                if (this.activeGroupTemplate && this.activeGroupTemplate.id == groupTemplate.id) {
+                    this.activeGroupTemplate = null;
+                }
+                http.delete('{% url "cms_course:api:classroom-group-template-batch-destroy" %}',{ids:groupTemplate.id},function () {})
+            },
+            showMinus: function ($event) {
+                var _this = $event.currentTarget;
+                $(_this).find('.delete').show();
+            },
+            hideMinus: function ($event) {
+                var _this = $event.currentTarget;
+                $(_this).find('.delete').hide();
+            }
+        },
+        mounted: function () {
+            this.getGroupTemplates();
+            this.getGroups();
+
+            addEventListener('resize', function () {
+                classEnvsVue.refixStyle();
+            });
+        },
+    });
+    </script>
+
+    <script type="text/javascript">
+        var monitorTable = bsTable.getTableModule($('#monitorTable'), function () {
+            this.unitFormatter = function (value, row, index) {
+                var organization_list = value.split('/');
+                var data = '<span style="color: #f7a54a">' + organization_list[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + organization_list[1] + '</span>' + ' / ' + organization_list[2];
+                return data;
+            };
+            this.signInFormatter = function (value, row, index) {
+                if (!row.sign_in) {
+                    return '<div class="text-danger">' + gettext("x_not_signed_in") + '</div>';
+                }else {
+                    return '<div class="text-success">' + gettext('x_signed_in') + '</div>';
+                }
+            };
+            this.signInTimeFormatter = function (value, row, index) {
+                if (value){
+                    return value
+                }
+
+            };
+            this.operationFormatter = function (value, row, index) {
+                if (row.assistance_link && row.sign_in && row.need_help) {
+                    var btn_html = "<button onclick='help_user(this)' data-user-id="+ row.user_id +" data-link=" + row.assistance_link +" class='btn btn-warning'><i class='fa fa-hand-stop-o'></i>" +
+                        gettext("x_remote_assistance")+ "</button>";
+                    return btn_html;
+                }
+
+            }
+        });
+
+        $('#monitorTable').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+        function help_user(obj) {
+            $.ajax({
+                url: "{% url 'cms_course:api:course-schedule-is-help' %}",
+                type: "get",
+                data: {"id": "{{ id }}", 'user_id':$(obj).attr('data-user-id')},
+                datatype: "json",
+                success: function (data) {
+                    monitorTable.reload();
+                    window.open($(obj).attr('data-link'));
+                },
+                error: function (res) {
+                    console.log(res.data)
+                }
+            });
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        {#var listUrl = "{% url 'cms_course:lesson_classroom' lesson_id classes_id %}";#}
+        var updateNoteUrl = "{% url 'cms_x_note:api:note-detail' 0 %}";
+        {#pageWidgets.registerCheckTableRow($("#table"));#}
+        {#$("#content").initMarkdown();#}
+        var elems = Array.prototype.slice.call($('.js-switch'));
+
+        elems.forEach(function (html) {
+            switchery = new Switchery(html, {color: "#1AB394"});
+
+            $(html).change(function () {
+                var name = $(this).attr('data-name');
+                var $input = $(this).siblings('[name=' + name + ']');
+                if ($(this).prop('checked')) {
+                    $input.val(1);
+                } else {
+                    $input.val(0);
+                }
+            });
+        });
+
+        $('#testEnvModal').on('hidden.bs.modal', function () {
+            $('[data-widget-id=common-env]').empty();
+            $('[data-widget-id=common-env]').clearLessonEnvInstance();
+        });
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.unitFormatter = function (value, row, index) {
+                var organization_list = value.split('/');
+                var data = '<span style="color: #f7a54a">' + organization_list[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + organization_list[1] + '</span>' + ' / ' + organization_list[2];
+                return data;
+            };
+
+            this.reportFormatter = function (value, row, index) {
+                if (row.ispass == undefined) {
+                    return "<div class='text-danger'>" + gettext('x_not_submit') + "</div>";
+                }
+                return [
+                    '<button class="btn btn-primary" data-toggle="modal" data-target="#myModal" data-value="',
+                    row.resource + '" data-user-id="' + row.id +'">',
+                    '{% trans "x_view_report" %}',
+                    '</button>',
+                ].join('');
+            };
+
+            this.markscoreFormatter = function (value, row, index) {
+
+                if (!row.mark_score_teacher) {
+                    return '<div class="text-warning">' + gettext("x_not_mark_score") + '</div>';
+                }
+                if (row.ispass) {
+                    return ['<div class="text-info">' +
+                    row.experiment_mark_score +
+                    '</div>'].join("");
+                } else {
+                    return '<div class="text-danger">' + gettext('x_not_pass') + '</div>';
+                }
+
+            }
+
+        });
+
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        $("#myModal").on("show.bs.modal", function (e) {
+            var btn = $(e.relatedTarget);
+            var value = btn.data("value");
+            var value_id = btn.data("user-id");
+            var report_detail_url = '{% url "cms_course:show_report_detail" 0 %}'
+
+            $("#report_div input[name='hash']").val(value);
+            $.ajax({
+                url: "{% url 'cms_x_note:api:note-list' %}",
+                type: "get",
+                data: {"search_resource": value, 'user_id':value_id},
+                datatype: "json",
+                async: true,
+                success: function (data) {
+                    // console.info(data);
+                    if (data.total !== 1) {
+                        return
+                    }
+                    var rows = data.rows[0];
+                    $("#validateForm").attr('action', updateNoteUrl.replace(0, rows.id));
+                    {#$("#content").val(rows.content);#}
+                    $("#introduction").html(marked(rows.content));
+                    $("#introduction").attr("link", report_detail_url.replace(0, rows.id))
+                    $("#score").val(rows.score);
+                    $("#markcomment").val(rows.markcomment);
+
+                    $("input[name='ispass']").val(rows.ispass ? 1 : 0);
+
+                    if (rows.ispass == true) {
+                        setSwitchery(switchery, true)
+                    } else {
+                        setSwitchery(switchery, false)
+                    }
+                },
+            });
+
+        });
+
+        $("#full_screen").click(function () {
+            var url = $("#introduction").attr("link");
+            window.open(url)
+        });
+
+        $("#validateForm").ajaxFormDialog(function () {
+            setTimeout(function () {
+                $("#myModal").modal('hide');
+                table.reload();
+            }, ajaxDialog.defaultDelayTime);
+        });
+
+        /**
+         * 切换Switchery开关函数  switchElement Switchery对象,checkedBool 选中的状态
+         */
+        function setSwitchery(switchElement, checkedBool) {
+            if ((checkedBool && !switchElement.isChecked()) || (!checkedBool && switchElement.isChecked())) {
+                switchElement.setPosition(true);
+                switchElement.handleOnchange(true);
+            }
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        // 饼图参数
+        $("#pieChart").css('width',$("#tab-1").width() * 0.25);
+        function setChartOption(data) {
+            var chartOption = {
+                title: {
+                    text: gettext('x_sign_statistics'),
+                    /*textStyle:{
+                        //文字颜色
+                        color:'#666666',
+                        //字体风格,'normal','italic','oblique'
+                        fontStyle:'normal',
+                        //字体粗细 'normal','bold','bolder','lighter',100 | 200 | 300 | 400...
+                        fontWeight:'bold',
+                        //字体系列
+                        fontFamily:'微软雅黑',
+                        //字体大小
+                　　　　  fontSize:18
+                    },*/
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c} "
+                },
+                color: ['#FFBB66', '#009FCC', '#00DDDD'],
+                toolbox: {
+                    show: true,
+                    feature: {
+                        mark: {show: true},
+                        // dataView: {show: true, readOnly: false},
+                        magicType: {
+                            show: true,
+                            type: ['pie', 'funnel'],
+                            option: {
+                                funnel: {
+                                    x: '25%',
+                                    width: '50%',
+                                    funnelAlign: 'left',
+                                    max: 1548
+                                }
+                            }
+                        },
+                        // restore: {show: true},
+                        // saveAsImage: {show: true}
+                    }
+                },
+                calculable: true,
+                series: [
+                    {
+                        // name: gettext('x_user'),
+                        type: 'pie',
+                        radius: '50%',//饼图的半径大小
+                        center: ['50%', '50%'],//饼图的位置
+                        labelLine:{
+                            normal:{
+                                    length:0.001
+                                }
+                        },
+                        label: {
+                            normal: {
+                                show: true,
+                                formatter: function(val){
+                                    // console.log(val);
+                                    var newStr=" ";
+                                    var start,end;
+                                 　　var name_len=val.data.name.length;
+                                 　　var max_name=10;    　　　　　　　　　
+                                 　　var new_row = Math.ceil(name_len / max_name);
+                                 　　if(name_len>max_name){
+                                  　　　　for(var i=0;i<new_row;i++){ 　
+                                   　　　　　　　　var old='';
+                                   　　　　　　　　start=i*max_name;
+                                  　　　　　　　　 end=start+max_name;
+                                   　　　　　　　　if(i==new_row-1){
+                                    　　　　　　　　　　old=val.data.name.substring(start);
+                                   　　　　　　　　}else{
+                                    　　　　　　　　　　old=val.data.name.substring(start,end)+"\n";
+                                  　　　　　　　　 }
+                                   　　　　　　　　　　 newStr+=old;
+                                 　　　　　　  }
+                                　　　   }else{
+                                  　　　　　　newStr=val.data.name;
+                                 　　　  }
+                                 　　　 return newStr + ':' + val.data.value + gettext('x_people');
+                                　　},
+
+                                textStyle:{       //这只是为了让文字居中而已
+                                    　　align:"center",            //水平对齐方式可选left，right，center
+                                    　　baseline:"top",　　　　//垂直对齐方式可选top，bottom，middle
+                                    },
+                                 }
+                        },
+                        data: data
+                    }
+                ]
+            };
+            return chartOption
+        };
+        var pie_chart = echarts.init(document.getElementById('pieChart'), 'macarons');
+        function setChart(chartName, data) {
+            window.onresize = function () {
+                chartName.resize();
+            };
+
+            $(function () {
+                chartName.setOption(setChartOption(data));
+            });
+        }
+
+        // 柱状图参数
+        $("#barChart").css('width',$("#tab-1").width() * 0.45);
+        var barChart = echarts.init(document.getElementById('barChart'), 'macarons');
+        var bar_option = {
+               title: {
+                    text: gettext('x_staff_performance_map'),
+                    x: 'center'
+               },
+               tooltip: {
+                   trigger: 'axis',
+                   formatter: function(params) {
+                       var relVal = params[0].name;
+                       for (var i = 0, l = params.length; i < l; i++) {
+                            relVal += '<br/>' + params[i].seriesName + ' : ' + params[i].value+ gettext('x_people');
+                        }
+                       return relVal;
+                    }
+               },
+               legend: {
+                    data: [gettext('x_statistics')]
+               },
+               xAxis: {
+                    data: [gettext('x_not_pass'), gettext('x_is_pass'), gettext('x_good'), gettext('x_verygood'), gettext('x_full_score')]
+               },
+               yAxis: [
+                   {
+                    axisLabel : {
+                        formatter: function(){
+                              return "";
+                        }
+                    }
+                }
+               ],
+               series: {
+                    name: gettext('x_grade'),
+                    type: 'bar',
+                    barMaxWidth: '30',
+                    itemStyle:{
+                            normal:{
+                                color:'#009FCC',
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                }
+                            },
+                        }
+               },
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top',
+                        textStyle: {
+                            color: '#009FCC'
+                        },
+                        formatter: function(params) {
+                            var data = params.data + gettext('x_people');
+                            return data
+                        }
+                    }
+                }
+          };
+
+        // 折线图参数
+        $("#lineChart").css('width',$("#tab-1").width());
+        var lineChart = echarts.init(document.getElementById('lineChart'), 'macarons');
+        var line_option = {
+            title: {
+                text: gettext('x_top20_score'),
+                x: 'center'
+            },
+            tooltip: {
+            trigger: 'axis',
+            formatter: function(params) {
+                   var relVal = params[0].name;
+                   for (var i = 0, l = params.length; i < l; i++) {
+                        relVal += '<br/>' + params[i].seriesName + ' : ' + params[i].value + gettext('x_fraction');
+                    }
+                   return relVal;
+                }
+            },
+            legend: {
+                data:['top20']
+            },
+            xAxis: {
+                data: [],
+                axisLabel:{
+                    interval:0
+                }
+            },
+            yAxis: {},
+            series: {
+                name: gettext('x_grade'),
+                type: 'line',
+                itemStyle: {
+                normal: {
+                    color: "#009FCC",
+                    lineStyle: {
+                        color: "#009FCC"
+                    }
+                }
+            },
+                data: []
+            },
+        };
+
+        $.ajax({
+            url: "{% url 'cms_course:api:course-schedule-classroom-statistics' %}",
+            type: "GET",
+            data: {id: {{ id }}},
+            datatype: "json",
+            success: function (result) {
+                    $('#classes').text(result.class_complete_json.class + gettext('x_learning_status_statistics')),
+                    $('#grade').text(result.class_complete_json.major),
+                    $('#total_persons').text(result.class_complete_json.total_users),
+                    $('#sign_persons').text(result.class_complete_json.sign_users),
+                    $('#complete_persons').text(result.class_complete_json.complete_users),
+                    $('#faculty').text(result.class_complete_json.faculty),
+                    $('#group_name_label').text("("+result.class_complete_json.group_name+")"),
+
+                    // 饼图
+                    setChart(pie_chart, result.pie_chart);
+
+                    // 柱状图
+                    bar_option.series.data = [result.mark_json.not_pass, result.mark_json.pass, result.mark_json.good,
+                                                result.mark_json.excellent, result.mark_json.full_score];
+                    barChart.setOption(bar_option, true);
+
+                    // 折线图
+                    for(var i=0; i<result.top20.length; i++) {
+                        line_option.xAxis.data.push(result.top20[i].first_name);
+                        line_option.series.data.push(result.top20[i].score)
+                    };
+                    lineChart.setOption(line_option, true);
+            }
+        });
+    </script>
+
+
+{% endblock %}

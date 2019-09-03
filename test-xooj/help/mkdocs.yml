@@ -1,0 +1,19 @@
+site_name: 场景引擎系统
+pages:
+    - 场景引擎系统: index.md
+    - 标靶: target.md
+    - 自定义上传: upload-target.md
+    - 基础场景: sense.md
+    - 攻防场景: adsense.md
+    - 场景创建: make-scene.md
+    - 虚拟机操作指南: operation-guide.md
+    - QA: qa.md
+site_author : Hankaln
+copyright : CyberPeace.cn
+theme: readthedocs
+markdown_extensions :
+    - tables
+    - smart_strong
+    - codehilite
+    - smarty
+    - toc

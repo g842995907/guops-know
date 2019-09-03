@@ -1,0 +1,71 @@
+msgid "x_bureau_management"
+msgstr "Bureau Management"
+
+msgid "x_bureau_name"
+msgstr "Bureau Name"
+
+msgid "x_public_key"
+msgstr "Public Key"
+
+msgid "x_private_key"
+msgstr "Private Key"
+
+msgid "x_download_License_file"
+msgstr "Download License File"
+
+msgid "x_new_bureau"
+msgstr "New Bureau"
+
+msgid "x_edit_bureau"
+msgstr "Edit Bureau"
+
+msgid "x_Licence_configuration_example"
+msgstr "License Configuration"
+
+msgid "x_Licence_configuration_information"
+msgstr "license Configuration"
+
+msgid "x_authorization_date"
+msgstr "Authorization Info"
+
+msgid "x_upgrade_package_management"
+msgstr "Upgrade Package Management"
+
+msgid "x_update_name"
+msgstr "Update Name"
+
+msgid "x_download_update_package"
+msgstr "Download Update Package"
+
+msgid "x_new_update"
+msgstr "New Update"
+
+msgid "x_edit_update"
+msgstr "Edit Update"
+
+msgid "x_release_notes"
+msgstr "Release Notes"
+
+msgid "x_del_package"
+msgstr "Delete Package"
+
+msgid "x_cloud_management"
+msgstr "Cloud Management"
+
+msgid "x_version_management"
+msgstr "Version Management"
+
+msgid "x_auto_update"
+msgstr "Auto Update"
+
+msgid "x_professional_edition"
+msgstr "Professional Edition"
+
+msgid "x_educational_edition"
+msgstr "Educational Edition"
+
+msgid "x_trial_yes"
+msgstr "Yes"
+
+msgid "x_trial_no"
+msgstr "No"

@@ -1,0 +1,261 @@
+{% extends './iframe_layout.html' %}
+{% load i18n %}
+{% load static static_v %}
+
+{% block title %}
+{#    <a href="{% url 'cms_common_env:env_list' %}">{% trans "x_system_operation_maintenance" %}</a> >#}
+    {% trans 'x_active_env_manage' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" />
+    <script type="text/javascript" src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+        #dump{
+            float: right;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky" id="type">
+                            <option value="">{% trans 'x_all_category' %}</option>
+                            <option data-id="option-rendering" data-list='ListModelConstant.Env.Type'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky" id="status">
+                            <option value="">{% trans 'x_all_status' %}</option>
+                            <option data-id="option-rendering" data-list='ListModelConstant.Env.Status'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_env_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b sticky" id="env_status" type="hidden" value="" />
+                        <input type="checkbox" class="form-control js-switch" data-for="env_status" >
+                        <span class="hint" style="vertical-align: sub;">{% trans 'x_only_show_unexpect_env' %}</span>
+                    </div>
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_common_env:api:active-env-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+
+                     <div class="m-r pull-right">
+                        <button class="btn btn-primary" id="dump">{% trans 'x_export_env_data' %}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a id="dump_data" href="/media/word/envs.xls" hidden="hidden">导出</a>
+
+        <table id="table"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_common_env:api:active-env-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="creator" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="belong_target" data-formatter="table.belongTargetFormatter">{% trans 'x_name' %}</th>
+                <th data-field="type" data-formatter="table.typeFormatter">{% trans 'x_type' %}
+                <th data-field="status" data-formatter="table.statusFormatter">{% trans 'x_status' %}</th>
+                <th data-field="servers" data-formatter="table.serversFormatter">{% trans 'x_machine_status' %}</th>
+                <th data-field="create_time" data-formatter="table.datetimeFormatter">{% trans 'x_create_time' %}</th>
+                <th data-field="consume_time" data-formatter="table.consumeTimeFormatter">{% trans 'x_spend_time' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        var restart_envterminal_url = "{% url 'common_env:restart_envterminal' %}";
+
+        function RestartEnvterminal(env_id, vm_id, from_backend = true) {
+          ajaxDialog.buttonClick(http.post, restart_envterminal_url, {
+            env_id: env_id,
+            vm_id: vm_id,
+            from_backend: from_backend
+          }, function () {
+            table.reload()
+          })
+        }
+        pageWidgets.registerCheckTableRow($("#table"));
+
+        var table = bsTable.getTableModule($('#table'), function(){
+            this.typeFormatter = function (value, row, index) {
+                return DictModelConstant.Env.Type[value];
+            };
+
+            this.statusFormatter = function (value, row, index) {
+                var text = DictModelConstant.Env.Status[value];
+                if (value == ModelConstant.Env.Status.ERROR) {
+                    return '<span title="' + row.error + '" style="cursor: pointer;color: #f00;">' + text + ' <i class="fa fa-info-circle"></i></span>';
+                } else {
+                    return text;
+                }
+            };
+
+            this.serversFormatter = function (value, row, index) {
+                var text = '';
+                var value_len = value.length -1;
+                $.each(value, function (index, server) {
+                    var serverStatusText = DictModelConstant.EnvTerminal.Status[server.status];
+                    // 环境出错状态所有服务器置为失败
+                    if (row.status == ModelConstant.Env.Status.ERROR) {
+                        serverStatusText = ModelConstant.EnvTerminal.Status.ERROR.text;
+                    }
+                    var str = server.sub_id + ': ' + serverStatusText;
+                    var str1 = '';
+                    if (row.status == ModelConstant.Env.Status.USING) {
+                        for (var i = 0; i < row.shared_assistance.length; i++) {
+                            if (server.sub_id == row.shared_assistance[i]['sub_id']){
+                                str1 = str1 +  '<a class="pull-right" href="' + row.shared_assistance[i]["link"] + '" target="_blank">【' + gettext("x_shared_assistance") + '】</a>&nbsp;&nbsp;';
+                            }
+                        }
+                        for (var i = 0; i < row.shared_monitor.length; i++) {
+                            if (server.sub_id == row.shared_monitor[i]['sub_id']){
+                                str1 = str1 +  '<a class="pull-right" href="' + row.shared_monitor[i]["link"] + '" target="_blank">【' + gettext("x_shared_monitor") + '】</a>&nbsp;&nbsp;';
+                            }
+                        }
+                        // 设置重启
+                        str1 = `${str1}<a class="pull-right" style="color: #ed5565;" href="javascript:void(0)" onclick="RestartEnvterminal(${row.id}, '${server.sub_id}')">【${gettext('x_restart')}】</a>`
+                    }
+                    if (index == value_len) {
+                        text = text.concat(str + str1 + '<br/>');
+                    } else {
+                        text = text.concat(str + str1 + '<br/><div style="border-top: #bcbdbd 1px dashed; overflow: hidden; height: 1px"></div>');
+                    }
+                });
+
+                return text;
+            };
+
+            this.consumeTimeFormatter = function (value, row, index) {
+                if (!value) {
+                    return '-';
+                }
+
+                var displayStr = '';
+                var day = Math.floor(value / (60 * 60 * 24));
+                var hour = Math.floor(value / (60 * 60)) - (day * 24);
+                var minute = Math.floor(value / 60) - (day * 24 * 60) - (hour * 60);
+                var second = Math.floor(value) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                if (day) {
+                    displayStr = displayStr.concat(day + gettext('x_day'));
+                }
+                if (hour) {
+                    displayStr = displayStr.concat(hour + gettext('x_hour'));
+                }
+                if (minute) {
+                    displayStr = displayStr.concat(minute + gettext('x_time_minute'));
+                }
+                if (second) {
+                    displayStr = displayStr.concat(second + gettext('x_second'));
+                }
+
+                return displayStr;
+            };
+
+            this.belongTargetFormatter = function (value, row, index) {
+                if (value) {
+                    var text = '<span class="text-warning">【' + value.app + '】</span>';
+                    if (value.type) {
+                        text = text + ' / <span style="color: #1ab394;">' + value.type + '</span>';
+                    }
+                    text = text + ' / ' + value.name;
+                    return text;
+                } else {
+                    return '-';
+                }
+            };
+        });
+
+        $("#table").stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.type = $("#type").val();
+                params.status = $("#status").val();
+                params.env_status = $("#env_status").val();
+                params.search = $("#search").val();
+                return params;
+            },
+        });
+
+        $(function () {
+            var value = $('#env_status').val();
+            new Switchery($('[data-for=env_status]')[0], {color: "#1AB394"});
+            $('[data-for=env_status]').change(function(){
+                var id = $(this).attr('data-for');
+                var $input = $(this).siblings('[id=' + id + ']');
+                if ($(this).prop('checked')) {
+                    $input.val(2);
+                } else {
+                    $input.val('');
+                }
+                table.refresh();
+            });
+            if (value == 2) {
+                $('.switchery').click()
+            }
+        });
+
+        $("#dump").click(function () {
+            swal({
+                title: '<i class="fa fa-spin fa-spinner" style="font-size: 80px;"></i>',
+                html: true,
+                text: gettext('x_the_server_processing_please_wait'),
+                confirmButtonText: "{% trans "x_confirm" %}",
+            });
+            $.ajax({
+                url: '{% url "cms_common_env:dump_env_data" %}',
+                type: 'GET',
+                datatype: 'json',
+                success: function (res) {
+                    if (res.status == 200) {
+                        $('dump_data').attr("href", '/' + res.url);
+                        document.getElementById("dump_data").click();
+                        setTimeout(function () {
+                            swal.close()
+                        }, 500);
+                    }
+                }
+            })
+        })
+
+    $('#type,#status').click(function () {
+        table.refresh()
+    })
+    </script>
+{% endblock %}

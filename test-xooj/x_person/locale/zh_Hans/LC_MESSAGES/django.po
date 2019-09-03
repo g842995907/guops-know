@@ -1,0 +1,809 @@
+msgid "x_user_manage"
+msgstr "用户管理"
+
+msgid "x_all_class"
+msgstr "全部班级"
+
+msgid "x_all_project_groups"
+msgstr "全部项目组"
+
+msgid "x_user_name_email"
+msgstr "用户名/姓名/邮箱"
+
+msgid "x_user_or_name"
+msgstr "用户名/姓名"
+
+msgid "x_batch_import_user"
+msgstr "批量用户导入"
+
+msgid "x_is_auth"
+msgstr "已授权"
+
+msgid "x_initial_password"
+msgstr "初始密码"
+
+msgid "x_faculty_area"
+msgstr "院系|地区"
+
+msgid "x_major_dep"
+msgstr "年级|部门"
+
+msgid "x_class_project_team"
+msgstr "班级|项目组"
+
+msgid "x_user_list"
+msgstr "用户列表"
+
+msgid "x_user_info"
+msgstr "用户信息"
+
+msgid "x_export_user_error_response"
+msgstr "当前组织下用户为空,请从新选择"
+
+msgid "x_total_online_time"
+msgstr "累计在线时间"
+
+msgid "x_batch_export_user"
+msgstr "批量用户导出"
+
+msgid "x_user_import"
+msgstr "用户导入"
+
+msgid "x_recovery"
+msgstr "恢复"
+
+msgid "x_disable"
+msgstr "禁用"
+
+msgid "x_enhance_teacher"
+msgstr "提升教员"
+
+msgid "x_down_student"
+msgstr "降为学员"
+
+msgid "x_name_surname"
+msgstr "姓名"
+
+msgid "x_faculties"
+msgstr "院系"
+
+msgid "x_area"
+msgstr "地区"
+
+msgid "x_grade"
+msgstr "年级"
+
+msgid "x_sector"
+msgstr "部门"
+
+msgid "x_class"
+msgstr "班级"
+
+msgid "x_project_groups"
+msgstr "项目组"
+
+msgid "x_user_level"
+msgstr "用户级别"
+
+msgid "x_reset_password"
+msgstr "重置密码"
+
+msgid "x_input_password"
+msgstr "输入密码"
+
+msgid "x_all_aegion"
+msgstr "所有地区"
+
+msgid "x_all_department"
+msgstr "所有部门"
+
+msgid "x_new_user"
+msgstr "新用户"
+
+msgid "x_num_new_team"
+msgstr "新队伍"
+
+msgid "x_event_answered"
+msgstr "题目完成数"
+
+msgid "x_not_audited"
+msgstr "未审核"
+
+msgid "x_new_create_user"
+msgstr "新建用户"
+
+msgid "x_edit_user"
+msgstr "编辑用户"
+
+msgid "x_please_select"
+msgstr "请选择---"
+
+msgid "x_email"
+msgstr "邮箱"
+
+msgid "x_verified"
+msgstr "已验证"
+
+msgid "x_unverified"
+msgstr "未验证"
+
+msgid "x_phone"
+msgstr "电话"
+
+msgid "x_nickname"
+msgstr "昵称"
+
+msgid "x_photo"
+msgstr "头像"
+
+msgid "x_id_number"
+msgstr "身份证"
+
+msgid "x_select_class"
+msgstr "请选择班级"
+
+msgid "x_select_department"
+msgstr "请选择院系"
+
+msgid "x_select_grade"
+msgstr "请选择年级"
+
+msgid "x_select_character"
+msgstr "请选择角色"
+
+msgid "x_email_field_required"
+msgstr "邮箱：该字段必填"
+
+msgid "x_password_field_required"
+msgstr "密码：该字段必填"
+
+msgid "x_confirm_password_field_required"
+msgstr "确认密码：该字段必填"
+
+msgid "x_password_same"
+msgstr "确认密码和密码必须一致"
+
+msgid "x_name_field_required"
+msgstr "姓名：该字段必填"
+
+msgid "x_name_too_long"
+msgstr "姓名过长"
+
+msgid "x_user_name_field_required"
+msgstr "用户名：该字段必填"
+
+msgid "x_team_manage"
+msgstr "战队管理"
+
+msgid "x_team_logo"
+msgstr "队伍Logo"
+
+msgid "x_captain"
+msgstr "队长"
+
+msgid "x_has_deleted"
+msgstr "已删除"
+
+msgid "x_has_fired"
+msgstr "已解散"
+
+msgid "x_forbidden_game"
+msgstr "禁赛"
+
+msgid "x_abnormal_situation"
+msgstr "异常情况"
+
+msgid "x_edit_team"
+msgstr "编辑队伍"
+
+msgid "x_player"
+msgstr "队员"
+
+msgid "x_organizational_structure_manage"
+msgstr "组织结构管理"
+
+msgid "x_said"
+msgstr "表示"
+
+msgid "x_school"
+msgstr "学校"
+
+msgid "x_company"
+msgstr "公司"
+
+msgid "x_enterprise"
+msgstr "企业"
+
+msgid "x_template_file"
+msgstr "模板文件"
+
+msgid "x_download_file"
+msgstr "文件下载"
+
+msgid "x_user_information_import"
+msgstr "用户信息表导入"
+
+msgid "x_configure_organizational_structure"
+msgstr "请提前配置好组织结构！"
+
+msgid "x_role_manage"
+msgstr "角色权限明细"
+
+msgid "x_audit"
+msgstr "审核"
+
+msgid "x_course_management"
+msgstr "课程管理"
+
+msgid "x_course_schedule"
+msgstr "课程表"
+
+msgid "x_theoretical_basis_management"
+msgstr "理论基础管理"
+
+msgid "x_real_vuln_management"
+msgstr "真实漏洞管理"
+
+msgid "x_exercise_management"
+msgstr "夺旗练习管理"
+
+msgid "x_exam_management"
+msgstr "考试管理"
+
+msgid "x_system_operation_maintenance"
+msgstr "系统运维"
+
+msgid "x_permissions_page"
+msgstr "权限页"
+
+msgid "x_administrator"
+msgstr "管理员"
+
+msgid "x_teacher"
+msgstr "教员"
+
+msgid "x_student"
+msgstr "学员"
+
+msgid "x_student_id"
+msgstr "学号"
+
+msgid "x_my_profile"
+msgstr "我的资料"
+
+msgid "x_click_change_avatar"
+msgstr "点击修改头像"
+
+msgid "x_click_verify"
+msgstr "点击验证"
+
+msgid "x_phone_num"
+msgstr "手机号"
+
+msgid "x_nickname_cloud_exchange"
+msgstr "昵称(用于留言)"
+
+msgid "x_personal_profile"
+msgstr "个人简介(限50个字符)"
+
+msgid "x_my_tram"
+msgstr "我的队伍"
+
+msgid "x_no_team_create_team"
+msgstr "您还没有队伍，可以创建或选择一支队伍加入..."
+
+msgid "x_create_team"
+msgstr "创建队伍"
+
+msgid "x_join_team"
+msgstr "加入队伍"
+
+msgid "x_name_captain"
+msgstr "队长名称"
+
+msgid "x_num_players"
+msgstr "队员数量"
+
+msgid "x_apply_admission"
+msgstr "申请加入"
+
+msgid "x_invite_join_team"
+msgstr "邀请你入队"
+
+msgid "x_edit_information"
+msgstr "编辑资料"
+
+msgid "x_click_upload"
+msgstr "点击上传"
+
+msgid "x_time_establishment"
+msgstr "成立时间"
+
+msgid "x_team_profile"
+msgstr "队伍简介"
+
+msgid "x_tram_time_wrong"
+msgstr "队伍创建时间格式不正确"
+
+msgid "x_team_not_exist"
+msgstr "队伍不存在或已解散"
+
+msgid "x_method_not_allowed"
+msgstr "方法不被允许"
+
+msgid "x_applied_please_patient"
+msgstr "已申请过，请耐心等待"
+
+msgid "x_invite_please_patient"
+msgstr "已邀请过，请耐心等待"
+
+msgid "x_user_already_exists"
+msgstr "用户已存在队伍"
+
+msgid "x_initial_password_wrong"
+msgstr "初始密码不正确"
+
+msgid "x_invaild_symbol"
+msgstr "包含非法字符"
+
+msgid "x_password_claim"
+msgstr "密码8～20位，且必须包含大小写字母数字及特殊字符"
+
+msgid "x_email_format_wrong"
+msgstr "邮箱格式不正确"
+
+msgid "x_phone_format_wrong"
+msgstr "手机号码格式不正确"
+
+msgid "x_cannot_del_type"
+msgstr "类型正在被使用, 无法删除"
+
+msgid "x_cannot_del_problem_sets"
+msgstr "习题集下有题目, 无法删除"
+
+msgid "x_cannot_del_shared_problem_sets"
+msgstr "他人共享习题集无删除权限"
+
+msgid "x_failed_delete"
+msgstr "删除失败！"
+
+msgid "x_growth_trajectory"
+msgstr "成长轨迹"
+
+msgid "x_my_team"
+msgstr "我的战队"
+
+msgid "x_clan_refuse_apply"
+msgstr "战队拒绝了你的申请"
+
+msgid "x_refused_invite"
+msgstr "拒绝了你的邀请"
+
+msgid "x_members_num"
+msgstr "成员数量"
+
+msgid "x_entries_num"
+msgstr "参赛次数"
+
+msgid "x_enrollment_application"
+msgstr "入队申请"
+
+msgid "x_modify_information"
+msgstr "修改资料"
+
+msgid "x_quit_team"
+msgstr "退出战队"
+
+msgid "x_activity_record"
+msgstr "活动记录"
+
+msgid "x_skills_six_dimensional_map"
+msgstr "技能图"
+
+msgid "x_team_members"
+msgstr "队伍成员"
+
+msgid "x_have_agreed"
+msgstr "已同意"
+
+msgid "x_have_refused"
+msgstr "已拒绝"
+
+msgid "x_fired"
+msgstr "解散"
+
+msgid "x_invite_members"
+msgstr "邀请成员"
+
+msgid "x_already_invited"
+msgstr "已邀请"
+
+msgid "x_invitation"
+msgstr "邀请"
+
+msgid "x_inviting_success"
+msgstr "邀请成功"
+
+msgid "x_agree"
+msgstr "同意"
+
+msgid "x_refuse"
+msgstr "拒绝"
+
+msgid "x_inviting_information"
+msgstr "邀请信息"
+
+msgid "x_examination_passed"
+msgstr "审核通过"
+
+msgid "x_examination_user"
+msgstr "审核用户"
+
+msgid "x_user_name_prompt"
+msgstr "用户名6～14位，数字，字母和下划线"
+
+msgid "x_time"
+msgstr "时间"
+
+msgid "x_baning"
+msgstr "禁赛中"
+
+msgid "x_password_not_match"
+msgstr "密码8～20位，且必须包含大小写字母数字及特殊字符, 密码为：%(passwd)s 不符合,请先修改该密码"
+
+msgid "x_Account_not_match"
+msgstr "账号为%(name)s的格式不正确,用户名为6～14位数字，字母和下划线"
+
+msgid "x_account_already_exists"
+msgstr "账号为%(name)s,已存在,请先修改该用户名"
+
+msgid "x_same_user"
+msgstr "用户导入文件中存在相同的用户名为%(name)s,请先修改该用户名"
+
+msgid "x_email_format_incorrect"
+msgstr "邮箱为%(email)s，此邮箱格式不正确"
+
+msgid "x_email_already_exists"
+msgstr "邮箱为%(email)s,已存在,请先修改该邮箱"
+
+msgid "x_modify_mailbox"
+msgstr "用户导入文件中存在相同的邮箱为%(email)s,请先修改该邮箱"
+
+msgid "x_create_class_first"
+msgstr "%(faculty)s下的%(major)s下的%(class)s,不存在,请先创建该班级"
+
+msgid "x_create_grade_first"
+msgstr "%(faculty)s下的年级%(major)s,不存在,请先创建该年级"
+
+msgid "x_create_college_first"
+msgstr "院系%(faculty)s,不存在,请先创建该院系"
+
+msgid "x_success_import"
+msgstr "共有记录%(all_count)d 成功导入%(success_count)d"
+
+msgid "x_user_already"
+msgstr "该用户已存在"
+
+msgid "x_rank_dimension"
+msgstr "排名维度"
+
+msgid "x_personal"
+msgstr "个人"
+
+msgid "x_scoreboard"
+msgstr "排行榜"
+
+msgid "x_solved_count"
+msgstr "解题数"
+
+msgid "x_theory"
+msgstr "理论基础"
+
+msgid "x_real_vuln"
+msgstr "真实漏洞"
+
+msgid "x_exercise"
+msgstr "夺旗解题"
+
+msgid "x_summary"
+msgstr "汇总"
+
+msgid "x_max_length_50"
+msgstr "长度不能大于50个字符"
+
+msgid "x_cms_max_120"
+msgstr "简介字符超长(0~120)"
+
+msgid "x_personal_center_oj"
+msgstr "个人中心 OJ"
+
+msgid "x_personal_center_ad"
+msgstr "个人中心 AD"
+
+msgid "x_theory_course"
+msgstr "理论课程"
+
+msgid "x_occupational_system"
+msgstr "职业体系"
+
+msgid "x_choose_career_goal"
+msgstr "选择职业目标"
+
+msgid "x_choose_career"
+msgstr "请选择一个职业"
+
+msgid "x_unable_choose_numbers"
+msgstr "无法选择多个职业"
+
+msgid "x_career_has_chosen"
+msgstr "该职业已选择，请重新选择职业"
+
+msgid "x_occupation_name"
+msgstr "职业名称"
+
+msgid "x_occupation_profile"
+msgstr "职业简介"
+
+msgid "x_occupation_class_hour"
+msgstr "职业课时"
+
+msgid "x_revising_personal_data"
+msgstr "修改个人资料"
+
+msgid "x_door"
+msgstr "门"
+
+msgid "x_learning_courses"
+msgstr "学习的课程"
+
+msgid "x_hour"
+msgstr "时"
+
+msgid "x_rankings"
+msgstr "名"
+
+msgid "x_practice_scoring"
+msgstr "练习得分"
+
+msgid "x_practice_ranking"
+msgstr "练习排名"
+
+msgid "x_personal_signature"
+msgstr "个人签名"
+
+msgid "x_my_question"
+msgstr "我的提问"
+
+msgid "x_my_reply"
+msgstr "我的回复"
+
+msgid "x_skills_six_dimensions"
+msgstr "技能六维图"
+
+msgid "x_learning_competition_records"
+msgstr "学习/比赛记录"
+
+msgid "x_task_schedule"
+msgstr "任务进度"
+
+msgid "x_current_career_goals"
+msgstr "我的职业目标"
+
+msgid "x_changing_career_goals"
+msgstr "更换职业目标"
+
+msgid "x_course_name"
+msgstr "课程名称"
+
+msgid "x_curriculum_progress"
+msgstr "课程进度"
+
+msgid "x_advanced"
+msgstr "进阶"
+
+msgid "x_senior"
+msgstr "高级"
+
+msgid "x_basics_nbsp"
+msgstr "基 础"
+
+msgid "x_advanced_nbsp"
+msgstr "进 阶"
+
+msgid "x_senior_nbsp"
+msgstr "高 级"
+
+msgid "x_required"
+msgstr "必修"
+
+msgid "x_elective"
+msgstr "选修"
+
+msgid "x_amend_the_team_information"
+msgstr "修改队伍资料"
+
+msgid "x_position"
+msgstr "职位"
+
+msgid "x_advanced_position"
+msgstr "进阶职位"
+
+msgid "x_position_description"
+msgstr "职位描述"
+
+msgid "x_difficulty_level"
+msgstr "难度级别"
+
+msgid "x_management_course"
+msgstr "管理课程"
+
+msgid "x_stage"
+msgstr "阶段"
+
+msgid "x_is_compulsory"
+msgstr "是否必修"
+
+msgid "x_lesson_num"
+msgstr "课时数"
+
+msgid "x_increase_course"
+msgstr "增加课程"
+
+msgid "x_new_vocational_system"
+msgstr "新建职业体系"
+
+msgid "x_edit_professional_system"
+msgstr "编辑职业体系"
+
+msgid "x_choose_advance_position"
+msgstr "请选择进阶职位"
+
+msgid "x_primary"
+msgstr "初级"
+
+msgid "x_intermediate"
+msgstr "中级"
+
+msgid "x_not_edited_system"
+msgstr "本职业系统内置不予编辑"
+
+msgid "x_not_deleted_system"
+msgstr "存在系统内置职业无法删除"
+
+msgid "x_not_executed_system"
+msgstr "存在系统内置职业无法执行"
+
+msgid "x_time_error_index_notexist"
+msgstr "时间获取错误，索引不存在"
+
+msgid "x_the_user_using_occupaitons"
+msgstr "用户正在使用该职业"
+
+msgid "x_env_type_base"
+msgstr "基础"
+
+msgid "x_profession_does_not_exist"
+msgstr "选择的职业不存在"
+
+msgid "x_no_occupation_choice"
+msgstr "还未选择职业"
+
+msgid "x_rename"
+msgstr "重命名"
+
+msgid "x_expired_time"
+msgstr "过期时间"
+
+msgid "x_select_expired_time"
+msgstr "过期时间"
+
+msgid "x_status_expired"
+msgstr "已过期"
+
+msgid "x_org"
+msgstr "组织"
+
+msgid "x_last_login_time"
+msgstr "上次登录时间"
+
+msgid "x_last_login_ip"
+msgstr "上次登录地址"
+
+msgid "x_wel_join"
+msgstr "欢迎加入"
+
+msgid "x_invite_join"
+msgstr "邀请你加入"
+
+msgid "x_verify_status"
+msgstr "验证状态"
+
+msgid "x_experimental_time"
+msgstr "实验时间"
+
+msgid "x_class_time"
+msgstr "上课时间"
+
+msgid "x_online_status"
+msgstr "在线状态"
+
+msgid "x_recent_operation"
+msgstr "最近操作"
+
+msgid "x_operation"
+msgstr "操作"
+
+msgid "x_operation_time"
+msgstr "操作时间"
+
+msgid "x_all_roles"
+msgstr "全部角色"
+
+msgid "x_online"
+msgstr "在线"
+
+msgid "x_offline"
+msgstr "离线"
+
+msgid "x_abnormal"
+msgstr "异常"
+
+msgid "x_no_authority"
+msgstr "无权限"
+
+msgid "x_already_in_team"
+msgstr "已存在队伍 {team_name} 中"
+
+msgid "x_please_choose_a_team_to_disband"
+msgstr "请选择一个队伍解散"
+
+msgid "x_you_are_not_in_the_team_and_cannot_dismiss_any_team"
+msgstr "您不存在队伍中，无法解散任何队伍"
+
+msgid "x_can_only_disband_his_team"
+msgstr "只能解散自己的队伍 {team_name}"
+
+msgid "x_only_the_captain_can_disband_the_team"
+msgstr "只有队长才能解散该队伍"
+
+msgid "x_all_teams"
+msgstr "全部队伍"
+
+msgid "x_clear_member"
+msgstr "清除成员"
+
+msgid "x_team_leader_user_does_not_exist"
+msgstr "队长用户不存在"
+
+msgid "x_add_members"
+msgstr "添加成员"
+
+msgid "x_no_guide"
+msgstr "暂无"
+
+msgid "x_please_choose_a_team_leader"
+msgstr "请选择一个队长"
+
+msgid "x_choose_caption"
+msgstr "选择队长"
+
+msgid "x_not_found_user"
+msgstr "没有找到用户"
+
+msgid "x_not_found_team"
+msgstr "没有找到队伍"
+
+msgid "x_has_joined"
+msgstr "已入队"
+
+msgid "x_please_choose_format"
+msgstr "请选择{}"
+
+msgid "x_not_greater_current_time"
+msgstr "成立时间不能大于当前时间"
+
+msgid "x_only_pic_file"
+msgstr "只支持上传图片格式"
+
+msgid "x_this_file_not_allow"
+msgstr "文件类型不被允许"

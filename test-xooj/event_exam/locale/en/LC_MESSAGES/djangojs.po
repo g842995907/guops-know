@@ -1,0 +1,71 @@
+msgid "x_all_have"
+msgstr "All"
+
+msgid "x_full_score"
+msgstr "Full Score"
+
+msgid "x_this_task"
+msgstr "This Task"
+
+msgid "x_user_answer"
+msgstr "User Answer"
+
+msgid "x_exam_wp"
+msgstr "Exam solution"
+
+msgid "x_multiple_choice"
+msgstr "Multiple Choice"
+
+msgid "x_blank_task"
+msgstr "Blank Task"
+
+msgid "x_exam_wp_score"
+msgstr "Solution Score"
+
+msgid "x_dynamic"
+msgstr "Dynamic"
+
+msgid "x_points"
+msgstr "Points"
+
+msgid "x_score_answer"
+msgstr "score of answer"
+
+msgid "x_notice_writeup_score"
+msgstr "Tip: Problem_report_score <= score_test_papers - score_of_answer"
+
+msgid "x_choose_test_paper"
+msgstr "Please choose a test paper"
+
+msgid "x_end_game"
+msgstr "End of the exam"
+
+msgid "x_answered"
+msgstr "Answered"
+
+msgid "x_not_answered"
+msgstr "Not Answered"
+
+msgid "x_current"
+msgstr "Current"
+
+msgid "x_whether_hand_over"
+msgstr "There are still {undone_num} questions not done, whether or not to submit?"
+
+msgid "x_15min_over"
+msgstr "15 minutes from the end of the exam!"
+
+msgid "x_previous_question"
+msgstr "Previous"
+
+msgid "x_already_handed_over"
+msgstr "Already handed over"
+
+msgid "x_did_take_test"
+msgstr "Did not take the test"
+
+msgid "x_tips_next"
+msgstr "Tips: Double click on the next question in the blank space!"
+
+msgid "exam_review"
+msgstr "Exam review"

@@ -1,0 +1,144 @@
+{% load staticfiles %}
+{% load i18n %}
+
+{% load static_v %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    {% get_current_language as LANGUAGE_CODE %}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>XCTF admin</title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+
+    <link rel="stylesheet" href="{% static 'web/css/ojicon.css' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/hplus/css/bootstrap.min14ed.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/hplus/css/bootstrap-table-custom.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/hplus/css/font-awesome.min93e3.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/hplus/css/animate.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/hplus/css/style.min862f.css' %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/bootstrap-table/bootstrap-table.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/hplus/css/plugins/sweetalert/sweetalert.css' %}"/>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/hplus/css/plugins/chosen/chosen.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/summernote/summernote.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static_v 'cms/css/common.css' %}"/>
+
+    <script src="{% url 'javascript-catalog' %}"></script>
+    <script src="{% static 'lib/websocket/reconnecting-websocket.min.js' %}"></script>
+    <script src="{% static 'lib/vue.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/jquery.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/content.min.js' %}"></script>
+
+    <script src="{% static 'lib/bootstrap-table/bootstrap-table.js' %}"></script>
+
+    <script src="{% static 'lib/bootstrap-table/locale/bootstrap-table-zh-CN.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/sweetalert/sweetalert.min.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/chosen/chosen.jquery.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/layer/laydate.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/validate/jquery.validate.min.js' %}"></script>
+
+    <script src="{% static 'lib/jquery/jquery.md5.js' %}"></script>
+    <script src="{% static 'lib/jquery/jquery.form.js' %}"></script>
+    <script src="{% static 'lib/summernote/summernote.js' %}"></script>
+    <script src="{% static 'lib/summernote/lang/summernote-zh-CN.js' %}"></script>
+    <script src="{% static 'lib/artTemplate/template.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static "lib/bootstrap-select/css/bootstrap-select.min.css" %}"/>
+
+    <script src="{% static "lib/bootstrap-select/js/bootstrap-select.js" %}"></script>
+    <script src="{% static 'lib/jquery/jquery.filedrop.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/markdown/bootstrap-markdown.js' %}"></script>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/markdown/bootstrap-markdown.min.css' %}"/>
+    <script src="{% static 'lib/hplus/js/plugins/markdown/marked.js' %}"></script>
+
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <script src="{% static "lib/bootstrap-select/js/i18n/defaults-zh_CN.min.js" %}"></script>
+        <script src="{% static 'lib/hplus/js/plugins/markdown/bootstrap-markdown.zh.js' %}"></script>
+        <script src="{% static 'lib/hplus/js/plugins/validate/messages_zh.min.js' %}"></script>
+    {% else %}
+        <script src="{% static "lib/bootstrap-select/js/i18n/defaults-en_US.js" %}"></script>
+    {% endif %}
+    <script type="text/javascript">
+        var imgUploadUrl = "{% url 'common_cms:common_upload_image' %}";
+        var logoUploadUrl = "{% url 'common_cms:upload_logo' %}";
+        var markdownUploadUrl = "{% url 'common_cms:common_upload_markdown' %}";
+
+        var LANGUAGE_CODE = '{{ LANGUAGE_CODE }}';
+        var isEn = {% if LANGUAGE_CODE == 'en' %}true{% else %}false{% endif %};
+
+        var BootstrapTableLanguageMap = {
+            'en': 'en',
+            'zh-hans': 'zh-CN',
+        };
+        var BOOTSTRAP_TABLE_LANGUAGE = BootstrapTableLanguageMap[LANGUAGE_CODE];
+        $.extend($.fn.bootstrapTable.defaults, $.fn.bootstrapTable.locales[BOOTSTRAP_TABLE_LANGUAGE]);
+    </script>
+    <script src="{% static_v 'cms/js/utils.js' %}"></script>
+    <script src="{% static_v 'cms/js/form.utils.js' %}"></script>
+    <script src="{% static_v 'cms/js/ajax.csrf.js' %}"></script>
+    <script src="{% static_v 'cms/js/common.js' %}"></script>
+    <script src="{% static_v 'cms/js/constants.js' %}"></script>
+    <script src="{% static_v 'cms/js/sticky.js' %}"></script>
+
+    <style type="text/css">
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    {% block other_css_js %}
+    {% endblock %}
+</head>
+<body class="gray-bg">
+{% include 'cms/js_templates/bootstrap_table.html' %}
+{% include 'cms/js_templates/html_element.html' %}
+
+{% block wrapper %}
+    <div class="wrapper wrapper-content">
+{% endblock %}
+
+<div class="ibox float-e-margins">
+    {% block super_title %}
+        <div class="ibox-title">
+            <h5>{% block title %}XCTF admin{% endblock %}</h5>
+        </div>
+    {% endblock %}
+
+    {% block container %}
+    {% endblock %}
+</div>
+</div>
+{% block modal %}{% endblock %}
+
+{% block bottom_js %}
+{% endblock %}
+</body>
+<script>
+
+    $().ready(function () {
+        $('.selectpicker').selectpicker({
+            style: 'btn-white'
+        });
+
+        var rendererMD = new marked.Renderer();
+        marked.setOptions({
+            renderer: rendererMD,
+            gfm: true,
+            tables: true,
+            breaks: true,
+            pedantic: false,
+            sanitize: false,
+            smartLists: true,
+            smartypants: false
+        });
+    });
+</script>
+</html>

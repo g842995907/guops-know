@@ -1,0 +1,97 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_sys_notice' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_system_configuration:sys_notice_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_system_configuration:cms_api:sys-notice-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-show-refresh="false"
+               data-toolbar-align="center"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+                   data-url="{% url 'cms_system_configuration:cms_api:sys-notice-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true">{% trans 'x_notice_title' %}</th>
+                <th data-field="real_group" data-formatter="groupFormatter">{% trans 'x_publish_object' %}</th>
+                <th data-field="create_time" >{% trans 'x_publish_time' %}</th>
+                <th data-field="creator_username">{% trans 'x_publisher' %}</th>
+                <th data-field="id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_system_configuration:sys_notice_list' %}";
+        var $table = $('#table');
+
+        pageWidgets.registerCheckTableRow($table);
+        var table = bsTableClass($table);
+
+
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            pageSize: 10
+        });
+
+        function groupFormatter(value, row, index) {
+            if (!value){
+                var orgs = [row.faculty_name];
+                if (row.major_name) {
+                    orgs.push(row.major_name);
+                }
+                if (row.classes_name) {
+                    orgs.push(row.classes_name);
+                }
+                var data = '<span style="color: #f7a54a">' + orgs[0] + '</span>' + ' / ' +
+                        '<span style="color: #23c6c8">' + orgs[1] + '</span>' + ' / ' + orgs[2];
+                return data;
+            }else {
+                return row.real_group
+            }
+        }
+
+        function operatorFormatter(value, row, index) {
+            var btns = [
+                {
+                    type: 'link',
+                    class: 'btn-primary',
+                    icon: 'fa-edit',
+                    text: "{% trans 'x_edit' %}",
+                    url: listUrl + value,
+                }
+            ];
+            return bsTable.getOperatorHtml(btns);
+        }
+    </script>
+    <script>
+</script>
+{% endblock %}

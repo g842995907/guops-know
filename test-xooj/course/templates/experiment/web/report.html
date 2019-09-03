@@ -1,0 +1,58 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% trans 'x_saining_training_platform' %}{% endblock %}</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <linK rel="stylesheet" href="{% static 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/common.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/default.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/ojicon.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-markdown.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-table.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/toastr.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/task.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'web/summernote/summernote.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <script src="{% static 'web/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static "web/js/ajax.csrf.js" %}"></script>
+    <script src="{% static 'web/vue/vue.min.js' %}"></script>
+    <script src="{% static 'web/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'web/js/bootstrap-table.js' %}"></script>
+    <script src="{% static 'web/js/bootstrap-markdown.js' %}"></script>
+    {% get_current_language as LANGUAGE_CODE %}
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <script src="{% static 'web/js/bootstrap-table-zh-CN.js' %}"></script>
+    {% endif %}
+    <script src="{% static 'web/js/toastr.min.js' %}"></script>
+    <script src="{% static 'web/js/utils.js' %}"></script>
+    <script src="{% static 'web/js/error.message.js' %}"></script>
+    <script src="{% static 'web/js/base.js' %}"></script>
+    <script src="{% static 'web/js/common.js' %}"></script>
+    <script src="{% static 'web/js/echarts.min.js' %}"></script>
+    <script src="{% static 'web/summernote/summernote.js' %}"></script>
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+        <script src="{% static 'web/summernote/lang/summernote-zh-CN.js' %}"></script>
+    {% endif %}
+</head>
+<body>
+    <div class='container' style="margin-top: 40px;">
+        <h3 class="borders pad20B clearfix">
+            <span class="font18" id="question-number">{% trans "x_experimental_report" %}</span>
+        </h3>
+        {% include "web/mynote.html" %}
+    </div>
+
+{% include "web/message_modal.html" %}
+
+<script type="text/javascript">
+$(function () {
+    init_course_note("{{ lesson_hash }}");
+});
+</script>
+
+</body>

@@ -1,0 +1,170 @@
+msgid "x_theory_course"
+msgstr "Course"
+
+msgid "x_occupational_system"
+msgstr "Occupation"
+
+msgid "x_choose_career_goal"
+msgstr "Choosing a career goal"
+
+msgid "x_choose_career"
+msgstr "Please choose a career"
+
+msgid "x_unable_choose_numbers"
+msgstr "Unable to choose a number of careers"
+
+msgid "x_career_has_chosen"
+msgstr "The career has been chosen, please rechoose the career"
+
+msgid "x_occupation_name"
+msgstr "Occupation Name"
+
+msgid "x_occupation_profile"
+msgstr "Occupation Profile"
+
+msgid "x_occupation_class_hour"
+msgstr "Occupation Class Hour"
+
+msgid "x_revising_personal_data"
+msgstr "Profile Edit"
+
+msgid "x_door"
+msgstr "Courses"
+
+msgid "x_learning_courses"
+msgstr "Learning Courses"
+
+msgid "x_hour"
+msgstr "Hours"
+
+msgid "x_rankings"
+msgstr "Ranking"
+
+msgid "x_practice_scoring"
+msgstr "Practice Scoring"
+
+msgid "x_practice_ranking"
+msgstr "Practice Ranking"
+
+msgid "x_personal_signature"
+msgstr "Personal Signature"
+
+msgid "x_my_question"
+msgstr "My Question"
+
+msgid "x_my_reply"
+msgstr "My Reply"
+
+msgid "x_skills_six_dimensions"
+msgstr "Skills Six Dimensions"
+
+msgid "x_learning_competition_records"
+msgstr "Learning/Competition Records"
+
+msgid "x_task_schedule"
+msgstr "Task Schedule"
+
+msgid "x_changing_career_goals"
+msgstr "Changing Career Goals"
+
+msgid "x_course_name"
+msgstr "Course Name"
+
+msgid "x_curriculum_progress"
+msgstr "Curriculum progress"
+
+msgid "x_advanced"
+msgstr "Advanced"
+
+msgid "x_senior"
+msgstr "Senior"
+
+msgid "x_basics_nbsp"
+msgstr "Base"
+
+msgid "x_advanced_nbsp"
+msgstr "Advanced "
+
+msgid "x_senior_nbsp"
+msgstr "Senior"
+
+msgid "x_required"
+msgstr "Required"
+
+msgid "x_elective"
+msgstr "Elective"
+
+msgid "x_amend_the_team_information"
+msgstr "Amend the team information"
+
+msgid "x_position"
+msgstr "Occupation"
+
+msgid "x_advanced_position"
+msgstr "Advanced Position"
+
+msgid "x_position_description"
+msgstr "Occupation Description"
+
+msgid "x_difficulty_level"
+msgstr "Difficulty Level"
+
+msgid "x_management_course"
+msgstr "Management Course"
+
+msgid "x_lesson_num"
+msgstr "Total Lesson(s)"
+
+msgid "x_stage"
+msgstr "Stage"
+
+msgid "x_is_compulsory"
+msgstr "Is Compulsory"
+
+msgid "x_increase_course"
+msgstr "Increase The course"
+
+msgid "x_new_vocational_system"
+msgstr "New Vocational System"
+
+msgid "x_edit_professional_system"
+msgstr "Professional system of editing"
+
+msgid "x_choose_advance_position"
+msgstr "Choose Advanced Occupation"
+
+msgid "x_primary"
+msgstr "primary"
+
+msgid "x_intermediate"
+msgstr "intermediate"
+
+msgid "x_not_edited_system"
+msgstr "Not edited in this professional system"
+
+msgid "x_not_deleted_system"
+msgstr "The existing system built in the system can't be deleted"
+
+msgid "x_not_executed_system"
+msgstr "The existing system built-in career cannot be executed"
+
+msgid "x_time_error_index_notexist"
+msgstr "Time gets error, index does not exist"
+
+msgid "x_the_user_using_occupaitons"
+msgstr "The user is using occupations"
+
+msgid "x_env_type_base"
+msgstr "Base"
+
+msgid "x_profession_does_not_exist"
+msgstr "chosen profession does not exist"
+
+msgid "x_no_occupation_choice"
+msgstr "No Occupation Choice"
+
+msgid "x_score_s"
+msgstr "Scores"
+
+msgid "x_repeat_addition"
+msgstr "Tips: Repeat addition"

@@ -1,0 +1,1212 @@
+@charset "UTF-8";
+@import url(ojicon.css);
+/* User-defined styles*/
+/*
+	@if $theme == "orange" {
+
+	} @else if $theme == "green" {
+
+	} @else {
+
+	}
+*/
+/* line 41, common.scss */
+a, a:link, a:visited, a:hover, a:active {
+  text-decoration: none !important;
+}
+
+@media (max-width: 767px) {
+  /* line 46, common.scss */
+  .hidden-xs {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+  /* line 52, common.scss */
+  .hidden-sm {
+    display: none !important;
+  }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+  /* line 58, common.scss */
+  .hidden-md {
+    display: none !important;
+  }
+}
+@media (min-width: 1200px) {
+  /* line 64, common.scss */
+  .hidden-lg {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) {
+  /* line 70, common.scss */
+  .container {
+    width: 740px;
+  }
+}
+@media (min-width: 992px) {
+  /* line 76, common.scss */
+  .container {
+    width: 960px;
+  }
+}
+@media (min-width: 1200px) {
+  /* line 82, common.scss */
+  .container {
+    width: 1160px;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 88, common.scss */
+  .container {
+    width: 1160px;
+  }
+}
+@media (min-width: 1900px) {
+  /* line 94, common.scss */
+  .container {
+    width: 1560px;
+  }
+}
+/* line 103, common.scss */
+html, body {
+  min-height: 100%;
+}
+
+/* line 107, common.scss */
+body {
+  background: url("../img/body_bg.jpg") !important;
+  background-attachment: fixed;
+  background-size: 100% 100% !important;
+  font-family: "Microsoft Yahei", "Hiragino Sans GB", Helvetica, "Helvetica Neue", "微软雅黑", Tahoma, Arial, sans-serif, "FontAwesome" !important;
+  color: #b2b6bf;
+}
+
+/* line 115, common.scss */
+.posRelative {
+  position: relative;
+}
+
+/* line 119, common.scss */
+.pad0A {
+  padding: 0 !important;
+}
+
+/* line 123, common.scss */
+.noBoder {
+  border: none !important;
+}
+
+/* line 127, common.scss */
+.layout-color {
+  color: #ccc;
+}
+
+/* line 131, common.scss */
+.font20P {
+  font-size: 20px;
+  color: #ccc;
+}
+
+/* line 136, common.scss */
+.font25P {
+  font-size: 25px !important;
+}
+
+/* line 140, common.scss */
+.font14P {
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* line 145, common.scss */
+.hidden {
+  display: none !important;
+}
+
+/* line 149, common.scss */
+.focus-status {
+  color: #FF9900;
+}
+
+/* line 153, common.scss */
+.vertical-middle {
+  vertical-align: middle;
+}
+
+/* line 157, common.scss */
+.vertical-text-top {
+  vertical-align: text-top;
+}
+
+/* line 162, common.scss */
+.default-bg {
+  background-color: rgba(0, 24, 54, 0.35);
+}
+
+/* line 166, common.scss */
+.hoverC:hover {
+  color: #FF9900 !important;
+}
+
+/* line 170, common.scss */
+.red {
+  color: #FF3333;
+}
+
+/* line 174, common.scss */
+.blue {
+  color: #6699FF;
+}
+
+/* line 178, common.scss */
+.no-radius {
+  border-radius: 0 !important;
+}
+
+/* line 182, common.scss */
+.justify {
+  -webkit-box-pack: justify;
+  display: -webkit-box;
+  -webkit-box-align: center;
+}
+
+/*nav start*/
+@media screen and (max-width: 1200px) {
+  /* line 199, common.scss */
+  nav {
+    zoom: 0.85;
+    -moz-transform: scaleY(0.85);
+    -moz-transform-origin: top left;
+  }
+
+  /* line 204, common.scss */
+  .navbar-default {
+    height: 70px !important;
+  }
+}
+/* line 210, common.scss */
+div.nav-box .navbar-default {
+  height: 62px;
+}
+/* line 214, common.scss */
+div.nav-box .navbar-brand {
+  padding: 8px 15px;
+}
+/* line 216, common.scss */
+div.nav-box .navbar-brand img {
+  zoom: 0.7;
+  -moz-transform: scale(0.7);
+  -moz-transform-origin: top left;
+}
+/* line 223, common.scss */
+div.nav-box .navbar-default {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: transparent transparent #3b5f83 transparent;
+  border-width: 1px;
+  border-style: solid;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+/* line 232, common.scss */
+div.nav-box .navbar-default .navbar-nav > .open > a,
+div.nav-box .navbar-default .navbar-nav > .open > a:focus,
+div.nav-box .navbar-default .navbar-nav > .open > a:hover,
+div.nav-box .nav .open > a, div.nav-box .nav .open > a:focus,
+div.nav-box .nav .open > a:hover {
+  background: transparent;
+}
+/* line 239, common.scss */
+div.nav-box .operate-btn {
+  display: box;
+  display: -moz-box;
+  display: -webkit-box;
+}
+/* line 243, common.scss */
+div.nav-box .operate-btn > li {
+  height: 60px;
+}
+/* line 246, common.scss */
+div.nav-box .operate-btn > li a {
+  display: inline-block;
+}
+/* line 249, common.scss */
+div.nav-box .operate-btn li:first-child {
+  -moz-box-flex: 1;
+  -webkit-box-flex: 1;
+  box-flex: 1;
+}
+/* line 254, common.scss */
+div.nav-box .operate-btn li:last-child {
+  -moz-box-flex: 2;
+  -webkit-box-flex: 2;
+  box-flex: 2;
+}
+/* line 260, common.scss */
+div.nav-box .operate-btn .nav-msg .tips {
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  display: inline-block;
+  background-color: #e50211;
+  border-radius: 50%;
+  top: 6px;
+  right: 0;
+  font-size: 12px;
+}
+/* line 272, common.scss */
+div.nav-box .operate-btn .nav-msg-dropdown {
+  background: rgba(17, 26, 26, 0.9);
+  min-width: 330px;
+  top: 61px;
+  right: 0px;
+  border: 1px solid #0d141a;
+  display: none;
+}
+/* line 279, common.scss */
+div.nav-box .operate-btn .nav-msg-dropdown li {
+  min-height: 60px;
+  text-align: left;
+  border-bottom: 1px solid #325271;
+}
+/* line 283, common.scss */
+div.nav-box .operate-btn .nav-msg-dropdown li .time {
+  color: #7ea9b2;
+}
+/* line 286, common.scss */
+div.nav-box .operate-btn .nav-msg-dropdown li .deal-btn {
+  width: 64px;
+  height: 24px;
+  display: inline-block;
+}
+/* line 291, common.scss */
+div.nav-box .operate-btn .nav-msg-dropdown li .agree {
+  background-color: #5897d7;
+  border: 1px solid #6ea9e6;
+}
+/* line 295, common.scss */
+div.nav-box .operate-btn .nav-msg-dropdown li .refuse {
+  background-color: #fe0100;
+  border: 1px solid #ff2423;
+}
+/* line 300, common.scss */
+div.nav-box .operate-btn .nav-msg-dropdown li:last-child {
+  border-bottom: none;
+}
+/* line 305, common.scss */
+div.nav-box .head-dropdown-menu {
+  background: rgba(0, 0, 0, 0.5);
+  min-width: 140px;
+  margin-top: 1px;
+  letter-spacing: 1px;
+}
+/* line 311, common.scss */
+div.nav-box .head-dropdown-menu > li:nth-of-type(1) {
+  margin-top: 11px;
+}
+/* line 314, common.scss */
+div.nav-box .head-dropdown-menu > li {
+  text-align: center;
+  margin-bottom: 6px;
+  float: initial;
+}
+/* line 319, common.scss */
+div.nav-box .head-dropdown-menu > li > a {
+  color: #ccc;
+}
+/* line 323, common.scss */
+div.nav-box .head-dropdown-menu > li > a:hover,
+div.nav-box .head-dropdown-menu > li > a:focus {
+  text-decoration: none;
+  color: #FF9900;
+  background-color: transparent;
+}
+/* line 330, common.scss */
+div.nav-box .nav > li > a {
+  font-size: 16px;
+}
+/* line 333, common.scss */
+div.nav-box .navbar-default .navbar-nav > li > a {
+  color: white;
+}
+/* line 337, common.scss */
+div.nav-box .navbar-default .navbar-nav > li > a {
+  transition: 0.5s;
+}
+/* line 341, common.scss */
+div.nav-box .navbar-default .navbar-nav > li > a,
+div.nav-box .navbar-default .navbar-nav > li > a:link,
+div.nav-box .navbar-default .navbar-nav > li > a:visited {
+  color: #fff;
+}
+/* line 347, common.scss */
+div.nav-box .navbar-nav > li > a:active {
+  color: #ccc;
+}
+
+/* line 353, common.scss */
+.navbar-brand > img {
+  height: 60px;
+}
+
+/* line 358, common.scss */
+.logo-bg {
+  display: inline-block;
+  background: rgba(41, 67, 102, 0.8);
+  padding: 5px;
+  border-radius: 50%;
+}
+
+/* line 365, common.scss */
+#title-name {
+  display: -moz-box;
+  display: -webkit-box;
+  display: box;
+}
+/* line 369, common.scss */
+#title-name li {
+  -moz-box-flex: 1;
+  -webkit-box-flex: 1;
+  box-flex: 1;
+}
+
+/* line 376, common.scss */
+.titles {
+  width: 100%;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+/* line 386, common.scss */
+.bg {
+  width: 100%;
+  height: 68px;
+  background: rgba(0, 24, 54, 0.35);
+  overflow: hidden;
+  z-index: 555;
+  transition: 0.1s;
+  display: none;
+}
+
+/* line 396, common.scss */
+.coat {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+/* line 404, common.scss */
+.list {
+  width: 100%;
+  position: absolute;
+  top: 2px;
+  opacity: 0;
+}
+
+/* line 411, common.scss */
+.list li {
+  padding: 10px;
+}
+
+/* line 415, common.scss */
+.second {
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* line 420, common.scss */
+.second a {
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  text-align: center;
+  outline: none !important;
+  color: #b2b6bf;
+}
+
+/* line 429, common.scss */
+.secondName {
+  padding: 0px 10px;
+  display: inline-block;
+  font-size: 14px;
+}
+
+/* line 435, common.scss */
+#event-nav > li > a {
+  padding: 19px 10px;
+}
+
+/*nav end*/
+/* line 442, common.scss */
+.pagination > .active > a,
+.pagination > .active > a:focus,
+.pagination > .active > a:hover,
+.pagination > .active > span,
+.pagination > .active > span:focus,
+.pagination > .active > span:hover {
+  color: #ccc;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+/* line 453, common.scss */
+.pagination > li > a,
+.pagination > li > span {
+  position: relative;
+  float: left;
+  margin-left: -1px;
+  line-height: 1.42857143;
+  color: #ccc;
+  text-decoration: none;
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* line 468, common.scss */
+.pagination li a {
+  display: inline-block;
+  line-height: 16px !important;
+}
+
+/* line 475, common.scss */
+.pagination li.active a,
+.pagination li.active a:hover {
+  color: #FF9900;
+  cursor: pointer;
+}
+
+/* line 481, common.scss */
+.pagination li:nth-of-type(1) a {
+  background: url("../img/pre.png") no-repeat center;
+  color: transparent !important;
+  width: 24px;
+  height: 28px;
+}
+
+.pageBox .pageNum{
+  width: 38px;
+  border-radius: 5px;
+  color: white;
+  border: 1px solid #1d73ad;
+  text-align: center;
+  margin-right: 5px;
+  margin-left: 5px;
+  outline: none;
+  background-color: transparent;
+}
+.pageBox .pageBtn{
+  color: white;
+  margin-left: 5px;
+  background-color: #1d73ad;
+  border: none;
+  width: 44px;
+  border-radius: 2px;
+}
+.pageBox .pageBtn:hover{
+  background-color: #1567AC;
+}
+.pageBox{
+  width:260px;
+  line-height:23px;
+  margin-left:20px;
+  display:flex;
+  margin-bottom: 6px;
+  float:right;
+}
+.paginationBox{
+  text-align:center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* line 488, common.scss */
+.pagination li:nth-of-type(1) a:hover {
+  background: url("../img/pre-hover.png") no-repeat center;
+  transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  /* IE 9 */
+  -moz-transform: rotate(180deg);
+  /* Firefox */
+  -webkit-transform: rotate(180deg);
+  /* Safari 和 Chrome */
+  -o-transform: rotate(180deg);
+  /* Opera */
+  color: transparent !important;
+}
+
+/* line 499, common.scss */
+.pagination li:last-child > a {
+  background: url("../img/pre.png") no-repeat center;
+  color: transparent !important;
+  transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  /* IE 9 */
+  -moz-transform: rotate(180deg);
+  /* Firefox */
+  -webkit-transform: rotate(180deg);
+  /* Safari 和 Chrome */
+  -o-transform: rotate(180deg);
+  /* Opera */
+  width: 24px;
+  height: 28px;
+}
+
+/* line 511, common.scss */
+.pagination li:last-child > a:hover {
+  background: url("../img/pre-hover.png") no-repeat center;
+  transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  /* IE 9 */
+  -moz-transform: rotate(0deg);
+  /* Firefox */
+  -webkit-transform: rotate(0deg);
+  /* Safari 和 Chrome */
+  -o-transform: rotate(0deg);
+  /* Opera */
+  color: transparent !important;
+}
+
+/* line 521, common.scss */
+.pagination > li > a:hover,
+.pagination > li > span:hover {
+  background-color: transparent;
+  color: white;
+}
+
+/* line 527, common.scss */
+.pagination > .disabled > a,
+.pagination > .disabled > a:focus,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > span,
+.pagination > .disabled > span:focus,
+.pagination > .disabled > span:hover {
+  background-color: transparent !important;
+}
+
+/* line 537, common.scss */
+.scene-common-msg {
+  position: fixed;
+  right: 45px;
+  bottom: 30px;
+  width: 300px;
+  background-color: rgba(0, 24, 54, 0.85);
+}
+
+/* line 545, common.scss */
+.scene-common-msg h2 {
+  padding: 10px 0 10px 14px;
+  margin: 0px;
+  font-size: 18px;
+}
+
+/* line 551, common.scss */
+.scene-con {
+  margin: 20px 10px 10px 10px;
+  padding-bottom: 10px;
+}
+
+/* line 556, common.scss */
+.scenc-title i {
+  font-size: 35px;
+  margin-top: 5px;
+  color: #fff;
+  margin-right: 5px;
+}
+
+/* line 563, common.scss */
+.scenc-title div {
+  margin-left: 4px;
+}
+
+/* line 568, common.scss */
+.scenc-title p {
+  font-size: 16px;
+}
+
+/* line 572, common.scss */
+.scene-btn-warp {
+  padding: 15px 5px 0px 5px;
+}
+
+/* line 576, common.scss */
+.scene-close {
+  cursor: pointer;
+}
+
+/* line 580, common.scss */
+.scene-back {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* line 588, common.scss */
+.scene-con-border-btm {
+  border-bottom: 1px solid #48494d;
+}
+
+/* line 593, common.scss */
+.table-warp .fixed-table-container,
+.table-warp .fixed-table-container,
+.fixed-table-container {
+  border-color: transparent !important;
+}
+
+/* line 599, common.scss */
+.bootstrap-table .table > thead > tr > th {
+  border-bottom: none !important;
+}
+
+/* line 603, common.scss */
+.bootstrap-table .table > tbody > tr:hover {
+  background-color: transparent !important;
+}
+
+/* line 607, common.scss */
+.fixed-table-loading {
+  top: -22px !important;
+  background-color: transparent !important;
+}
+
+/* line 614, common.scss */
+.modal {
+  top: 50%;
+  margin-top: -200px;
+}
+
+/* line 620, common.scss */
+.common-msg-modal .modal-content {
+  background: rgba(19, 37, 60, 0.9);
+}
+/* line 623, common.scss */
+.common-msg-modal .modal-header .close {
+  background: url("../img/apply_close.png");
+  width: 16px;
+  height: 16px;
+  opacity: 1;
+}
+/* line 629, common.scss */
+.common-msg-modal .modal-header {
+  border-bottom: 1px solid #293e66;
+}
+/* line 632, common.scss */
+.common-msg-modal .modal-body {
+  min-height: 141px;
+}
+/* line 635, common.scss */
+.common-msg-modal .modal-footer {
+  border-top: 1px solid #293e66;
+}
+/* line 638, common.scss */
+.common-msg-modal .wrong-msg:before {
+  content: url("../img/wrong_icon.png");
+  vertical-align: -webkit-baseline-middle;
+  margin-right: 10px;
+}
+/* line 643, common.scss */
+.common-msg-modal .hint-msg:before {
+  content: url("../img/hint_icon.png");
+  vertical-align: -webkit-baseline-middle;
+  margin-right: 10px;
+}
+/* line 648, common.scss */
+.common-msg-modal .deal-btn {
+  display: box;
+  display: -webkit-box;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+}
+/* line 654, common.scss */
+.common-msg-modal button {
+  width: 140px;
+  height: 30px;
+  line-height: 30px;
+  color: #fff;
+  border: none;
+}
+/* line 661, common.scss */
+.common-msg-modal button.btn-cancel {
+  background-color: #365074;
+  margin-left: 20px;
+}
+
+/* line 670, common.scss */
+#change-pwd-modal form .modal-body label {
+  text-align: right;
+}
+/* line 673, common.scss */
+#change-pwd-modal form .modal-body input {
+  border: none;
+}
+
+/* line 681, common.scss */
+.note-editor, .panel-body,
+.note-toolbar,
+.note-statusbar,
+.note-icon-bar,
+.note-resizebar {
+  background-color: rgba(153, 153, 153, 0.2) !important;
+}
+
+/* line 689, common.scss */
+.note-btn {
+  background-color: rgba(153, 153, 153, 0.75) !important;
+  border-color: #ccc;
+  color: #333;
+  height: 32px;
+}
+
+/* line 696, common.scss */
+.note-editing-area {
+  min-height: 300px;
+}
+
+/* line 700, common.scss */
+.note-editor.note-frame .note-editing-area .note-editable {
+  color: #ccc !important;
+}
+
+/* line 705, common.scss */
+.note-editor.note-frame .modal-content {
+  background: rgba(19, 37, 60, 0.9);
+}
+/* line 708, common.scss */
+.note-editor.note-frame .modal-header .close {
+  background: url("../img/apply_close.png");
+  width: 16px;
+  height: 16px;
+  opacity: 1;
+}
+/* line 714, common.scss */
+.note-editor.note-frame .modal-header {
+  border-bottom: 1px solid #293e66;
+}
+/* line 717, common.scss */
+.note-editor.note-frame .modal-body {
+  min-height: 141px;
+}
+/* line 719, common.scss */
+.note-editor.note-frame .modal-body input {
+  border: none;
+  background-color: rgba(0, 24, 54, 0.35);
+}
+/* line 724, common.scss */
+.note-editor.note-frame .modal-footer {
+  border-top: 1px solid #293e66;
+}
+
+@keyframes hover-color {
+  from {
+    border-color: #c0c0c0;
+  }
+  to {
+    border-color: #FF9900;
+  }
+}
+/* line 741, common.scss */
+input[type=radio],
+input[type=checkbox] {
+  position: absolute;
+  display: none;
+}
+
+/* line 747, common.scss */
+input[type=radio][disabled],
+input[type=checkbox][disabled] {
+  cursor: not-allowed;
+}
+
+/* line 752, common.scss */
+input[type=radio] + label,
+input[type=checkbox] + label {
+  position: relative;
+  display: inline-block;
+  padding-left: 30px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* line 761, common.scss */
+input[type=radio] + label:hover:before,
+input[type=checkbox] + label:hover:before {
+  animation-duration: 0.4s;
+  animation-fill-mode: both;
+  animation-name: hover-color;
+}
+
+/* line 768, common.scss */
+input[type=radio] + label:before,
+input[type=checkbox] + label:before {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  content: '';
+  border: 1px solid #c0c0c0;
+}
+
+/* line 780, common.scss */
+input[type=radio] + label:after,
+input[type=checkbox] + label:after {
+  position: absolute;
+  display: none;
+  content: '';
+}
+
+/* line 787, common.scss */
+input[type=radio][disabled] + label,
+input[type=checkbox][disabled] + label {
+  cursor: not-allowed;
+  color: #e4e4e4;
+}
+
+/* line 793, common.scss */
+input[type=radio][disabled] + label:hover, input[type=radio][disabled] + label:before, input[type=radio][disabled] + label:after,
+input[type=checkbox][disabled] + label:hover,
+input[type=checkbox][disabled] + label:before,
+input[type=checkbox][disabled] + label:after {
+  cursor: not-allowed;
+}
+
+/* line 800, common.scss */
+input[type=radio][disabled] + label:hover:before,
+input[type=checkbox][disabled] + label:hover:before {
+  border: 1px solid #FF9900;
+  animation-name: none;
+}
+
+/* line 806, common.scss */
+input[type=radio][disabled] + label:before,
+input[type=checkbox][disabled] + label:before {
+  border-color: #e4e4e4;
+}
+
+/* line 811, common.scss */
+input[type=radio]:checked + label:before,
+input[type=checkbox]:checked + label:before {
+  animation-name: none;
+}
+
+/* line 816, common.scss */
+input[type=radio]:checked + label:after,
+input[type=checkbox]:checked + label:after {
+  display: block;
+}
+
+/* line 821, common.scss */
+input[type=radio] + label:before {
+  border-radius: 50%;
+}
+
+/* line 825, common.scss */
+input[type=radio] + label:after {
+  top: 10.6px;
+  left: 3.2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #FF9900;
+}
+
+/* line 834, common.scss */
+input[type=radio]:checked + label:before {
+  border: 1px solid #FF9900;
+}
+
+/* line 838, common.scss */
+input[type=radio]:checked[disabled] + label:before {
+  border: 1px solid #c9e2f9;
+}
+
+/* line 842, common.scss */
+input[type=radio]:checked[disabled] + label:after {
+  background: #c9e2f9;
+}
+
+/* line 846, common.scss */
+input[type=checkbox] + label:before {
+  border-radius: 3px;
+}
+
+/* line 850, common.scss */
+input[type=checkbox] + label:after {
+  top: 8px;
+  left: 4px;
+  box-sizing: border-box;
+  width: 6px;
+  height: 12px;
+  transform: rotate(45deg);
+  border-width: 2px;
+  border-style: solid;
+  border-color: #fff;
+  border-top: 0;
+  border-left: 0;
+}
+
+/* line 864, common.scss */
+input[type=checkbox]:checked + label:before {
+  border: #FF9900;
+  background: #FF9900;
+}
+
+/* line 869, common.scss */
+input[type=checkbox]:checked[disabled] + label:before {
+  border: #a5a5a5;
+  background: #a5a5a5;
+}
+
+/* line 875, common.scss */
+.larger-img {
+  transition: .5s;
+}
+
+/* line 879, common.scss */
+.larger-img:hover {
+  transform: scale(1.1);
+}
+
+/* line 884, common.scss */
+.mask-layer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 55;
+  background-color: rgba(144, 142, 142, 0.6);
+  cursor: not-allowed;
+  text-align: center;
+  line-height: 120px;
+  display: none;
+}
+
+/* line 899, common.scss */
+.comment-btn {
+  width: 100px;
+  height: 35px;
+  border: none;
+}
+
+/* line 905, common.scss */
+.border-top {
+  border-top: 1px solid #315179;
+}
+
+/* line 909, common.scss */
+.comment-btn-bg {
+  background: #284c7a;
+}
+
+/* line 913, common.scss */
+.submit-comment-btn {
+  width: 90px;
+  height: 30px;
+  outline: none;
+}
+
+/* line 919, common.scss */
+.comment-clr {
+  color: #6693c0;
+}
+
+/* line 923, common.scss */
+.font-bold {
+  font-weight: 600;
+}
+
+/* line 927, common.scss */
+.comment-radius {
+  border-radius: 3px !important;
+}
+
+/* line 931, common.scss */
+.reply {
+  display: none;
+}
+
+/* line 935, common.scss */
+.reply-area::placeholder {
+  color: #6693c0;
+}
+
+/* line 939, common.scss */
+.goComment {
+  border-radius: 5px;
+}
+
+/* line 943, common.scss */
+.goComment:before {
+  content: '';
+  border-top: 0;
+  border-bottom: 10px solid rgba(0, 24, 54, 0.35);
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  position: absolute;
+  left: 30px;
+  top: -10px;
+}
+
+/* line 955, common.scss */
+.follow-up {
+  width: -moz-calc(100% - 45px - 20px * 2 - 10px);
+  width: -webkit-calc(100% - 45px - 20px * 2 - 10px);
+  width: calc(100% - 45px - 20px * 2 - 10px);
+  width: 90%;
+}
+
+/* line 962, common.scss */
+.follow-up-img {
+  width: 45px;
+  height: 45px;
+}
+
+/* line 967, common.scss */
+.follow-up-comment-warp {
+  display: none;
+}
+
+/* line 971, common.scss */
+.follow-up-comment {
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid !important;
+}
+
+/* line 987, common.scss */
+.follow-up-comment:focus {
+  outline: none;
+  border: none;
+}
+
+@font-face {
+  font-family: 'navLogoFont';
+  src: url("../fonts/deepdark.ttf");
+}
+/* line 1002, common.scss */
+.nav-logo-font {
+  line-height: 70px;
+  text-shadow: 0 0 10px #15ddef;
+  font-family: 'navLogoFont';
+  font-size: 28px;
+}
+
+/* line 1010, common.scss */
+.page-info {
+  background-color: rgba(2, 51, 68, 0.46);
+  color: #00c5cc;
+  height: 120px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* line 1017, common.scss */
+.page-info div span {
+  display: inline-block;
+}
+/* line 1020, common.scss */
+.page-info div:nth-of-type(1) span {
+  background: url("../img/icon_team_bg.png") no-repeat center;
+  width: 189px;
+  height: 62px;
+  line-height: 62px;
+}
+/* line 1026, common.scss */
+.page-info div:nth-of-type(3) span {
+  background: url("../img/icon_rank_bg.png") no-repeat center;
+  width: 66px;
+  height: 66px;
+  line-height: 66px;
+}
+
+/* 定义一个走马灯动画 */
+@-webkit-keyframes marquee {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
+}
+@-moz-keyframes marquee {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
+}
+@-ms-keyframes marquee {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
+}
+@-o-keyframes marquee {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
+}
+@keyframes marquee {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
+}
+/* line 1081, common.scss */
+.marquee {
+  overflow: hidden;
+  -webkit-animation: marquee 5200ms linear infinite;
+  -moz-animation: marquee 5200ms linear infinite;
+  -ms-animation: marquee 5200ms linear infinite;
+  -o-animation: marquee 5200ms linear infinite;
+  animation: marquee 5200ms linear infinite;
+}
+
+/* line 1090, common.scss */
+.default-logo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: url("../img/left_logo.png") no-repeat center;
+  width: 20px;
+  height: 20px;
+  background-size: 100% 100%;
+}
+
+/* line 1101, common.scss */
+.prev-next {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 0;
+  color: #fff;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 1px solid #1fa0fb;
+  vertical-align: bottom;
+}

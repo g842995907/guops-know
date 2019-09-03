@@ -1,0 +1,258 @@
+
+.logoin-warpper {
+    width: 50%;
+    position: fixed;
+    top: 50%;
+    margin-top: -275px;
+    width: 100%;
+}
+
+.sn_oj {
+    bottom: 100px;
+}
+
+@media screen and (max-width: 1366px) {
+    .logoin-warpper {
+        margin-top: -235px;
+    }
+
+    .sn_oj {
+        bottom: 50px;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .logoin-warpper {
+        margin-top: -225px;
+    }
+}
+
+.browser {
+    color: red;
+    text-align: center;
+}
+
+.login-box {
+    width: 410px;
+}
+.logoMain {
+    background: rgba(60, 94, 155, .5);
+    border: 1px solid #4c80ba;
+    padding: 45px 40px 0 40px;
+}
+
+@media screen and (max-width: 1366px) {
+    .login-box > .logoMain, .login-box > .browser {
+        width: 90%;
+    }
+
+    .register-box {
+        zoom: 0.8;
+    }
+}
+
+.oj_banner {
+    width: 50%;
+}
+
+.titleH1 {
+    padding: 30px 40px;
+    cursor: default;
+}
+
+.write, .write-login {
+    line-height: 44px;
+    height: 44px;
+    background: #fff;
+}
+
+.person {
+    padding-top: 22px;
+}
+
+.human , .human-login{
+    background: url(../img/yh.png) no-repeat center center;
+
+}
+
+.suo,.suo-login {
+    background: url(../img/mm.png) no-repeat center center;
+}
+
+.human, .suo,.human-login,.suo-login{
+    margin-top: 10px;
+}
+
+@media screen and (max-width: 1366px) {
+    .write-login {
+        line-height: 35px;
+        height: 35px;
+        background: #fff;
+    }
+
+    .human-login,.suo-login {
+        margin-top: 5px;
+    }
+}
+
+#username, #password {
+    border: none;
+    /*height: 100%;*/
+    border-left: 1px solid #666666;
+    padding-left: 10px;
+    outline: none;
+    background: transparent;
+    height: 40px;
+    width: 84.5%;
+}
+@media screen and (max-width: 1366px) {
+    #username, #password {
+    border: none;
+    /*height: 100%;*/
+    border-left: 1px solid #666666;
+    padding-left: 10px;
+    outline: none;
+    background: transparent;
+    line-height: 30px;
+    height: 30px;
+    width: 84.5%;
+}
+}
+
+.clickLogin {
+    width: 100%;
+    background: #5996d7;
+    border: 1px solid #6ea8e7;
+    border-radius: 0 !important;
+}
+
+.sign {
+    text-decoration: underline;
+}
+
+.mar {
+    margin-bottom: 60px;
+}
+
+.language {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    cursor: pointer;
+}
+
+.line {
+    width: 1px;
+    height: 12px;
+    margin-left: 12px;
+    margin-right: 12px;
+    background: white;
+    vertical-align: middle;
+}
+
+.animationBg {
+    width: 30%;
+    height: 30%;
+    position: absolute;
+    left: 10%;
+    top: 20%;
+}
+
+.sn_oj {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    color: white;
+    text-align: center;
+}
+
+input[type=checkbox], input[type=radio] {
+    margin: 0 !important;
+}
+
+.oj_banner {
+    transform-style: preserve-3d;
+    perspective: 500px;
+    perspective-origin: center bottom;
+}
+
+@media (max-width: 1152px) {
+    .mar {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .oj_banner {
+        display: none;
+    }
+
+    .sn_oj {
+        bottom: 20px;
+    }
+
+}
+
+@media (min-width: 1000px) {
+    .oj_banner {
+        display: block;
+    }
+
+}
+
+#stats {
+    display: none;
+}
+
+/*授权页*/
+.authorization {
+    width: 100%;
+    top: 18%;
+    position: fixed
+}
+
+.authoriztion-info {
+
+}
+
+.authoriztion-info {
+    margin-left: 5%;
+    margin-top: -25px;
+}
+
+.authoriztion-info p:nth-child(1) {
+    color: #ff9217;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.authoriztion-info p:nth-child(2) {
+    color: #3c5f99;
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.authoriztion-info p:nth-child(3) {
+    color: #fff;
+    font-size: 16px;
+    margin-top: 35px;
+}
+
+.authoriztion-info button {
+    background-color: #f88601;
+    border: none;
+    color: #fff;
+    width: 245px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 16px;
+    margin-top: 35px;
+    outline: none;
+}
+
+.authoriztion-info input[type=file] {
+    display: none;
+}

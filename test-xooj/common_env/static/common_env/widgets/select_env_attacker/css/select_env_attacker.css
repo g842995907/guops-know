@@ -1,0 +1,15 @@
+[data-widget-id=select-env-attacker] .filter{
+    margin-bottom: 10px;
+}
+
+[data-widget-id=select-env-attacker] [data-filter-name=type]{
+    margin: auto 0 auto 8px;
+}
+
+[data-widget-id=select-env-attacker] [data-filter-name=search]{
+    vertical-align: top;
+    margin-bottom: 0;
+}
+[data-widget-id=select-env-attacker] [data-filter-name=search]+a{
+    margin-bottom: 0;
+}

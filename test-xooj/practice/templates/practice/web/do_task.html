@@ -1,0 +1,179 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/course.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/cube.grid.css' %}">
+    <script src="{% static 'practice/js/practice.js' %}"></script>
+    <style>
+        .mrg30T {
+            margin-top: 0px !important;
+        }
+        .course-label {
+            font-size: 0;
+        }
+        .course-label li {
+            display: inline-block;
+            font-size:14px;
+            padding-right: 8px;
+        }
+
+        .course-label li a {
+            height: 22px;
+            line-height: 20px;
+            border-radius:20px;
+            border: 1px solid #FF9900;
+            display: block;
+            color: #FF9900;
+            padding-left: 12px;
+            padding-right: 12px;
+            cursor: pointer;
+        }
+    .prev-next {
+        width: 25px;
+        height: 100px;
+        line-height: 20px;
+        padding-top: 5px;
+        box-sizing: border-box;
+        font-size: 14px;
+        word-wrap: break-word;
+        margin: 0 auto;
+        writing-mode: vertical-lr;
+    }
+    .prew-next-box{
+        position: absolute;
+        right: -36px;
+        top: 20px;
+    }
+    .task-imgbox img {
+        width: 100%;
+        height: 100%;
+    }
+    .skip-info{
+        font-size: 18px;
+        line-height: 30px;
+        {#border: 1px solid #FF9900;#}
+        color: #FF9900;
+        padding: 5px;
+        cursor: pointer;
+    }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <input type="hidden" id="type_id" value="{{ type_id }}">
+    <input type="hidden" id="event_id" value="">
+    <input type="hidden" id="task_hash" value="{{ task_hash }}">
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}"></a>
+            <span></span>
+            <a href=""></a>
+            <span></span>
+            <a href=""></a>
+            <span></span>
+            <a class='active font15'></a>
+        </div>
+        <div class="content pad10T mrg30T" style="position: relative;">
+            <ul class="course-label orangeC mrg10T">
+            {% for tip in knowledges_list %}
+                <li><a>{{ tip }}</a></li>
+            {% endfor %}
+            </ul>
+            <div class="row defaultColor mrg100B oj_table searchNoMargin mrg0A default-bg">
+                <h3 class='borders pad20B pad50L pad50R clearfix'>
+                    <!--<span class='mainColor font18' id="question-number" ></span>-->
+                    <span class='mainColor font18 pull-left' name="task-category"></span>
+                    <span class='font18 pull-left task-imgbox' name="task-title"></span>
+                    {#                    <span class='fr mrg20R'>#}
+                    {#                    <button href="" class='oj_toolDown inLine mainBg font16 ' id="previous"#}
+                    {#                            style="display: none" onclick="goPrevious()">{% trans 'x_previous_question' %}</button>#}
+                    {#                    <button href="" class='oj_toolDown inLine mainBg font16 ' id="next"#}
+                    {#                            style="display: none" onclick="goNext()">{% trans 'x_next_question' %}</button>#}
+                    {#                </span>#}
+                </h3>
+
+                <div class="">
+                    <div class="pad40L lineH50 font16 markdown-wrapper" name="task-content"></div>
+                    <form action="" method="post" class="font14 pad40L pad30B" enctype="" id="options">
+                        {% csrf_token %}
+                    </form>
+                </div>
+
+                {# 选择题templete#}
+                <div class="lineH30 sigle_template" style="display: none">
+                    <input class="mrg10T mrg10B mrg10R" name="sigle_template"
+                           type="radio"><label>A． 22-ssh</label>
+                </div>
+                <div class="lineH30 multiple_template" style="display: none">
+                    <input id="" class="mrg10T mrg10B mrg10R"
+                           type="checkbox"><label>A． 22-ssh</label>
+                </div>
+                {# 选择题templete#}
+                <div class="pull-right pad20R mrg30B" style="position: relative">
+{#                    <div class="glyphicon glyphicon-backward cursor font20" style="display: none" id="previous" onclick="goPrevious()"></div>#}
+                    <div class="inLine mrg30R mrg30L" name="submit_answer">
+                        <div class="sk-cube-grid" id="loading" style="display:none;vertical-align: bottom;">
+                            <div class="sk-cube sk-cube1"></div>
+                            <div class="sk-cube sk-cube2"></div>
+                            <div class="sk-cube sk-cube3"></div>
+                            <div class="sk-cube sk-cube4"></div>
+                            <div class="sk-cube sk-cube5"></div>
+                            <div class="sk-cube sk-cube6"></div>
+                            <div class="sk-cube sk-cube7"></div>
+                            <div class="sk-cube sk-cube8"></div>
+                            <div class="sk-cube sk-cube9"></div>
+                        </div>
+                        <span id="answer-status"></span>
+                        <span id="skip-info" hidden class="skip-info">{% trans 'x_jump_two_seconds' %}</span>
+                        <button type="submit" onclick="submit();return false;" id="checkbox_submit"
+                                class="btn-common" style="vertical-align: bottom;">
+                            <div class="left-right-line">{% trans 'x_submit' %}</div>
+                        </button>
+                    </div>
+{#                    <div class="glyphicon glyphicon-forward cursor font20" style="display: none" id="next" onclick="goNext()"></div>#}
+                </div>
+            </div>
+
+        <div class="prew-next-box">
+            <div class="prev-next prevPos fa fa-backward cursor" style="display: none;margin-bottom: 16px" id="previous" onclick="goPrevious()">{% trans 'x_previous_question' %}</div>
+            <br>
+           <div class="prev-next nextPos fa fa-forward cursor" style="display: none" id="next" onclick="goNext()">{% trans 'x_next_question' %}</div>
+
+        </div>
+{#            <span class='fr mrg20R'>#}
+{#                 <button type="submit" onclick="goPrevious()" id="previous"#}
+{#                         style="display: none" class="btn-common font16"><div#}
+{#                         class="left-right-line">{% trans 'x_previous_question' %}</div></button>#}
+{#                 <button type="submit" onclick="goNext()" id="next"#}
+{#                         style="display: none" class="btn-common font16"><div#}
+{#                         class="left-right-line">{% trans 'x_next_question' %}</div></button>#}
+{#            </span>#}
+        </div>
+    </div>
+{% endblock %}
+
+{% block document_ready %}
+    <script>
+        var type_id = $('#type_id').val();
+        var event_id = $('#event_id').val();
+        var task_hash = $('#task_hash').val();
+        var taskRecordUrl = '{% url 'practice:get_personal_task_record'%}';
+        var doTaskURL = '{% url 'practice:defensetraintaskTT' %}';
+        {#    根据习题集获取题目Id列表url#}
+        var getChoiceIdsUrl = '{% url 'practice:task_hash_list' %}';
+        {#  获取选择题url#}
+        var getChoicesUrl = '{% url 'practice:task_detail' %}';
+        {# 提交答案url#}
+        var submitAnswerUrl = '{% url 'practice:score_list' %}';
+
+        {# 选择题#}
+        $(function () {
+            get_task_record("{{ task_hash }}");
+        });
+    </script>
+{% endblock %}
+

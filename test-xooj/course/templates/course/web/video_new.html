@@ -1,0 +1,30 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static i18n %}
+{% block other_css_js %}
+    <title></title>
+{#    <script src="{% static 'course/js/chplayer-master/chplayer/chplayer.js' %}?t=2"></script>#}
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/video.css' %}"/>
+    <link rel="stylesheet" href="{% static 'course/css/learn_new.css' %}"/>
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .container {
+            height: 100%;
+        }
+    </style>
+{% endblock %}
+{% block container %}
+    <div class='container mrg93T'>
+        {% include './bread.html' %}
+        <div class='content mrg10T mrg10B'>
+            <div id="video" style="width:100%;height:80%;"></div>
+        </div>
+    </div>
+    {% include './sidebar.html' %}
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}

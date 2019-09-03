@@ -1,0 +1,167 @@
+msgid "x_platform_dynamic"
+msgstr "平台动态"
+
+msgid "x_messages_center"
+msgstr "消息中心"
+
+msgid "x_personal_center"
+msgstr "个人中心"
+
+msgid "x_events_list"
+msgstr "活动列表"
+
+msgid "x_login"
+msgstr "登录"
+
+msgid "x_remember_me"
+msgstr "记住密码"
+
+msgid "x_forget_password"
+msgstr "忘记密码?"
+
+msgid "x_login_immediately"
+msgstr "立即登录"
+
+msgid "x_registered_account"
+msgstr "注册账号"
+
+msgid "x_enter_username_password"
+msgstr "请输入用户名和密码"
+
+msgid "x_enter_username"
+msgstr "请输入用户名"
+
+msgid "x_enter_password"
+msgstr "请输入密码"
+
+msgid "x_incorrect_username_password"
+msgstr "用户名或密码错误"
+
+msgid "x_user_not_active"
+msgstr "该用户尚未被激活"
+
+msgid "x_user_non_existent"
+msgstr "该用户不存在"
+
+msgid "x_retrieve_password"
+msgstr "找回密码"
+
+msgid "x_email_been_sent"
+msgstr "电子邮件已经发送"
+
+msgid "x_email_not_active"
+msgstr "该用户对应邮箱尚未激活"
+
+msgid "x_system_not_active"
+msgstr "系统尚未激活..."
+
+msgid "x_upload_Licnece_activation"
+msgstr "当前系统未激活，无法使用，需要上传License文件进行激活"
+
+msgid "x_upload_Licnence"
+msgstr "上传License文件"
+
+msgid "x_submit_comments"
+msgstr "提交评论"
+
+msgid "x_reply"
+msgstr "回复"
+
+msgid "x_already_liked"
+msgstr "已点过赞"
+
+msgid "x_comments_cannot_empty"
+msgstr "评论内容不能为空。"
+
+msgid "x_new_user_registration"
+msgstr "新用户注册"
+
+msgid "x_set_user_name"
+msgstr "请设置用户名"
+
+msgid "x_verification_code"
+msgstr "验证码"
+
+msgid "x_password_twice_different"
+msgstr "两次输入密码不一致"
+
+msgid "x_username_format_error"
+msgstr "用户名格式错误"
+
+msgid "x_password_format_error"
+msgstr "密码格式错误"
+
+msgid "x_username_already_exists"
+msgstr "用户名已存在"
+
+msgid "x_enter_verification_code"
+msgstr "请输入验证码"
+
+msgid "x_registration_success"
+msgstr "注册成功"
+
+msgid "x_verification_code_error"
+msgstr "验证码错误"
+
+msgid "x_registered"
+msgstr "注册"
+
+msgid "x_comment_too_long"
+msgstr "评论内容不能超过250个字符"
+
+msgid "x_old_password"
+msgstr "旧密码"
+
+msgid "x_new_password"
+msgstr "新密码"
+
+msgid "x_confirm_new_password"
+msgstr "确认新密码"
+
+msgid "x_message_list"
+msgstr "消息列表"
+
+msgid "x_published"
+msgstr "发表于"
+
+msgid "x_reply_successfully"
+msgstr "评论成功"
+
+msgid "x_post_successfully"
+msgstr "发布成功"
+
+msgid "x_get_alarm_error"
+msgstr "获取告警失败"
+
+msgid "x_user_has_expired"
+msgstr "用户已过期"
+
+msgid "x_you_have"
+msgstr "你有"
+
+msgid "x_team_messages"
+msgstr "条队伍消息"
+
+msgid "x_post_question"
+msgstr "我要提问"
+
+msgid"x_tip_login"
+msgstr"为了您更好的体验，请使用最新版Chrome浏览器，建议分辨率：1920*1080"
+
+msgid "x_get_container_error"
+msgstr "获取容器出错"
+
+msgid "x_no_messages"
+msgstr "暂无消息"
+
+msgid "x_trial_version"
+msgstr "试用版"
+
+msgid "x_get_license_info"
+msgstr "获取激活码"
+
+msgid "x_password_not_blank"
+msgstr "密码不能为空"
+
+msgid "x_username_not_blank"
+msgstr "用户名不能为空"

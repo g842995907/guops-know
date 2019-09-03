@@ -1,0 +1,381 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/list.css' %}">
+    <script src="{% static 'practice/js/practice.js' %}"></script>
+    <style>
+        .filtrate tbody tr td span a {
+            white-space: inherit;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .fixed-table-pagination {
+            text-align: center;
+        }
+
+        .fixed-table-pagination div.pagination {
+            float: none !important;
+        }
+
+    </style>
+{% endblock %}
+
+{% block container %}
+    <input type="hidden" id="type-id" value="{{ type_id }}">
+    <input type="hidden" id="eventid" value="{{ event_id }}">
+    <div class='container mrg93T'>
+        {% verbatim %}
+        <div class="bread hidden" id="navigation">
+            <a href="/home/">{{ home }}</a>
+            <span>&gt;&gt;</span>
+            <a v-bind:href="navi_detail.type_url" class='font15' id="active-menus">{{ navi_detail.event_type
+                }}</a><span>&gt;&gt;</span>
+            <a href="" class='active font15' id="active-menus">{{ navi_detail.name }}</a>
+        </div>
+        {% endverbatim %}
+        <div class="content pad10T">
+            <div id="myTabContent" class="tab-content font14">
+                <div class="row tab-pane fade in mrg0A pad40L pad40R" id="card">
+                    <div class='row mrg20B'>
+                        <div class="search mrg20T default-bg fr">
+                            <input class="search-text pad10L fl" id="search-text" placeholder="{% trans 'x_search' %}"
+                                   type="text">
+                            <span class="search-bg mainBg fr font18 text-center cursor">
+                            <i class="oj-icon search-btn whiteC oj-icon-E911"></i>
+                        </span>
+                        </div>
+                    </div>
+                    <div class="row default-bg defaultColor mrg100B">
+                        <div class="row pad40A " id="j-bannerDiv">
+
+                        </div>
+                        {# 分页#}
+                        <div id="example" style="text-align: center;width: 100%;margin: 0 auto;">
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="row tab-pane fade active in pad40L pad40R table-warp" id="list">
+
+                    <div id="category_list" class="hidden">
+                        <table class="filtrate">
+                            <tr>
+                                <td width="50" class="top10">{% trans 'x_category' %}:</td>
+                                <td width="60" class="top10">
+                                    <span><a href="javaScript:void(0)" class="classfication-list activated "
+                                             v-on:click="refresh_table()"
+                                             id="classfication-all" name="category-list"
+                                             value="">{% trans 'x_all' %}</a></span></td>
+                                <td>
+                                    {% verbatim %}
+                                    <span v-for="category in category_list">
+                                        <a v-bind:href="category_href"
+                                           class="classfication-list"
+                                           name="category-list"
+                                           v-bind:value="category.id" v-on:click="refresh_table()">{{ category.name }}
+                                        </a>
+                                    </span>
+                                    {% endverbatim %}
+                            </tr>
+                            {% if active_menus != 'practice_theory' %}
+                                <tr>
+                                    <td width="50" class="top10">{% trans 'x_difficulty' %}:</td>
+                                    <td width="60" class="top10">
+                                        {% verbatim %}
+                                        <span><a href="javaScript:void(0)" class="direction-list activated "
+                                                 v-on:click="refresh_table()"
+                                                 name="diffcult-list" v-bind:value="difficult_all.value"
+                                                 id="direction-all">{{ difficult_all.name }}</a></span>
+                                    </td>
+                                    <td>
+                                    <span v-for="difficult in difficult_list"><a href="javaScript:void(0)"
+                                                                                 v-on:click="refresh_table()"
+                                                                                 class="direction-list"
+                                                                                 name="diffcult-list"
+                                                                                 v-bind:value="difficult.value">{{ difficult.name }}</a></span>
+                                </tr>
+                                {% endverbatim %}
+                            {% endif %}
+                                <tr>
+                                    <td width="50" class="top10">{% trans 'x_status' %}:</td>
+                                    {% verbatim %}
+                                    <td width="60" class="top10">
+                                        <span>
+                                            <a href="javaScript:void(0)" class="status-list activated"
+                                                 v-on:click="refresh_table()"
+                                                 id="status-all" name="status-list"
+                                                 value="">{{ status_all.name }}</a></span></td>
+                                    <td>
+                                        <span v-for="status in status_list">
+                                            <a href="javaScript:void(0)" class="status-list"
+                                                 v-on:click="refresh_table()"
+                                                 name="status-list"
+                                                 :value="status.value">{{ status.name }}</a>
+                                        </span></td>
+                                </tr>
+                                {% endverbatim %}
+
+                        </table>
+
+                    </div>
+
+
+                    <div class='clearfix mrg20B'>
+                        <div class="search default-bg fr">
+                            <input class="search-text pad10L fl " placeholder="{% trans 'x_search' %}" type="text"
+                                   id="task_name">
+                            <span class="search-bg mainBg fr font18 text-center cursor" onclick="refresh()">
+                            <i class="oj-icon search-btn whiteC oj-icon-E911"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <table id="tasktable" class="table default-table-v2"
+                           data-pagination="true"
+                           data-side-pagination="server"
+                           data-pagination-pre-text="<"
+                           data-pagination-next-text=">"
+                           data-url="{% url 'practice:task_list' %}"
+                    >
+                        <thead>
+                        <tr>
+{#                            <th data-field="id">{% trans 'x_title_num' %}</th>#}
+                            <th class="col-xs-" data-field="title_dsc"
+                                data-formatter="titileFormatter">{% trans 'x_task_name' %}</th>
+                            {% if active_menus == 'practice_real_vuln' %}
+                                <th data-field="identifier" data-formatter="identifierFormatter">{% trans 'x_vuln_id' %}</th>
+                            {% endif %}
+                            <th class="col-xs-" data-field="event_name"
+                                data-formatter="eventFormatter">{% trans 'x_owned_question' %}</th>
+                            <th class="col-xs-" data-field="category"
+                                data-formatter="categoryFormatter">{% trans 'x_type' %}</th>
+                            {% if active_menus != 'practice_theory' %}
+                                <th class="col-xs-" data-field="difficulty_rating"
+                                    data-formatter="diffcultFormatter">{% trans 'x_difficulty' %}</th>
+                            {% endif %}
+                            <th class="col-xs-" data-formatter="dateUtil.formatYMDHMS"
+                                data-field="last_edit_time">{% trans 'x_last_edit_time' %}</th>
+                            <th class="col-xs-" data-field="is_solved"
+                                data-formatter="solvedFormatter">{% trans 'x_status' %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                        </tfoot>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block document_ready %}
+    <script>
+        var type_id;
+        var typeId = $('#type-id').val();
+        var getCategoryListUrl = '{% url 'practice:category_list' %}';
+        var getEventDetail = '{% url 'practice:event_detail' event_id %}';
+        $(function () {
+            {#            categoryW(typeId);#}
+            initNavi();
+            getCategoryList();
+
+            $("#tool-search").click(refresh);
+            $("#task_name").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    refresh();
+                }
+            });
+            $("a[name='diffcult-list']").click(refresh);
+        });
+
+        function initNavi() {
+            http.get(getEventDetail, {}, function (data) {
+                var event_name = codeUtil.htmlDecode(data.name_dsc);//进行解码转义
+                var event_type = typename(data.type.toString());
+                var url = urlename("{{ type_id }}");
+                var type_url = "/" + url + "/list"
+                $("#navigation").removeClass("hidden")
+                navigation.navi_detail = {
+                    name: gettext(event_name),
+                    event_type: gettext(event_type),
+                    type_url: type_url
+                };
+            })
+        }
+
+        function queryParams(params) {
+            params.event_id = {{ event_id }};
+            params.type_id = {{ type_id }};
+            params.category = $("a[name='category-list'].activated").attr("value");
+            params.diffcult = $("a[name='diffcult-list'].activated").attr("value");
+            params.task_name = $('#task_name').val();
+            params.has_solved = $("a[name='status-list'].activated").attr("value");
+            return params;
+        }
+        $('#tasktable').bootstrapTable({
+            queryParams: queryParams,
+            onClickRow: function (row) {
+                window.location.href = "{% url 'practice:defensetraintaskT' type_id %}" + row.hash;
+            },
+        });
+
+        function refresh() {
+            $('#tasktable').bootstrapTable('refreshOptions', {pageNumber: 1});
+            $('#tasktable').bootstrapTable('refresh')
+        }
+
+        function eventFormatter(value, row, index) {
+            value = codeUtil.htmlEncode(value)
+            return value
+        }
+        function identifierFormatter(value, row, index) {
+            value = codeUtil.htmlEncode(value)
+            return value
+        }
+
+        function categoryFormatter(value, row, index) {
+            value = codeUtil.htmlEncode(value)
+            return value
+        }
+        function diffcultFormatter(value, row, index) {
+            var diffcult = '';
+            if (value != null) {
+                switch (Number(value)) {
+                    case 0:
+                        diffcult = '{% trans 'x_easy' %}';
+                        break;
+                    case 1:
+                        diffcult = '{% trans 'x_normal' %}';
+                        break;
+                    case 2:
+                        diffcult = '{% trans 'x_hard' %}';
+                        break;
+                }
+            } else {
+                diffcult = '{% trans 'x_none' %}';
+            }
+            return diffcult
+        }
+
+        function titileFormatter(value, row, index) {
+            var title;
+            if (value != null && value != '') {
+                title = value;
+            } else {
+                if (row.content != null && row.content != '') {
+                    var dd = row.content.replace(/<\/?.+?>/g, "");
+                    var dds = dd.replace(/ /g, "");
+                    if (dds.length > 15) {
+                        title = dds.substr(0, 15) + '...'
+                    } else {
+                        title = dds
+                    }
+                }
+            }
+            if (row.lock) {
+                return '<div title="此内容仅在正式版提供">' + '<i class="fa fa-lock"></i>&nbsp;&nbsp;' + title + '<div>'
+            } else {
+                return '&nbsp;&nbsp;&nbsp;&nbsp;' + title
+            }
+        }
+
+        function solvedFormatter(value, row, index) {
+            var is_solved = '';
+            if (value) {
+                is_solved = '<span style="color: #FF9900">' + '{% trans 'x_solved' %}' + '</span>'
+            } else {
+                is_solved = '{% trans 'x_un_solved' %}'
+            }
+            return is_solved
+        }
+
+        //获取题目类型
+        function getCategoryList() {
+            http.get(getCategoryListUrl, {'type_id': "{{ type_id }}"}, function (data) {
+                $("#category_list").removeClass('hidden');
+                app.category_list = data;
+                setTimeout(function () {
+                    init_category_list();
+                    init_status_list();
+                }, 100)
+            })
+        }
+
+        var app = new Vue({
+            el: '#category_list',
+            data: {
+                category_list: [],
+                category_href: 'javaScript:void(0)',
+                difficult_all: {name: '{% trans 'x_all' %}', value: ''},
+                difficult_list: [{name: '{% trans 'x_easy' %}', value: '0'},
+                    {name: '{% trans 'x_normal' %}', value: '1'}, {name: '{% trans 'x_hard' %}', value: '2'}],
+                status_all: {name: '{% trans 'x_all' %}', value: ''},
+                status_list:[{name: '{% trans 'x_solved' %}', value: 'true'},{name: '{% trans 'x_un_solved' %}', value: 'false'}]
+            },
+            methods: {
+                refresh_table: function () {
+                    setTimeout(function () {
+                        refresh()
+                    }, 10)
+
+                },
+            },
+        });
+
+        var navigation = new Vue({
+            el: '#navigation',
+            data: {
+                navi_detail: {},
+                home: '{% trans 'x_home' %}'
+            },
+        });
+
+        function init_category_list() {
+            var classficationList = document.getElementsByClassName('classfication-list');
+
+
+            //分类
+            for (var i = 0; i < classficationList.length; i++) {
+                classficationList[i].onclick = function () {
+                    var currentClassficationId = $(this).attr('id')
+                    if (currentClassficationId == undefined) {
+                        $('#classfication-all').removeClass('activated');
+                        $(this).addClass('activated').parent().siblings().children().removeClass('activated');
+                    } else {
+                        $('#classfication-all').addClass('activated');
+                        $(this).parent().parent().next().children().children().removeClass('activated');
+                    }
+
+
+                }
+            }
+        }
+
+        function init_status_list() {
+            var statuslist = document.getElementsByClassName('status-list');
+
+            for (var i = 0; i < statuslist.length; i++) {
+                statuslist[i].onclick = function () {
+                    var ststusListId = $(this).attr('id')
+                    if (ststusListId == undefined) {
+                        $('#status-all').removeClass('activated');
+                        $(this).addClass('activated').parent().siblings().children().removeClass('activated');
+                    } else {
+                        $('#status-all').addClass('activated');
+                        $(this).parent().parent().next().children().children().removeClass('activated');
+                    }
+                }
+            }
+        }
+
+    </script>
+{% endblock %}

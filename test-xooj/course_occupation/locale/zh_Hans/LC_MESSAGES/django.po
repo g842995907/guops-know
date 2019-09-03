@@ -1,0 +1,170 @@
+msgid "x_theory_course"
+msgstr "理论课程"
+
+msgid "x_occupational_system"
+msgstr "职业体系"
+
+msgid "x_choose_career_goal"
+msgstr "选择职业目标"
+
+msgid "x_choose_career"
+msgstr "请选择一个职业"
+
+msgid "x_unable_choose_numbers"
+msgstr "无法选择多个职业"
+
+msgid "x_career_has_chosen"
+msgstr "该职业已选择，请重新选择职业"
+
+msgid "x_occupation_name"
+msgstr "职业名称"
+
+msgid "x_occupation_profile"
+msgstr "职业简介"
+
+msgid "x_occupation_class_hour"
+msgstr "职业课时"
+
+msgid "x_revising_personal_data"
+msgstr "修改个人资料"
+
+msgid "x_door"
+msgstr "门"
+
+msgid "x_learning_courses"
+msgstr "学习的课程"
+
+msgid "x_hour"
+msgstr "时"
+
+msgid "x_rankings"
+msgstr "名"
+
+msgid "x_practice_scoring"
+msgstr "练习得分"
+
+msgid "x_practice_ranking"
+msgstr "练习排名"
+
+msgid "x_personal_signature"
+msgstr "个人签名"
+
+msgid "x_my_question"
+msgstr "我的提问"
+
+msgid "x_my_reply"
+msgstr "我的回复"
+
+msgid "x_skills_six_dimensions"
+msgstr "技能六维图"
+
+msgid "x_learning_competition_records"
+msgstr "学习/比赛记录"
+
+msgid "x_task_schedule"
+msgstr "任务进度"
+
+msgid "x_changing_career_goals"
+msgstr "更换职业目标"
+
+msgid "x_course_name"
+msgstr "课程名称"
+
+msgid "x_curriculum_progress"
+msgstr "课程进度"
+
+msgid "x_advanced"
+msgstr "进阶"
+
+msgid "x_senior"
+msgstr "高级"
+
+msgid "x_basics_nbsp"
+msgstr "基 础"
+
+msgid "x_advanced_nbsp"
+msgstr "进 阶"
+
+msgid "x_senior_nbsp"
+msgstr "高 级"
+
+msgid "x_required"
+msgstr "必修"
+
+msgid "x_elective"
+msgstr "选修"
+
+msgid "x_amend_the_team_information"
+msgstr "修改队伍资料"
+
+msgid "x_position"
+msgstr "职位"
+
+msgid "x_advanced_position"
+msgstr "进阶职位"
+
+msgid "x_position_description"
+msgstr "职位描述"
+
+msgid "x_difficulty_level"
+msgstr "难度级别"
+
+msgid "x_management_course"
+msgstr "管理课程"
+
+msgid "x_stage"
+msgstr "阶段"
+
+msgid "x_is_compulsory"
+msgstr "是否必修"
+
+msgid "x_lesson_num"
+msgstr "课时数"
+
+msgid "x_increase_course"
+msgstr "增加课程"
+
+msgid "x_new_vocational_system"
+msgstr "新建职业体系"
+
+msgid "x_edit_professional_system"
+msgstr "编辑职业体系"
+
+msgid "x_choose_advance_position"
+msgstr "请选择进阶职位"
+
+msgid "x_primary"
+msgstr "初级"
+
+msgid "x_intermediate"
+msgstr "中级"
+
+msgid "x_not_edited_system"
+msgstr "本职业系统内置不予编辑"
+
+msgid "x_not_deleted_system"
+msgstr "存在系统内置职业无法删除"
+
+msgid "x_not_executed_system"
+msgstr "存在系统内置职业无法执行"
+
+msgid "x_time_error_index_notexist"
+msgstr "时间获取错误，索引不存在"
+
+msgid "x_the_user_using_occupaitons"
+msgstr "用户正在使用该职业"
+
+msgid "x_env_type_base"
+msgstr "基础"
+
+msgid "x_profession_does_not_exist"
+msgstr "选择的职业不存在"
+
+msgid "x_no_occupation_choice"
+msgstr "还未选择职业"
+
+msgid "x_score_s"
+msgstr "分"
+
+msgid "x_repeat_addition"
+msgstr "提示：请勿重复添加课程"

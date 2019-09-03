@@ -1,0 +1,47 @@
+msgid "x_match"
+msgstr "比赛"
+
+msgid "x_course"
+msgstr "课程"
+
+msgid "x_practice"
+msgstr "练习"
+
+msgid "x_30_day"
+msgstr "30天"
+
+msgid "x_record"
+msgstr "记录"
+
+msgid "x_experiment"
+msgstr "实验"
+
+msgid "x_average_score"
+msgstr "平均分"
+
+msgid "x_add_failure"
+msgstr "添加失败!"
+
+msgid "x_primary"
+msgstr "初级"
+
+msgid "x_intermediate"
+msgstr "中级"
+
+msgid "x_senior"
+msgstr "高级"
+
+msgid "x_position_required"
+msgstr "职位：该字段必填"
+
+msgid "x_difficlty_choose"
+msgstr "难度级别： 请选择难度"
+
+msgid "x_course_experiment"
+msgstr "课程/实验"
+
+msgid "x_competition_practice"
+msgstr "比赛/练习"
+
+msgid "click_to_enter"
+msgstr "点击进入课堂"

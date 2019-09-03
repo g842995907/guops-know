@@ -1,0 +1,306 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    {% trans 'x_infiltration' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <script type="text/javascript" src="{% static_v 'practice/widgets/task_env/js/network.js' %}"></script>
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="event">
+                            <option value="" selected="selected">{% trans 'x_all_task_event' %}</option>
+                            {% for event in event_list %}
+                                <option value="{{ event.id }}">{{ event.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+{#                    <div class="col-md-2 col-sm-2">#}
+                        <select class="form-control m-b sticky select_search" id="category">
+                            <option value="" selected="selected">{% trans "x_all_type" %}</option>
+                            {% for c in category_list %}
+                                <option value="{{ c.id }}">{% if LANGUAGE_CODE == 'zh-hans' %}{{ c.cn_name }}{% else %}
+                                    {{ c.en_name }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+{#                    <div class="col-md-2 col-sm-2">#}
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_task_name' %}"
+                               type="text">
+                        </input>
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                    <div class="m-r pull-right">
+                        <a class="btn btn-primary pull-right" href="{% url 'cms_practice_infiltration:category_list' %}">
+                            <i class="fa fa-gear"></i> {% trans 'x_type_management' %}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_practice_infiltration:task_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_practice_infiltration:cms_api:practice-infiltration-task-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                        <button class="btn btn-success"
+                                data-url="{% url 'cms_practice_infiltration:cms_api:practice-infiltration-task-batch-public' %}"
+                                onclick="table.batchPublic(this, 1);">
+                            <i class="fa fa-eye"></i> {% trans 'x_public' %}
+                        </button>
+                        <button class="btn btn-warning"
+                                data-url="{% url 'cms_practice_infiltration:cms_api:practice-infiltration-task-batch-public' %}"
+                                onclick="table.batchPublic(this, 0);">
+                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}
+                        </button>
+                        <button class="btn btn-success"
+                                data-url="{% url 'cms_practice_infiltration:cms_api:practice-infiltration-task-batch-public-writeup' %}"
+                                onclick="table.batchPublic(this, 1);">
+                            <i class="fa fa-eye"></i> {% trans 'x_public_wp' %}
+                        </button>
+                        <button class="btn btn-warning"
+                                data-url="{% url 'cms_practice_infiltration:cms_api:practice-infiltration-task-batch-public-writeup' %}"
+                                onclick="table.batchPublic(this, 0);">
+                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide_wp' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-show-refresh="false"
+               data-toolbar-align="center"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_practice_infiltration:cms_api:practice-infiltration-task-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="title" data-formatter="titileFormatter" data-escape="true" data-sortable="true">{% trans 'x_title' %}</th>
+                <th data-field="event_name">{% trans 'x_task_event' %}</th>
+                <th data-field="category_cn_name" data-escape="true">{% trans 'x_category' %}</th>
+                <th data-field="is_dynamic_env"
+                    data-formatter="table.isEnvFormatter">{% trans 'x_dynamic_scenes' %}</th>
+                <th data-field="public_official_writeup" data-sortable="true"
+                    data-formatter="table.isWriteupPublicFormatter">{% trans 'x_wp_status' %}</th>
+                <th data-field="public" data-formatter="table.publicFormatter" data-sortable="true">{% trans 'x_is_public' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="last_edit_time" data-sortable="true"
+                    data-formatter="table.datetimeFormatter">{% trans 'x_update_time' %}</th>
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="modal fade" id="testEnvModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_test_dy_env' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <div data-widget-id="common-env" data-task-hash="0" data-from-backend="1"></div>
+                </div>
+                <div class="clearfix modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_practice_infiltration:task_list' %}";
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+
+        $ENV(function () {
+            $('[data-widget-id=common-env]').registerEnvWidget({
+                common: {
+                    lang: LANGUAGE_CODE,
+                    alert: popUtil.warningHint,
+                    confirm: popUtil.confirm,
+                }
+            });
+        });
+        $('#testEnvModal').on('hidden.bs.modal', function () {
+            $('[data-widget-id=common-env]').empty();
+            $('[data-widget-id=common-env]').clearEnvInstance();
+        });
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.showTestEnv = function (taskHash) {
+                $('[data-widget-id=common-env]').attr('data-task-hash', taskHash);
+                $('#testEnvModal').off('shown.bs.modal').on('shown.bs.modal', function () {
+                    $('[data-widget-id=common-env]').getEnv();
+                });
+                $('#testEnvModal').modal();
+            }
+
+            var fakeTaskUrl = '{% url "cms_practice_infiltration:cms_api:practice-infiltration-task-detail" 0 %}';
+            this.setTaskEnvType = function (taskId, type) {
+                var url = fakeTaskUrl.replace('0', taskId);
+                http.patch(url, {task_env__type: type}, function (res) {
+                    table.reload();
+                });
+            };
+
+            this.operatorFormatter = function (value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        url: listUrl + value,
+                        builtin: row.builtin,
+                    }
+                ]
+
+                if (row.is_dynamic_env && row.task_env) {
+                    btns.push({
+                        type: 'btn',
+                        class: 'btn-warning',
+                        icon: 'fa-spinner',
+                        text: '{% trans "x_test" %}',
+                        click: 'table.showTestEnv("' + row.hash + '")',
+                    });
+
+                }
+
+                return bsTable.getOperatorHtml(btns);
+            };
+
+            this.isEnvFormatter = function (value, row, index) {
+                var private_select = '';
+                var shar_select = '';
+                var setTaskEnvType;
+                if (row.is_dynamic_env && row.task_env) {
+                    if (row.task_env.type == 0) {
+                        private_select = 'selected';
+                        setTaskEnvType = 1;
+
+                    } else {
+                        shar_select = 'selected';
+                        setTaskEnvType = 0;
+                    }
+                    var isEnvHtml = "<select style=\"width:100%;min-width:80px;max-width:100px;\" class=\"form-control\" onchange=\"table.setTaskEnvType(" + row.id + "," + setTaskEnvType + ")\">\n" +
+                        "  <option value = 0 " + private_select + ">" + gettext('x_share') + "</option>\n" +
+                        "  <option value = 1 " + shar_select + ">" + gettext('x_private') + "</option>\n" +
+                        "</select>"
+
+                    return isEnvHtml;
+                }
+
+            };
+
+            this.isWriteupPublicFormatter = function (value, row, index) {
+                if (!!row.official_writeup || !!row.markdown) {
+                    var text = value ? gettext("x_public") : gettext("x_hide");
+                    var iClass = value ? "fa-eye" : "fa-eye-slash";
+                    return '<i class="fa ' + iClass + '" style="margin-right: 5px;"></i>' + text;
+                } else {
+                    return gettext('x_hides');
+                }
+            }
+
+        });
+
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.event = $("#event").val();
+                params.category = $("#category").val();
+                params.is_copy = 0;
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+        function titileFormatter(value, row, index) {
+{#            var nameString = "";#}
+{#            if (value.length > 15) {#}
+{#                nameString = value.substring(0, 15) + '...';#}
+{#            } else {#}
+{#                nameString = value;#}
+{#            }#}
+{#            return [#}
+{#                '<span id="thread"  data-toggle="tooltip" title="' + value + '">' + nameString + '</span>',#}
+{#            ].join('');#}
+            var nameString = "";
+            var realLength = getRealLength(value)[0];
+            var subLength = getRealLength(value)[1];
+            if (realLength > 100) {
+                value = value.substring(0, 100) + '...'
+                nameString = value.substring(0, subLength) + '...';
+            } else if (realLength >= 60) {
+                nameString = value.substring(0, subLength) + '...';
+            } else {
+                nameString = value;
+            }
+            return [
+                '<span id="thread"  data-toggle="tooltip" title="' + value + '">' + nameString + '</span>',
+            ].join('');
+        }
+
+        //获取长度
+        function getRealLength(str) {
+            var len = 0;//总长度
+            var subLen = 0;//截取长度
+            for (var i = 0; i < str.length; i++) {
+                var c = str.charCodeAt(i);
+                //单字节+1
+                if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
+                    len++;
+                }
+                //汉字+2
+                else {
+                    len += 2;
+                }
+                if (len <= 60) {
+                    subLen = i;
+                }
+            }
+            var lenArr = new Array(len, subLen);
+            return lenArr;
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,474 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans 'x_authorization' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+
+    <link rel="stylesheet" href="{% static "lib/bootstrap-switch-master/dists/css/bootstrap3/bootstrap-switch.css" %}"/>
+    <script src="{% static 'lib/bootstrap-switch-master/dists/js/bootstrap-switch.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <style type="text/css">
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 1px;
+        }
+
+        @media (min-width: 768px) {
+            .form-horizontal .control-label {
+                padding-top: 7px;
+                margin-bottom: 0;
+                text-align: center;
+            }
+        }
+
+        .bootstrap-switch-success-v1 {
+            color: #FFFFFF;
+            background: #00B293;
+        }
+
+        .bootstrap-switch-failure-v1 {
+            color: #FFFFFF;
+            background: #B2B2B2;
+        }
+
+        .control-label {
+            padding-right: 7px;
+        }
+
+        .custom-auth {
+            margin-top: 45px;
+            border: 1px solid #e7eaec;
+            padding: 40px;
+            position: relative;
+        }
+
+        .radio-box {
+            position: absolute;
+            top: -10px;
+            background: #fff;
+            padding: 0 5px;
+        }
+
+        input[type="radio"] {
+            vertical-align: text-bottom;
+        }
+
+        .btn-w-m {
+            min-width: 95px;
+        }
+
+        .ibox-content {
+            padding: 15px 40px 20px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div class="form-horizontal" style="background: white">
+            <form id="validateForm"
+                  method="post"
+                  action="{{ modify_auth_url }}"
+                  class="form-horizontal">
+                {% csrf_token %}
+                <div class="clearfix" style="padding-left: 7px;margin-left: 38px;">
+                    <input type="radio" name="auth_mode" value="1" data-form-fixed="1">
+                    <label class="control-label">{% trans 'x_all_auth' %}</label>
+
+                    {#                    <input type="hidden" name="auth_mode" data-form-fixed="1"#}
+                    {#                           value="1">#}
+                    {#                    <input type="checkbox" id="auth_mode" checked>#}
+                </div>
+
+                <div class="all-auth">
+                </div>
+
+                <div class="custom-auth">
+                    <div class="radio-box">
+                        <input type="radio" name="auth_mode" value="2" data-form-fixed="1">
+                        <label>{% trans 'x_custom_auth' %}</label>
+                    </div>
+
+                    <div class="display-auth-class clearfix"
+                         id="auth-faculty-major-class"
+                         style="padding-left: 7px; margin-bottom: 1rem"
+                         v-cloak
+                    >
+                        <div class="auth-faculty clearfix">
+                            <div class="faculty-label" style="float: left">
+                                 {% trans 'x_is_auth' %}{{ ORGANIZATION.Second_level }}:
+                            </div>
+                            <div class="faculty-wrapper" style="float: left">
+                                <div style="float: left; margin-left: 1rem" v-for="faculty in faculty_list">
+                                    <span>[[ faculty.name ]]</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="auth-major clearfix" style="margin-top: 1rem">
+                            <div class="major-label" style="float: left">
+                                {% trans 'x_is_auth' %}{{ ORGANIZATION.Third_level }}:
+                            </div>
+                            <div class="major-wrapper" style="float: left">
+                                <div style="float: left; margin-left: 1rem" v-for="major in major_list">
+                                    <span v-html="majorFormatter(major.name)"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="auth-class clearfix" style="margin-top: 1rem">
+                            <div class="class-label" style="float: left">
+                                {% trans 'x_is_auth' %}{{ ORGANIZATION.Fourth_level }}:
+                            </div>
+                            <div class="faculty-wrapper" style="float: left">
+                                <div style="float: left; margin-left: 1rem" v-for="classes in class_list">
+                                    <span v-html="classFormatter(classes.name)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <div id="tableToolbar">
+                            <div class="form-group">
+                                <div class="clearfix">
+                                    <div class="m-r pull-left" style="padding-left: 20px">
+                                        <select class="form-control m-b" id="faculty">
+                                            <option value="">{% trans 'x_all' %}{{ ORGANIZATION.Second_level }}</option>
+                                            {% for d in facultys %}
+                                                <option value="{{ d.id }}">{{ d.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="m-r pull-left" style="min-width: 174px;">
+                                        <select class="form-control m-b" id="major">
+                                            <option value="">{% trans 'x_all' %}{{ ORGANIZATION.Third_level }}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="checkbox checkbox-success" style="margin: 0 0 20px 30px;">
+                                <input type="checkbox" class="checkall" id="checkAll">
+                                <label for="checkAll">{% trans "x_select_all" %}</label>
+                            </div>
+                            <div class="col-sm-12" id="classes">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="auth_type" id="auth_type" data-form-fixed="1" value="2">
+                <div class="form-group" style="margin: 30px 0 0 0">
+                    <a class="btn btn-w-m btn-white"
+                       href="{{ url_list_url }}">{% trans 'x_cancel' %}</a>
+                    <input type="submit" class="btn btn-w-m btn-primary" style="margin-left: 20px;"
+                           value="{% trans "x_authorized" %}"/>
+                </div>
+            </form>
+            <div id="class-template-div" style="display: none;">
+                <div class="sub-template-div" style="float: left; margin-left: 1rem">
+                    <div class="checkbox-inline checkbox checkbox-success ">
+                        <input type="checkbox" class="checkitem" id="" name="auth_classes" value="">
+                        <label></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        (function () {
+            var _ = modelConstantUtil.dataType;
+            modelConstantUtil.addConstant({
+                CMS: {
+                    AUTH: {
+                        ALL_AUTH: _(1, gettext('x_all_auth')),
+                        CUSTOM_AUTH: _(2, gettext('x_custom_auth'))
+                    },
+                    SHARE: {
+                        ALL_SHARE: _(1, gettext('x_all_share')),
+                        CUSTOM_SHARE: _(2, gettext('x_custom_share'))
+                    },
+                    AUTH_TYPE: {
+                        FACULTY: 2,
+                        MAJOR: 3,
+                        CLASS: 4
+                    }
+                }
+            });
+            if (window.optionRender) {
+                $(function () {
+                    optionRender.loadDefaultSelect();
+                });
+            }
+        }());
+
+        function freshMajor(faculty_id) {
+            var major_param = $("#major");
+            major_param.empty();
+            major_param.append("<option value=''>{% trans 'x_all' %}{{ ORGANIZATION.Third_level }}</option>");
+            if (faculty_id != "") {
+                $.ajax({
+                    url: "{% url 'cms_x_person:cms_api:major-list' %}",
+                    type: "get",
+                    data: {"faculty": faculty_id},
+                    datatype: "json",
+                    success: function (data) {
+                        var major_list = data.rows;
+                        for (var i in major_list) {
+                            major_param.append("<option value='" + major_list[i].id + "'>" + codeUtil.htmlEncode(major_list[i].name) + "</option>");
+                        }
+                    }
+                });
+            }
+        }
+
+        function freshClass(faculty_id, major_id) {
+            // 重新生成班级列表
+            var classes_div = $("#classes");
+            var class_tpl = $("#class-template-div");
+            classes_div.html("");
+            // 重置checkbox
+            $("input[name='auth_classes']").attr('checked', false)
+
+            $.ajax({
+                url: getUrl(),
+                type: "get",
+                async: false,
+                data: {"faculty": faculty_id, "major": major_id},
+                datatype: "json",
+                success: function (data) {
+                    var class_list = data.rows;
+                    for (var i in class_list) {
+                        class_tpl.children(".sub-template-div").attr("faculty_id", class_list[i].faculty);
+                        class_tpl.children(".sub-template-div").attr("major_id", class_list[i].major);
+                        class_tpl.find("input").attr("id", class_list[i].id);
+                        class_tpl.find("input").attr("value", class_list[i].id);
+                        class_tpl.find("label").html(getAuthObj(class_list, i))
+                        {#class_tpl.find("label").html('<span class="text-warning">' + codeUtil.htmlEncode(class_list[i].faculty_name) + '</span>' + " / " + '<span class="text-info">' + codeUtil.htmlEncode(class_list[i].major_name) + '</span>' + " / " + codeUtil.htmlEncode(class_list[i].name));#}
+                        classes_div.append(class_tpl.html());
+                    }
+                }
+            });
+        }
+
+        function getUrl() {
+            var faculty = $('#faculty').val()
+            var major = $('#major').val()
+            if (faculty === '' && major === '') {
+                return "{% url 'cms_x_person:cms_api:faculty-list' %}"
+            }
+            if (faculty !== '' && major === '') {
+                return "{% url 'cms_x_person:cms_api:major-list' %}"
+            }
+            if (faculty !== '' && major !== '') {
+                return "{% url 'cms_x_person:cms_api:classes-list' %}"
+            }
+        }
+
+        var app = new Vue({
+            el: '#auth-faculty-major-class',
+            delimiters: ["[[", "]]"],
+            data: {
+                faculty_list: [],
+                major_list: [],
+                class_list: [],
+            },
+            methods: {
+                majorFormatter: function (value) {
+                    if (value) {
+                        var orgs = value.split('/')
+                        var data = '<span style="color: #f7a54a">' + orgs[0] + '</span>' + ' / ' + orgs[1]
+                        return data;
+                    }
+                    return null
+                },
+                classFormatter: function (value) {
+                    if (value) {
+                        var orgs = value.split('/')
+                        var data = '<span style="color: #f7a54a">' + orgs[0] + '</span>' + ' / ' +
+                        '<span style="color: #23c6c8">' + orgs[1] + '</span>' + ' / ' + orgs[2];
+                        return data;
+                    }
+                    return null
+                }
+            },
+        });
+
+        // 初始化显示已授权的院系,年级,班级
+        function initAuthObjs() {
+            http.get("{{ query_all_auth_url }}", {}, function (data) {
+                app.faculty_list = data.auth_faculty
+                app.major_list = data.auth_major
+                app.class_list = data.auth_classes
+            })
+        }
+        initAuthObjs()
+
+        // 获取授权院系，年级，班级
+        var getAuthObj = function (class_list, item) {
+            return '<span>' + codeUtil.htmlEncode(class_list[item].name) + '</span>'
+        }
+
+        {#        $('[id="auth_mode"]').bootstrapSwitch({#}
+        {#            onText: gettext('x_all_auth'),#}
+        {#            offText: gettext('x_custom_auth'),#}
+        {#            onColor: "failure-v1",#}
+        {#            offColor: "success-v1",#}
+        {#            size: "small",#}
+        {#            animate: "true",#}
+        {#            onSwitchChange: function (event, state) {#}
+        {#                if (state == true) {#}
+        {#                    $(this).attr("checked", true);#}
+        {#                    $('[name="auth_mode"]').val(ModelConstant.CMS.AUTH.ALL_AUTH);#}
+        {#                    changeAuthMode(ModelConstant.CMS.AUTH.ALL_AUTH);#}
+        {#                } else {#}
+        {#                    $(this).attr("checked", false);#}
+        {#                    $('[name="auth_mode"]').val(ModelConstant.CMS.AUTH.CUSTOM_AUTH);#}
+        {#                    changeAuthMode(ModelConstant.CMS.AUTH.CUSTOM_AUTH);#}
+        {#                }#}
+        {#            }#}
+        {#        });#}
+
+
+        function handleAuthMode(auth_mode) {
+            var $options = $('#auth_mode option');
+            $options.each(function (j, opt) {
+                if (opt.value == auth_mode) {
+                    opt.selected = true;
+                }
+            });
+
+        }
+
+        $('[name="auth_mode"]').change(function () {
+            if ($('input[name="auth_mode"]')[0].checked == true) {
+                $('.custom-auth, .radio-box').css({
+                    'background': '#f3f3f4',
+                    'cursor': 'not-allowed'
+                });
+                $('#faculty')[0].disabled = 'disabled';
+                $('#major')[0].disabled = 'disabled';
+                $('input[type=checkbox]').prop('disabled', 'disabled')
+            } else {
+                $('.custom-auth,.radio-box').css({
+                    'background': '#fff',
+                    'cursor': 'auto'
+                });
+                $('#faculty')[0].disabled = false;
+                $('#major')[0].disabled = false;
+                $('input[type=checkbox]').prop('disabled', false)
+            }
+        });
+
+        function initChecked(customize) {
+            // 初始化已授权的班级
+            $.ajax({
+                url: "{{ query_auth_url}}",
+                type: "get",
+                data: {'auth_type': $('#auth_type').val()},
+                datatype: "json",
+                success: function (data) {
+                    handleAuthMode(data.auth_mode);
+
+                    // 授权所有, 不需要在单独设置班级了
+                    if (data.auth_mode == ModelConstant.CMS.AUTH.ALL_AUTH) {
+                        if (customize === true) return;
+                        $('[name="auth_mode"][value="1"]').prop('checked', true);
+                        $('[name="auth_mode"]').change();
+                        return;
+                    }
+                    $('[name="auth_mode"][value="2"]').prop('checked', true);
+                    $('[name="auth_mode"]').change();
+
+                    for (var i in data.class) {
+                        if (data.class[i].auth == 1) {
+                            $("input[name='auth_classes'][value='" + data.class[i].id + "']").attr("checked", true);
+                        }
+                    }
+                }
+            });
+        }
+
+        function hideElements(faculty_id, major_id) {
+            // 根据选择的学院和年级来隐藏其他选项
+            if (faculty_id == "") {
+                // 显示所有
+                $("#classes>div").show();
+            } else {
+                $("#classes>div").hide();
+                if (major_id == "") {
+                    $("#classes>div[faculty_id='" + faculty_id + "']").show();
+                } else {
+                    $("#classes>div[faculty_id='" + faculty_id + "'][major_id='" + major_id + "']").show();
+                }
+            }
+        }
+
+        $("#checkAll").click(function () {
+            // 全选按钮只针对当前可见的学院和年级，不影响其他年级
+            if (this.checked) {
+                $("input[name='auth_classes']:checkbox").each(function () {
+                    if ($(this).parents(".sub-template-div").css("display") == "block") {
+                        $(this).prop("checked", true);
+                    }
+                })
+            } else {
+                $("input[name='auth_classes']:checkbox").each(function () {
+                    if ($(this).parents(".sub-template-div").css("display") == "block") {
+                        $(this).prop("checked", false);
+                    }
+                })
+            }
+        });
+
+
+        $("#faculty").change(function () {
+            $("#checkAll").attr("checked", false);
+            freshMajor($(this).val());
+            freshClass()
+            if ($(this).val() === '') {
+                $('#auth_type').val(ModelConstant.CMS.AUTH_TYPE.FACULTY)
+            } else {
+                $('#auth_type').val(ModelConstant.CMS.AUTH_TYPE.MAJOR)
+            }
+            initChecked(true)
+            hideElements($(this).val(), "");
+        });
+
+        $("#major").change(function () {
+            $("#checkAll").attr("checked", false);
+            freshClass()
+            if ($(this).val() === '') {
+                $('#auth_type').val(ModelConstant.CMS.AUTH_TYPE.MAJOR)
+            } else {
+                $('#auth_type').val(ModelConstant.CMS.AUTH_TYPE.CLASS)
+            }
+            initChecked(true)
+            hideElements($("#faculty").val(), $(this).val());
+        });
+
+        freshClass("", "");
+        initChecked();
+
+        var listUrl = "{{ url_list_url }}";
+        $("#validateForm").ajaxFormDialog(function () {
+            setTimeout(function () {
+                window.location.href = listUrl;
+            }, ajaxDialog.defaultDelayTime);
+        });
+    </script>
+
+{% endblock %}

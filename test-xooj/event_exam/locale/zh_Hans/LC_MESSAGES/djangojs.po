@@ -1,0 +1,71 @@
+msgid "x_all_have"
+msgstr "共有"
+
+msgid "x_full_score"
+msgstr "满分"
+
+msgid "x_this_task"
+msgstr "本题"
+
+msgid "x_user_answer"
+msgstr "用户答案"
+
+msgid "x_exam_wp"
+msgstr "解题报告"
+
+msgid "x_multiple_choice"
+msgstr "多选题"
+
+msgid "x_blank_task"
+msgstr "填空题"
+
+msgid "x_exam_wp_score"
+msgstr "解题报告评分"
+
+msgid "x_dynamic"
+msgstr "动态"
+
+msgid "x_points"
+msgstr "分"
+
+msgid "x_score_answer"
+msgstr "答题得分"
+
+msgid "x_notice_writeup_score"
+msgstr "提示：解题报告得分<=试卷总分-答题得分"
+
+msgid "x_choose_test_paper"
+msgstr "请选择一张试卷"
+
+msgid "x_end_game"
+msgstr "距离考试结束"
+
+msgid "x_answered"
+msgstr "已答"
+
+msgid "x_not_answered"
+msgstr "未答"
+
+msgid "x_current"
+msgstr "当前"
+
+msgid "x_whether_hand_over"
+msgstr "还有{undone_num}题没做，是否交卷？"
+
+msgid "x_15min_over"
+msgstr "距离考试结束还有15分钟"
+
+msgid "x_previous_question"
+msgstr "上一题"
+
+msgid "x_already_handed_over"
+msgstr "已交卷"
+
+msgid "x_did_take_test"
+msgstr "未参加考试"
+
+msgid "x_tips_next"
+msgstr "温馨提示：空白处双击下一题！"
+
+msgid "exam_review"
+msgstr "考试回顾"

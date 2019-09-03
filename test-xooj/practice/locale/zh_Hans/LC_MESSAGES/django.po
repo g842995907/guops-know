@@ -1,0 +1,269 @@
+msgid "x_practice"
+msgstr "练习"
+
+msgid "x_event_manage"
+msgstr "习题集管理"
+
+msgid "x_self_test_paper"
+msgstr "自评试卷"
+
+msgid "x_all_task_event"
+msgstr "全部习题集"
+
+msgid "x_task_name"
+msgstr "题目名称"
+
+msgid "x_theory"
+msgstr "理论基础"
+
+msgid "x_real_vuln"
+msgstr "真实漏洞"
+
+msgid "x_exercise"
+msgstr "夺旗解题"
+
+msgid "x_man_machine"
+msgstr "人机攻防"
+
+msgid "x_ad_mode"
+msgstr "夺旗攻防"
+
+msgid "x_infiltration"
+msgstr "渗透赛题"
+
+#msgid "x_experiment"
+#msgstr "基础实验"
+
+msgid "x_weight"
+msgstr "权重"
+
+msgid "x_task_count"
+msgstr "习题数"
+
+msgid "x_task_event"
+msgstr "习题集"
+
+msgid "x_add_event"
+msgstr "新建习题集"
+
+msgid "x_edit_event"
+msgstr "编辑习题集"
+
+msgid "x_option"
+msgstr "选项"
+
+msgid "x_answer"
+msgstr "答案"
+
+msgid "x_add_task"
+msgstr "新建题目"
+
+msgid "x_edit_task"
+msgstr "编辑题目"
+
+msgid "x_lose_score"
+msgstr "分数： 请设置分数"
+
+msgid "x_lose_task_event"
+msgstr "习题集： 请选择习题集"
+
+msgid "x_lose_category"
+msgstr "分类： 请选择分类"
+
+msgid "x_lose_content"
+msgstr "内容： 该字段必填"
+
+msgid "x_lose_answer"
+msgstr "答案： 请选择答案"
+
+msgid "x_is_not_null"
+msgstr "不能为空"
+
+msgid "x_public_wp"
+msgstr "公开赛题题解"
+
+msgid "x_hide_wp"
+msgstr "隐藏赛题题解"
+
+msgid "x_public_ex"
+msgstr "公开课后练习"
+
+msgid "x_hide_ex"
+msgstr "隐藏课后练习"
+
+msgid "x_exercise_status"
+msgstr "练习状态"
+
+msgid "x_official_wp"
+msgstr "官方题解"
+
+msgid "x_is_show_official_wp"
+msgstr "是否显示赛题题解"
+
+msgid "x_dynamic_env"
+msgstr "动态答题环境"
+
+msgid "x_sence_setting"
+msgstr "场景配置"
+
+msgid "x_dymaic_flag"
+msgstr "动态Flag"
+
+msgid "x_flag_count"
+msgstr "Flag数量"
+
+msgid "x_flag_split"
+msgstr "多个Flag用'|'分离"
+
+msgid "x_wp_status"
+msgstr "赛题题解"
+
+msgid "x_name_len_lt_30"
+msgstr "名称： 字段超长(0~30)"
+
+msgid "x_title_num"
+msgstr "题目id"
+
+msgid "x_last_edit_time"
+msgstr "上一次编辑时间"
+
+msgid "x_previous_question"
+msgstr "上一题"
+
+msgid "x_next_question"
+msgstr "下一题"
+
+msgid "x_my_question_bank"
+msgstr "我的题库"
+
+msgid "x_practiceing"
+msgstr "练习中……"
+
+msgid "x_official_solve_problem"
+msgstr "赛题题解"
+
+msgid "x_test_environment"
+msgstr "测试环境"
+
+msgid "x_practical_exercises"
+msgstr "夺旗解题"
+
+msgid "x_long_length_30"
+msgstr "长度超长(30个字符)"
+
+msgid "x_title_too_long"
+msgstr "标题过长"
+
+msgid "x_title_already_exists"
+msgstr "标题已存在"
+
+msgid "x_no_environmental_documents"
+msgstr "没有环境文件"
+
+msgid "x_file_missing_scene_configuration"
+msgstr "环境文件缺少场景配置"
+
+msgid "x_invalid_scene_configuration"
+msgstr "无效的场景配置"
+
+msgid "x_lack_flag"
+msgstr "缺少FLAG"
+
+msgid "x_invalid_scene"
+msgstr "无效的场景"
+
+msgid "x_please_select_scene"
+msgstr "请选择场景"
+
+msgid "x_lack_environmental_information"
+msgstr "缺少环境信息"
+
+msgid "x_length_not_greater_30"
+msgstr "字段长度不能大于30"
+
+msgid "x_score_2000"
+msgstr "分数超过2000"
+
+msgid "x_score_type_error"
+msgstr "分数类型错误"
+
+msgid "x_multi_solution_mode"
+msgstr "多解模式 ----多个FLAG，成功提交任一FLAG即可完成解题。"
+
+msgid "x_step_by_step"
+msgstr "分步得分 ----多个FLAG，分步解题，依次提交对应的FLAG，按照提交成功的FLAG数量得分。"
+
+msgid "x_problem_solving_type"
+msgstr "解题类型"
+
+msgid "x_multiple_flag_serparated"
+msgstr "多个Flag用'|'分离"
+
+msgid "x_slelct_solution_mode"
+msgstr "请选择解题模式"
+
+msgid "x_flag_dynamicslly_generated"
+msgstr "FLAG动态生成"
+
+msgid "x_flag_repeat"
+msgstr "FLAG重复"
+
+msgid "x_score_field_required"
+msgstr "分数：该字段必填"
+
+msgid "x_score_small"
+msgstr "分数不能小于等于0"
+
+msgid "x_team_not_exist"
+msgstr "队伍不存在"
+
+msgid "x_export"
+msgstr "导出"
+
+msgid "x_import"
+msgstr "导入"
+
+msgid "x_answer_env_error"
+msgstr "动态答题环境错误"
+
+msgid "x_select_solution_mode"
+msgstr "请选择解题模式"
+
+msgid "x_parameter_error"
+msgstr "参数错误"
+
+msgid "x_has_all_answered"
+msgstr "已经全部答完"
+
+msgid "x_return_to_practice"
+msgstr "返回练习"
+
+msgid "x_practice_library"
+msgstr "练习题库"
+
+msgid "x_attach_server"
+msgstr "所属机器"
+
+msgid "x_empty"
+msgstr "清空"
+
+msgid "x_name_conventions"
+msgstr "请使用数字、字母、中文以及下划线命名"
+
+msgid "x_flag_error"
+msgstr "flag中请勿包含“|”！"
+
+msgid "x_practice_package"
+msgstr "习题集压缩包"
+
+msgid "x_flag_error_new"
+msgstr "分步得分模式下，flag中请勿包含'|'"
+
+msgid "x_jump_two_seconds"
+msgstr "两秒后自动跳转下一题"
+
+msgid "x_get_start"
+msgstr "入门"
+
+msgid "x_title_type"
+msgstr "题目类型"

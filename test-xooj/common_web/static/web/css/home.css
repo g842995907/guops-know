@@ -1,0 +1,39 @@
+/*
+* @Author: Marte
+* @Date:   2017-06-23 16:09:36
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-06-23 16:09:43
+*/
+.oj_label2{
+    width:100px;
+    height:22px;
+    line-height:22px;
+    text-align:center;
+    color:white;
+    font-size:14px;
+}
+.finish .oj_label2{
+    background:url(../img/hhui2.png);
+    background-size:100% 100%;
+}
+.already .oj_label2{
+    background:url(../img/hyellow3.png);
+    background-size:100% 100%;
+}
+.ing .oj_label2{
+    background:url(../img/hblue1.png);
+    background-size:100% 100%;
+}
+.oj_hover:hover{
+    background:#5996d7;
+    color:white;
+}
+.oj_hover:hover .dots{
+    background:white;
+    color:white;
+}
+@media screen and (max-width: 1366px){
+  #home{
+      zoom: 0.8;
+  }
+}

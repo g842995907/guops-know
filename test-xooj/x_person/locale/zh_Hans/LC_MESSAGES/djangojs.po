@@ -1,0 +1,203 @@
+msgid "x_all_grades"
+msgstr "全部年级"
+
+msgid "x_all_class"
+msgstr "全部班级"
+
+msgid "x_user_name_prompt"
+msgstr "用户名6～14位，数字，字母和下划线"
+
+msgid "x_email_prompt"
+msgstr "邮箱格式形如xx@xx.com"
+
+msgid "x_password_prompt"
+msgstr "密码8～20位，且必须包含大小写字母数字及特殊字符"
+
+msgid "x_select_class"
+msgstr "请选择班级"
+
+msgid "x_select_department"
+msgstr "请选择院系"
+
+msgid "x_select_grade"
+msgstr "请选择年级"
+
+msgid "x_select_character"
+msgstr "请选择角色"
+
+msgid "x_enter_china_phone"
+msgstr "请输入中国大陆手机号或座机号"
+
+msgid "x_user_already_exists"
+msgstr "该用户已存在"
+
+msgid "x_team_name"
+msgstr "队伍名"
+
+msgid "x_team_logo"
+msgstr "队伍Logo"
+
+msgid "x_organizational_structure_manage"
+msgstr "组织结构管理"
+
+msgid "x_cannot_del_school"
+msgstr "学校无法删除"
+
+msgid "x_rename"
+msgstr "重命名"
+
+msgid "x_upload_file"
+msgstr "请上传文件"
+
+msgid "x_file_must_excel"
+msgstr "文件类型必须是excel"
+
+msgid "x_administrator"
+msgstr "管理员"
+
+msgid "x_teacher"
+msgstr "教员"
+
+msgid "x_student"
+msgstr "学员"
+
+msgid "x_web_security"
+msgstr "Web安全"
+
+msgid "x_reverse_analysis"
+msgstr "逆向分析"
+
+msgid "x_loophole_utilization"
+msgstr "漏洞利用"
+
+msgid "x_password_agreement"
+msgstr "密码协议"
+
+msgid "x_caves_index"
+msgstr "脑洞指数"
+
+msgid "x_mobile_security"
+msgstr "移动安全"
+
+msgid "x_E-mail_verification"
+msgstr "邮件已发送，请在浏览器打开邮件中的链接完成邮箱验证"
+
+msgid "x_max_length_30"
+msgstr "长度不能大于30个字符"
+
+msgid "x_invaild_symbol_admin"
+msgstr "包含非法字符admin | root | 管理员"
+
+msgid "x_save_cannot_changed"
+msgstr "保存后组织结构管理，姓名，学号将无法更改"
+
+msgid "x_apply_admission"
+msgstr "申请加入"
+
+msgid "x_apply_success"
+msgstr "申请成功"
+
+msgid "x_have_applied"
+msgstr "已申请"
+
+msgid "x_already_invited"
+msgstr "已邀请"
+
+msgid "x_page_num"
+msgstr "共{all}页"
+
+msgid "x_click_logo_go"
+msgstr "点击logo前往"
+
+msgid "x_student_ID"
+msgstr "学号"
+
+msgid "x_max_120"
+msgstr "字符超长(0~120)"
+
+msgid "x_members_name"
+msgstr "队员名"
+
+msgid "x_match"
+msgstr "比赛"
+
+msgid "x_course"
+msgstr "课程"
+
+msgid "x_practice"
+msgstr "练习"
+
+msgid "x_30_day"
+msgstr "30天"
+
+msgid "x_record"
+msgstr "记录"
+
+msgid "x_add_failure"
+msgstr "添加失败!"
+
+msgid "x_primary"
+msgstr "初级"
+
+msgid "x_intermediate"
+msgstr "中级"
+
+msgid "x_senior"
+msgstr "高级"
+
+msgid "x_position_required"
+msgstr "职位：该字段必填"
+
+msgid "x_difficlty_choose"
+msgstr "难度级别： 请选择难度"
+
+msgid "x_date"
+msgstr "日期"
+
+msgid "x_match_score"
+msgstr "比赛得分"
+
+msgid "x_study_course_number"
+msgstr "学习课程数"
+
+msgid "x_practice_scoring"
+msgstr "练习得分"
+
+msgid "x_time"
+msgstr "时间"
+
+msgid "x_skills_six_dimensions"
+msgstr "技能六维图"
+
+msgid "x_normal"
+msgstr "正常"
+
+msgid "x_new_user"
+msgstr "新用户"
+
+msgid "x_not_verify"
+msgstr "未审核"
+
+msgid "x_overdue"
+msgstr "已过期"
+
+msgid "x_banned"
+msgstr "已禁用"
+
+msgid "x_online"
+msgstr "在线"
+
+msgid "x_offline"
+msgstr "离线"
+
+msgid "x_joined"
+msgstr "已入队"
+
+msgid "x_invitation"
+msgstr "邀请"
+
+msgid "x_clear_member"
+msgstr "清除成员"
+
+msgid "x_please_choose_format"
+msgstr "请选择{info}"

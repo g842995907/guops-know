@@ -1,0 +1,419 @@
+/* line 9, layout.scss */
+div > h2 {
+  margin-top: 0;
+}
+
+/* line 13, layout.scss */
+.team-logo > span {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 50%;
+}
+
+/* line 20, layout.scss */
+.team-logo > span img {
+  display: inline-block;
+}
+
+/* line 24, layout.scss */
+.team-info-show {
+  padding: 45px 70px;
+  margin-top: 32px;
+  position: relative;
+}
+/* line 28, layout.scss */
+.team-info-show a {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  font-size: 12px;
+  border-bottom: 1px solid;
+}
+/* line 36, layout.scss */
+.team-info-show div:nth-child(2) p {
+  color: #76a9df;
+}
+/* line 39, layout.scss */
+.team-info-show div:nth-child(3) {
+  position: relative;
+  margin-top: 20px;
+}
+/* line 42, layout.scss */
+.team-info-show div:nth-child(3) .new-member-apply {
+  width: 11px;
+  height: 11px;
+  display: inline-block;
+  background: #fb2f2f;
+  border-radius: 50%;
+  /*position: absolute;*/
+  right: 8px;
+  top: 0;
+}
+/* line 53, layout.scss */
+.team-info-show div:nth-child(3) div {
+  display: inline-block;
+  border-right: 1px solid;
+  padding: 0 20px;
+}
+@media screen and (max-width: 1919px) {
+  /* line 59, layout.scss */
+  .team-info-show div:nth-child(3) div {
+    display: inline-block;
+    border-right: 1px solid;
+    padding: 0 4px;
+  }
+}
+/* line 65, layout.scss */
+.team-info-show div:nth-child(3) div:last-child {
+  border-right: none;
+}
+
+/* line 71, layout.scss */
+.team-record {
+  margin-top: 35px;
+}
+/* line 73, layout.scss */
+.team-record h3 {
+  border-bottom: 1px solid #293e66;
+  padding-bottom: 5px;
+  margin-top: 0;
+}
+/* line 78, layout.scss */
+.team-record row div {
+  min-height: 800px;
+}
+
+/* line 84, layout.scss */
+.join-team tbody tr td span {
+  width: 115px;
+  height: 30px;
+  background-color: #777;
+  line-height: 30px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* line 95, layout.scss */
+.team-member-list {
+  text-align: center;
+}
+/* line 97, layout.scss */
+.team-member-list img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+/* line 105, layout.scss */
+.modal {
+  top: 50%;
+  margin-top: -200px;
+}
+
+/* line 113, layout.scss */
+.team-deal-modal .modal-content,
+#new-member-apply-modal .modal-content,
+#invite-new-members-modal .modal-content {
+  background: rgba(18, 35, 57, 0.9);
+}
+/* line 116, layout.scss */
+.team-deal-modal .modal-header .close,
+#new-member-apply-modal .modal-header .close,
+#invite-new-members-modal .modal-header .close {
+  background: url("../img/apply_close.png");
+  width: 16px;
+  height: 16px;
+  opacity: 1;
+}
+/* line 122, layout.scss */
+.team-deal-modal .modal-header,
+#new-member-apply-modal .modal-header,
+#invite-new-members-modal .modal-header {
+  border-bottom: 1px solid #293e66;
+}
+/* line 125, layout.scss */
+.team-deal-modal .new-member-apply-list,
+#new-member-apply-modal .new-member-apply-list,
+#invite-new-members-modal .new-member-apply-list {
+  border-bottom: 1px solid #293e66;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+/* line 130, layout.scss */
+.team-deal-modal .new-member-apply-list img,
+#new-member-apply-modal .new-member-apply-list img,
+#invite-new-members-modal .new-member-apply-list img {
+  width: 50px;
+  height: 50px;
+  margin-right: 5px;
+}
+/* line 135, layout.scss */
+.team-deal-modal .new-member-apply-time,
+#new-member-apply-modal .new-member-apply-time,
+#invite-new-members-modal .new-member-apply-time {
+  color: #293e66;
+  font-size: 14px;
+}
+/* line 139, layout.scss */
+.team-deal-modal .deal-btn span,
+#new-member-apply-modal .deal-btn span,
+#invite-new-members-modal .deal-btn span {
+  width: 60px;
+  height: 30px;
+  margin-top: 5px;
+  display: inline-block;
+  color: #fff;
+  line-height: 30px;
+  text-align: center;
+  margin-right: 10px;
+}
+/* line 149, layout.scss */
+.team-deal-modal .deal-btn .agree-btn,
+#new-member-apply-modal .deal-btn .agree-btn,
+#invite-new-members-modal .deal-btn .agree-btn {
+  background: #ff9900;
+}
+/* line 152, layout.scss */
+.team-deal-modal .deal-btn .refuse-btn,
+#new-member-apply-modal .deal-btn .refuse-btn,
+#invite-new-members-modal .deal-btn .refuse-btn {
+  background: #293e66;
+}
+
+/* line 159, layout.scss */
+#invite-new-members-modal .modal-body form {
+  display: -webkit-box;
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+}
+/* line 164, layout.scss */
+#invite-new-members-modal .modal-body div {
+  width: 578px;
+  height: 50px;
+  margin-left: 145px;
+  padding-top: 5px;
+  background-color: #081d38;
+}
+/* line 171, layout.scss */
+#invite-new-members-modal .modal-body div span:nth-child(1) {
+  line-height: 40px;
+}
+/* line 174, layout.scss */
+#invite-new-members-modal .modal-body div span:nth-child(3) {
+  width: 60px;
+  height: 30px;
+  margin-top: 5px;
+  display: inline-block;
+  color: #fff;
+  line-height: 30px;
+  text-align: center;
+  background: #ff9900;
+}
+/* line 186, layout.scss */
+#invite-new-members-modal input {
+  width: 460px;
+  display: inline-block;
+  background-color: #081d38;
+  border: 1px solid #447bbe;
+}
+/* line 192, layout.scss */
+#invite-new-members-modal button.search {
+  width: 95px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  background-color: #ff9900;
+  border: none;
+  margin-left: 20px;
+}
+@media screen and (max-width: 1152px) {
+  /* line 202, layout.scss */
+  #invite-new-members-modal input,
+  #invite-new-members-modal .modal-body div {
+    width: 360px;
+  }
+  /* line 206, layout.scss */
+  #invite-new-members-modal .modal-body div {
+    margin-left: 195px;
+  }
+}
+@media screen and (max-width: 1024px) {
+  /* line 211, layout.scss */
+  #invite-new-members-modal .modal-body div {
+    margin-left: 44px;
+  }
+}
+
+/* line 233, layout.scss */
+.team-dismiss-btn {
+  background-color: #c11217;
+}
+
+/* line 237, layout.scss */
+.cancel-btn {
+  margin-left: 55px;
+}
+
+/* line 241, layout.scss */
+.team-member {
+  margin-top: 70px;
+}
+/* line 253, layout.scss */
+.team-member h2 {
+  padding: 10px;
+}
+/* line 257, layout.scss */
+.team-member > table tbody tr {
+  border-bottom: 1px solid;
+}
+/* line 259, layout.scss */
+.team-member > table tbody tr td {
+  padding: 5px 45px;
+}
+
+/* line 267, layout.scss */
+.team-edit-box {
+  padding: 30px 100px;
+  margin-top: 32px;
+}
+/* line 270, layout.scss */
+.team-edit-box .click-upload {
+  color: #ff9900;
+  cursor: pointer;
+  margin-top: 10px;
+}
+/* line 275, layout.scss */
+.team-edit-box .team-edit-form label {
+  font-weight: normal;
+  vertical-align: top;
+}
+/* line 279, layout.scss */
+.team-edit-box .team-edit-form input {
+  height: 40px;
+}
+/* line 282, layout.scss */
+.team-edit-box .team-edit-form input::placeholder {
+  padding-left: 5px;
+  color: #999;
+}
+/* line 286, layout.scss */
+.team-edit-box .team-edit-form textarea {
+  height: 68px;
+  padding-left: 8px;
+  padding-top: 15px;
+  outline: none;
+  resize: none;
+  padding-bottom: 15px;
+}
+/* line 294, layout.scss */
+.team-edit-box .team-edit-form input::placeholder, .team-edit-box .team-edit-form textarea::placeholder {
+  padding-left: 5px;
+  color: #999;
+}
+/* line 299, layout.scss */
+.team-edit-box #team-set-up-time input:nth-of-type(1) {
+  width: 165px;
+}
+/* line 302, layout.scss */
+.team-edit-box #team-set-up-time input:nth-of-type(2) {
+  width: 80px;
+  margin-left: 30px;
+}
+@media screen and (max-width: 1152px) {
+  /* line 307, layout.scss */
+  .team-edit-box #team-set-up-time input:nth-of-type(1) {
+    width: 155px;
+  }
+  /* line 310, layout.scss */
+  .team-edit-box #team-set-up-time input:nth-of-type(2) {
+    width: 60px;
+    margin-left: 4px;
+  }
+}
+
+/* line 318, layout.scss */
+.invite-members {
+  font-size: 14px;
+  padding-right: 45px;
+  letter-spacing: 4px;
+  cursor: pointer;
+}
+
+/* line 328, layout.scss */
+.personal-info-box {
+  height: 300px;
+}
+/* line 330, layout.scss */
+.personal-info-box .head-info {
+  height: 300px;
+  padding: 10px 0;
+}
+/* line 334, layout.scss */
+.personal-info-box .head-info .head-img .head-img p {
+  text-align: center;
+}
+
+/* line 343, layout.scss */
+.calendar-icon {
+  text-align: center;
+  line-height: 32px;
+}
+
+@media screen and (max-width: 1919px) {
+  /* line 349, layout.scss */
+  .calendar-icon {
+    font-size: 22px !important;
+  }
+}
+@media screen and (max-width: 1200px) {
+  /* line 355, layout.scss */
+  .calendar-icon {
+    font-size: 13px !important;
+  }
+}
+/* line 361, layout.scss */
+h3.title {
+  border-bottom: 1px solid #293e66;
+  padding-bottom: 15px;
+  margin-top: 0;
+  font-size: 18px;
+  font-weight: normal;
+  padding-top: 15px;
+  padding-left: 25px;
+}
+
+/* line 371, layout.scss */
+.join-team-tool-box {
+  border-bottom: 1px solid #293e66;
+  padding: 0 15px;
+}
+
+/* line 376, layout.scss */
+.team-hint {
+  height: 48px;
+  line-height: 48px;
+  padding: 0 15px;
+}
+/* line 380, layout.scss */
+.team-hint span:before {
+  content: url("../img/exclamation_mark.png");
+  vertical-align: -webkit-baseline-middle;
+  margin-right: 5px;
+}
+/* line 385, layout.scss */
+.team-hint a {
+  color: #ff9900;
+  text-decoration: underline !important;
+}
+
+/* line 392, layout.scss */
+.page-bar a {
+  border: 1px solid #447bbe;
+  padding: 4px 10px;
+}
+
+/* line 397, layout.scss */
+.page-bar a:hover {
+  background-color: transparent;
+  color: #fff;
+}

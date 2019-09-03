@@ -1,0 +1,72 @@
+{% extends 'experiment/web/task.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'experiment/css/course.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/list.css' %}">
+    <script src="{% static 'practice/js/practice.js' %}"></script>
+{% endblock %}
+
+{% block container %}
+    <input type="hidden" id="type_id" value="{{ type_id }}">
+    <input type="hidden" id="event_id" value="">
+    <input type="hidden" id="task_hash" value="{{ task_hash }}">
+    <div class='container mrg93T'>
+        <div class="content pad10T mrg30T">
+            <div class="row defaultColor mrg100B oj_table searchNoMargin mrg0A default-bg">
+                <h3 class='borders pad20B pad50L pad50R'>
+                    <!--<span class='mainColor font18' id="question-number" ></span>-->
+                    <span class='mainColor font18' name="task-title"></span>
+                </h3>
+
+                <div class="">
+                    <div class="pad40L lineH50 font16 hidden" name="task-title"></div>
+                    <div class="pad40L lineH50 font16" name="task-content"></div>
+                    <form action="" method="post" class="font14 pad40L pad30B" enctype="" id="options">
+                        {% csrf_token %}
+                    </form>
+                </div>
+                {# 选择题templete#}
+                <div class="lineH30 sigle_template" style="display: none">
+                    <input class="mrg10T mrg10B mrg10R" name="sigle_template"
+                           type="radio"><label>A． 22-ssh</label>
+                </div>
+                <div class="lineH30 multiple_template" style="display: none">
+                    <input id="" class="mrg10T mrg10B mrg10R"
+                           type="checkbox"><label>A． 22-ssh</label>
+                </div>
+                {# 选择题templete#}
+                <div class="row pad30L mrg20L mrg30B mrg0A pull-right" name="submit_answer">
+                    <span id="answer-status"></span>
+                    <button type="submit" onclick="submit();return false;" id="checkbox_submit"
+                            class="btn-common mrg40R"><div class="left-right-line">{% trans 'x_submit' %}</div></button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block document_ready %}
+    <script>
+        var type_id = $('#type_id').val();
+        var event_id = $('#event_id').val();
+        var task_hash = $('#task_hash').val();
+        var taskRecordUrl = '{% url 'practice:get_personal_task_record'%}';
+        var doTaskURL = '{% url 'practice:defensetraintaskTT' %}';
+        {#    根据习题集获取题目Id列表url#}
+        var getChoiceIdsUrl = '{% url 'practice:task_hash_list' %}';
+        {#  获取选择题url#}
+        var getChoicesUrl = '{% url 'practice:task_detail' %}';
+        {# 提交答案url#}
+        var submitAnswerUrl = '{% url 'practice:score_list' %}';
+
+        {# 选择题#}
+        $(function () {
+           get_task_record("{{ task_hash }}");
+        });
+    </script>
+{% endblock %}
+

@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title id="platform_title">{% block title %}{% endblock %}</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <linK rel="stylesheet" href="{% static 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/common.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/default.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/ojicon.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-markdown.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-table.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/toastr.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+
+
+    {% block other_css_js %}
+
+    {% endblock %}
+</head>
+<body>
+
+{% block container %}
+
+{% endblock %}
+
+
+
+{% block document_ready %}
+
+{% endblock %}
+
+</body>
+</html>

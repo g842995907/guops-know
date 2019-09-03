@@ -1,0 +1,56 @@
+msgid "x_option_count"
+msgstr "Options"
+
+msgid "x_is_muliple_select"
+msgstr "Whether multiple choice"
+
+msgid "x_option_required"
+msgstr "Option: Each of these options is required"
+
+msgid "x_options_1024"
+msgstr "Options: Make sure that the field does not exceed 1024 characters in length."
+
+msgid "x_import"
+msgstr "Upload"
+
+msgid "x_task_import"
+msgstr "Upload Task"
+
+msgid "x_task"
+msgstr "Task"
+
+msgid "x_task_export"
+msgstr "Download Task"
+
+msgid "x_import_successfully"
+msgstr "Upload Successfully"
+
+msgid "x_upload_format_error"
+msgstr "Upload Format Error"
+
+msgid "x_please_select_a_file"
+msgstr "Please select a file"
+
+msgid "x_select_task_event_category"
+msgstr "Select Task Event and Category"
+
+msgid "x_supports_xls_txt_format_files_such_as"
+msgstr "Supports (.xls, .txt) Format Files, Such As"
+
+msgid "x_format_error"
+msgstr "Format Error"
+
+msgid "x_accurate_format_error"
+msgstr "At Row {}, column {}, Format Error"
+
+msgid "x_accurate_format_error_no_col"
+msgstr "At Row {}, Format Error"
+
+msgid "x_current_topic_is_empty"
+msgstr "The current topic is empty, please choose from new"
+
+msgid "x_the_topic_option_is_up_to_8"
+msgstr "The maximum number of topic options is 8"
+
+msgid "x_inconsistent_answers_and_options"
+msgstr "This Topic『{}』Inconsistent Answers And Options"

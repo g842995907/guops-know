@@ -1,0 +1,230 @@
+{% extends 'event/cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    {% trans '考试题目' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <!-- <div class="clearfix">
+                    <div class="col-md-4 col-sm-4">
+                        <input class="form-control m-b" id="search" placeholder="标题"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div> -->
+                <div class="clearfix">
+                    <a class='btn btn-primary' href='javascript:showAddTask();'>
+                        <i class='fa fa-plus'></i> {% trans 'x_add' %}
+                    </a>
+                    <a class="btn btn-primary" href='javascript:showAddPaperTask();'">
+                        <i class="fa fa-plus"></i> {% trans '试卷导入' %}
+                    </a>
+                    <button class="btn btn-danger"
+                            data-url="{% url 'cms_event_exam:api:event-task-batch-destroy' %}"
+                            onclick="table.batchDestroy(this);">
+                        <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                    </button>
+
+{#                    <button class='btn btn-primary'#}
+{#                            data-url='{% url "cms_event_exam:api:event-task-batch-public" %}'#}
+{#                            data-field='public'#}
+{#                            data-value='1'#}
+{#                            onclick='table.batchSet(this);'>#}
+{#                        <i class='fa fa-eye'></i> {% trans 'x_public' %}#}
+{#                    </button>#}
+{#                    <button class='btn btn-default'#}
+{#                            data-url='{% url "cms_event_exam:api:event-task-batch-public" %}'#}
+{#                            data-field='public'#}
+{#                            data-value='0'#}
+{#                            onclick='table.batchSet(this);'>#}
+{#                        <i class='fa fa-eye-slash'></i> {% trans 'x_hide' %}#}
+{#                    </button>#}
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_event_exam:api:event-task-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field='task' data-formatter='table.titleFormatter'>{% trans 'x_title' %}</th>
+                <th data-field='task_score'>{% trans 'x_score' %}</th>
+                <th data-field='type' data-formatter='table.typeFormatter'>{% trans 'x_type' %}</th>
+                <th data-field='public' data-formatter='table.publicFormatter'>{% trans 'x_is_public' %}</th>
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- 选择题目 -->
+    <div class='modal fade' id='selectTask' tabindex='-1' role='dialog' aria-labelledby='mySelectTaskModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='mySelectTaskModalLabel'>{% trans 'x_add_task' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <div data-widget-id='select-task' data-instance-id='t1'></div>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="addTask();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 导入试卷题目 -->
+    <div class='modal fade' id='selectPaperTask' tabindex='-1' role='dialog' aria-labelledby='mySelectPaperTaskModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='mySelectPaperTaskModalLabel'>{% trans '导入试卷题目' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <div data-widget-id='select-paper-task' data-instance-id='t2'></div>
+                </div>
+                <div class='clearfix modal-footer'>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static_v 'practice/widgets/select_task/js/select_task.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'practice/widgets/select_paper_task/js/select_paper_task.js' %}"></script>
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_event_exam:task_list' event.pk %}";
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+
+        var taskDetailUrlDict = {
+            '0': '{% url "cms_practice_theory:task_detail" 0 %}',
+            '1': '{% url "cms_practice_real_vuln:task_detail" 0 %}',
+            '2': '{% url "cms_practice_exercise:task_detail" 0 %}',
+            '3': '{% url "cms_practice_man_machine:task_detail" 0 %}',
+        };
+        var table = bsTable.getTableModule($('#table'), function(){
+            this.titleFormatter = function (value, row, index) {
+                if(row.type == 0 && !value.title){
+                    content = value.content.replace(/<[^>]+>/g, "")
+                    return content.substring(0, 15) + "...";
+                }
+                return value ? value.title : '无题';
+            };
+
+            this.scoreFormatter = function (value, row, index) {
+                return value ? value.score : '-';
+            };
+
+            this.typeFormatter = function (value, row, index) {
+                return DictModelConstant.EventTask.Type[value];
+            };
+
+            this.operatorFormatter = function (value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        url: taskDetailUrlDict[row.type].replace('/0', '/' + row.task.id) + '?return=' + urlparser.getEncodedLocalPath(),
+                    }
+                ]
+                return table.getOperatorHtml(btns);
+            };
+        });
+
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.event = '{{ event.pk }}';
+                // params.search = $("#search").val();
+                return params;
+            },
+        });
+        
+        var selectPaperTaskWidgetBindFlag = false;
+        function showAddPaperTask(){
+            if (!selectPaperTaskWidgetBindFlag) {
+                $('[data-widget-id=select-paper-task]').bindPaperTaskSelectWidget({
+                    exportPaperTask: function(taskHashs, taskScores) {
+                        var data = {
+                            task_hashs: taskHashs,
+                            task_scores: taskScores,
+                            event: '{{ event.pk }}',
+                        }
+                        http.post('{% url "cms_event_exam:api:event-task-batch-create" %}', data, function(res){
+                            $('#selectPaperTask').modal('hide');
+                            table.refresh();
+                        });
+                    }
+                });
+            }
+            $('#selectPaperTask').modal();
+        }
+
+        var selectTaskWidgetBindFlag = false;
+        function showAddTask(){
+            if (!selectTaskWidgetBindFlag) {
+                $('[data-widget-id=select-task]').bindTaskSelectWidget();
+            }
+            $('#selectTask').modal();
+        }
+
+        function addTask(){
+            var ids = taskSelectWidgetInstance.t1.table.getCheckedValues();
+            if (ids.length == 0) {
+                return;
+            }
+            var tasks = $('[data-widget-id=select-task] table').bootstrapTable('getData');
+
+            var taskHashs = [];
+            $.each(tasks, function(i, task){
+                if ($.inArray(task.id.toString(), ids) != -1) {
+                    taskHashs.push(task.hash);
+                }
+            });
+
+            var data = {
+                task_hashs: taskHashs,
+                event: '{{ event.pk }}',
+            }
+
+            // 理论基础默认10分
+            var type = $('[data-widget-id=select-task] [data-filter-name=type]').val();
+            if (type == 0) {
+                data.task_scores = Array(taskHashs.length).fill(10);
+            }
+
+            http.post('{% url "cms_event_exam:api:event-task-batch-create" %}', data, function(res){
+                $('#selectTask').modal('hide');
+                table.refresh();
+            });
+        }
+    </script>
+{% endblock %}

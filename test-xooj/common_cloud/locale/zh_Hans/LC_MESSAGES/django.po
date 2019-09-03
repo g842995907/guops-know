@@ -1,0 +1,71 @@
+msgid "x_bureau_management"
+msgstr "局点管理"
+
+msgid "x_bureau_name"
+msgstr "局点名"
+
+msgid "x_public_key"
+msgstr "公钥"
+
+msgid "x_private_key"
+msgstr "私钥"
+
+msgid "x_download_License_file"
+msgstr "下载License文件"
+
+msgid "x_new_bureau"
+msgstr "新建局点"
+
+msgid "x_edit_bureau"
+msgstr "编辑局点"
+
+msgid "x_Licence_configuration_example"
+msgstr "License配置项如下"
+
+msgid "x_Licence_configuration_information"
+msgstr "license配置信息"
+
+msgid "x_authorization_date"
+msgstr "授权信息"
+
+msgid "x_upgrade_package_management"
+msgstr "升级包管理"
+
+msgid "x_update_name"
+msgstr "更新名"
+
+msgid "x_download_update_package"
+msgstr "下载更新包"
+
+msgid "x_new_update"
+msgstr "新建更新"
+
+msgid "x_edit_update"
+msgstr "编辑更新"
+
+msgid "x_release_notes"
+msgstr "更新说明"
+
+msgid "x_del_package"
+msgstr "删除更新包"
+
+msgid "x_cloud_management"
+msgstr "云管理"
+
+msgid "x_version_management"
+msgstr "版本管理"
+
+msgid "x_auto_update"
+msgstr "自动更新"
+
+msgid "x_professional_edition"
+msgstr "专业版"
+
+msgid "x_educational_edition"
+msgstr "教育版"
+
+msgid "x_trial_yes"
+msgstr "试用版"
+
+msgid "x_trial_no"
+msgstr "正式版"

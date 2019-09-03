@@ -1,0 +1,143 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/list.css' %}">
+    <script src="{% static 'web/bootstrap-table/bootstrap-table.min.js' %}"></script>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+            <span>&gt;&gt;</span>
+            <a href="{% url 'experiment:list' %}" class='active font15'>{% trans "基础实验" %}</a>
+        </div>
+        <div class="content pad10T">
+            <table class="filtrate">
+                <tr>
+                    <td width="50" class="top10">{% trans "分类" %}:</td>
+                    <td width="60">
+                        <span><a href="javaScript:void(0)" class="direction-list activated sticky" name="search_direction"
+                                 id="direction-all" value="">{% trans "x_all" %}</a></span>
+                    </td>
+                    <td>
+                        {% for direction in directions %}
+                            <span><a href="javaScript:void (0)" class="direction-list" name="search_direction"
+                                     value="{{ direction.id }}">{{ direction.name }}</a></span>
+                        {% endfor %}
+                </tr>
+                <tr>
+                    <td width="50" class="top10">{% trans "x_difficulty" %}:</td>
+                    <td width="60" class="top10">
+                        <span><a href="javaScript:void(0)" class="difficulty-list activated sticky" name="search_difficulty"
+                                 id="difficulty-all" value="">{% trans "x_all" %}</a></span></td>
+                    <td>
+                        <span><a href="javaScript:void(0)" class="difficulty-list" name="search_difficulty" value="0">{% trans "x_easy" %}</a></span>
+                        <span><a href="javaScript:void(0)" class="difficulty-list" name="search_difficulty" value="1">{% trans "x_normal" %}</a></span>
+                        <span><a href="javaScript:void(0)" class="difficulty-list" name="search_difficulty" value="2">{% trans "x_hard" %}</a></span>
+                </tr>
+            </table>
+            <div class='clearfix mrg20B'>
+                <div class="search default-bg fr">
+                    <input class="search-text pad10L fl sticky" placeholder="{% trans "搜索" %}" type="text" name="search">
+                    <span class="search-bg mainBg fr font18 text-center cursor" id="experiment-search">
+                    <i class="oj-icon search-btn whiteC oj-icon-E911"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content pad10T mrg30T">
+            <div class="defaultColor mrg100B table-warp">
+                <table id="tasktable" class="table default-table-v2"
+                       data-toggle="table"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-pagination-pre-text="<"
+                       data-pagination-next-text=">"
+                       data-url="{% url 'experiment:api:experiment-list' %}"
+                >
+                    <thead>
+                    <tr>
+                        <th class="col-xs-" data-field="name">{% trans '实验名称' %}</th>
+                        <th class="col-xs-" data-field="direction_i18n_name">{% trans '实验分类' %}</th>
+                        <th class="col-xs-" data-field="difficulty"
+                                data-formatter="diffcultFormatter">{% trans 'x_difficulty' %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                    </tfoot>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'web/js/sticky-bt.js' %}"></script>
+
+    <script type="text/javascript">
+        function get_query_string(name) {
+             var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+             var r = window.location.search.substr(1).match(reg);
+             if(r!=null)return  unescape(r[2]); return null;
+        }
+
+
+        function queryParams(params) {
+            params.search = $("input[name='search']").val();
+            params.search_direction = $("a[name='search_direction'].activated").attr("value");
+            params.search_difficulty = $("a[name='search_difficulty'].activated").attr("value");
+            return params;
+        }
+
+        var $table = $('#tasktable');
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: queryParams,
+            onClickRow: function (row) {
+                window.open("{% url 'experiment:learn' -1 %}".replace("-1", row.id), "_self");
+            },
+            pageSize: 10
+        });
+
+        function diffcultFormatter(value, row, index) {
+            var diffcult = '';
+            if (value != null) {
+                switch (Number(value)) {
+                    case 0:
+                        diffcult = gettext('x_easy');
+                        break;
+                    case 1:
+                        diffcult = gettext('提高');
+                        break;
+                    case 2:
+                        diffcult = gettext('专家');
+                        break;
+                }
+            } else {
+                diffcult = gettext('无');
+            }
+            return diffcult
+        }
+
+        $(document).ready(function () {
+            // init style
+            activate_effects("direction");
+            activate_effects("difficulty");
+
+            // 点击搜索按钮
+            $("#experiment-search").click({"bsTable": $table}, refreshBootstrapTable);
+            $("a[name='search_direction']").click({"bsTable": $table}, refreshBootstrapTable);
+            $("a[name='search_difficulty']").click({"bsTable": $table}, refreshBootstrapTable);
+        });
+    </script>
+{% endblock %}
+
+<!-- container end-->

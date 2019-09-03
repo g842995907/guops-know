@@ -1,0 +1,23 @@
+msgid "x_deploy_task"
+msgstr "Deployment Challenges"
+
+msgid "x_clean_task"
+msgstr "Clean task"
+
+msgid "x_push_flag"
+msgstr "Push flag"
+
+msgid "x_check_task"
+msgstr "Check task"
+
+msgid "x_check_status_is"
+msgstr "Check the status as"
+
+msgid "x_execute_success"
+msgstr "Execution succeed"
+
+msgid "x_field_cannot_empty!"
+msgstr "This field can not be empty!"
+
+msgid "x_choose_environment"
+msgstr "Please choose a Scene"

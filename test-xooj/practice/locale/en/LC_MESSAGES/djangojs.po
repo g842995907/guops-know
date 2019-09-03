@@ -1,0 +1,83 @@
+msgid "x_ad_mode"
+msgstr "CTF AD"
+
+msgid "x_all_task_event"
+msgstr "All Quiz List"
+
+msgid "x_all_category"
+msgstr "All Category"
+
+msgid "x_all_tye"
+msgstr "All Type"
+
+msgid "x_theory"
+msgstr "Theoretical Basis"
+
+msgid "x_real_vuln"
+msgstr "Real Vulnerability"
+
+msgid "x_exercise"
+msgstr "CTF Jeopardy"
+
+msgid "x_man_machine"
+msgstr "Man-machine attack and defense"
+
+msgid "x_task_event"
+msgstr "Quiz List"
+
+msgid "x_task_name"
+msgstr "Challenge Name"
+
+msgid "x_task"
+msgstr "Challenge"
+
+msgid "x_fixed_ip"
+msgstr "Fix IP"
+
+msgid "x_float_ip"
+msgstr "Float IP"
+
+msgid "x_ssh_port"
+msgstr "SSH Port"
+
+msgid "x_task_port"
+msgstr "Challenge Port"
+
+msgid "x_home"
+msgstr "Home"
+
+msgid "x_flag_not_null"
+msgstr "Flag Not Null"
+
+msgid "x_topic_num"
+msgstr "Challenges"
+
+msgid "x_topic_panking"
+msgstr "{num} question"
+
+msgid "x_resolved"
+msgstr "Resolved"
+
+msgid "x_multiple_flags"
+msgstr "The current topic supports step by step solution, there are multiple FLAG"
+
+msgid "x_answer_not_empty"
+msgstr "The answer can not be empty"
+
+msgid "x_flag_solved"
+msgstr "This FLAG has been solved!"
+
+msgid "x_multiple_flag_serparated"
+msgstr "Multiple flags are separated by '|'"
+
+msgid "x_no_writeup"
+msgstr "No Solution"
+
+msgid "x_select_theoretical_basis"
+msgstr "Please select the type of theoretical basis."
+
+msgid "x_infiltration"
+msgstr "Infiltration"
+
+msgid "x_no_answer"
+msgstr "There is no need to submit an answer to this question."

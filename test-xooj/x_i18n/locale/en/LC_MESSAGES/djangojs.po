@@ -1,0 +1,428 @@
+msgid "x_yes"
+msgstr "Yes"
+
+msgid "x_no"
+msgstr "No"
+
+msgid "x_name"
+msgstr "Name"
+
+msgid "x_operation"
+msgstr "Operation"
+
+msgid "x_to_create"
+msgstr "To Crete"
+
+msgid "x_re_create"
+msgstr "Recreate"
+
+msgid "x_error"
+msgstr "Error"
+
+msgid "x_score"
+msgstr "Score"
+
+msgid "x_category"
+msgstr "Category"
+
+msgid "x_search"
+msgstr "Search"
+
+msgid "x_status"
+msgstr "Status"
+
+msgid "x_has_deleted"
+msgstr "Deleted"
+
+msgid "x_team_leader"
+msgstr "Team Leader"
+
+msgid "x_unknown"
+msgstr "Down"
+
+msgid "x_want_to_continue"
+msgstr "Want To Continue"
+
+msgid "x_confirm"
+msgstr "Confirm"
+
+msgid "x_save"
+msgstr "Save"
+
+msgid "x_cancel"
+msgstr "Cancel"
+
+msgid "x_operation_success"
+msgstr "Operation Succeeded"
+
+msgid "x_server_error"
+msgstr "Server Error"
+
+msgid "x_close"
+msgstr "Close"
+
+msgid "x_select_file"
+msgstr "Choose File"
+
+msgid "x_none"
+msgstr "None"
+
+msgid "x_private"
+msgstr "Private"
+
+msgid "x_share"
+msgstr "Share"
+
+msgid "x_team"
+msgstr "My Team"
+
+msgid "x_not_configured"
+msgstr "Not Configured"
+
+msgid "x_setting_private_environment"
+msgstr "Set Scene as Private"
+
+msgid "x_experimental_report"
+msgstr "Report"
+
+msgid "x_easy"
+msgstr "Easy"
+
+msgid "x_normal"
+msgstr "Normal"
+
+msgid "x_hard"
+msgstr "Expert"
+
+msgid "x_public"
+msgstr "Public"
+
+msgid "x_hide"
+msgstr "Hide"
+
+msgid "x_shared_environment"
+msgstr "Sharing Scene"
+
+msgid "x_private_environment"
+msgstr "Private Scene"
+
+msgid "x_group_environment"
+msgstr "Group scene"
+
+msgid "x_remaining_time"
+msgstr "Left Time"
+
+msgid "x_is_withdraw"
+msgstr "Will recycle the scenario after {minute} minute {second} second ,  extend or not?"
+
+msgid "x_right_click_switch"
+msgstr "Right Click To Edit"
+
+msgid "x_cannot_add_subnode"
+msgstr "Can't Add Sub Node"
+
+msgid "x_cannot_edit_node"
+msgstr "Cant't Edit Node"
+
+msgid "x_cantnot_del_rootnode"
+msgstr "Root Node Can't Br Deleted"
+
+msgid "x_delete"
+msgstr "Delete"
+
+msgid "x_no_match_found"
+msgstr "No matching records found"
+
+msgid "x_charge"
+msgstr "Charge"
+
+msgid "x_free"
+msgstr "Free"
+
+msgid "x_limit"
+msgstr "Limit"
+
+msgid "x_starting"
+msgstr "Starting"
+
+msgid "x_running"
+msgstr "Running"
+
+msgid "x_deploying"
+msgstr "Deploying"
+
+msgid "x_creating"
+msgstr "Creating"
+
+msgid "x_add"
+msgstr "New"
+
+msgid "x_user_name"
+msgstr "Username"
+
+msgid "x_zh-han"
+msgstr "Chinese"
+
+msgid "x_English"
+msgstr "English"
+
+msgid "x_day"
+msgstr "D"
+
+msgid "x_hour"
+msgstr "hr"
+
+msgid "x_time_minute"
+msgstr "'"
+
+msgid "x_second"
+msgstr "\""
+
+msgid "x_type"
+msgstr "Category"
+
+msgid "x_introduction"
+msgstr "Introduction"
+
+msgid "x_password"
+msgstr "Password"
+
+msgid "x_sorry_not_start"
+msgstr "Coming Soon!"
+
+msgid "x_paused"
+msgstr "Paused"
+
+msgid "x_underway"
+msgstr "In Progress"
+
+msgid "x_upcoming"
+msgstr "Upcoming"
+
+msgid "x_archive"
+msgstr "Closed"
+
+msgid "x_question_no_title"
+msgstr "No Task Body"
+
+msgid "x_set_shared_environment"
+msgstr "Set Scene as Shared"
+
+msgid "x_exam"
+msgstr "Exam"
+
+msgid "x_jeopardy"
+msgstr "Jeopardy"
+
+msgid "x_ad_game"
+msgstr "AD"
+
+msgid "x_single_choice"
+msgstr "Single Choice"
+
+msgid "x_title"
+msgstr "Name"
+
+msgid "x_required"
+msgstr "Require"
+
+msgid "x_ranking"
+msgstr "Rank"
+
+msgid "x_click_download_attachments"
+msgstr "Download Attachment"
+
+msgid "x_drag_picture_here"
+msgstr "Drag the picture here"
+
+msgid "x_status_normal"
+msgstr "Normal"
+
+msgid "x_unable_comment"
+msgstr "Unable To Comment。"
+
+msgid "x_you_are_here"
+msgstr "Your Location"
+
+msgid "x_connect_env_with_oj"
+msgstr "Connect to the environment via training platform "
+
+msgid "x_connect_network_with_route"
+msgstr "Connect to the network by routing"
+
+msgid "x_no_free_harddisk"
+msgstr "Don't have enough hard disk Space"
+
+msgid "x_web_ssh"
+msgstr "WEB-SSH Login"
+
+msgid "x_web_rep"
+msgstr "WEB-RDP Login"
+
+msgid "x_web_login"
+msgstr "WEB Login"
+
+msgid "x_web_login_new_tab"
+msgstr "Login New Tab"
+
+msgid "x_vulnerability"
+msgstr "Vulnerability"
+
+msgid "x_enter_chinese"
+msgstr "Chinese Name Require"
+
+msgid "x_enter_english"
+msgstr "English Name Require"
+
+msgid "x_enter_name_testpaper"
+msgstr "Please enter the name of the test paper"
+
+msgid "x_edit"
+msgstr "Edit"
+
+msgid "x_vm_count"
+msgstr "Total Virtual Machine"
+
+msgid "x_update_failure"
+msgstr "Update failure"
+
+msgid "x_update_completed"
+msgstr "update completed"
+
+msgid "x_start"
+msgstr "Start"
+
+msgid "x_hides"
+msgstr "-"
+
+msgid "x_unable_get_comment_list"
+msgstr "Get Comment List Error"
+
+msgid "x_please_select_picture"
+msgstr "Please select the image file!"
+
+msgid "x_upload_successfully"
+msgstr "Upload successfully"
+
+msgid "x_value_small"
+msgstr "Value is too small"
+
+msgid "x_please_select_zip"
+msgstr "Please select the zip file!"
+
+msgid "x_download_annex"
+msgstr "Download"
+
+msgid "x_markdown_add_image_or_drop"
+msgstr "Add images by dragging & dropping or"
+
+msgid "x_markdown_select_pic"
+msgstr "selecting them"
+
+msgid "x_markdown_upload_img"
+msgstr "Uploading your images..."
+
+msgid "x_create"
+msgstr "Create"
+
+msgid "x_update"
+msgstr "Update"
+
+msgid "x_input_answer"
+msgstr "Input Answer"
+
+msgid "x_minutes"
+msgstr "Minutes"
+
+msgid "x_want_to_continue_log"
+msgstr "We Will Clear All Logs.Want To Continue?"
+
+msgid "x_subject_name"
+msgstr "Name:"
+
+msgid "x_subject_desc"
+msgstr "Description:"
+
+msgid "x_sys_time"
+msgstr "System Time"
+
+msgid "x_sun"
+msgstr "Sunday"
+
+msgid "x_mon"
+msgstr "Monday"
+
+msgid "x_tues"
+msgstr "Tuesday"
+
+msgid "x_wed"
+msgstr "Wednesday"
+
+msgid "x_thurs"
+msgstr "Thursday"
+
+msgid "x_fri"
+msgstr "Friday"
+
+msgid "x_sat"
+msgstr "Saturday"
+
+msgid "x_have_auth"
+msgstr "Have Auth({number})"
+
+msgid "x_auth_forbidden"
+msgstr "Forbidden"
+
+msgid "x_teacher_share"
+msgstr "Teacher Share({number})"
+
+msgid "x_teacher_share_private"
+msgstr "Private"
+
+msgid "x_all_auth"
+msgstr "All"
+
+msgid "x_custom_auth"
+msgstr "Custom Auth"
+
+msgid "x_all_share"
+msgstr "All"
+
+msgid "x_custom_share"
+msgstr "Custom Share"
+
+msgid "x_from_other_people_share"
+msgstr "Share From <t style=\"color: #ed5565;\">{username}</t>"
+
+msgid "x_generate_test_paper"
+msgstr "Import test paper"
+
+msgid "x_score_per_question"
+msgstr "Score per question"
+
+msgid "x_configure_test_paper"
+msgstr "Please configure the test paper"
+
+msgid "x_select_quantity_score"
+msgstr "Please select the quantity and score"
+
+msgid "x_insufficient_number_reconfigure"
+msgstr "Insufficient number of questions, please reconfigure"
+
+msgid "x_select_course_class"
+msgstr "Please select a course and class hours"
+
+msgid "x_generated"
+msgstr "Generated"
+
+msgid "x_please_select_lesson"
+msgstr "Please Select Lesson"
+
+msgid "x_please_select_course"
+msgstr "Please Select Course"
+
+msgid "x_question_bank"
+msgstr "Question bank"
+
+msgid "x_no_markdown_zip_demo"
+msgstr "No Markdown-Zip Demo"

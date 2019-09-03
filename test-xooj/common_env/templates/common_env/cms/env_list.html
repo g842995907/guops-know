@@ -1,0 +1,281 @@
+{% extends './iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    {% trans 'x_scene_management' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <script type="text/javascript" src="{% static_v 'common_env/widgets/test_env/js/network.js' %}"></script>
+
+    <style>
+    .text-pre{
+        white-space: pre;
+    }
+    </style>
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+{#                    <div class="m-r pull-left" style="width:196px">#}
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="type">
+                            <option value="">{% trans 'x_all_category' %}</option>
+                            <option data-id="option-rendering" data-list='ListModelConstant.Env.Type'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+
+                    <div class="m-r pull-left col-md-2">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_env_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+{#                    <div class="m-r pull-right">#}
+{#                        <a class="btn btn-primary" href="{% url 'cms_common_env:active_env_list' %}">#}
+{#                            <i class="fa fa-gear"></i> {% trans 'x_active_env_manage' %}#}
+{#                        </a>#}
+{#                    </div>#}
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_common_env:env_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                    </div>
+                    <div class="m-r pull-left">
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_common_env:api:env-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_common_env:api:env-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true" data-sortable="true">{% trans 'x_name' %}</th>
+                <th data-field="type" data-formatter="table.typeFormatter">{% trans 'x_type' %}</th>
+                <th data-field="node_count" data-formatter="table.nodeCountFormatter">{% trans 'x_node_scale' %}</th>
+                <th data-field="node_stat" data-formatter="table.nodeMemoryFormatter">{% trans 'x_node_memory' %}</th>
+                <th data-field="node_stat" data-formatter="table.nodeDiskFormatter">{% trans 'x_node_disk' %}</th>
+{#                <th data-field="attacker_list" data-formatter="table.attackerCountFormatter">{% trans 'x_attacker_count' %}</th>#}
+                {% if DEBUG %}
+                <th data-field="estimate_consume_time" data-formatter="table.estimateConsumeTimeFormatter">{% trans 'x_expect_time' %}</th>
+                {% endif %}
+{#                <th data-field="image_status" data-formatter="table.imageStatusFormatter">{% trans 'x_snapshot_status' %}</th>#}
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="modify_time" data-sortable="true" data-formatter="table.datetimeFormatter" data-escape="true">{% trans 'x_update_time' %}</th>
+                <th data-field="share_count" data-formatter="table.shareFormatter">{% trans 'x_authorization_Operation' %}</th>
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <div class="modal fade" id="testEnvModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_test' %}</h4>
+                </div>
+                <div class="modal-body">
+                    <div data-widget-id="common-env" data-template-env="0" data-from-backend="1"></div>
+                </div>
+                <div class="clearfix modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_common_env:env_list' %}";
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+
+        $TEST_ENV(function () {
+            $('[data-widget-id=common-env]').registerTestEnvWidget({
+                common: {
+                    lang: LANGUAGE_CODE,
+                    alert: popUtil.warningHint,
+                    confirm: popUtil.confirm,
+                }
+            });
+        });
+
+        $('#testEnvModal').on('hidden.bs.modal', function () {
+            $('[data-widget-id=common-env]').empty();
+            $('[data-widget-id=common-env]').clearTestEnvInstance();
+        });
+
+        var table = bsTable.getTableModule($('#table'), function(){
+            this.shareUrl = '{% url 'cms_common_env:share_teacher' 0 %}';
+
+            this.showTestEnv = function (templateEnvId) {
+                $('[data-widget-id=common-env]').attr('data-template-env', templateEnvId);
+                $('#testEnvModal').off('shown.bs.modal').on('shown.bs.modal', function () {
+                    $('[data-widget-id=common-env]').getTestEnv();
+                });
+                $('#testEnvModal').modal('show');
+            };
+
+            var fakeSnapshotUrl = "{% url 'cms_common_env:api:env-snapshot' 0 %}";
+            this.createSnapshot = function (envId) {
+                var url = fakeSnapshotUrl.replace('0', envId);
+                ajaxDialog.buttonClick(http.post, url, {backend_admin: 1}, function () {
+                    table.reload();
+                    // 轮训快照创建状态
+                    startLoopReload();
+                });
+            };
+
+            this.deleteSnapshot = function (envId) {
+                var url = fakeSnapshotUrl.replace('0', envId);
+                ajaxDialog.buttonClick(http.delete, url, {backend_admin: 1}, function () {
+                    table.reload();
+                });
+            };
+
+            var imageCreatingCount = 0;
+            this.operatorFormatter = function (value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        url: listUrl + value,
+                        builtin: row.builtin,
+                    }, {
+                        type: 'btn',
+                        class: 'btn-warning',
+                        icon: 'fa-spinner',
+                        text: '{% trans "x_test" %}',
+                        click: 'table.showTestEnv("' + value + '")',
+                    },
+                ];
+
+                var dataSize = $('#table').bootstrapTable('getData').length;
+                if (index == 0) {
+                    imageCreatingCount = 0;
+                }
+
+                if (index == dataSize - 1 && imageCreatingCount == 0) {
+                    closeLoopReload();
+                }
+
+                return table.getOperatorHtml(btns);
+            };
+
+            this.typeFormatter = function (value, row, index) {
+                return DictModelConstant.Env.Type[value];
+            };
+
+            this.imageStatusFormatter = function (value, row, index) {
+                if (!row.need_snapshot) {
+                    return "{% trans 'x_none_snapshot' %}";
+                }
+                return DictModelConstant.Env.ImageStatus[value];
+            };
+
+            this.nodeCountFormatter = function (value, row, index) {
+                return '<span class="text-pre">' + gettext('x_terminal') + ': ' + value.terminal + ' ' +
+                        gettext('x_gateway') + ': ' + value.gateway + ' ' +
+                        gettext('x_network') + ': ' + value.network + '</span>';
+            };
+
+            this.nodeMemoryFormatter = function (value, row, index) {
+                return value.memory + 'G';
+            };
+
+            this.nodeDiskFormatter = function (value, row, index) {
+                return value.disk + 'G';
+            };
+
+            this.attackerCountFormatter = function (value, row, index) {
+                return value.length;
+            };
+
+            this.estimateConsumeTimeFormatter = function (value, row, index) {
+                if (!value) {
+                    return '-';
+                }
+
+                var displayStr = '';
+                var day = Math.floor(value / (60 * 60 * 24));
+                var hour = Math.floor(value / (60 * 60)) - (day * 24);
+                var minute = Math.floor(value / 60) - (day * 24 * 60) - (hour * 60);
+                var second = Math.floor(value) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                if (day) {
+                    displayStr = displayStr.concat(day + gettext('x_day'));
+                }
+                if (hour) {
+                    displayStr = displayStr.concat(hour + gettext('x_hour'));
+                }
+                if (minute) {
+                    displayStr = displayStr.concat(minute + gettext('x_time_minute'));
+                }
+                if (second) {
+                    displayStr = displayStr.concat(second + gettext('x_second'));
+                }
+
+                return displayStr;
+            };
+        });
+
+        $("#table").stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.type = $("#type").val();
+                params.search = $("#search").val();
+                return params;
+            },
+        });
+
+        var loopReload = null;
+        function startLoopReload() {
+            if (loopReload == null) {
+                loopReload = setInterval(function () {
+                    table.reload();
+                }, 5000);
+            }
+        }
+
+        function closeLoopReload() {
+            clearInterval(loopReload);
+            loopReload = null;
+        }
+    </script>
+{% endblock %}

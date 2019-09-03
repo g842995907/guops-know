@@ -1,0 +1,129 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static static_v i18n %}
+{% block other_css_js %}
+    <title></title>
+    <script src="{% static 'web/js/pdfobject.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'course/css/learn_new.css' %}"/>
+{#    <link rel="stylesheet" href="{% static 'course/css/markdown.css' %}"/>#}
+
+    <script type="text/javascript" src="{% static_v 'course/widgets/lesson_env/js/network.js' %}"></script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        .container {
+            height: 100%;
+        }
+
+        .pdfobject-container {
+            margin: 0 auto;
+            background-color: rgba(0, 24, 54, .5);
+            border: 10px solid rgba(0, 0, 0, .2);
+        }
+
+        .pdfobject {
+            background-color: rgba(0, 24, 54, .5);
+        }
+
+        .apply-env {
+            font-size: 16px;
+            border-radius: 2px;
+            cursor: pointer;
+            padding: 8px 15px;
+            color: #fff;
+            background-color: #f99d12;
+            border: 1px solid #e48a01;
+            cursor: pointer;
+            right: 10px;
+            top: 0px;
+            position: absolute;
+        }
+
+    </style>
+    <script>
+        $(function () {
+            $('.content').height($('.container ').height() - $('.bread').height() - 93)
+        })
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class='container ' style="padding-top: 93px;">
+        {% include './bread.html' %}
+        <div class='mrg10T'>
+            <div class="markdown-wrapper wrapper load-page-wrapper" id="show_env" style="display: none;">
+                <div class="load-page" >
+                    {% if lesson_id %}
+                        <div data-widget-id="common-env" data-lesson-hash="{{ lesson_id }}"></div>
+
+                        <script type="text/javascript">
+                            var LANGUAGE_CODE = '{{ LANGUAGE_CODE }}';
+                            $LESSON_ENV(function () {
+                                $('[data-widget-id=common-env]').registerLessonEnvWidget({
+                                    common: {
+                                        lang: LANGUAGE_CODE,
+                                        alert: ialert,
+                                        confirm: iconfirm,
+                                        webAccessTargets: ['_blank'],
+                                        webAccessUrlHandler: function (url) {
+                                            return '{% url "course:network" course_id lesson_id %}?url={0}'.format(escape(url))
+                                        }
+                                    }
+                                });
+
+                                $('[data-widget-id=common-env]').getLessonEnv();
+                            });
+                        </script>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="markdown-wrapper wrapper" id="markdown">
+                <div class="pad20L pad20R posRelative">
+                   {% comment %} <div class="apply-env-btn text-center" name="apply-env" id="show_env" hidden="hidden"></div>{% endcomment %}
+                </div>
+            </div>
+        </div>
+        <div class='content mrg10T mrg10B'>
+            <div id="mypdf" style="height:100%;"></div>
+        </div>
+        {% include './sidebar.html' %}
+    </div>
+    <script>
+        $(function () {
+            var options = {
+                pdfOpenParams: {view: 'FitV', toolbar: '0'}
+            };
+            PDFObject.embed("{{ pdf_url }}", $("#mypdf"), options);
+
+            // 定时执行, 根据定时场景按钮进行判断显示（显示较慢），
+        });
+    </script>
+    <script>
+    $(function () {
+        url = $("#mypdf").html();
+        if (url.indexOf("None") < 0) {
+            var start;
+            var end;
+            var times = 0;
+            var system_url = "{% url 'course:api:lesson-schedule-pdf-progress' lesson_id%}";
+            start = new Date();
+            $(window).bind('beforeunload', function (e) {
+                end = new Date();
+                times = end.getTime() - start.getTime();
+                times = Math.ceil(times / 1000);
+                $.ajax({
+                    type: 'POST',
+                    async: false, //同步提交
+                    url: system_url,
+                    data: {
+                        times: times,
+                    }
+                });
+            })
+        }
+    })
+    </script>
+{% endblock %}

@@ -1,0 +1,475 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans 'x_theory' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <style>
+    .table > tbody > tr > td:nth-child(2){
+        cursor: pointer;
+    }
+    </style>
+
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="event">
+                            <option value="" selected="selected">{% trans 'x_all_task_event' %}</option>
+                            {% for event in event_list %}
+                                <option value="{{ event.id }}">{{ event.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="category">
+                            <option value="" selected="selected">{% trans 'x_all_type' %}</option>
+                            {% for c in category_list %}
+                                <option value="{{ c.id }}">{% if LANGUAGE_CODE == 'zh-hans' %}{{ c.cn_name }}{% else %}{{ c.en_name }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_task_name' %}"
+                               type="text">
+                        </input>
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                    <div class="m-r pull-right">
+                        <a class="btn btn-primary pull-right" href="{% url 'cms_practice_theory:category_list' %}">
+                            <i class="fa fa-gear"></i> {% trans 'x_type_management' %}
+                        </a>
+                    </div>
+                </div>
+
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_practice_theory:task_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_practice_theory:cms_api:choice-task-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+
+                        <button class="btn btn-success"
+                                data-url="{% url 'cms_practice_theory:cms_api:choice-task-batch-public' %}"
+                                onclick="table.batchPublic(this, 1);">
+                            <i class="fa fa-eye"></i> {% trans 'x_public' %}
+                        </button>
+                        <button class="btn btn-warning"
+                                data-url="{% url 'cms_practice_theory:cms_api:choice-task-batch-public' %}"
+                                onclick="table.batchPublic(this, 0);">
+                            <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}
+                        </button>
+                        <button class="btn btn-info"
+                                data-toggle="modal" data-target="#import_task">
+                            <i class="fa fa-upload"></i> {% trans 'x_upload' %}
+                        </button>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#export_task" style="display: none">
+                            <i class="fa fa-download"></i> {% trans 'x_download' %}
+                        </button>
+                    </div>
+                </div>
+                {% verbatim %}
+                <div class='modal fade' id='showTask' v-cloak tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+                     aria-hidden='true'>
+                    <div class='modal-dialog modal-lg' style='top: 200px; font-size: 14px'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <button type="button" class="close" data-dismiss="modal"
+                                        aria-hidden="true">×
+                                </button>
+                                <h4 class='modal-title' id='task_title'>{{ task.title_dsc }}</h4>
+                            </div>
+                            <div class='modal-body' style="padding: 5px 20px">
+                                <div style="margin: 15px" v-for='(key,value) in options_dsc'>{{ value }}.{{ key }}</div>
+                                <span style="margin: 15px">{{ 'x_answer' | trans }}: {{ task.answer }}</span>
+                            </div>
+                            <div style="margin: 15px"></div>
+                        </div>
+                    </div>
+                </div>
+                {% endverbatim %}
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-show-refresh="false"
+               data-toolbar-align="center"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_practice_theory:cms_api:choice-task-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="title_dsc" data-width="30%" data-formatter="titileFormatter" >{% trans 'x_title' %}</th>
+                <th data-field="event_name" data-escape="true" >{% trans 'x_task_event' %}</th>
+                <th data-field="category_cn_name" data-escape="true">{% trans 'x_category' %}</th>
+                <th data-field="public" data-formatter="table.publicFormatter" data-sortable="true">{% trans 'x_is_public' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="last_edit_time" data-formatter="table.datetimeFormatter" data-sortable="true">{% trans 'x_update_time' %}</th>
+                <th data-field="id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    <a href="" download="理论基础.xls" id="export_theory" hidden="hidden"></a>
+
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="import_task" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style='top: 100px; font-size: 14px'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_task_import' %}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="line-height: 0px;">{% trans 'x_task_event' %}</label>
+
+                        <div class="col-sm-7" style="bottom: 16px">
+                            <select class="form-control selectpicker" id="event_name" name="event">
+                                {% for event in event_list %}
+                                    <option {% if event.id == task.event %}selected{% endif %}
+                                            value="{{ event.id }}">{{ event.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2  control-label"
+                               style="line-height: 0px;">{% trans 'x_category' %}</label>
+                        <div class="col-sm-7" style="bottom: 16px">
+                            <select class="col-sm-2 form-control selectpicker" id="category" name="category"
+                                    data-form-fixed="1">
+                                {% for category in category_list %}
+                                    <option {% if category.id == task.category %}selected{% endif %}
+                                            value="{{ category.id }}">
+                                        {% if LANGUAGE_CODE == 'zh-hans' %}{{ category.cn_name }}{% else %}
+                                            {{ category.en_name }}{% endif %}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2  control-label" style="line-height: 0px;">{% trans 'x_annex' %}</label>
+                        <div class="col-sm-7" id="theory-div"
+                             style="display: block;bottom: 16px">
+                            <input type="file" class="form-control pretty-file" accept=".xls, .xlsx, .txt" id="theory_import"
+                                   name="theory_import">
+
+                            <div style="margin-top: 5px;">{% trans "x_supports_xls_txt_format_files_such_as" %}：[<a
+                                    href="/media/practice/practice_theory/demo.xls">execl_demo.xls</a>, <a
+                                    href="/media/practice/practice_theory/demo.txt" download="txt_demo.txt">txt_demo.txt</a>]
+                            </div>
+                        </div>
+                    </div>
+
+
+{#                    <div class="hr-line-dashed"></div>#}
+                    <div class="form-group">
+                        <div class="col-sm-7 col-sm-offset-2"{% comment %} style="line-height: 0px;"{% endcomment %}>
+                            <div class="text-danger" style="font-size: 17px;" id="import_server_error"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin: 100px"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-bottom: 0px">{% trans 'x_cancel' %}</button>
+                    <button type="button" class="btn btn-primary" onclick="taskImport()">{% trans 'x_save' %}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <div class="modal fade" id="export_task" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style='top: 100px; font-size: 14px'>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_task_export' %}</h4>
+                </div>
+                <div class="modal-body">
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label"
+                               style="line-height: 0px;">{% trans 'x_task_event' %}</label>
+
+                        <div class="col-sm-7" style="bottom: 16px">
+                            <select class="form-control selectpicker" id="eventName" name="event">
+                                {% for event in event_list %}
+                                    <option {% if event.id == task.event %}selected{% endif %}
+                                            value="{{ event.id }}">{{ event.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2  control-label"
+                               style="line-height: 0px;">{% trans 'x_category' %}</label>
+                        <div class="col-sm-7" style="bottom: 16px">
+                            <select class="col-sm-2 form-control selectpicker" id="categoryName" name="category"
+                                    data-form-fixed="1">
+                                {% for category in category_list %}
+                                    <option {% if category.id == task.category %}selected{% endif %}
+                                            value="{{ category.id }}">
+                                        {% if LANGUAGE_CODE == 'zh-hans' %}{{ category.cn_name }}{% else %}
+                                            {{ category.en_name }}{% endif %}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="padding-top:1px;font-size:25px">
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-7 col-sm-offset-2" style="line-height: 30px;">
+                            <div class="text-danger" style="font-size: 17px;" id="export_server_error"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" style="margin-bottom: 0px">{% trans 'x_cancel' %}</button>
+                    <button type="button" class="btn btn-primary" onclick="taskExport()">{% trans 'x_save' %}</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_practice_theory:task_list' %}";
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+        var table = bsTableClass($('#table'));
+        $(function () {
+            $('input[type="file"].pretty-file').prettyFile();
+        });
+        var choiceTask = new Vue({
+                el: '#showTask',
+                data: {
+                    task:{},
+                    options_dsc:{}
+                },
+            });
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.event = $("#event").val();
+                params.category = $("#category").val();
+                params.is_copy = 0;
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        $('#table').on('dbl-click-row.bs.table', function (e, row)
+            {
+                choiceTask.task = row;
+                choiceTask.options_dsc = row['options_dsc'];
+                $('#showTask').modal('show');
+            });
+
+        function operatorFormatter(value, row, index) {
+            var btns = [
+                {
+                    type: 'link',
+                    class: 'btn-primary',
+                    icon: 'fa-edit',
+                    text: "{% trans 'x_edit' %}",
+                    url: listUrl + value,
+                    builtin: row.builtin,
+                }
+            ]
+            return bsTable.getOperatorHtml(btns);
+        };
+
+        function titileFormatter(value, row, index) {
+{#            var title;#}
+{#            if (value != null && value != '') {#}
+{#                title = value;#}
+{#                if (row.content != null && row.content != '') {#}
+{#                    var dd = row.content.replace(/<\/?.+?>/g, "");#}
+{#                    var dds = dd.replace(/ /g, "");#}
+{#                    if (dds.length > 15) {#}
+{#                        title = dds.substr(0, 15) + '...'#}
+{#                    } else {#}
+{#                        title = dds#}
+{#                    }#}
+{#                }#}
+{#            }#}
+{#            return title#}
+            var nameString = "";
+            var realLength = getRealLength(value)[0];
+            var subLength = getRealLength(value)[1];
+            if (realLength > 100) {
+                value=value.substring(0,100)+'...'
+                nameString = value.substring(0, subLength) + '...';
+            }else if (realLength >= 60){
+                nameString = value.substring(0, subLength) + '...';
+            }else {
+                nameString = value;
+            }
+            return [
+                '<span id="thread"  data-toggle="tooltip" title="' + value + '">' + nameString + '</span>',
+            ].join('');
+        }
+        //获取长度
+        function getRealLength(str) {
+            var len = 0;//总长度
+            var subLen = 0;//截取长度
+            for (var i = 0; i < str.length; i++) {
+                var c = str.charCodeAt(i);
+                //单字节+1
+                 if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+                   len++;
+                 }
+                 //汉字+2
+                 else {
+                  len+=2;
+                 }
+                 if (len <= 60){
+                     subLen = i;
+                 }
+            }
+            var lenArr = new Array(len,subLen);
+            return lenArr;
+        }
+
+        // 导入题目
+        function taskImport() {
+            var tempData = check_value();
+            if (!tempData){
+                $("#import_server_error").text("");
+                $("#import_server_error").text("{% trans 'x_please_select_a_file' %}");
+                return false
+            }
+
+            $.ajax({
+                type: 'post',
+                url: '{% url "cms_practice_theory:cms_api:choice-task-import-data" %}',
+                dataType: 'json',
+                data: tempData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                success: function (data) {
+                    $('input[name="theory_import"]').val("");
+                    $("#import_server_error").text("");
+                    $('#import_task').modal('toggle');
+                    swal({
+                            title: "{% trans "x_import_successfully" %}",
+                            type: "success",
+                            confirmButtonText: "{% trans "x_confirm" %}"
+                        },
+                        function () {
+                            $("#table").bootstrapTable('refresh');
+                        }
+                    );
+                },
+                error: function (xhr) {
+                    // 上传失败
+                    var error = xhr.responseJSON && xhr.responseJSON.error || '';
+                    $.each(xhr.responseJSON, function(key, value){
+                        $("#import_server_error").text("");
+                        $("#import_server_error").text(value.message);
+                        return
+                    });
+                }
+            });
+        }
+
+        // 导出题目
+        function taskExport() {
+            var event_id = $("#export_task #eventName option:selected").val();
+            var category_id = $("#export_task #categoryName option:selected").val();
+            $.ajax({
+                url: '{% url "cms_practice_theory:cms_api:choice-task-export-data" %}',
+                data: {event_id: event_id, category_id: category_id},
+                type: 'post',
+                datatype: 'json',
+                success: function (res) {
+                    if (res.info == 'success') {
+                        $("#export_server_error").empty();
+                        $('#export_theory').attr('href', res.url);
+                        document.getElementById("export_theory").click();
+                    }else {
+                        $("#export_server_error").empty();
+                        $("#export_server_error").text(res.error);
+                        $("#export_server_error").show();
+                    }
+                }
+            });
+        }
+
+        function check_value() {
+            var return_data = {};
+            var get_event_id = $("#import_task #event_name option:selected").val();
+            var get_category_id = $("#import_task #category option:selected").val();
+            var fileobj = $('input[name="theory_import"]').prop('files');
+
+            if (!get_event_id || !get_category_id || fileobj.length < 1) {
+                return false
+            }
+
+            var tempData = new FormData();
+            tempData.append('event_id', get_event_id);
+            tempData.append('category_id', get_category_id);
+            tempData.append('fileobj', fileobj[0]);
+
+            return tempData
+        }
+    </script>
+{% endblock %}

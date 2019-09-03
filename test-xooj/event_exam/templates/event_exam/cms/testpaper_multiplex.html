@@ -1,0 +1,385 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    <a href="{% url 'cms_event_exam:exam_list' %}">{% trans '考试' %}</a>>
+    <a href="{% url 'cms_event_exam:task_list' event_exam_id %}">{% trans '题目管理' %}</a>>  {% trans '复用考试' %}
+{% endblock %}
+{% load staticfiles %}
+{% block other_css_js %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "lib/bootstrap-select/css/bootstrap-select.min.css" %}"/>
+
+    <script src="{% static "lib/bootstrap-select/js/bootstrap-select.js" %}"></script>
+    <script src="{% static "lib/bootstrap-select/js/i18n/defaults-zh_CN.min.js" %}"></script>
+    <script src="{% static 'lib/vue.js' %}"></script>
+    <script src="{% static 'event/cms/js/constants.js' %}"></script>
+    <style>
+
+        #table1 tr td {
+            border: 0px solid transparent !important;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        #examform * {
+            border: 0px solid transparent !important;
+        }
+        #table1 {
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+            text-align: left;
+        }
+    </style>
+
+    <style>
+        .note-btn {
+            background-color: #fff;
+            border-color: #ccc;
+            color: #333;
+            height: 32px;
+        }
+
+        .quick-navigation {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 20px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message {
+            overflow: hidden;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        ul, li {
+            list-style: none;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content clearfix">
+        <div style="width: 25%;float: left">
+            <h4>{% trans '请选择要复用的考试：' %}</h4>
+            <br>
+            <table id="table"
+                   data-toggle="table"
+                    {#                   data-toolbar="#tableToolbar"#}
+                   data-toolbar-align="center"
+                   data-show-refresh="false"
+                   data-search="false"
+                   data-pagination="true"
+                   data-checkbox="true"
+                   data-single-select="true"
+                   data-click-to-select="true"
+                   data-side-pagination="server"
+                   data-url="{% url 'cms_event_exam:api:event-list' %}"
+            >
+                <thead>
+                <tr>
+                    <th class="bs-checkbox" data-checkbox="true"
+                        data-formatter="operatorFormatter"></th>
+                    <th data-field="name">{% trans "名称" %}</th>
+                    <th data-field="process" data-formatter="processFormatter">{% trans "状态" %}</th>
+                    <th data-field="task_count">{% trans "总题数" %}</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div style="width: 70%;float: right">
+            <div id="app_paper">
+                <div class="mail-content" id="mail-content">
+                    <div class="quick-navigation">
+                        <h3 align="left">{% trans '请选择需要的复用的考试题目：' %}
+                        </h3>
+                    </div>
+
+                    <div class="message" style="min-height: 500px">
+                        <div class="content" id="examcontent" tabindex="5002"
+                             style="overflow: hidden; outline: none;">
+                            <div class="form-group">
+
+                                <form id="examform" target="form-target">
+
+                                    {#                                    {% verbatim %}#}
+                                    {##}
+                                    {#                                    <ol id="examlist"#}
+                                    {#                                        style="padding: 20px;text-align: left;max-height: 600px; overflow-y: auto;">#}
+                                    {#                                        <li v-for="task,index in task_lists" style="height: 60px;">#}
+                                    {##}
+                                    {#                                            <div class="row form-inline">#}
+                                    {#                                                <label class="col-md-2 col-lg-2"#}
+                                    {#                                                       style="vertical-align:middle;display:inline-block;">#}
+                                    {#                                                    <input :id="create_index(index)" type="checkbox"#}
+                                    {#                                                           style="zoom:150%; vertical-align:middle;"#}
+                                    {#                                                    >题目 {{ index+1 }}:</label>#}
+                                    {##}
+                                    {#                                                <div class="col-md-2 col-lg-8 h4"#}
+                                    {#                                                     v-text="examTitleOrContent(task)"></div>#}
+                                    {##}
+                                    {#                                            </div>#}
+                                    {#                                        </li>#}
+                                    {#                                    </ol>#}
+                                    {#                                    {% endverbatim %}#}
+                                    {#                                    {% verbatim %}#}
+                                    <table id="table1"
+                                           class="table-no-bordered"
+                                           data-show-header="false"
+                                           data-toolbar="#tableToolbar"
+                                           data-toolbar-align="center"
+                                           data-show-refresh="false"
+                                           data-search="false"
+                                           data-checkbox="true"
+                                           data-click-to-select="true"
+                                           data-undefined-text="-"
+                                            {#                                           data-row-style="rowStyle"#}
+                                    >
+                                        <thead>
+                                        <tr>
+                                            {#                                            data-cell-style="cellStyle"#}
+                                            <th data-field="id" data-width="10%"
+                                                data-formatter="title_numberFormatter">{% trans "题目编号" %}
+                                            </th>
+                                            <th data-field="title" data-width="85%"
+                                                data-escape="true" data-formatter="titleFormatter">{% trans "题目名称" %}
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                    {#                                    {% endverbatim %}#}
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div id="vuetable" class="container">
+                                        <div class="row" v-if="task_lists.length > 0" align="right">
+
+                                            <button id="unsubmitbtn" type="button"
+                                                    v-on:click="unsubmit_paper()"
+                                                    v-on:dblclick="db_return()"
+                                                    class="btn btn-default col-md-1 col-md-offset-3">{% trans '取 消' %}
+                                            </button>
+                                            <button id="submitbtn" type="button"
+                                                    v-on:click="submit_paper()"
+                                                    class="btn btn-success col-md-1 col-md-offset-1"> {% trans '确 定' %}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        var EventTaskUrl = "{% url 'cms_event_exam:task_multiplex_json' 0 %}";
+        var EventTask = "{% url 'cms_event_exam:task_list' event_exam_id %}";
+
+    </script>
+
+    <script>
+        var task_list = new Array();
+
+        function operatorFormatter(value, row, index) {
+            return '<input id="task' + index + '" name="checkTask"'
+                + ' type="checkbox" value="0" hidden>';
+        }
+        processFormatter = function (value, row, index) {
+            return DictModelConstant.Event.Process[value];
+        };
+        title_numberFormatter = function (value, row, index) {
+            index = parseInt(index) + 1
+            return gettext('题目') + index + '：';
+        };
+        titleFormatter = function (value, row, index) {
+            if (value.length == 0) {
+                return row.content
+            }
+            return value
+        };
+
+        {#        function cellStyle(value, row, index) {#}
+        {#            return {#}
+        {#                css:{#}
+        {#                    "text-align" : "left"#}
+        {#                }#}
+        {#            }#}
+        {#        }#}
+        {##}
+        {#        function rowStyle(row, index) {#}
+        {#            return {#}
+        {#                css: {#}
+        {#                    'text-align': 'left',#}
+        {#                }#}
+        {#            };#}
+        {#        }#}
+
+
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {//设置查询参数
+                params.copy_exam_id = "{{ event_exam_id }}";
+                return params;
+            },
+            onLoadSuccess: function (data) {
+                var tasks = data.rows;
+                $("input[name='btSelectItem']:checkbox").change(function () {
+                    var tid = $(this).attr('data-index');
+                    if (this.checked) {
+                        var eventTaskId = tasks[tid].id;
+                        checkClick(eventTaskId);
+                    }
+                });
+            }
+        });
+        pageWidgets.registerCheckTableRow($("#table1"));
+        var table1 = bsTableClass($('#table1'));
+        $('#table1').bootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            data: task_list,
+            columns: [
+                {
+                    field: 'id',
+                    valign: 'top'
+                },
+                {
+                    field: 'id',
+                    valign: 'top'
+                }
+            ],
+            onClickRow: function (row, elem) {
+                if ($(elem).find("input[type=checkbox]").is(':checked')) {
+                    $(elem).find("input[type=checkbox]").prop("checked", false);
+                } else {
+                    $(elem).find("input[type=checkbox]").prop("checked", true);
+
+                }
+            }
+        });
+
+        function checkClick(eventTaskId) {
+
+            $.ajax({
+                url: EventTaskUrl.replace("0", eventTaskId),
+                type: "get",
+                datatype: "json",
+                data: {"eventTaskId": eventTaskId},
+                success: function (data) {
+                    var tasks = data.context.tasks;
+                    task_list.splice(0, task_list.length);
+                    $.each(tasks, function () {
+                        if (this.content) {
+                            this.content = clean_html(this.content)
+                        }
+                        task_list.push(this);
+                    });
+                    $("#table1").bootstrapTable('refreshOptions', {data: task_list});
+                }
+            });
+        }
+
+        var app = new Vue({
+            el: '#vuetable',
+            data: {
+                task_lists: task_list
+            },
+            methods: {
+                submit_paper: function () {
+                    //获取所有被选中的复选框
+                    var ids = table1.getCheckedValues();
+                    var return_value = [];
+                    for (var i = 0; i < ids.length; i++) {
+                        //获取被选中的题目
+                        var get_value = table1.getData(ids[i]);
+                        return_value.push(get_value)
+                    }
+                    submitPaper(return_value)
+                },
+                unsubmit_paper: function () {
+                    //取消所有选中的复选框
+                    $('#table1').find(".checkrow:checked").each(function () {
+                        this.checked = false
+                    });
+                },
+                db_return: function () {
+                    window.location.href = EventTask;
+                }
+            }
+        });
+
+        function clean_html(content) {
+            var title;
+            var dd = content.replace(/<\/?.+?>/g, "");
+            var dds = dd.replace(/ /g, "");
+            {#            if (dds.length > 70) {#}
+            {#                title = dds.substr(0, 70) + '...'#}
+            {#            } else {#}
+            {#                title = dds#}
+            {#            }#}
+            return dds;
+        }
+
+        function submitPaper(task_list) {
+
+            var newexamquestions = {};
+            for (task in task_list) {
+                var task_id = task_list[task].id;
+                newexamquestions['taskid-' + task_id] = {};
+                newexamquestions['taskid-' + task_id]['taskid'] = task_id;
+                newexamquestions['taskid-' + task_id]['hash'] = task_list[task].hash;
+                newexamquestions['taskid-' + task_id]['qorder'] = parseInt(task) + 1;
+                newexamquestions['taskid-' + task_id]['score'] = task_list[task].score;
+            }
+            data = {
+                'examname': '',
+                'questions': newexamquestions,
+                'multiplexPaper': 'yes'
+            };
+            jsondata = JSON.stringify(data);
+
+            $.ajax({
+                type: "POST",
+                url: '{% url "cms_event_exam:ret_event_exam_detail" event_exam_id %}',
+                data: jsondata,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (message) {
+                    setTimeout(function () {
+                        window.location.href = EventTask;
+                    }, ajaxDialog.defaultDelayTime);
+                },
+                error: function (message) {
+                    swal({
+                        title: gettext('保存失败！'),
+                        type: 'error',
+                        confirmButtonText: gettext('确定')
+                    });
+                }
+            });
+            return false;
+        }
+
+    </script>
+{% endblock %}

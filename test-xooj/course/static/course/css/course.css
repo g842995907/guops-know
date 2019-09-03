@@ -1,0 +1,91 @@
+/*
+* @Author: Marte
+* @Date:   2017-06-22 14:43:30
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-06-23 14:17:52
+*/
+
+.overflows:hover .hoverImg{
+    transform:scale(1.2);
+}
+.hoverImg {
+    transition: .5s;
+}
+.oj_labelTitle {
+    width: 100%;
+    height: 30px;
+    background: rgba(0,0,0,0.6);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    line-height: 30px;
+    padding-left: 20px;
+    color: white;
+}
+.oj_page {
+    padding: 0;
+    margin: 0;
+}
+.oj_page li{
+    float:left;
+    font-weight:bold;
+    margin:10px;
+    cursor:pointer;
+    font-size:18px;
+}
+.search-text:focus{
+    border:none;
+}
+.oj-icon-F014 {
+    transform: rotate(180deg);
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: gray; opacity:1;
+}
+
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: gray;opacity:1;
+}
+
+input:-ms-input-placeholder{
+    color: gray;opacity:1;
+}
+
+input::-webkit-input-placeholder{
+    color: gray;opacity:1;
+}
+.prev:hover,.next:hover{
+    color:orange;
+}
+.oj_page li a{
+    color:white;
+}
+.oj_page li:hover a{
+    color:orange;
+}
+
+.of-hide{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break:keep-all;
+}
+
+a.posRelative{
+    height: 120px;
+    width: 100%;
+    max-width: 210px;
+}
+
+span.type{
+    margin-right: 10px;
+}
+
+.direction-list > .label{
+    padding: 2px 5px;
+}
+
+.filtrate .top10{
+    vertical-align: top;
+    padding: 10px 0 10px 0;
+}

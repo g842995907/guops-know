@@ -1,0 +1,576 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans 'x_team_manage' %}
+{% endblock %}
+
+{% block other_css_js %}
+  <link rel="stylesheet" type="text/css" href="{% static 'x_person/css/vue-pageination.css' %}"/>
+  <script src="{% static 'x_person/js/vue-nav.js' %}"></script>
+  <script src="{% static 'x_person/js/constant.js' %}"></script>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <select class="form-control m-b" id="my_team" onchange="table.refresh()">
+                            <option value="0" selected="selected">{% trans "x_all_teams" %}</option>
+                            <option value="1">{% trans "x_my_tram" %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b" id="team_name"
+                               placeholder={% trans 'x_team_name' %} type="text" />
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                            {#                        <button class="btn btn-primary" data-field="is_active" data-value="1"#}
+                            {#                                data-url="{% url 'cms_x_person:cms_api:team-batch-active' %}"#}
+                            {#                                onclick="CALLBACK.batchSet(this);">#}
+                            {#                            <i class="fa fa-unlock-alt"></i>{% trans '恢复' %}#}
+                            {#                        </button>#}
+                            {#                        <button class="btn btn-default" data-field="is_active" data-value="0"#}
+                            {#                                data-url="{% url 'cms_x_person:cms_api:team-batch-active' %}"#}
+                            {#                                onclick="CALLBACK.batchSet(this);">#}
+                            {#                            <i class="fa fa-lock"></i>{% trans '禁用' %}#}
+                            {#                        </button>#}
+                            {#                        <button class="btn btn-danger"#}
+                            {#                                data-url="{% url 'cms_x_person:cms_api:team-batch-destroy' %}"#}
+                            {#                                onclick="table.batchDestroy(this);">#}
+                            {#                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}#}
+                            {#                        </button>#}
+                            <a class="btn btn-primary" data-value="1"
+                               href="{% url 'cms_x_person:team_detail' 0 %}">
+                                <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                            </a>
+                            <button class="btn btn-danger"
+                                    data-url="{% url 'cms_x_person:cms_api:team-dismiss-team' %}"
+                                    onclick="table.batchDestroy(this);">
+                                <i class="fa fa-remove"></i> {% trans 'x_fired' %}
+                            </button>
+                        </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-show-refresh="false"
+               data-toolbar-align="center"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_x_person:cms_api:team-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true">{% trans 'x_team_name' %}</th>
+                <th data-field="logo_url" data-formatter="logoFormatter">{% trans 'x_team_logo' %}</th>
+                <th data-field="team_leader_name" data-escape="true">{% trans 'x_captain' %}</th>
+                <th data-field="status" data-formatter="activeFormatter">{% trans 'x_status' %}</th>
+                <th data-field="id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+
+    {% comment %}添加成员{% endcomment %}
+    <div class="modal fade" id="add-members-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+              <span class="current-user-name"></span> {% trans 'x_add_members' %}
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div id="tableToolbarUser">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b" id="user_name"
+                               placeholder={% trans 'x_user_name' %} type="text" />
+                    </div>
+                    <div class="col-md-4 col-sm-4">
+                        <a class="btn btn-primary" onclick="userTable.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <table id="userTable"
+                   data-toggle="userTable"
+                   data-toolbar="#tableToolbarUser"
+                   data-toolbar-align="center"
+                   data-show-refresh="false"
+                   data-search="false"
+                   data-pagination="true"
+                   data-side-pagination="server"
+                   data-url="{% url 'cms_x_person:cms_api:user-list' %}"
+            >
+              <thead>
+              <tr>
+                <th data-field="username" data-escape="true" data-sortable="true">{% trans 'x_user_name' %}</th>
+                <th data-field="first_name" data-escape="true" data-sortable="true">{% trans 'x_name_surname' %}</th>
+                <th data-field="id" data-formatter="orgFormatter">{% trans 'x_org' %}</th>
+                <th data-field="group_name" data-formatter="groupFormatter">{% trans 'x_role' %}</th>
+              </tr>
+              </thead>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" style="margin-bottom: auto;" data-dismiss="modal">{% trans "x_close" %}</button>
+            <button type="button" class="btn btn-primary" style="margin-bottom: auto;" onclick="addMembers()" id="addMembers">{% trans 'x_confirm' %}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% comment %}邀请成员{% endcomment %}
+  <div class="modal fade" id="invite-new-members-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" style="width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        <span class="current-user-name"></span> {% trans 'x_invite_members' %}
+                    </h4>
+                </div>
+                <div class="modal-body">
+                  <div>
+                    <form class="text-center clearfix">
+                      <div class="pull-left" style="width: 75%;">
+                        <input id="username" class="form-control" @keyup.enter="get_user_list()"
+                               onkeypress="if(event.keyCode == 13) return false;" v-model="username">
+                      </div>
+                      <button type="button" class="btn btn-primary pull-right"
+                              v-on:click="get_user_list()"><i class="fa fa-search"></i>{% trans 'x_search' %}</button>
+
+                    </form>
+                    <div class="clearfix" v-for="(user, index) in user_list" style="line-height: 39px;">
+                      <span>[[ user.first_name ]]</span>
+                      <button v-on:click="apply_team_member(user.id, user.applided, index)" class="pull-right btn" :class="user.applided |btnClass" v-bind:data-id="user.id"
+                            style="cursor:pointer">[[ user.applided | applidname ]]</button>
+                    </div>
+                    <vue-nav style="text-align: center;" name="'invite-memebers'" :cur="cur" :all="all" :callback="get_page_data" v-if="all > 1"></vue-nav>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% comment %}清除成员{% endcomment %}
+    <div class="modal fade" id="clear-members-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog modal-lg" style="width: 500px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              &times;
+            </button>
+            <h4 class="modal-title" id="myModalLabel">
+              <span class="current-user-name"></span> {% trans 'x_clear_member' %}
+            </h4>
+          </div>
+          <div class="modal-body">
+            <div>
+              <div class="clearfix" v-for="user in team_members" style="line-height: 39px;">
+                <span>[[ user.real_name ]]<span v-if="user.team_leader" class="btn-warning"> {% trans 'x_captain' %}</span></span>
+                <span v-on:click="clear_team_member(user.id, user.team_leader)" class="pull-right btn" :class="user.team_leader? '': 'btn-danger'" v-bind:data-id="user.id"
+                      style="cursor:pointer;" v-text="user.team_leader? '-': '{% trans "x_remove" %}'"></span>
+              </div>
+              <nav-vue style="text-align: center;" name="clear-members" :cur="cur" :all="all" :callback="get_page_data" v-if="all > 1"></nav-vue>
+            </div>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_x_person:team_list' %}"
+        var teamUserApiList = "{% url 'x_person:api:team-user-list'%}";
+        var teamUserApiListCMS = "{% url 'cms_x_person:cms_api:team-user-list'%}";
+        var userApiList = "{% url 'x_person:api:user-list'%}";
+        var add_team_user_member_url = "{% url 'cms_x_person:cms_api:team-add-team-users' %}";
+        var current_team_id = null;
+    </script>
+    <script>
+        var CALLBACK = {
+            batchSet: function (btn) {
+                var ids = table.getCheckedValues();
+                if (ids.length == 0) {
+                    return;
+                }
+                var url = $(btn).attr('data-url');
+                var fieldname = $(btn).attr('data-field');
+                var value = $(btn).attr('data-value');
+                var data = {
+                    ids: ids,
+                };
+                data[fieldname] = value;
+                ajaxDialog.buttonClick(http.patch, url, data, function () {
+                    table.reload();
+                });
+            },
+        };
+        pageWidgets.registerCheckTableRow($("#userTable"));
+        var userTable = bsTableClass($('#userTable'));
+        $('#userTable').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search = $("#user_name").val();
+                {#params.my_team = $("#my_team").val();#}
+                params.no_team = true;
+                return params;
+            },
+        });
+
+        function groupFormatter(value, row, index) {
+            return gettext(value);
+        }
+
+        function orgFormatter(value, row, index) {
+            if (!row.faculty_name) {
+                return '-';
+            }
+            var orgs = [row.faculty_name];
+            if (row.major_name) {
+                orgs.push(row.major_name);
+            }
+            if (row.classes_name) {
+                orgs.push(row.classes_name);
+            }
+            var data = '<span style="color: #f7a54a">' + orgs[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + orgs[1] + '</span>' + ' / ' + orgs[2];
+            return data;
+        }
+
+        pageWidgets.registerCheckTableRow($("#table"));
+        var table = bsTableClass($('#table'));
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.search = $("#team_name").val();
+                params.my_team = $("#my_team").val();
+                return params;
+            },
+        });
+
+        $("#team_name").keydown(function (e) {
+            if (e.keyCode == 13) {
+                table.refresh();
+            }
+        });
+        $("#user_name").keydown(function (e) {
+            if (e.keyCode == 13) {
+                userTable.refresh();
+            }
+        });
+
+        function logoFormatter(value, row, index) {
+            if (value == null) {
+                return '<a class="fancybox"><img class="img-thumbnail" style="width:64px" alt="image" src="/static/avatar/team_logo.png"></a>';
+            } else {
+                return '<a class="fancybox"><img class="img-thumbnail" style="width:64px" alt="image" src="' + value + '"></a>';
+            }
+        }
+
+        function activeFormatter(value, row, index) {
+            var text;
+            switch (value) {
+                case 0:
+                    text = '{% trans 'x_has_deleted' %}';
+                    break;
+                case 1:
+                    text = '{% trans 'x_status_normal' %}';
+                    break;
+                case 2:
+                    text = '{% trans 'x_has_fired' %}';
+                    break;
+                case 3:
+                    text = '{% trans 'x_forbidden_game' %}';
+                    break;
+                default:
+                    text = '{% trans 'x_abnormal_situation' %}';
+                    break;
+            }
+            return text;
+        }
+
+        function operatorFormatter(value, row, index) {
+            var btns = [
+                {
+                    type: 'link',
+                    class: 'btn-primary',
+                    icon: 'fa-edit',
+                    text: "{% trans 'x_edit' %}",
+                    url: listUrl + value,
+                },
+            ];
+            btns.push({
+              type: 'link',
+              class: 'btn-success',
+              icon: 'fa-user',
+              text: "{% trans 'x_add_members' %}",
+              click: 'showaddMembers(' + value + ', "' + row.name + '")',
+            });
+            btns.push({
+                type: 'link',
+                class: 'btn-warning',
+                icon: 'fa-trash',
+                text: gettext("x_clear_member"),
+                click: 'clearMembers(' + value + ', "' + row.name + '")',
+            });
+              {% comment %}btns.push({
+                type: 'link',
+                class: 'btn-success',
+                icon: 'fa-user',
+                text: "{% trans 'x_invite_members' %}",
+                click: 'inviteMembers(' + value + ', "' + row.name + '")',
+              }){% endcomment %}
+            return bsTable.getOperatorHtml(btns);
+        }
+
+        var apply_modal = new Vue({
+            el: '#invite-new-members-modal',
+            delimiters: ["[[", "]]"],
+            data: {
+                username: '',
+                user_list: [],
+                cur: 1,
+                all: 1,
+                msg: '',
+                limit: 7,
+            },
+            components: {
+                'vue-nav': Vnav
+            },
+            methods: {
+                apply_team_member: function (id, is_apply, index) {
+                    if (is_apply === constant.Applided.Status.JOINED){
+                      return false
+                    }else if (is_apply === constant.Applided.Status.HASINVITATION){
+                      swal({
+                        title: "{% trans 'x_already_invited' %}",
+                        type: "error",
+                        showConfirmButton: true,
+                      });
+                      return false
+                    }
+                    var data = {
+                        is_apply: 0,
+                        user: id,
+                        offset: (this.cur - 1) * app.limit,
+                        limit: app.limit,
+                    };
+                    http.post(teamUserApiList, data, function (data) {
+                        apply_modal.user_list[index].applided = constant.Applided.Status.HASINVITATION
+
+                        swal({
+                          title: "{% trans 'x_inviting_success' %}",
+                          type: "success",
+                          showConfirmButton: false,
+                          timer: 1000
+                        });
+                    }, function (xhr, ts, et) {
+                        swal({
+                          title: JSON.parse(xhr.responseText).detail.message,
+                          type: "error",
+                        })
+                    });
+                },
+                get_user_list: function (data) {
+                    user_list(data);
+                },
+                get_page_data: function (data) {
+                    this.cur = data
+                    apply_modal.get_user_list(data)
+                }
+            },
+            filters: {
+              applidname: function (value) {
+                if (value === constant.Applided.Status.INVITATION){
+                  value = gettext("x_invitation")
+                }else if (value === constant.Applided.Status.HASINVITATION){
+                  value = gettext("x_already_invited")
+                }else if (value === constant.Applided.Status.JOINED){
+                  value = gettext("x_joined")
+                }else {
+                  console.log('value error, is not in the Applided')
+                }
+                return value
+              },
+              btnClass: function (value) {
+                if (value === constant.Applided.Status.INVITATION){
+                  value = "btn-success"
+                }else if (value === constant.Applided.Status.HASINVITATION){
+                  value = "btn-pramary"
+                }else if (value === constant.Applided.Status.JOINED){
+                  value = "btn-pramary"
+                }else {
+                  console.log('value error, is not in the Applided-button')
+                }
+                return value
+              }
+            }
+        });
+
+        var app = new Vue({
+          el: '#clear-members-modal',
+          delimiters: ["[[", "]]"],
+          data: {
+            team_members: [],
+            team_id: 0,
+            cur: 1,
+            all: 1,
+            limit: 8,
+          },
+          components: {
+                'nav-vue': Vnav
+            },
+          methods: {
+            clear_team_member: function (id, team_leader) {
+              if (team_leader) {
+                console.log('team_leader can not be delete');
+                return false
+              }
+
+              swal({
+                title: gettext('x_want_to_continue'),
+                type: "warning",
+                confirmButtonText: gettext("x_confirm")
+              }, function () {
+                var data = {
+                  'type': 6,
+                  'current_team_id': current_team_id,
+                };
+                http.patch(teamUserApiListCMS + id.toString() + '/', data, function (data) {
+                  app.get_team_user()
+                }, function (xhr, ts, et) {
+                  swal({
+                    title: JSON.parse(xhr.responseText).detail.message,
+                    type: "error",
+                  })
+                });
+              });
+            },
+            get_team_user: function () {
+                var data = {
+                    teamid:app.team_id,
+                    join: 1,
+                    offset: (this.cur-1) * app.limit,
+                    limit: app.limit,
+                };
+                http.get(teamUserApiList, data, function (data) {
+                    app.team_members = [];
+                    app.team_members = data.rows
+                    app.all = Math.ceil(data.total / app.limit)
+                })
+            },
+            get_page_data: function (data) {
+              this.cur = data;
+              app.get_team_user()
+            }
+          },
+        });
+
+        function user_list(data) {
+          if (isNaN(data)){
+            data = 1
+          }
+          var Userdata = {
+            realname: apply_modal.username,
+            offset: (data - 1) * apply_modal.limit,
+            limit: apply_modal.limit,
+          };
+          apply_modal.user_list = [];
+          http.get(userApiList, Userdata, function (data) {
+            apply_modal.all = Math.ceil(data.total / apply_modal.limit)
+            apply_modal.user_list = data.rows
+          })
+        }
+
+        function inviteMembers(teamId, tamName) {
+          apply_modal.get_page_data(1);
+          $("#invite-new-members-modal").modal("show");
+        }
+
+        function clearMembers(teamId, teamName) {
+          app.team_id = teamId;
+          app.get_team_user();
+          $("#clear-members-modal").modal("show");
+        }
+
+        function showaddMembers(teamId, teamName) {
+          current_team_id = teamId;
+          userTable.refresh();
+          $("#add-members-modal").modal("show");
+        }
+
+        function addMembers() {
+            $("#addMembers").attr('disabled', true);
+            var user_ids = userTable.getCheckedValues();
+            if (user_ids.length === 0){
+                $("#addMembers").attr('disabled', false);
+                return false
+            }else {
+                var data = {
+                    ids: user_ids,
+                    current_team_id: current_team_id,
+                };
+                $.ajax({
+                    type: 'patch',
+                    url: add_team_user_member_url,
+                    data: data,
+                    dataType: "json",
+                    traditional:true,
+                    success: function (data) {
+                        $("#add-members-modal").modal('hide');
+                        $("#addMembers").attr('disabled', false);
+                        swal({
+                            title: "{% trans 'x_saved_successfully' %}",
+                            type: 'success',
+                            confirmButtonText: "{% trans 'x_confirm' %}"
+                        }, function () {
+                            userTable.reload();
+                        });
+                    },
+                    error: function (xhr) {
+                        $("#addMembers").attr('disabled', false);
+                    }
+                });
+            }
+        };
+
+    </script>
+{% endblock %}

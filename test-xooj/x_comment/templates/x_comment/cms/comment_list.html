@@ -1,0 +1,329 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_cloud_exchange' %}
+{% endblock %}
+
+{% block container %}
+
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="col-md-2 col-sm-2" hidden="hidden">
+                        <input class="form-control m-b sticky" id="search_tenant" placeholder={% trans "租户" %}
+                                type="text"/>
+                    </div>
+                    <div class="m-r pull-left" style="width: 196px">
+                        <select class="form-control m-b sticky select_search" id="search_type">
+                            <option value="" selected="selected">{% trans 'x_all_theme' %}</option>
+                            {% for k,v in type_list.items %}
+                                <option value="{{ k }}">{{ v }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+{#                    <div class="col-md-2 col-sm-2">#}
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b sticky" id="search_comment" placeholder={% trans "x_theme" %}
+                                type="text"/>
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <a class="btn btn-primary" onclick="table.refresh(); tables.refresh(); " id="table_refresh"
+                           name="search">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+{#                    <div class="col-md-3 col-sm-3">#}
+{#                    </div>#}
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_x_comment:api:comment-batch-destroy' %}"
+                                onclick="table.batchDestroy(this,refresh); tables.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p>{% trans "x_main_stickers" %}</p>
+        </div>
+        <div id="tableToolbar-v1" style="visibility: hidden">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="col-md-2 col-sm-2" hidden="hidden">
+                        <input class="form-control m-b sticky" id="search_tenant1" placeholder={% trans "租户" %}
+                                type="text"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <select class="form-control m-b sticky select_search" id="search_types">
+                            <option value="" selected="selected">{% trans 'x_all_theme' %}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-2 col-sm-2">
+                        <input class="form-control m-b sticky" id="search_comment1" placeholder={% trans "x_comment" %}
+                                type="text"/>
+                    </div>
+                    <div class="col-md-1 col-sm-1">
+                        <a class="btn btn-primary" onclick="table.refresh();" name="search">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-sm-3">
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-md-6 col-sm-6">
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_x_comment:api:comment-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete1' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <p style="visibility: visible">{% trans "x_comment" %}</p>
+        </div>
+        <div class="table-warp row">
+            <div class="col-lg-6 col-md-6">
+                <input hidden="hidden" id="root_page" type="text" value="0"/>
+
+                <table id="table"
+                       data-toggle="table"
+                       data-toolbar="#tableToolbar"
+                       data-toolbar-align="center"
+                       data-show-refresh="false"
+                       data-search="false"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-url="{% url 'cms_x_comment:api:comment-list' %}">
+
+                    <thead>
+                    <tr>
+                        <th data-field="theme" data-formatter="theme">{% trans "x_theme" %}</th>
+                        <th data-field="comment" data-escape="true" data-formatter="commentLimit">{% trans "x_content" %}</th>
+                        <th data-field="username">{% trans "x_user" %}</th>
+                        <th data-field="thumbs_up">{% trans "x_like_num" %}</th>
+{#                        <th data-field="operating" data-formatter="operatorFormatter">{% trans "x_operation" %}</th>#}
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="col-lg-6 col-md-6">
+                <input hidden="hidden" id="root_pages" type="text" value="1"/>
+                <input hidden="hidden" id="parent_ids" type="text">
+                <table id="table1"
+                       data-toggle="table"
+                       data-toolbar="#tableToolbar-v1"
+                       data-toolbar-align="center"
+                       data-show-refresh="false"
+                       data-search="false"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-url="{% url 'cms_x_comment:api:comment-list' %}"
+                >
+                    <thead>
+                    <tr>
+                        <th data-field="comment" data-formatter="commentLimit">{% trans "x_content" %}</th>
+                        <th data-field="username">{% trans "x_user" %}</th>
+                        <th data-field="thumbs_up">{% trans "x_like_num" %}</th>
+{#                        <th data-field="operating" data-formatter="operatorFormatter">{% trans "x_operation" %}</th>#}
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {# 模态框 #}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <form id="comment-form"
+              enctype="multipart/form-data"
+              action=""
+              method="">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">×
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <input name="hash" id="hash" type="hidden">
+                        <input name="parent" id="parent" type="hidden">
+                        <input type="text" class="form-control" id="comment" name="comment"/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal" id="close_button" style="margin-bottom:0px">{% trans "x_close" %}
+                        </button>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        //“编辑”和“回复”按钮
+        var listUrl = "{% url 'cms_x_comment:comment_list' %}";
+
+        function operatorFormatter(value, row, index) {
+            var btns = [
+                {
+                    type: 'button',
+                    class: 'btn-primary',
+                    text: "{% trans 'x_edit' %}",
+                    click: 'CALLBACK.commentModal("' + value + '",' + row.id + ')',
+                },
+                {
+                    type: "button",
+                    class: 'btn-primary',
+                    text: "{% trans 'x_reply' %}",
+                    click: 'CALLBACK.commentreply("' + row.username + '",' + row.id + ',"' + row.resource + '","' + row.parent + '")',
+                }
+            ];
+            return bsTable.getOperatorHtml(btns);
+        }
+
+        var CALLBACK = {
+            commentModal: function (value, id) {    //编辑按钮的模态框的内容以及api
+                var url = "{% url 'cms_x_comment:api:comment-detail' 0 %}".replace('0', id);
+                var patch = "patch";
+                $("#myModal #comment-form").attr('action', url);
+                $("#myModal #comment-form").attr("method", patch);
+                $("#myModalLabel").html(gettext("x_edit"));
+                $("#comment").val(value);
+                $("#myModal").modal({
+                    keyboard: true
+                });
+
+            },
+            commentreply: function (username, id, hash, parent) { //回复按钮的模态框的内容以及api
+                var url = "{% url 'cms_x_comment:api:comment-reply-comment'  0 %}".replace('0', id);
+                var post = "post";
+
+                $("#myModal #comment-form").attr('action', url);
+                $("#myModal #comment-form").attr("method", post);
+                $("#parent").val(parent);
+                $("#hash").val(hash);
+                $("#myModalLabel").html(gettext("x_reply") + "@" + username);
+                $("#myModal").modal({
+                    keyboard: true
+                });
+            }
+        };
+        $(function () {     //模态框中的表单提交
+            $("#comment-form").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            });
+        });
+
+        function commentLimit(value, row, index) {       //内容字数限制
+            var nameString = "";
+            if (value != null && value != "") {
+                if (value.length > 10) {
+                    nameString = value.substring(0, 10) + '...';
+                } else {
+                    nameString = value;
+                }
+                return [
+                    '<span id="thread"  data-toggle="tooltip" title="' + value + '">' + nameString + '</span>',
+                ].join('');
+            }
+        }
+
+        function theme(value, row, index) { //主题字数限制
+            var nameString = "";
+            if (value != null && value != "") {
+                if (value.length > 10) {
+                    nameString = value.substring(0, 10) + '...';
+                } else {
+                    nameString = value;
+                }
+                return [
+                    '<a id="thread"  data-toggle="tooltip" title="' + value + '">' + nameString + '</a>',
+                ].join('');
+            }
+        }
+
+        $("[data-toggle='tooltip']").tooltip();
+
+
+        var $table = $('#table');
+        pageWidgets.registerCheckTableRow($table);
+        var table = bsTable.getTableModule($table, function () {
+        });
+        $table.stickyBootstrapTable({   //主贴数据刷新
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                {#                params.search_tenant = $("#search_tenant").val();#}
+                params.search_type = $("#search_type").val();
+                params.search_comment = $("#search_comment").val();
+                params.search_parent = $("#root_page").val();
+                return params;
+            },
+            onClickRow: function (row, elem) {
+                $("#parent_ids").val(row.id);
+                tables.refresh();
+
+            },
+            pageSize: 10
+        });
+
+        //跟帖数据筛选
+        var $tables = $('#table1');
+        pageWidgets.registerCheckTableRow($tables);
+
+        var tables = bsTable.getTableModule($tables, function () {
+        });
+        $tables.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search_tenant = $("#search_tenant").val();
+                params.search_type = $("#search_types").val();
+                params.search_comment = $("#search_comment").val();
+                params.search_parent = $("#root_pages").val();
+                params.parent_ids = $("#parent_ids").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        function refresh() {
+            $("#table1").bootstrapTable('refresh')
+        }
+
+        $('#comment-form').mvalidate({
+            rules: {
+                comment: {
+                    required: true,
+                    maxlength: 250
+                }
+            },
+            messages: {
+                comment: {
+                    required: "{% trans 'x_required_name' %}",
+                    maxlength: "{% trans 'x_max_length_250' %}"
+                }
+            }
+        });
+        $("#close_button").on("click", function () {
+            $(this).parent().siblings().find("#comment").val("")
+        })
+    </script>
+{% endblock %}

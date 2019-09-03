@@ -1,0 +1,525 @@
+{% extends './iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    {% trans 'x_target_management' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <script src="{% static_v 'common_remote/js/login_guacamole.js' %}"></script>
+
+    <style>
+        .standard-device-logo {
+            width: 40px;
+            border-radius: 50%;
+        }
+        .filter{
+            width: 196px;
+        }
+    @media screen and (max-width:1200px) {
+        .filter{
+         width:150px;
+        }
+
+    }
+    .show-time{
+        display: none;
+        transition: all 0.4s;
+        position: fixed;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid gray;
+        background-color: rgba(245,245,245,0.8);
+    }
+    td:hover .show-time{
+        display: flex;
+    }
+    </style>
+
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="role" data-after-select="afterRoleSelect">
+                            <option value="">{% trans 'x_all_role' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ListModelConstant.StandardDevice.Role'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="role_type">
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="image_type">
+                            <option value="">{% trans 'x_all_image_type' %}</option>
+                            <option data-id="option-rendering"
+                                    data-list='ListModelConstant.StandardDevice.ImageType'>{% trans 'x_loading' %}</option>
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_std_device_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" href="{% url 'cms_common_env:standard_device_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                        </a>
+                    </div>
+                    <div class="m-r pull-left">
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_common_env:api:standard-device-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_common_env:api:standard-device-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-formatter="table.nameFormatter" data-escape="true">{% trans 'x_name' %}</th>
+                <th data-field="role" data-formatter="table.roleFormatter">{% trans 'x_role' %}</th>
+                <th data-field="system_sub_type" data-formatter="table.systemTypeFormatter">{% trans 'x_system_type' %}</th>
+                <th data-field="flavor" data-formatter="table.flavorFormatter">{% trans 'x_size' %}</th>
+                <th data-field="image_status" data-formatter="table.imageStatusFormatter">{% trans 'x_img_status' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="share_count" data-formatter="table.shareFormatter">{% trans 'x_authorization_Operation' %}</th>
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans "x_operation" %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    {% verbatim %}
+    <div class="modal fade" id="tmpVmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{ 'x_img_machine_info' | trans }}</h4>
+                </div>
+                <div class="modal-body">
+                    <p v-if="proxy_ip && proxy_port">{{ 'x_sys_visit' | trans }}: {{ protocol }} {{ proxy_ip }} {{ proxy_port }}</p>
+                    <p v-else>{{ 'x_sys_visit' | trans }}: {{ protocol }} {{ float_ip }} {{ port }}</p>
+                    <p>{{ 'x_sys_user' | trans }}: {{ username }}</p>
+                    <p>{{ 'x_sys_user_passwd' | trans }}: {{ password }}</p>
+                    <p v-if="connection_url"><a class="btn btn-sm btn-primary" :href="connection_url" target="_blank">{{ 'x_web_connect' | trans }}</a></p>
+                </div>
+                <div class="clearfix modal-footer">
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endverbatim %}
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_common_env:standard_device_list' %}";
+    </script>
+    <script type="text/javascript">
+        var tmpVmVue = new Vue({
+            el: '#tmpVmModal',
+            data: {
+                protocol: '',
+                float_ip: '',
+                port: '',
+                proxy_ip: '',
+                proxy_port: '',
+                username: '',
+                password: '',
+                connection_url: '',
+            }
+        });
+
+        $(function(){
+            $('#role').change(function(){
+                refreshRoleTypeSelect();
+            });
+            function refreshRoleTypeSelect() {
+                var $loadingOption = $(`
+                    <option value="">{% trans 'x_entire_type' %}</option>
+                    <option data-id="option-rendering" data-load="loadRoleTypeSelect" async>{% trans "x_loading" %}</option>
+                `);
+                $('#role_type').html($loadingOption);
+                optionRender.renderAsyncSelect($('#role_type').find('[data-load]'));
+            }
+        });
+        function loadRoleTypeSelect(callback) {
+            var role = $('#role').val();
+            var roleType = ModelConstant.auxiliaryConstant.ListRoleType[role] || [];
+            callback(roleType);
+        }
+
+        function afterRoleSelect() {
+            setTimeout(function () {
+                table.refresh();
+            }, 300);
+            return false;
+        }
+
+        pageWidgets.registerCheckTableRow($("#table"));
+
+        function isTerminalMode(role, roleType) {
+            return role == ModelConstant.StandardDevice.Role.TERMINAL
+                || (role == ModelConstant.StandardDevice.Role.GATEWAY
+                    && !arrayUtil.in(roleType, [ModelConstant.StandardDevice.RoleGatewayType.ROUTER, ModelConstant.StandardDevice.RoleGatewayType.FIREWALL]))
+        }
+
+        var flavorMap = {};
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.shareUrl = '{% url 'cms_common_env:share_standard_device_teacher' 0 %}';
+
+            var loopReload = null;
+            var startLoopReload = function () {
+                if (loopReload == null) {
+                    table.reload();
+                    loopReload = setInterval(function () {
+                        table.reload();
+                    }, 5000);
+                }
+            };
+            var closeLoopReload = function () {
+                clearInterval(loopReload);
+                loopReload = null;
+            };
+
+            var fakedTmpVmUrl = "{% url 'cms_common_env:api:standard-device-tmp-vm' 0 %}";
+            var fakedRestartTmpVmUrl = "{% url 'cms_common_env:api:standard-device-restart-tmp-vm' 0 %}";
+            this.startTmpVm = function (btn, deviceId) {
+                var url = fakedTmpVmUrl.replace(0, deviceId);
+                ajaxDialog.buttonClick(phttp(btn).post, url, {}, function (res) {
+                    startLoopReload();
+                });
+            };
+
+            this.deleteTmpVm = function (deviceId) {
+                var url = fakedTmpVmUrl.replace(0, deviceId);
+                ajaxDialog.buttonClick(http.delete, url, {}, function (res) {
+                    table.reload();
+                });
+                consoleUrlCache[deviceId] = undefined;
+            };
+
+            this.showTmpVm = function (index) {
+                var data = $('#table').bootstrapTable('getData')[index];
+                $.extend(true, tmpVmVue._data, data.tmp_vm_info);
+                $('#tmpVmModal').modal();
+            };
+
+            this.restartTmpVm = function (deviceId) {
+                var url = fakedRestartTmpVmUrl.replace(0, deviceId);
+                ajaxDialog.buttonClick(http.post, url, {}, function (res) {});
+            };
+
+            var fakedImageUrl = "{% url 'cms_common_env:api:standard-device-image' 0 %}";
+            this.saveImage = function (deviceId) {
+                var url = fakedImageUrl.replace(0, deviceId);
+                ajaxDialog.buttonClick(http.post, url, {}, function (res) {
+                    table.reload();
+                }, function (xhr, ts, et) {
+                    ajaxDialog.popError(xhr, ts, et);
+                }, {
+                    popConfig: {
+                        title: gettext('x_save_std_device_tip')
+                    }
+                });
+            };
+
+            var consoleUrlCache = {};
+            var fakedConsoleUrl = "{% url 'cms_common_env:api:standard-device-console-url' 0 %}";
+            function getConsoleUrlCallback(abtn, url) {
+                $(abtn).attr('href', url);
+                $(abtn).find('.text').text('{% trans "x_access_console" %}');
+                $(abtn).find('i').removeClass('fa-spin fa-spinner').addClass('fa-desktop');
+            }
+
+            this.getConsoleUrl = function (abtn, deviceId) {
+                $(abtn).removeAttr('onclick');
+                var consoleUrl = consoleUrlCache[deviceId];
+                if (consoleUrl) {
+                    getConsoleUrlCallback(abtn, consoleUrl);
+                } else {
+                    var url = fakedConsoleUrl.replace(0, deviceId);
+                    http.get(url, {}, function (res) {
+                        consoleUrl = res.url;
+                        if (consoleUrl) {
+                            consoleUrlCache[deviceId] = consoleUrl;
+                            getConsoleUrlCallback(abtn, consoleUrl);
+                        } else {
+                            table.getTmpVmStatus(deviceId, function (status) {
+                                var statusDesc = DictModelConstant.EnvTerminal.VmStatus[status];
+                                var statusHint
+                                if (status == ModelConstant.EnvTerminal.VmStatus.RUNNING) {
+                                    statusHint = gettext('x_please_try_again_later');
+                                } else if (status == ModelConstant.EnvTerminal.VmStatus.ABNORMAL) {
+                                    statusHint = gettext('x_please_recreate');
+                                } else {
+                                    statusHint = gettext('x_please_restart');
+                                }
+                                $(abtn).find('.text').text(gettext('x_vm') + statusDesc + ',' + statusHint);
+                                $(abtn).addClass('btn-warning');
+                                $(abtn).find('i').removeClass('fa-spin fa-spinner').addClass('fa-warning ');
+                            });
+                        }
+                    });
+                }
+            };
+
+            var fakedTmpVmStatusUrl = "{% url 'cms_common_env:api:standard-device-tmp-vm-status' 0 %}";
+            this.getTmpVmStatus = function (deviceId, callback) {
+                var url = fakedTmpVmStatusUrl.replace(0, deviceId);
+                http.get(url, {}, function (res) {
+                    if (callback) {
+                       callback(res.status)
+                    }
+                });
+            };
+
+            var tmpVmStartingCount = 0;
+            var imageCreatingCount = 0;
+            this.operatorFormatter = function (value, row, index) {
+                var allBtns = [{
+                    type: 'link',
+                    class: 'btn-primary',
+                    icon: 'fa-edit',
+                    text: '{% trans "x_env_edit_node" %}',
+                    url: listUrl + value,
+                    builtin: row.builtin,
+                }];
+                var dropBtn;
+
+                var btns = [];
+
+                var dataSize = $('#table').bootstrapTable('getData').length;
+                if (index == 0) {
+                    tmpVmStartingCount = 0;
+                    imageCreatingCount = 0;
+                }
+
+                if (isTerminalMode(row.role, row.role_type)) {
+                    if (!row.tmp_vm_info || row.tmp_vm_info.status == ModelConstant.StandardDeviceEditServer.Status.DELETED) {
+                        if (row.image_type == ModelConstant.StandardDevice.ImageType.VM) {
+                            // 没有镜像机器可以创建机器
+                            dropBtn = {
+                                type: 'btn',
+                                class: 'btn-success',
+                                icon: 'fa-globe',
+                                text: '{% trans "x_edit_img" %}',
+                                click: 'table.startTmpVm(this, ' + value + ')',
+                                builtin: row.builtin,
+                                subs: btns,
+                            };
+                        }
+                    } else {
+                        if (row.tmp_vm_info.status == ModelConstant.StandardDeviceEditServer.Status.STARTING ||
+                            row.tmp_vm_info.status == ModelConstant.StandardDeviceEditServer.Status.RUNNING) {
+                            if (row.image_status != ModelConstant.StandardDevice.ImageStatus.CREATING) {
+                                if (row.image_type == ModelConstant.StandardDevice.ImageType.VM) {
+                                    // 机器刚创建就获取console连接（前提镜像不在保存中）
+                                    dropBtn = {
+                                        type: 'link',
+                                        class: 'btn-success immediately-click',
+                                        icon: 'fa-spin fa-spinner',
+                                        target: '_blank',
+                                        click: 'table.getConsoleUrl(this, ' + value + ')',
+                                        text: '{% trans "x_getting_console_access" %}',
+                                        subs: btns,
+                                    };
+                                }
+                                // 机器创建完就可删除（前提镜像不在保存中）
+                                btns.push({
+                                    type: 'btn',
+                                    icon: 'fa-remove',
+                                    text: '{% trans "x_free_img_machine" %}',
+                                    click: 'table.deleteTmpVm(' + value + ')',
+                                });
+                            }
+                        }
+
+                        if (row.tmp_vm_info.status == ModelConstant.StandardDeviceEditServer.Status.CREATING ||
+                            row.tmp_vm_info.status == ModelConstant.StandardDeviceEditServer.Status.STARTING) {
+                            // 机器创建中轮询状态
+                            tmpVmStartingCount = tmpVmStartingCount + 1;
+                            startLoopReload();
+                            if (dropBtn) {
+                                btns.push({
+                                    type: 'btn',
+                                    class: 'disabled',
+                                    icon: 'fa-spinner',
+                                    text: row.tmp_vm_info.status == ModelConstant.StandardDeviceEditServer.Status.CREATING ? '{% trans "x_img_machine_creating" %}' : '{% trans "x_img_machine_starting" %}',
+                                });
+                            } else {
+                                dropBtn = {
+                                    type: 'btn',
+                                    class: 'btn-primary disabled',
+                                    icon: 'fa-spinner',
+                                    text: row.tmp_vm_info.status == ModelConstant.StandardDeviceEditServer.Status.CREATING ? '{% trans "x_img_machine_creating" %}' : '{% trans "x_img_machine_starting" %}',
+                                    subs: btns,
+                                }
+                                btns.push({
+                                    type: 'btn',
+                                    icon: 'fa-remove',
+                                    text: '{% trans "x_free_img_machine" %}',
+                                    click: 'table.deleteTmpVm(' + value + ')',
+                                });
+                            }
+                        } else if (row.tmp_vm_info.status == ModelConstant.StandardDeviceEditServer.Status.RUNNING) {
+                            // 机器运行中可查看连接信息（镜像创建中时不能访问机器）
+                            if (row.image_status != ModelConstant.StandardDevice.ImageStatus.CREATING) {
+                                btns.push({
+                                    type: 'btn',
+                                    icon: 'fa-edit',
+                                    text: '{% trans "x_view_img_machine" %}',
+                                    click: 'table.showTmpVm(' + index + ')',
+                                });
+                                btns.push({
+                                    type: 'btn',
+                                    icon: 'fa-repeat',
+                                    text: '{% trans "x_restart_img_machine" %}',
+                                    click: 'table.restartTmpVm(' + value + ')',
+                                });
+                            }
+
+                            if (row.image_status == ModelConstant.StandardDevice.ImageStatus.NOT_APPLY) {
+                                // 机器运行中可保存镜像
+                                btns.push({
+                                    type: 'btn',
+                                    icon: 'fa-save',
+                                    text: '{% trans "x_save_img" %}',
+                                    click: 'table.saveImage(' + value + ')',
+                                });
+                            } else if (row.image_status == ModelConstant.StandardDevice.ImageStatus.CREATING) {
+                                // 镜像创建中轮询状态
+                                imageCreatingCount = imageCreatingCount + 1;
+                                startLoopReload();
+                                btns.push({
+                                    type: 'btn',
+                                    class: 'disabled',
+                                    icon: 'fa-save',
+                                    text: '{% trans "x_img_saving" %}',
+                                });
+                            } else {
+                                // 镜像已保存可以重新保存镜像
+                                btns.push({
+                                    type: 'btn',
+                                    icon: 'fa-save',
+                                    text: '{% trans "x_resave_img" %}',
+                                    click: 'table.saveImage(' + value + ')',
+                                });
+                            }
+                        }
+                    }
+                }
+
+                // 没有执行中的状态关闭轮询
+                if (index == dataSize - 1 && tmpVmStartingCount == 0 && imageCreatingCount == 0) {
+                    closeLoopReload();
+                }
+
+                if (dropBtn) {
+                  allBtns.push(dropBtn)
+                }
+                return table.getDDOperatorHtml(allBtns);
+            };
+
+            this.nameFormatter = function (value, row, index) {
+                var logo =  row.logo ? '<img class="standard-device-logo" src="' + row.logo + '" />' : '';
+                return logo + value;
+            };
+
+            this.roleFormatter = function (value, row, index) {
+                return '<span class="text-warning">' + DictModelConstant.StandardDevice.Role[value] + '</span> / ' + ModelConstant.auxiliaryConstant.DictRoleType[value][row.role_type];
+            };
+
+            this.systemTypeFormatter =  function (value, row, index) {
+                if (isTerminalMode(row.role, row.role_type)) {
+                    return '<span class="text-warning">' + DictModelConstant.StandardDevice.ImageType[row.image_type] + '</span> / ' + (value == 'other' ? gettext('x_other') : value);
+                } else {
+                    return '-';
+                }
+            };
+
+            this.initSupportFormatter = function (value, row, index) {
+                if (isTerminalMode(row.role, row.role_type)) {
+                    return table.boolFormatter(value, row, index)
+                } else {
+                    return '-';
+                }
+            };
+
+            this.imageStatusFormatter = function (value, row, index) {
+                if (isTerminalMode(row.role, row.role_type)) {
+                    var statusText = DictModelConstant.StandardDevice.ImageStatus[value];
+                    if (row.error) {
+                        statusText = statusText + '<span style="color:red;margin-left:5px" class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>' + '<div class="text-danger show-time">' + row.error + '</div>';
+                    }
+                    return statusText;
+                } else {
+                    return '-';
+                }
+            };
+
+            this.flavorFormatter = function (value, row, index) {
+                return (flavorMap[value] || value || '-').replace(new RegExp('/', 'g'), ' / ');
+            };
+        });
+
+        http.get('{% url "common_env:flavors" %}', {}, function (res) {
+            $.each(res, function (i, flavor) {
+                flavorMap[flavor[0]] = flavor[1];
+            });
+
+            $("#table").stickyBootstrapTable({
+                ajaxOptions: {
+                    traditional: true,
+                },
+                queryParams: function (params) {
+                    params.role = $("#role").val();
+                    params.role_type = $("#role_type").val();
+                    params.image_type = $("#image_type").val();
+                    params.search = $("#search").val();
+                    return params;
+                },
+                onLoadSuccess: function () {
+                    $('.immediately-click').click();
+                }
+            });
+        });
+
+        // 登录web远程服务
+        remoteUtil.loginGuacamole()
+    </script>
+{% endblock %}

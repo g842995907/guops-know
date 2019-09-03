@@ -1,0 +1,1562 @@
+@charset "UTF-8";
+/* User-defined styles*/
+/*
+	@if $theme == "orange" {
+
+	} @else if $theme == "green" {
+
+	} @else {
+
+	}
+*/
+/*//公用样式/类*/
+/* line 25, default.scss */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 30, default.scss */
+img {
+  border: 0;
+}
+
+/* line 34, default.scss */
+body {
+  padding: 0;
+  margin: 0;
+}
+
+/* line 39, default.scss */
+h1 a {
+  color: white;
+}
+
+/* line 43, default.scss */
+ol, ul, li {
+  list-style: none;
+}
+
+/* line 47, default.scss */
+a:focus {
+  outline: none;
+}
+
+/*//各种类*/
+/*//清浮动*/
+/* line 53, default.scss */
+.clearfix:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* line 59, default.scss */
+.pad0A {
+  padding: 0 !important;
+}
+
+/* line 63, default.scss */
+.pad0L {
+  padding-left: 0 !important;
+}
+
+/* line 67, default.scss */
+.pad0R {
+  padding-right: 0 !important;
+}
+
+/* line 71, default.scss */
+.pad0T {
+  padding-top: 0 !important;
+}
+
+/* line 75, default.scss */
+.pad0B {
+  padding-bottom: 0 !important;
+}
+
+/* line 79, default.scss */
+.pad5A {
+  padding: 5px !important;
+}
+
+/* line 83, default.scss */
+.pad10A {
+  padding: 10px !important;
+}
+
+/* line 87, default.scss */
+.pad12A {
+  padding: 12px !important;
+}
+
+/* line 91, default.scss */
+.pad15A {
+  padding: 15px !important;
+}
+
+/* line 95, default.scss */
+.pad20A {
+  padding: 20px !important;
+}
+
+/* line 99, default.scss */
+.pad25A {
+  padding: 25px !important;
+}
+
+/* line 103, default.scss */
+.pad30A {
+  padding: 30px !important;
+}
+
+/* line 107, default.scss */
+.pad40A {
+  padding: 40px !important;
+}
+
+/* line 111, default.scss */
+.pad50T {
+  padding-top: 50px !important;
+}
+
+/* line 115, default.scss */
+.pad60T {
+  padding-top: 60px !important;
+}
+
+/* line 119, default.scss */
+.pad40A {
+  padding: 40px !important;
+}
+
+/* line 123, default.scss */
+.pad5L {
+  padding-left: 5px !important;
+}
+
+/* line 127, default.scss */
+.pad10L {
+  padding-left: 10px !important;
+}
+
+/* line 131, default.scss */
+.pad15L {
+  padding-left: 15px !important;
+}
+
+/* line 135, default.scss */
+.pad20L {
+  padding-left: 20px !important;
+}
+
+/* line 139, default.scss */
+.pad25L {
+  padding-left: 25px !important;
+}
+
+/* line 143, default.scss */
+.pad30L {
+  padding-left: 30px !important;
+}
+
+/* line 147, default.scss */
+.pad100L {
+  padding-left: 100px !important;
+}
+
+/* line 151, default.scss */
+.pad5R {
+  padding-right: 5px !important;
+}
+
+/* line 155, default.scss */
+.pad10R {
+  padding-right: 10px !important;
+}
+
+/* line 159, default.scss */
+.pad15R {
+  padding-right: 15px !important;
+}
+
+/* line 163, default.scss */
+.pad20R {
+  padding-right: 20px !important;
+}
+
+/* line 167, default.scss */
+.pad52R {
+  padding-right: 52px !important;
+}
+
+/* line 171, default.scss */
+.pad100R {
+  padding-right: 100px !important;
+}
+
+/* line 175, default.scss */
+.pad7T {
+  padding-top: 7px;
+}
+
+/* line 179, default.scss */
+.pad7B {
+  padding-bottom: 7px;
+}
+
+/* line 183, default.scss */
+.pad25R {
+  padding-right: 25px !important;
+}
+
+/* line 187, default.scss */
+.pad30R {
+  padding-right: 30px !important;
+}
+
+/* line 191, default.scss */
+.pad40L {
+  padding-left: 40px !important;
+}
+
+/* line 195, default.scss */
+.pad40R {
+  padding-right: 40px !important;
+}
+
+/* line 199, default.scss */
+.pad5T {
+  padding-top: 5px !important;
+}
+
+/* line 203, default.scss */
+.pad8T {
+  padding-top: 8px !important;
+}
+
+/* line 207, default.scss */
+.pad8B {
+  padding-bottom: 8px !important;
+}
+
+/* line 211, default.scss */
+.pad10T {
+  padding-top: 10px !important;
+}
+
+/* line 215, default.scss */
+.pad12T {
+  padding-top: 12px !important;
+}
+
+/* line 219, default.scss */
+.pad12B {
+  padding-bottom: 12px !important;
+}
+
+/* line 223, default.scss */
+.pad15T {
+  padding-top: 15px !important;
+}
+
+/* line 227, default.scss */
+.pad20T {
+  padding-top: 20px !important;
+}
+
+/* line 231, default.scss */
+.pad25T {
+  padding-top: 25px !important;
+}
+
+/* line 235, default.scss */
+.pad30T {
+  padding-top: 30px !important;
+}
+
+/* line 239, default.scss */
+.pad5B {
+  padding-bottom: 5px !important;
+}
+
+/* line 243, default.scss */
+.pad10B {
+  padding-bottom: 10px !important;
+}
+
+/* line 247, default.scss */
+.pad15B {
+  padding-bottom: 15px !important;
+}
+
+/* line 251, default.scss */
+.pad20B {
+  padding-bottom: 20px !important;
+}
+
+/* line 255, default.scss */
+.pad25B {
+  padding-bottom: 25px !important;
+}
+
+/* line 259, default.scss */
+.pad30B {
+  padding-bottom: 30px !important;
+}
+
+/* line 263, default.scss */
+.pad40B {
+  padding-bottom: 40px !important;
+}
+
+/* line 267, default.scss */
+.pad45B {
+  padding-bottom: 45px !important;
+}
+
+/* line 271, default.scss */
+.pad50B {
+  padding-bottom: 50px !important;
+}
+
+/* line 275, default.scss */
+.pad40L {
+  padding-left: 40px;
+}
+
+/* line 279, default.scss */
+.pad50L {
+  padding-left: 50px;
+}
+
+/* line 283, default.scss */
+.pad60L {
+  padding-left: 60px;
+}
+
+/* line 287, default.scss */
+.pad40R {
+  padding-right: 40px;
+}
+
+/* line 291, default.scss */
+.pad35T {
+  padding-top: 35px;
+}
+
+/* line 295, default.scss */
+.pad35B {
+  padding-bottom: 35px;
+}
+
+/* line 299, default.scss */
+.pad35A {
+  padding: 35px;
+}
+
+/* line 303, default.scss */
+.pad40T {
+  padding-top: 40px;
+}
+
+/* line 307, default.scss */
+.pad60T {
+  padding-top: 60px;
+}
+
+/* line 311, default.scss */
+.mrg0A {
+  margin: 0 !important;
+}
+
+/* line 315, default.scss */
+.mrg0L {
+  margin-left: 0 !important;
+}
+
+/* line 319, default.scss */
+.mrg0R {
+  margin-right: 0 !important;
+}
+
+/* line 323, default.scss */
+.mrg0T {
+  margin-top: 0 !important;
+}
+
+/* line 327, default.scss */
+.mrg0B {
+  margin-bottom: 0 !important;
+}
+
+/* line 331, default.scss */
+.mrg5A {
+  margin: 5px !important;
+}
+
+/* line 335, default.scss */
+.mrg10A {
+  margin: 10px !important;
+}
+
+/* line 339, default.scss */
+.mrg15A {
+  margin: 15px !important;
+}
+
+/* line 343, default.scss */
+.mrg20A {
+  margin: 20px !important;
+}
+
+/* line 347, default.scss */
+.mrg25A {
+  margin: 25px !important;
+}
+
+/* line 351, default.scss */
+.mrg30A {
+  margin: 30px !important;
+}
+
+/* line 355, default.scss */
+.mrg5L {
+  margin-left: 5px !important;
+}
+
+/* line 359, default.scss */
+.mrg10L {
+  margin-left: 10px !important;
+}
+
+/* line 363, default.scss */
+.mrg15L {
+  margin-left: 15px !important;
+}
+
+/* line 367, default.scss */
+.mrg20L {
+  margin-left: 20px !important;
+}
+
+/* line 371, default.scss */
+.mrg25L {
+  margin-left: 25px !important;
+}
+
+/* line 375, default.scss */
+.mrg30L {
+  margin-left: 30px !important;
+}
+
+/* line 379, default.scss */
+.mrg5R {
+  margin-right: 5px !important;
+}
+
+/* line 383, default.scss */
+.mrg10R {
+  margin-right: 10px !important;
+}
+
+/* line 387, default.scss */
+.mrg15R {
+  margin-right: 15px !important;
+}
+
+/* line 391, default.scss */
+.mrg20R {
+  margin-right: 20px !important;
+}
+
+/* line 395, default.scss */
+.mrg25R {
+  margin-right: 25px !important;
+}
+
+/* line 399, default.scss */
+.mrg30R {
+  margin-right: 30px !important;
+}
+
+/* line 403, default.scss */
+.mrg40R {
+  margin-right: 40px !important;
+}
+
+/* line 407, default.scss */
+.mrg50R {
+  margin-right: 50px !important;
+}
+
+/* line 411, default.scss */
+.mrg2B {
+  margin-bottom: 2px !important;
+}
+
+/* line 415, default.scss */
+.mrg40B {
+  margin-bottom: 40px !important;
+}
+
+/* line 419, default.scss */
+.mrg40T {
+  margin-top: 40px;
+}
+
+/* line 423, default.scss */
+.mrg50T {
+  margin-top: 50px;
+}
+
+/* line 427, default.scss */
+.mrg50B {
+  margin-bottom: 50px !important;
+}
+
+/* line 431, default.scss */
+.mrg100B {
+  margin-bottom: 100px !important;
+}
+
+/* line 435, default.scss */
+.mrg5T {
+  margin-top: 5px !important;
+}
+
+/* line 439, default.scss */
+.mrg10T {
+  margin-top: 10px !important;
+}
+
+/* line 443, default.scss */
+.mrg15T {
+  margin-top: 15px !important;
+}
+
+/* line 447, default.scss */
+.mrg20T {
+  margin-top: 20px !important;
+}
+
+/* line 451, default.scss */
+.mrg25T {
+  margin-top: 25px !important;
+}
+
+/* line 455, default.scss */
+.mrg30T {
+  margin-top: 30px !important;
+}
+
+/* line 459, default.scss */
+.mrg60T {
+  margin-top: 60px !important;
+}
+
+/* line 463, default.scss */
+.mrg80T {
+  margin-top: 80px !important;
+}
+
+/* line 467, default.scss */
+.mrg93T {
+  margin-top: 93px;
+}
+
+/* line 471, default.scss */
+.mrg130T {
+  margin-top: 130px !important;
+}
+
+/* line 475, default.scss */
+.mrg5B {
+  margin-bottom: 5px !important;
+}
+
+/* line 479, default.scss */
+.mrg10B {
+  margin-bottom: 10px !important;
+}
+
+/* line 483, default.scss */
+.mrg15B {
+  margin-bottom: 15px !important;
+}
+
+/* line 487, default.scss */
+.mrg20B {
+  margin-bottom: 20px !important;
+}
+
+/* line 491, default.scss */
+.mrg25B {
+  margin-bottom: 25px !important;
+}
+
+/* line 495, default.scss */
+.mrg30B {
+  margin-bottom: 30px !important;
+}
+
+/* line 499, default.scss */
+.L20 {
+  line-height: 20px !important;
+}
+
+/* line 503, default.scss */
+.L30 {
+  line-height: 30px !important;
+}
+
+/* line 507, default.scss */
+.L40 {
+  line-height: 40px !important;
+}
+
+/* line 511, default.scss */
+.L50 {
+  line-height: 50px !important;
+}
+
+/* line 515, default.scss */
+.noBoder {
+  border: none !important;
+}
+
+/* line 519, default.scss */
+.overflowA {
+  overflow: auto;
+}
+
+/* line 523, default.scss */
+.fl {
+  float: left;
+}
+
+/* line 527, default.scss */
+.fr {
+  float: right;
+}
+
+/* line 531, default.scss */
+.greenF {
+  color: green;
+}
+
+/* line 535, default.scss */
+.blueF {
+  color: blue;
+}
+
+/* line 539, default.scss */
+.grayF {
+  color: gray !important;
+}
+
+/* line 543, default.scss */
+.redF {
+  color: red;
+}
+
+/* line 547, default.scss */
+.fill {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* line 555, default.scss */
+.centerDiv {
+  /*display: box !important;*/
+    /*-webkit-box-pack: center;*/
+  /*-webkit-box-align: center;*/
+  display: flex;!important;
+  display: -webkit-flex;
+  display: -moz-flex;
+
+  justify-content: center;
+    -webkit-justify-content: center;
+  align-items: center;
+  -webkit-align-items: center;
+}
+
+/* line 561, default.scss */
+.between {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* line 566, default.scss */
+.inLine {
+  display: inline-block;
+}
+
+/* line 570, default.scss */
+.orangeB {
+  background: blue;
+}
+
+/* line 574, default.scss */
+.grayB {
+  background: #a0a0a0 !important;
+}
+
+/* line 578, default.scss */
+.blackB {
+  background: black;
+}
+
+/* line 582, default.scss */
+.redB {
+  background: red;
+}
+
+/* line 586, default.scss */
+.blueB {
+  background: blue;
+}
+
+/* line 590, default.scss */
+.whiteB {
+  background: #fff;
+}
+
+/* line 594, default.scss */
+.whiteC {
+  color: #fff !important;
+}
+
+/* line 598, default.scss */
+.blueC {
+  color: blue !important;
+}
+
+/* line 602, default.scss */
+.blackC {
+  color: black !important;
+}
+
+/* line 606, default.scss */
+.redC {
+  color: red !important;
+}
+
+/* line 610, default.scss */
+.orangeC {
+  color: #FF9900 !important;
+}
+
+/* line 614, default.scss */
+.grayC {
+  color: #c2c2c2 !important;
+}
+
+/* line 618, default.scss */
+.orangeC2 {
+  color: #FF9900 !important;
+}
+
+/* line 626, default.scss */
+.borderBottom {
+  border-bottom: 1px solid white;
+}
+
+/* line 630, default.scss */
+.borderBlue {
+  border: 1px solid blue;
+}
+
+/* line 634, default.scss */
+.borderOrange {
+  border: 1px solid #ff9900;
+}
+
+/* line 638, default.scss */
+.borderRed {
+  border: 1px solid red;
+}
+
+/* line 642, default.scss */
+.borderGray {
+  border: 1px solid gray;
+}
+
+/* line 646, default.scss */
+.borderWhite {
+  border: 1px solid white;
+}
+
+/* line 650, default.scss */
+.width100 {
+  width: 100%;
+}
+
+/* line 654, default.scss */
+.font12 {
+  font-size: 12px;
+}
+
+/* line 658, default.scss */
+.font14 {
+  font-size: 14px;
+}
+
+/* line 662, default.scss */
+.font15 {
+  font-size: 15px;
+}
+
+/* line 666, default.scss */
+.font16 {
+  font-size: 16px;
+}
+
+/* line 670, default.scss */
+.font18 {
+  font-size: 18px;
+}
+
+/* line 674, default.scss */
+.font20 {
+  font-size: 20px;
+}
+
+/* line 678, default.scss */
+.font22 {
+  font-size: 22px;
+}
+
+/* line 682, default.scss */
+.font24 {
+  font-size: 24px;
+}
+
+/* line 686, default.scss */
+.font26 {
+  font-size: 26px;
+}
+
+/* line 690, default.scss */
+.font30 {
+  font-size: 30px;
+}
+
+/* line 694, default.scss */
+.font34 {
+  font-size: 34px;
+}
+
+/* line 698, default.scss */
+.font38 {
+  font-size: 38px;
+}
+
+/* line 702, default.scss */
+.font40 {
+  font-size: 40px;
+}
+
+/* line 706, default.scss */
+.font46 {
+  font-size: 46px;
+}
+
+/* line 710, default.scss */
+.font60 {
+  font-size: 60px;
+}
+
+/* line 714, default.scss */
+.lineH20 {
+  line-height: 20px !important;
+}
+
+/* line 718, default.scss */
+.lineH24 {
+  line-height: 24px;
+}
+
+/* line 722, default.scss */
+.lineH30 {
+  line-height: 30px;
+}
+
+/* line 726, default.scss */
+.lineH36 {
+  line-height: 36px;
+}
+
+/* line 730, default.scss */
+.lineH40 {
+  line-height: 40px;
+}
+
+/* line 734, default.scss */
+.lineH50 {
+  line-height: 50px;
+}
+
+/* line 738, default.scss */
+.lineH60 {
+  line-height: 60px;
+}
+
+/* line 742, default.scss */
+.blueBorder {
+  border: 1px solid #1a2b71;
+}
+
+/* line 746, default.scss */
+.borderRadius {
+  border-radius: 4px;
+}
+
+/* line 750, default.scss */
+.highlight {
+  background: black !important;
+}
+
+/* line 754, default.scss */
+.posRelative {
+  position: relative;
+}
+
+/* line 758, default.scss */
+.posAbsoult {
+  position: absolute;
+}
+
+/* line 762, default.scss */
+.weight {
+  font-weight: bold;
+}
+
+/* line 766, default.scss */
+.cursor {
+  cursor: pointer;
+}
+
+/* line 770, default.scss */
+p {
+  margin: 0 0 5px;
+}
+
+/* line 774, default.scss */
+.width100 {
+  width: 100%;
+}
+
+/* line 778, default.scss */
+.overflows {
+  overflow: hidden;
+}
+
+/* line 782, default.scss */
+.boxShadow {
+  box-shadow: 0 0 12px 1px #e2e2e2;
+}
+
+/* line 786, default.scss */
+.blackBlue {
+  color: #003464;
+}
+
+/* line 790, default.scss */
+.disableds .homeBlue {
+  color: #254361;
+}
+
+/* line 794, default.scss */
+.homeBlue {
+  color: #5a97da;
+}
+
+/* line 798, default.scss */
+.disabled {
+  cursor: not-allowed;
+}
+
+/* line 802, default.scss */
+.dots {
+  width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  display: inline-block;
+  background: #5a97da;
+}
+
+/* line 810, default.scss */
+a {
+  color: #b2b6bf;
+}
+
+/* line 814, default.scss */
+.mainColor {
+  color: #FF9900;
+}
+
+/* line 818, default.scss */
+.mainBg {
+  background: #FF9900;
+}
+
+/* line 822, default.scss */
+a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+/* line 827, default.scss */
+.overflows {
+  overflow: hidden;
+}
+
+/* line 831, default.scss */
+.borderh {
+  border-bottom: 1px solid #bcbcbc;
+}
+
+/* line 835, default.scss */
+.oj_card {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid #3b5d82;
+}
+
+/* line 840, default.scss */
+.card_height {
+  height: 220px;
+}
+
+/* line 844, default.scss */
+.oj_card:hover {
+  box-shadow: 0 0 10px 3px #2b4462;
+}
+
+/* line 848, default.scss */
+.borders2 {
+  border-bottom: 1px solid #2b4664;
+}
+
+/* line 852, default.scss */
+.oj_toolDown {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 0;
+  color: white;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  transition: 800ms ease all;
+  outline: none;
+  background-color: #FF9900;
+}
+
+/* line 868, default.scss */
+.btn-common {
+  width: 120px;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  border-radius: 0;
+  color: #fff;
+  border: none;
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  transition: 800ms ease all;
+  outline: none;
+  background-color: #FF9900;
+}
+
+/* line 884, default.scss */
+.btn-common:hover {
+  background: #132f56;
+  color: #FF9900;
+}
+
+/* line 889, default.scss */
+.btn-common:before,
+.btn-common:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: #FF9900;
+  transition: 400ms ease all;
+}
+
+/* line 901, default.scss */
+.btn-common:after {
+  left: inherit;
+  top: inherit;
+  right: 0;
+  bottom: 0;
+}
+
+/* line 907, default.scss */
+.btn-common .left-right-line:before,
+.btn-common .left-right-line:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 0;
+  width: 2px;
+  background: #FF9900;
+  transition: 400ms ease all;
+}
+
+/* line 919, default.scss */
+.btn-common .left-right-line:after {
+  left: inherit;
+  bottom: inherit;
+  top: 0;
+  right: 0;
+}
+
+/* line 926, default.scss */
+.btn-common:hover:before,
+.btn-common:hover:after {
+  width: 100%;
+  transition: 800ms ease all;
+}
+
+/* line 931, default.scss */
+.btn-common .left-right-line:hover:before,
+.btn-common .left-right-line:hover:after {
+  height: 100%;
+  transition: 800ms ease all;
+}
+
+/* line 937, default.scss */
+.collect {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+/* line 943, default.scss */
+.title-list {
+  margin-left: 20px;
+  cursor: pointer;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding: 15px 35px 0;
+  font-size: 14px;
+}
+
+/* line 952, default.scss */
+.directory-list {
+  cursor: pointer;
+}
+
+/* line 956, default.scss */
+.directory {
+  margin-bottom: 15px;
+}
+
+/* line 960, default.scss */
+.nav-tabs {
+  border-bottom: none;
+}
+
+/* line 964, default.scss */
+.couseDetail .nav-tabs > li.active > a,
+.bugDetail .nav-tabs > li.active > a {
+  color: white;
+  border-bottom: 1px solid #FF9900;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+
+/* line 974, default.scss */
+.couseDetail .nav-tabs a,
+.bugDetail .nav-tabs a {
+  background: none !important;
+  color: white;
+  border: none;
+  border-radius: 0;
+}
+
+/* line 982, default.scss */
+.commentContent {
+  padding-right: 54px;
+}
+
+/* line 986, default.scss */
+.humanIco {
+  width: 45px;
+  height: 45px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+/* line 994, default.scss */
+.humanIco img {
+  width: 100%;
+  height: 100%;
+}
+
+/* line 999, default.scss */
+.humanIco2 {
+  width: 38px;
+  height: 38px;
+  position: absolute;
+  left: 25px;
+  top: 0;
+}
+
+/* line 1007, default.scss */
+.commentText {
+  margin: 0 0 0 60px;
+  width: 100%;
+}
+
+/* line 1012, default.scss */
+.addOne2, .aleadyZan2, .addOne3, .aleadyZan3 {
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  z-index: -1;
+}
+
+/* line 1020, default.scss */
+.couseDetail .nav > li > a {
+  font-size: 16px;
+}
+
+/* line 1024, default.scss */
+.blueIco {
+  color: #5080a8;
+}
+
+/* line 1028, default.scss */
+.weight {
+  font-weight: bold;
+}
+
+/* line 1032, default.scss */
+.borderNone {
+  border: none;
+}
+
+/* line 1036, default.scss */
+.indent {
+  text-indent: 2em;
+}
+
+/* line 1040, default.scss */
+.filter dd a {
+  padding: 0 20px;
+  display: inline-block;
+  color: white;
+}
+
+/* line 1046, default.scss */
+.oj_examTitle {
+  width: 100%;
+  padding: 10px 0 10px 0px;
+}
+
+/* line 1051, default.scss */
+.borders {
+  border-bottom: 1px solid #7390af;
+}
+
+/*导航标签颜色显示*/
+/* line 1058, default.scss */
+.bread {
+  padding-bottom: 10px;
+  padding-left: 20px;
+  border-bottom: 1px solid #7390af;
+}
+
+/* line 1064, default.scss */
+.bread a:link, .bread a:visited {
+  color: #b2b6bf;
+}
+
+/* line 1068, default.scss */
+.bread a:hover, .bread a:active {
+  color: #fff;
+}
+
+/* line 1072, default.scss */
+.bread a:active, .bread a.active {
+  color: #FF9900;
+}
+
+/* line 1085, default.scss */
+.filtrate tbody tr td:nth-of-type(2) {
+  text-align: center;
+}
+
+/* line 1089, default.scss */
+.filtrate tbody tr td:nth-of-type(3) {
+  padding-left: 15px;
+}
+
+/* line 1093, default.scss */
+.filtrate tbody tr td span a {
+  color: #a3b2ca;
+  font-style: normal;
+  white-space: nowrap;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+/* line 1102, default.scss */
+.filtrate tbody tr td:nth-of-type(3) span {
+  margin-right: 20px;
+  line-height: 42px;
+}
+
+/* line 1107, default.scss */
+.filtrate tbody tr td a.activated {
+  color: #fff !important;
+  background-color: #FF9900;
+  font-weight: bold;
+  padding: 2px 10px;
+}
+
+/* line 1115, default.scss */
+.filtrate tbody tr td a:hover {
+  color: #FF9900;
+}
+
+/* line 1119, default.scss */
+.filtrate .top10 {
+  vertical-align: top;
+  padding: 15px 0 10px 0;
+}
+
+/* line 1125, default.scss */
+.new-filtrate {
+  height: 50px;
+  line-height: 50px;
+}
+/* line 1128, default.scss */
+.new-filtrate > div > .sub-filtrate {
+  position: absolute;
+  max-width: 500px;
+  z-index: 999;
+  display: none;
+  padding-right: 5px;
+}
+/* line 1134, default.scss */
+.new-filtrate > div > .sub-filtrate span {
+  display: inline-block;
+  padding: 0 18px;
+  line-height: 30px;
+  position: relative;
+}
+/* line 1139, default.scss */
+.new-filtrate > div > .sub-filtrate span .s_line {
+  display: block;
+  height: 13px;
+  width: 1px;
+  background: #FFF;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -6.5px;
+  opacity: .3;
+  filter: alpha(opacity=30);
+}
+/* line 1153, default.scss */
+.new-filtrate > div > .sub-filtrate span:hover {
+  background: #FF9900;
+  color: #fff;
+}
+/* line 1158, default.scss */
+.new-filtrate > div > a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding: 0 30px;
+}
+/* line 1164, default.scss */
+.new-filtrate > div > a > .s_line {
+  display: block;
+  height: 13px;
+  width: 1px;
+  background: #FFF;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  margin-top: -6.5px;
+  opacity: .3;
+  filter: alpha(opacity=30);
+}
+/* line 1177, default.scss */
+.new-filtrate > div > a > i.down {
+  line-height: 50px;
+}
+/* line 1182, default.scss */
+.new-filtrate > .difficulty .difficulty-list {
+  display: none;
+  width: 100%;
+  position: absolute;
+  left: 0;
+}
+/* line 1187, default.scss */
+.new-filtrate > .difficulty .difficulty-list li span {
+  display: inline-block;
+  line-height: 30px;
+  width: 100%;
+}
+/* line 1192, default.scss */
+.new-filtrate > .difficulty .difficulty-list li:hover span {
+  background: #FF9900;
+  color: #fff;
+}
+/* line 1200, default.scss */
+.new-filtrate > .difficulty:hover .difficulty-list {
+  display: block;
+}
+
+@media screen and (max-width: 1024px) {
+  /* line 1207, default.scss */
+  #difficulty-list {
+    padding-right: 0;
+  }
+
+  /* line 1210, default.scss */
+  #difficulty-list span {
+    display: block;
+  }
+  /* line 1213, default.scss */
+  #difficulty-list span .s_line {
+    display: none;
+  }
+}
+/* line 1221, default.scss */
+.search {
+  width: 200px;
+  height: 30px;
+  position: relative;
+}
+
+/* line 1227, default.scss */
+.search-text {
+  width: 160px;
+  height: 30px;
+  color: #ccc;
+  background: #556a7f;
+  border: 1px solid #556a7f;
+  outline: none;
+}
+
+/* line 1236, default.scss */
+.search-text::placeholder {
+  color: #ccc;
+}
+
+/* line 1240, default.scss */
+.search-bg {
+  width: 40px;
+  height: 30px;
+  line-height: 30px;
+  display: inline-block;
+  position: absolute;
+  right: 0;
+}
+
+/* line 1250, default.scss */
+.default-table {
+  color: #fff;
+}
+/* line 1252, default.scss */
+.default-table thead tr {
+  background: #365074;
+}
+/* line 1255, default.scss */
+.default-table thead tr th {
+  border: 1px solid #293e66;
+}
+/* line 1258, default.scss */
+.default-table tbody tr td {
+  border: 1px solid #293e66;
+}
+/* line 1261, default.scss */
+.default-table tbody tr:hover {
+  cursor: pointer;
+}
+
+/* line 1267, default.scss */
+.default-table tbody tr {
+  cursor: pointer;
+}
+/* line 1270, default.scss */
+.default-table tbody tr td span {
+  width: 115px;
+  height: 30px;
+  background-color: #FF9900;
+  line-height: 30px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* line 1280, default.scss */
+.fixed-table-container thead th:first-child {
+  border-left: hidden;
+}
+
+/* line 1285, default.scss */
+.default-table-v2 {
+  color: #afc0d3;
+}
+/* line 1287, default.scss */
+.default-table-v2 thead tr {
+  background: #3f6189;
+}
+/* line 1290, default.scss */
+.default-table-v2 thead tr th,
+.default-table-v2 thead th:first-child {
+  border: 1px solid #42648c;
+}
+/* line 1294, default.scss */
+.default-table-v2 tbody tr td {
+  border: 1px solid #42648c;
+}
+/* line 1297, default.scss */
+.default-table-v2 tbody tr:hover {
+  color: #fff;
+  cursor: pointer;
+}
+
+/* line 1303, default.scss */
+.fixed-table-container thead th:first-child,
+.fixed-table-container tbody td:first-child,
+.table-warp .fixed-table-container tbody td {
+  border-left: 1px solid #42648c !important;
+}
+
+/* line 1310, default.scss */
+.left-top-logo {
+  height: 60px;
+}
+
+/* line 1316, default.scss */
+.md-editor > textarea {
+  border-top: 1px dashed #569bf2 !important;
+  border-bottom: 1px dashed #569bf2 !important;
+  /*color: #b9d9fc;*/
+  color: #fff;
+}

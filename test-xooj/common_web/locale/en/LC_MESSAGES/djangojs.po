@@ -1,0 +1,50 @@
+msgid "x_ongoing_scene"
+msgstr "Ongoing Scene"
+
+msgid "x_no_longer_reminding"
+msgstr "No Longer Reminding"
+
+msgid "x_delete_scene"
+msgstr "Delete Scene"
+
+msgid "x_click_to_go"
+msgstr "Click to go"
+
+msgid "x_confirm_delete_scene"
+msgstr "Confirm to delete this scene?"
+
+msgid "x_please_enter_initial_password"
+msgstr "Please enter the initial password"
+
+msgid "x_password_length_8"
+msgstr "Password length can not be less than 8 characters"
+
+msgid "x_please_enter_new_password"
+msgstr "Please enter a new password"
+
+msgid "x_please_confirm_new_password"
+msgstr "Please confirm the new password"
+
+msgid "x_password_inconsistent_twice"
+msgstr "Two passwords are inconsistent"
+
+msgid "x_reply"
+msgstr "Reply"
+
+msgid "x_no_messages"
+msgstr "No messages now."
+
+msgid "x_select_all"
+msgstr "Select All"
+
+msgid "x_selected"
+msgstr "Selected"
+
+msgid "x_handle"
+msgstr "Handle Now"
+
+msgid "x_go_page"
+msgstr "Jump To Page"
+
+msgid "x_page"
+msgstr " "

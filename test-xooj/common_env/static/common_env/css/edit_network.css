@@ -1,0 +1,199 @@
+.edit-topology{
+    border: 1px solid #ddd;
+    height: 600px;
+}
+.env-topology{
+    width: calc(100% - 150px);
+    height: 100%;
+    position: relative;
+}
+.env-topology #envTopologyPanel{
+    height: 100%;
+    background-image: url(../img/network/edit/bg.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+ }
+
+.select-device{
+    width: 150px;
+    height: 100%;
+    border-right: 1px solid #ddd;
+    position: relative;
+}
+.select-device .device-filter{
+    border: none;
+    border-bottom: 1px solid #ddd;
+    width: 100%;
+    height: 30px;
+    padding: 5px;
+    display: block;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+}
+.select-device .search-device{
+    padding: 0;
+}
+.select-device .search-device #device-search{
+    width: 100%;
+    outline: none;
+    border: none;
+    height: 29px;
+    padding: 5px 23px 5px 8px;
+}
+.select-device .search-device .glyphicon-search{
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translate(0, -50%);
+    -webkit-transform: translate(0, -50%);
+    -moz-transform: translate(0, -50%);
+}
+.select-device .device-list{
+
+}
+
+
+.select-device .no-records{
+    text-align: center;
+    line-height: 80px;
+}
+.device-item{
+    cursor: pointer;
+    text-align: center;
+    margin: 5px 0;
+}
+.device-item img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+}
+.device-item .label{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 74px;
+    display: block;
+    background-color: transparent;
+}
+.select-device .device-page{
+    position: absolute;
+    width: 120px;
+    left: 15px;
+    bottom: 4px;
+}
+.select-device .device-page span{
+    padding: 3px 6px;
+}
+
+
+.center-btn{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    cursor: pointer;
+}
+
+.rightMenu{
+    position: absolute;
+    z-index: 101;
+    white-space: nowrap;
+}
+.rightMenu a{
+    padding: 5px 10px;
+    background-color: #fff;
+}
+
+.edit-panel{
+    position: absolute;
+    background-color: #f9f9f9;
+    padding: 20px 50px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    min-width: 700px;
+    border: 1px solid #ddd;
+    z-index: 100;
+}
+.edit-panel h3{
+    margin-bottom: 20px;
+}
+.edit-panel .control-label{
+    white-space: nowrap;
+    text-align: right;
+}
+.edit-panel input[readonly]{
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: auto;
+}
+
+.edit-panel .tag-item {
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 4px 20px 4px 8px;
+    display: inline-block;
+    position: relative;
+}
+.edit-panel .tag-item .glyphicon-remove {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    color: #f00;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.edit-panel .tag-adder{
+    margin-top: 10px;
+}
+.edit-panel .tag-adder .form-control{
+    height: 28px;
+    width: 150px;
+}
+.edit-panel .tag-adder .form-control.checkbox{
+    border: none;
+    background-color: transparent;
+}
+.edit-panel .tag-adder .tag-add-btn{
+    vertical-align: top;
+    padding: 3px 8px;
+    margin: 0;
+}
+.edit-panel .tag-adder.add-firewall-rule .form-control{
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.edit-panel .server-role label{
+    color: #ff0000;
+}
+.edit-panel .server-role select{
+    color: #ff0000;
+}
+
+.checker-panel {
+    position: absolute;
+    background-color: #fff;
+    text-align: center;
+    right: 2px;
+    top: 2px;
+    width: 80px;
+    z-index: 99;
+}
+.checker-panel .checker-item{
+    height: 80px;
+    padding-top: 5px;
+}
+.checker-panel .checker-item img{
+    width: 50px;
+    height: 50px;
+}
+.checker-panel .no-checker{
+    line-height: 80px;
+}

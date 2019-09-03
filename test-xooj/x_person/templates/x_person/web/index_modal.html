@@ -1,0 +1,162 @@
+{% load i18n %}
+{% load staticfiles %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'common_env/lib/vis/vis.min.css' %}"/>
+    <script src="{% static 'common_env/lib/vis/vis.min.js' %}"></script>
+    <style>
+        #mynetwork {
+            width: 100%;
+            height: 500px;
+        }
+
+        .modal {
+            top: 0;
+            margin-top: 0;
+        }
+
+        .description {
+            position: absolute;
+            width: 450px;
+            height: 115px;
+            background-color: rgba(3, 19, 39, .95);
+            border-radius: 10px;
+            z-index: 999;
+            font-size: 14px;
+        }
+
+        .description:before {
+            content: '';
+            border-left: 13px solid transparent;
+            border-right: 13px solid transparent;
+            border-bottom: 13px solid rgba(3, 19, 39, .95);
+            position: absolute;
+            top: -13px;
+            left: 30px;
+        }
+    </style>
+{% endblock %}
+
+{#    职业目标弹框#}
+<div class="modal fade common-msg-modal" id="index-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title text-center">{% trans '选择职业目标' %}</h4>
+            </div>
+            <div class="modal-body centerDiv">
+                <div class="description pad10R pad10L pad10T pad10B hidden">
+                </div>
+                <div id="mynetwork"></div>
+            </div>
+            <div class="modal-footer deal-btn">
+                <button type="button" class="btn-confirm mainBg ">确定</button>
+                <button type="button" class="btn-cancel " data-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden" id="template">
+    <p>职业名称：<span>渗透测试工程师</span></p>
+    <p>职业简介：<span>渗透测试 (penetration test)并没有一个标准的定义，国外一些安全组织达成共识的通用说法是:渗透测试是通过模拟恶意黑客。</span></p>
+    <p>职业课时：<span>186</span>课时</p>
+</div>
+<script type="text/javascript">
+
+</script>
+{% block document_ready %}
+    <script>
+        var nodes = [
+            {id: 1, label: '渗透测试工程师1',},
+            {id: 2, label: '渗透测试工程师2'},
+            {id: 3, label: '渗透测试工程师3'},
+            {id: 4, label: '渗透测试工程师4',},
+            {id: 5, label: '渗透测试工程师5',},
+            {id: 6, label: '职业6',},
+            {id: 7, label: '职业7',},
+        ];
+
+        var edges = [
+            {from: 1, to: 2, label: ""},
+            {from: 2, to: 3, label: ""},
+            {from: 3, to: 4, label: ""},
+            {from: 5, to: 2, label: ""},
+            {from: 2, to: 6, label: ""},
+            {from: 6, to: 7, label: ""},
+        ];
+
+        var container = document.getElementById('mynetwork');
+        var data = {
+            nodes: nodes,
+            edges: edges
+        };
+        var options = {
+            edges: {
+                font: {
+                    size: 12
+                },
+                color: {
+                    color: '#416ead',
+                    hover: '#e79006',
+                    highlight: '#e79006'
+
+                },
+                widthConstraint: {
+                    maximum: 90
+                },
+            },
+            nodes: {
+                shape: 'box',
+                margin: 10,
+                widthConstraint: 120,
+                color: {
+                    background: 'rgba(0, 24, 54, 1)', border: '#416ead',
+                    highlight: {background: '#e79006', border: '#e79006'},
+                    hover: {background: '#e79006', border: '#e79006'},
+                },
+
+                font: {
+                    color: '#fff'
+                },
+            },
+            layout: {
+                randomSeed: 1,//配置每次生成的节点位置都一样，参数为数字1、2等
+                hierarchical: {
+                    direction: 'LR',//UD:上下 DU:下上 LR:左右 RL:右左
+                    sortMethod: 'directed'
+                }, //层级结构显示}
+            },
+            physics: {
+                enabled: false
+            },
+            interaction: {hover: true}
+        };
+        var network = new vis.Network(container, data, options);
+
+        var $description = $('.description');
+
+        network.on("hoverNode", function (e) {
+            $description.html(getInfoHtml())
+            $description.removeClass('hidden');
+            var x = this.body.nodes[e.node].x;
+            var y = this.body.nodes[e.node].y;
+            console.log(this.canvas)
+            var domCoord = this.canvas.canvasToDOM({x: x, y: y});
+            $description.animate({
+                left: domCoord.x - 60 + 'px',
+                top: domCoord.y + 50 + 'px',
+            })
+
+        });
+        network.on("blurNode", function (e) {
+            $description.addClass('hidden');
+        })
+        function getInfoHtml() {
+            var msg;
+            msg = $('#template').clone().html();
+            return msg;
+        }
+    </script>
+{% endblock %}

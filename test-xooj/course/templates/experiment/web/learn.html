@@ -1,0 +1,214 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>{% trans "x_learning_course" %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/learn.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/video.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'web/css/common.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/bootstrap.min.css'%}">
+    <script src="{% static 'course/js/jquery-3.2.1.min.js'%}"></script>
+    <script src="{% static 'web/js/pdfobject.min.js' %}"></script>
+    <script src="{% static 'course/js/learn.js'%}"></script>
+    <script src="{% static 'course/js/tween.js'%}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.title-list li a').each(function(){
+            if($($(this))[0].href==String(window.location)){
+                $(this)[0].style.color='orange'
+                $(this).parent().parent()[0].style.display='block';
+                $(this).parent().parent().prev()[0].style.color='orange'
+                $(this).parent().parent().prev()[0].children[0].style.cssText='background:orange;border:none';
+                $(this).parent().parent().prev()[0].play=false;
+                }
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        function setFocus() {
+            //alert('focus');
+            document.getElementById('iframeH').contentWindow.focus();
+        }
+    </script>
+</head>
+
+
+<body>
+    <div class='bg-wrap' style="background:url({% static 'course/img/bg.jpg' %})">
+    </div>
+    <div class='black-bg'>
+        <div class='learn-title clearfix'>
+{#            <div  class='return-btn pad20L pad20R mainBg inLine text-center fl lineH40'>#}
+{#                <a href="" class='return '>{% trans "返回课程" %}</a>#}
+{#            </div>#}
+            <div class='learn-label'>
+                <span class='dot'></span>
+                <span class='label-text' name="course-name"></span>
+                <span class='label-text'>&nbsp;>&nbsp;</span>
+                <span class='label-text' name="lesson-name"></span>
+            </div>
+            <ul class='action-btn'>
+                <li media-name="pdf" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "实验文档" %}</span>
+                </li>
+                <li media-name="video" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "教学视频" %}</span>
+                </li>
+                <li media-name="practice" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_lab_environment" %}</span>
+                </li>
+                <li media-name="note" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_my_note" %}</span>
+                </li>
+                <li media-name="note" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_experimental_report" %}</span>
+                </li>
+            </ul>
+            <div class='appear'></div>
+        </div>
+        <div class='learn-content'>
+            <div class='inportant-main doc-hide frame-pdf'>
+                <div class='study-main'>
+                    <iframe class='gg' name="pdf" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-video'>
+                <div class='study-main'>
+                    <iframe class='gg' name="video" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-practice'>
+                <div class='study-main'>
+                    <iframe class='gg' name="practice" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-note'>
+                <div class='study-main'>
+                    <iframe class='gg' name="note" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-report'>
+                <div class='study-main'>
+                    <iframe class='gg' name="report" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='course-detailed'>
+        <div class='pull'>
+            <span></span>
+        </div>
+        <div class='detailed-main'>
+            <div class='head-name' name="course-name">
+            </div>
+            <div class='inner'>
+                <ul class='assess-content' id="lesson-list-div">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="lesson-template-div" style="display: none;">
+        <li>
+            <span class='list-ico'></span>
+            <a href="" class='return listText' name="lt-name" lesson-id=""></a>
+        </li>
+    </div>
+<script type="text/javascript">
+var course_id = {{ course_id }};
+var current_lesson_id = "";
+{% if lesson_id %}
+    current_lesson_id = {{ lesson_id }};
+{% endif %}
+
+function init_lesson_list(lesson_id) {
+    var lesson_list_div = $("#lesson-list-div");
+    var lesson_tpl = $("#lesson-template-div");
+    var current_lesson = null ;
+    lesson_list_div.empty();
+
+    $.ajax({
+        url: "{% url 'course:api:lesson-list' %}",
+        type: "get",
+        data: {"course_id": {{ course_id }}},
+        datatype: "json",
+        success: function (data) {
+            if (data.total > 0){
+                var lesson_list = data.rows;
+                // 生成列表
+                for (var i in lesson_list){
+                    var lesson_obj = lesson_list[i];
+                    if (lesson_id == lesson_obj.id){
+                        current_lesson = lesson_obj;
+                    }
+                    lesson_tpl.find("a[name='lt-name']").attr("lesson-id", lesson_obj.id);
+                    lesson_tpl.find("a[name='lt-name']").html(lesson_obj.name);
+                    lesson_tpl.find("a[name='lt-name']").attr("href",
+                        "{% url 'course:learn_lesson' course_id 0 %}".replace("0", lesson_obj.id));
+                    lesson_list_div.append(lesson_tpl.html());
+                }
+
+                if (current_lesson == null || lesson_id == ""){
+                    current_lesson = lesson_list[0];
+                }
+
+                // 初始化当前lesson
+                init_current_lesson(current_lesson)
+            }
+        },
+        error: function () {
+            showPopMsg("{% trans 'x_course_directory' %}");
+        }
+    });
+}
+
+function init_current_lesson(lesson) {
+    $("[name='course-name']").html(lesson.course_name);
+    $("span[name='lesson-name']").html(lesson.name);
+    $("a[lesson-id='"+lesson.id+"']").css("color", "orange");
+     $("a[lesson-id='"+lesson.id+"']").prev().css('background','orange');
+
+
+    if (lesson.pdf){
+{#        PDFObject.embed(lesson.pdf, $("div[name='pdf']"), {pdfOpenParams: { view: 'FitV', toolbar: '0' }});#}
+{#        $("iframe[name='pdf']").attr("src", "{% url 'course:pdf' %}"+ "?pdf_url=" +lesson.pdf);#}
+        $("iframe[name='pdf']").attr("src", "{% static 'web/pdfjs-1.8.188/web/viewer.html' %}?file=" + lesson.pdf);
+        $("li[media-name='pdf']").show();
+    }
+
+    if (lesson.video){
+        $("iframe[name='video']").attr("src", "{% url 'course:video' %}"+ "?video_url=" +lesson.video);
+        $("li[media-name='video']").show();
+    }
+
+    if (lesson.practice){
+        $("iframe[name='practice']").attr("src", "{% url 'course:task' %}"+"?task_hash=" + lesson.practice);
+        $("li[media-name='practice']").show();
+    }
+
+    $("iframe[name='note']").attr("src", "{% url 'course:note' %}"+"?course_id={{ course_id }}");
+    $("li[media-name='note']").show();
+
+    $("iframe[name='report']").attr("src", "{% url 'course:report' %}"+"?lesson_hash="+ lesson.hash);
+    $("li[media-name='report']").show();
+}
+
+$(function () {
+{#    $("a.return").attr("href", "{% url 'course:detail' course_id %}");#}
+
+    init_lesson_list(current_lesson_id);
+})
+</script>
+</body>
+</html>

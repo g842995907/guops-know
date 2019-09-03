@@ -1,0 +1,41 @@
+msgid "x_num_new_user"
+msgstr "新增用户数"
+
+msgid "x_num_course_learning"
+msgstr "课程学习数"
+
+msgid "x_num_practice_completed"
+msgstr "练习完成数"
+
+msgid "x_num_new_team"
+msgstr "新队伍"
+
+msgid "x_event_answered"
+msgstr "题目完成数"
+
+msgid "x_study"
+msgstr "学习"
+
+msgid "x_exam"
+msgstr "考试"
+
+msgid "x_subject"
+msgstr "题目"
+
+msgid "x_cpu_use_percent"
+msgstr "CPU使用率"
+
+msgid "x_ram_use_percent"
+msgstr "内存使用率"
+
+msgid "x_disk_use_percent"
+msgstr "磁盘使用率"
+
+msgid "x_switch_bar"
+msgstr "切换为柱状图"
+
+msgid "x_switch_line"
+msgstr "切换为折线图"
+
+msgid "x_restore"
+msgstr "还原"

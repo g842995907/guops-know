@@ -1,0 +1,158 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static_v %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static_v '/x_person/css/layout.css' %}"/>
+    {% if LANGUAGE_CODE == 'zh-hans' %}
+         <link rel="stylesheet" type="text/css" href="{% static_v 'x_person/css/layout-zh.css' %}"/>
+    {% else %}
+         <link rel="stylesheet" type="text/css" href="{% static_v 'x_person/css/layout-en.css' %}"/>
+    {% endif %}
+    <script src="{% static '/x_person/js/uploadPreview.js' %}"></script>
+    <script src="{% static_v '/x_person/js/common.js' %}"></script>
+    <script src="{% static_v '/x_person/js/form.utils.js' %}"></script>
+    <script src="{% static '/x_person/js/jquery.form.js' %}"></script>
+    <script src="{% static '/x_person/js/jquery.md5.js' %}"></script>
+    <script src="{% static 'web/js/autosize.js' %}"></script>
+    <script src="{% static 'web/js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'web/js/messages_zh.min.js' %}"></script>
+    <script src="{% static "web/artTemplate/template.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/layer/laydate.js' %}"></script>
+
+
+    <script>
+        $(function () {
+            autosize(document.querySelectorAll('textarea'));
+        })
+    </script>
+{% endblock %}
+
+{% block container %}
+    <section class="container layout-color mrg93T">
+        <div class="bread layout-color">
+            <a class="layout-color" href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a> >>
+{#            <a href="{% url 'x_person:team' %}">{% trans 'x_my_tram' %}</a>>>#}
+            <a href="" class="active font15">{% trans 'x_edit_information' %}</a>
+        </div>
+        {#        <div class="team-hint default-bg mrg20T clearfix">#}
+        {#            <span class="pull-left">{% trans '您还没有队伍，可以创建或选择一支队伍加入...' %}</span>#}
+        {#            <a class="pull-right" href="{% url 'x_person:join_team' %}">{% trans '返回加入队伍' %}</a>#}
+        {#        </div>#}
+        {#    create team start#}
+        <div class="create-team default-bg mrg20T">
+            <h3 class="title mrg20B">{% trans 'x_create_team' %}</h3>
+            <div class="row team-edit-box">
+                <form id="validateForm" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 team-edit-form"
+                      action="{% url 'x_person:api:team-list' %}"
+                      method="post">{% csrf_token %}
+                    <div class="row">
+                        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-3 text-center team-logo" id="headBox">
+                    <span><img id="headShow" class="img-responsive img-circle"
+                               src="{% static 'x_person/img/team_logo.png' %}"></span>
+                            <input id="logo" name="logo" type="file" style="display: none"
+                                   accept="image/gif,image/jpeg,image/png,image/bmp"/>
+                            <div class="click-upload text-center"
+                                 onclick="$('#logo').click()">{% trans 'x_click_upload' %}Logo</div>
+                        </div>
+                        <div class="col-lg-10 col-md-9 col-sm-9 col-xs-9">
+                            <div class="row">
+
+                                <div class="form-group form-inline ">
+                                    <label for="">{% trans 'x_team_name' %}：</label>
+                                    <input type="text" name="name" class="default-bg form-control layout-color"
+                                           placeholder="{% trans 'x_team_name' %}"/>
+                                    <span style="font-size: 20px;" class="text-danger">*</span>
+                                </div>
+                                <div class="form-group form-inline">
+                                    <label for="">{% trans 'x_time_establishment' %}：</label>
+                                    <input type="text" name="create_time" class="default-bg  form-control layer-date laydate-icon layout-color"
+                                         id ='create_time'  value=""  placeholder="{% trans 'x_created' %}" />
+                                    <span style="font-size: 20px;" class="text-danger">*</span>
+                                </div>
+                                <div class="form-group form-inline">
+                                    <label for="">{% trans 'x_team_profile' %}：</label>
+                                    <textarea type="text" name="brief_introduction"
+                                              class="default-bg form-control layout-color" placeholder="{% trans 'x_team_profile' %}"></textarea>
+                                </div>
+                                {#save&cancle#}
+                                <div class="save-ifon-btn col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center mrg20T">
+                                    <button type="button"
+                                            class="team-info-edit-btn default-bg text-center whiteC cancel-btn"
+                                            onclick="window.location.href = '{% url 'x_person:join_team' %}';" >{% trans 'x_cancel' %}</button>
+                                    <button type="submit"
+                                            class="team-info-edit-btn mainBg text-center whiteC">{% trans 'x_save' %}</button>
+                                </div>
+
+                                {#save&cancle#}
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {#  reate team end #}
+        </div>
+    </section>
+    {% include 'x_person/web/js_templates/bootstrap_modal.html' %}
+{% endblock %}
+
+{% block document_ready %}
+
+    <script>
+        var listUrl = "{% url 'x_person:team' %}";
+    </script>
+    <script>
+        var returnUrl = urlparser.getQueryString("return");
+        returnUrl = returnUrl ? returnUrl : listUrl;
+    </script>
+    <script>
+        //图片上传预览
+        window.onload = function () {
+            new uploadPreview({UpBtn: "logo", DivShow: "headBox", ImgShow: "headShow"});
+        };
+        $(function () {
+            $("#validateForm").validate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 30
+                    },
+                    create_time: {
+                        required: true,
+                        maxlength: 30,
+                    }
+                },
+                messages: {
+                    name: {
+                        required: gettext("x_required"),
+                        maxlength: gettext("x_max_length_30"),
+                    },
+                    create_time: {
+                        required: gettext("x_required"),
+                        maxlength: gettext("x_max_length_30"),
+                    },
+                },
+            });
+
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = returnUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {});
+        });
+        $(function(){
+            var now_date = new Date();
+            laydate.render({
+              elem: '#create_time',
+              type: 'datetime',
+             max: 'now_date',
+            });
+            //$('#create_time').val(now_date);
+        })
+
+
+    </script>
+{% endblock %}

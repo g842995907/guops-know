@@ -1,0 +1,14 @@
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+<div class="bread">
+    <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+    <span style="color: #b2b6bf;">&gt;&gt;</span>
+    <a href="{% url 'course:list' %}">{% trans "x_course" %}</a>
+    <span style="color: #b2b6bf;">&gt;&gt;</span>
+    <a href="{% url 'course:detail' course_id %}" class='font15' name="course-name"></a>
+    <span style="color: #b2b6bf;">&gt;&gt;</span>
+    <a href="" class='active font15' name="lesson-name"></a>
+</div>
+
+

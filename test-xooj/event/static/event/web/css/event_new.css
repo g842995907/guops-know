@@ -1,0 +1,139 @@
+.oj_competitionBtn {
+    transition: .4s;
+}
+
+.oj_competitionBtn:hover {
+    border-radius: 50px;
+}
+
+.oj_label {
+    width: 124px;
+    height: 30px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.finish .oj_label {
+    background: url(../img/hui2.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+.ing .oj_label {
+    background: url(../img/blue1.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+.future .oj_label {
+    background: url(../img/yellow3.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+.exam .oj_label {
+    background: url(../img/red1.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+.md-editor > textarea {
+    background: none;
+}
+
+.md-editor > textarea:focus {
+    background: none;
+}
+
+.md-editor > .md-preview {
+    background: #16212e;
+    color: white;
+}
+
+/**/
+
+.right-label {
+    width: 71px;
+    height: 71px;
+    right: 15px;
+    top: 0;
+    background-size: 100% 100%;
+}
+
+.right-label.ing {
+    background: url("../img/ing.png") center no-repeat;
+}
+
+.right-label.future {
+    background: url("../img/finished.png") center no-repeat;
+}
+
+.right-label.finished {
+    background: url("../img/finished.png") center no-repeat;
+}
+
+.event-info .info > div > span {
+    vertical-align: text-bottom;
+}
+
+.event-info .info > div:nth-child(1):before {
+    content: url("../img/type_icon.png");
+}
+
+.event-info .info > div:nth-child(2):before {
+    content: url("../img/usr_icon.png");
+}
+
+.event-info .info > div:nth-child(3):before {
+    content: url("../img/integral_icon.png");
+}
+
+.event-info .info > div:nth-child(4):before {
+    content: url("../img/reward_icon.png");
+}
+
+.event-info .info > div:nth-child(5):before {
+    content: url("../img/time_icon.png");
+}
+
+.event-btn {
+    width: 78px;
+    height: 24px;
+    display: inline-block;
+    line-height: 24px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.2);
+    transition: all .2s ease-in-out;
+}
+
+.event-btn:hover {
+    box-shadow: 0 4px 11px 0px rgba(0, 0, 0, 0.275);
+    transform: scale(1.1);
+    /*animation: btn-animate .3s ease-in-out;*/
+    border-radius:0;
+}
+
+@-webkit-keyframes btn-animate {
+    from {
+        border-radius: 4px;
+    }
+    to {
+        border-radius:0;
+    }
+}
+.event-btn.review {
+    background-color: #c77e0f;
+}
+
+.event-btn.review:hover {
+    background-color: #f99d12;
+}
+
+.event-btn.join {
+    background-color: #1d73ad;
+}
+
+.event-btn.join:hover {
+    background-color: #1fa0fb;
+}

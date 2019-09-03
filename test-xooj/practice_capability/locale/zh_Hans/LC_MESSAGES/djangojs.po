@@ -1,0 +1,72 @@
+msgid "x_test_paper_show_tip"
+msgstr "<span id=\"questioncount\">{number}</span>题共 <span id=\"scoresum\">{allScore}</span> PT"
+
+
+msgid "x_name_already_exists"
+msgstr "名称已存在, 请重新输入"
+
+msgid "x_choose_least_question"
+msgstr "至少选择一道题"
+
+msgid "x_enter_score"
+msgstr "请输入分值"
+
+msgid "x_task"
+msgstr "赛题"
+
+msgid "x_attachment_download"
+msgstr "附件下载"
+
+msgid "x_get_score"
+msgstr "得分"
+
+msgid "x_score_total_score"
+msgstr " 分/总分 "
+
+msgid "x_socre_nbsp"
+msgstr " 分"
+
+msgid "x_total_score"
+msgstr "总分 "
+
+msgid "x_submit_success_your_score_is"
+msgstr "提交成功！您的得分为"
+
+msgid "x_abnormal"
+msgstr "异常"
+
+msgid "x_list_questions"
+msgstr "试题列表"
+
+msgid "x_Scores"
+msgstr "分值"
+
+msgid "x_idea_of_solving_problem"
+msgstr "解题思路"
+
+msgid "x_answer"
+msgstr "答案"
+
+msgid "x_fraction_score"
+msgstr " 分"
+
+msgid "x_questions_answers"
+msgstr "问答题"
+
+msgid "x_download_attachment"
+msgstr "点击下载题目附件"
+
+msgid "x_capability_name_required"
+msgstr "试卷名称: 该字段必填"
+
+msgid "x_export_paper"
+msgstr "导出试卷"
+
+msgid "x_testpaper_export_confirm"
+msgstr "该试卷含操作题，是否只导出选择题？"
+
+msgid "x_configuration_error"
+msgstr "配置错误！请重新选择。"
+
+msgid "x_select_set"
+msgstr "请选择习题集"

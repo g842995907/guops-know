@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Hankaln">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>标靶 - 场景引擎系统</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u6807\u9776";
+    var mkdocs_page_input_path = "target.md";
+    var mkdocs_page_url = "/target/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> 场景引擎系统</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">场景引擎系统</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">标靶</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#_1">概述</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_2">标靶属性</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_3">标靶接入</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_4">自定义标靶</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_5">注意项</a></li>
+    
+
+    <li class="toctree-l2"><a href="#cloudbase-init-winxp">Cloudbase-init WinXP部署</a></li>
+    
+
+    <li class="toctree-l2"><a href="#linux">Linux自动挂载脚本部署</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../upload-target/">自定义上传</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../sense/">基础场景</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../adsense/">攻防场景</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../make-scene/">场景创建</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../operation-guide/">虚拟机操作指南</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../qa/">QA</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">场景引擎系统</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>标靶</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h3 id="_1">概述</h3>
+<p>标靶是网络拓扑中的最小单位，可以是网络、虚拟路由、虚拟终端。
+网络和虚拟路由不支持访问和自定义，虚拟终端标靶采用RDP(远程桌面)或SSH远程访问方式。</p>
+<hr />
+<h3 id="_2"><span id='target-property'>标靶属性</span></h3>
+<ul>
+<li>元数据<ul>
+<li><a href="#target-role">角色</a>，标靶角色分为<strong>路由</strong>、<strong>网络</strong>和<strong>终端</strong>；</li>
+<li>系统，系统分为Linux、Windows、其他；</li>
+<li>大小，标靶运行时的CPU、内存和硬盘的配置；</li>
+<li>系统访问方式，支持SSH(默认22端口)和RDP(远程桌面，默认3389端口)两种登录方式，请确保系统相关服务开启并允许远程接入；</li>
+<li>系统用户信息，系统登录的初始用户名和密码；</li>
+</ul>
+</li>
+<li>高级属性<ul>
+<li>是否支持<a href="http://cloudinit.readthedocs.io/en/latest/">Cloud-init</a>,提供了虚拟机启动后的初始化能力；</li>
+<li><a href="#target-disk-control-type">磁盘控制器类型</a></li>
+<li><a href="#target-virtual-io">虚拟网卡型号</a></li>
+<li><a href="#target-image-video-driver">视频图像驱动</a></li>
+</ul>
+</li>
+<li>镜像<ul>
+<li>标靶实际对应的系统镜像文件；</li>
+</ul>
+</li>
+<li>状态<ul>
+<li>待编辑，从已有系统新增镜像，只有元数据而未生成系统镜像的状态，该标靶不能直接使用，在场景中被自动过滤；</li>
+<li>已保存，元数据和镜像已就绪，可以正常使用；</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h3 id="_3"><span id='target-remote-access'>标靶接入</span></h3>
+<p>系统提供操作标靶的远程接入能力，Windows系统支持RDP协议，Linux系统支持SSH和RDP协议。</p>
+<ul>
+<li>Web直接访问，系统支持从web页面直接访问，系统自动输入用户名密码</li>
+<li>RDP 协议支持 远程桌面、Remmina等支持RDP的工具</li>
+<li>SSH 协议支持 Xshell、SecureCRT、Putty、Terminal等支持SSH的工具</li>
+</ul>
+<hr />
+<h3 id="_4"><span id='target-selfdefine'>自定义标靶</span></h3>
+<ul>
+<li>从基础系统启动，系统提供基础镜像<ul>
+<li>winxp-32</li>
+<li>win7-64</li>
+<li>win2008-64</li>
+<li>centos7-64</li>
+<li>ubuntu14-64</li>
+</ul>
+</li>
+<li>自定义上传<ul>
+<li><a href="../upload-target/#upload-vmware">VMware虚拟机</a></li>
+<li><a href="../upload-target/#upload-virtualbox">Virtualbox虚拟机</a></li>
+<li><a href="../upload-target/#upload-kvm">KVM虚拟机</a></li>
+<li><a href="../upload-target/#upload-vm-setting">虚拟机设置方法</a></li>
+</ul>
+</li>
+<li>文件拷贝</li>
+</ul>
+<p>方式1：文件直接从Web页面拖入，拖入的文件，Windows系统在虚拟盘符Gucamole盘中，Linux在登录用户所在目录下；</p>
+<p>方式2：使用远程桌面、Remmina、Xshell等工具请使用工具自带传输方式</p>
+<ul>
+<li>保存镜像</li>
+</ul>
+<hr />
+<h3 id="_5"><span id='target-assert'>注意项</span></h3>
+<ul>
+<li>由于网络是随机的，标靶需设置dhcp，不能配置静态IP；</li>
+<li>支持Cloud-init的标靶在使用中调整到高配硬盘启动时会自动挂载硬盘，不支持Cloud-init的系统需手动挂载；</li>
+<li>标靶现不支持多网卡；</li>
+<li>保存镜像过程中镜像会无法访问，保存成功后恢复正常，可以继续编辑，重复保存，只保存最后一次状态；</li>
+<li>Windows系统上传的文件请从Gucamole盘中移走，否则会占用服务器空间；</li>
+<li>Linux系统上传文件需要靶机开启SSH服务(SSH用户名密码需要和RDP用户一致);</li>
+</ul>
+<hr />
+<p><strong size=4 id='target-role'>标靶角色</strong></p>
+<p>系统有<strong>网络</strong>,<strong>路由</strong>,<strong>终端</strong>三种角色</p>
+<ul>
+<li>路由只能和网络进行连接；终端只能接在网络上；路由和终端无法直接连接</li>
+<li>DIY拓扑时，平台属性为网络，提供系统默认的openstack网络</li>
+<li>目前只有终端角色支持自定义</li>
+</ul>
+<hr />
+<p><strong size=4 id='target-disk-control-type'>磁盘控制器类型</strong></p>
+<ul>
+<li>ide</li>
+<li>virtio </li>
+<li>scsi </li>
+<li>uml</li>
+<li>xen</li>
+<li>usb</li>
+</ul>
+<hr />
+<p><strong size=4 id='target-virtual-io'>虚拟网卡型号</strong></p>
+<ul>
+<li>rtl8139</li>
+<li>virtio</li>
+<li>e1000</li>
+<li>ne2k_pci</li>
+<li>pcnet</li>
+</ul>
+<hr />
+<p><strong size=4 id='target-image-video-driver'>视频图像驱动</strong></p>
+<ul>
+<li><strong>vga</strong>（Video Graphics Array）即视频图形阵列</li>
+<li>cirrus</li>
+<li>vmvga</li>
+<li>xenXEN  </li>
+<li>qxl</li>
+</ul>
+<hr />
+<h3 id="cloudbase-init-winxp"><span id='target-cloudbase-init'>Cloudbase-init WinXP部署</span></h3>
+<ul>
+<li>运行<a href="../attachment/CloudbaseInitSetup_0_9_11_x86.msi">官方安装包</a></li>
+<li>打开C:\Program Files\Cloudbase Solutions\Cloudbase-Init\Python\Lib\site-packages\serial\win32.py, 注释掉包含&rsquo;CancelIOEx&rsquo;的三行 </li>
+<li>打开C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf, 增加metadata_services和allow_reboot=false, 参考cloudbase-init-unattend.conf</li>
+<li>删除服务：sc delete cloudbase-init</li>
+<li>导入注册表文件<a href="../attachment/cloudbase-init.reg">cloudbase-init.reg</a></li>
+<li>制作镜像前，需要检查注册表HKLM/Software/Cloudbase Solutions/Cloudbase-Init/下面是否有子键，有就删掉，否则新虚拟机启动时Cloudbase-init认为已经执行过，不再执行。</li>
+<li>制作镜像前，执行ipconfig /release释放虚拟机的IP地址。</li>
+</ul>
+<hr />
+<h3 id="linux"><span id='target-automount'>Linux自动挂载脚本部署</span></h3>
+<ul>
+<li>复制<a href="../attachment/automount.sh">automount.sh</a>到/usr/sbin</li>
+<li>添加执行权限：chmod +x /usr/sbin/automount.sh</li>
+<li>设置开机启动：echo /usr/sbin/automount.sh &gt;&gt; /etc/rc.local</li>
+<li>设置定时启动：echo &lsquo;<em> * </em> * * root /usr/sbin/automount.sh&rsquo; &gt;&gt; /etc/crontab</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../upload-target/" class="btn btn-neutral float-right" title="自定义上传">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href=".." class="btn btn-neutral" title="场景引擎系统"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>CyberPeace.cn</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href=".." style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../upload-target/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

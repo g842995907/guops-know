@@ -1,0 +1,83 @@
+msgid "x_ad_mode"
+msgstr "夺旗攻防"
+
+msgid "x_all_task_event"
+msgstr "全部习题集"
+
+msgid "x_all_category"
+msgstr "全部分类"
+
+msgid "x_all_tye"
+msgstr "全部类型"
+
+msgid "x_theory"
+msgstr "理论基础"
+
+msgid "x_real_vuln"
+msgstr "真实漏洞"
+
+msgid "x_exercise"
+msgstr "夺旗解题"
+
+msgid "x_man_machine"
+msgstr "人机攻防"
+
+msgid "x_task_event"
+msgstr "习题集"
+
+msgid "x_task_name"
+msgstr "题目名称"
+
+msgid "x_task"
+msgstr "题目"
+
+msgid "x_fixed_ip"
+msgstr "内网地址"
+
+msgid "x_float_ip"
+msgstr "外网地址"
+
+msgid "x_ssh_port"
+msgstr "SSH端口"
+
+msgid "x_task_port"
+msgstr "题目端口"
+
+msgid "x_home"
+msgstr "首页"
+
+msgid "x_flag_not_null"
+msgstr "Flag不能为空"
+
+msgid "x_topic_num"
+msgstr "题目数量"
+
+msgid "x_topic_panking"
+msgstr "第{num}题"
+
+msgid "x_resolved"
+msgstr "已解决"
+
+msgid "x_multiple_flags"
+msgstr "当前题目支持分步解题，存在多个FLAG"
+
+msgid "x_answer_not_empty"
+msgstr "答案不能为空"
+
+msgid "x_flag_solved"
+msgstr "该FLAG已解出！"
+
+msgid "x_multiple_flag_serparated"
+msgstr "多个Flag用'|'分离"
+
+msgid "x_no_writeup"
+msgstr "暂无题解"
+
+msgid "x_select_theoretical_basis"
+msgstr "请选择理论基础类型"
+
+msgid "x_infiltration"
+msgstr "渗透赛题"
+
+msgid "x_no_answer"
+msgstr "本题不需要提交答案"

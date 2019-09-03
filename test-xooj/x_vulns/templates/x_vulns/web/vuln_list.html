@@ -1,0 +1,170 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'x_vulns/css/list.css' %}">
+    <style>
+        input[type=checkbox] + label:before {
+            top: 3px;
+        }
+
+        input[type=checkbox] + label:after {
+            top: 3px;
+        }
+
+        input[type=checkbox] + label, label {
+            vertical-align: sub;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .fixed-table-pagination {
+            text-align: center;
+        }
+
+        .fixed-table-pagination div.pagination {
+            float: none !important;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active font15'>{% trans 'x_vulnerability' %}</a>
+            <ul id="myTab" class="exercise nav nav-tabs font16 fr cursor" style='position:relative;z-index:2000;'>
+                <li  id="logBtn">
+                    <a href="{% url 'x_vulns:vuln_global' %}"  class='icon-icons-18 cursor font20 mrg10R exercise_type'
+                       title="{% trans 'x_switch_Problem_set_mode' %}"></a>
+                </li>
+                <li class="active" id="eventBtn">
+                    <a href='#list' class='icon-icons-19 cursor font20 exercise_type' data-toggle="tab"
+                       title="{% trans 'x_switch_list_mode' %}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="content pad10T" id="list">
+            <!--  <table class="filtrate">
+                 <tr>
+                     <td width="50">分类:</td>
+                     <td width="60">
+                                     <span><a href="javaScript:void(0)" class="classfication-list activated"
+                                              id="classfication-all">全部</a></span></td>
+                     <td>
+                         <span><a href="javaScript:void(0)" class="classfication-list">web漏洞</a></span>
+                         <span><a href="javaScript:void(0)" class="classfication-list">移动端漏洞</a></span>
+                         <span><a href="javaScript:void(0)" class="classfication-list">硬件漏洞</a></span>
+                         <span><a href="javaScript:void(0)" class="classfication-list">操作系统漏洞</a></span>
+                         <span><a href="javaScript:void(0)" class="classfication-list">射频漏洞</a></span>
+                         <span><a href="javaScript:void(0)" class="classfication-list">工控漏洞</a></span>
+                         <span><a href="javaScript:void(0)" class="classfication-list">其他漏洞</a></span>
+                 </tr>
+                 <tr>
+                     <td width="50">难度:</td>
+                     <td width="60">
+                         <span><a href="javaScript:void(0)" class="direction-list activated"
+                                  id="direction-all">全部</a></span></td>
+                     <td>
+                         <span><a href="javaScript:void(0)" class="direction-list">入门</a></span>
+                         <span><a href="javaScript:void(0)" class="direction-list">提高</a></span>
+                         <span><a href="javaScript:void(0)" class="direction-list">专家</a></span>
+                 </tr>
+             </table> -->
+            <div class='row mrg10B clearfix pull-right'>
+                <div class="pull-left mrg10R">
+                    <label>{% trans 'x_search_options' %}：</label>
+                    <input id="cn" type="checkbox" name="cn" value="on" {% if cn == 'on' %}checked{% endif %}>
+                    <label style="margin-right: 30px" for="cn">{% trans 'x_chinese_data' %}</label>
+                    <input id="exploit" type="checkbox" name="exploit" value="on"
+                           {% if exploit == 'on' %}checked{% endif %}>
+                    <label for="exploit">{% trans 'Exp/PoC' %}</label>
+                </div>
+                <div class="search default-bg fr">
+                    <input class="search-text pad10L fl sticky" placeholder="{% trans 'x_search' %}" type="text"
+                           id="search-text"
+                           name="search-text" value="{{ search }}">
+                    <span class="search-bg mainBg fr font18 text-center cursor" onclick="table.reload();">
+                        <i class="oj-icon search-btn whiteC oj-icon-E911"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="row layout-color mrg100B oj_table">
+                <table class="default-table-v2" id="table"
+                       data-toggle="table"
+                       data-show-refresh="false"
+                       data-search="false"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-url="{% url 'x_vulns:api_vuln_list' %}">
+                    <thead>
+                    <tr>
+                        <th data-field="_id">{% trans 'x_numbering' %}</th>
+                        <th data-field="title">{% trans 'x_title' %}</th>
+                        <th data-field="pub_datetime">{% trans 'x_publish_time' %}</th>
+                    </tr>
+                    </thead>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <img class="vuln-logo" style="width: 80px; height: 80px;position: absolute;left: 10px;bottom: 10px;"
+         src="{% static 'x_vulns/img/logo.png' %}">
+
+    <script src="{% static 'web/js/sticky.js' %}"></script>
+    <script type="text/javascript">
+        var pageSize = 10;
+
+        var $table = $('#table');
+
+        // 初始化
+        var searchText = get_params_from_ls("search-text");
+        var offset = get_params_from_ls("offset") || 0;
+        var initPageNumber = offset / pageSize + 1;
+        $('#search-text').val(searchText);
+
+
+        $table.bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            pageNumber: initPageNumber,
+            queryParams: function (params) {
+                params.search = $("#search-text").val();
+                params.cn = $("#cn").prop("checked") ? 'on' : "";
+                params.exploit = $("#exploit").prop("checked") ? 'on' : "";
+                return params;
+            },
+            onClickRow: function (row) {
+                window.location.href = '{% url "x_vulns:vuln_detail" 0 %}'.replace('0', row._id);
+            },
+        });
+
+        var table = (function (t) {
+            t.refresh = function () {
+                $table.bootstrapTable('refresh');
+            };
+
+            t.reload = function () {
+                $table.bootstrapTable('refreshOptions', {pageNumber: 1});
+                {#                t.refresh();#}
+            };
+            return t;
+        }(window.table || {}));
+
+
+        $('.search-bg').enterClick();
+
+    </script>
+{% endblock %}
+

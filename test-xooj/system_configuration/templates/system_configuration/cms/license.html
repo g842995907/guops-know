@@ -1,0 +1,91 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_authorization_date' %}
+{% endblock %}
+
+{#{% block other_css_js %}#}
+{#    <style>#}
+{#        .license {#}
+{#            background: url("../../../static/system_configuration/img/license.jpg");#}
+{#            width: 579px;#}
+{#            height: 700px;#}
+{#            padding: 1px;#}
+{#            margin-left: 50px;#}
+{#        }#}
+{##}
+{#        .license p {#}
+{#            margin-top: 170px;#}
+{#            font-size: 16px;#}
+{#            font-weight: bold;#}
+{#            margin-left: 190px;#}
+{#        }#}
+{#    </style>#}
+{#{% endblock %}#}
+{##}
+{#{% block container %}#}
+{#    <div class="ibox float-e-margins">#}
+{#        <div class="ibox-title">#}
+{#            <h5></h5>#}
+{#        </div>#}
+{#        <div class="ibox-content">#}
+{#            <div class="project-list license">#}
+{#                <p>{{ user_limit }}</p>#}
+{#            </div>#}
+{#        </div>#}
+{#{% endblock %}#}
+<!-- 版权信息-->
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              action="{% url 'cms_system_configuration:cms_api:system-configuration-batch-update' %}"
+              method="post" class="form-horizontal"> {% csrf_token %}
+            <div class="ibox-content">
+
+                <!-- 版权号-->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_sys_version' %}</label>
+                    <div class="col-sm-2" style="margin-top: 7px;">
+                        <p>{{ version }}</p>
+                    </div>
+                </div>
+
+
+                <!-- 场景上限 -->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_scene_limit' %}</label>
+                    <div class="col-sm-2" style="margin-top: 7px;">
+                        <p>{{ all_env_count }}</p>
+                        {#                        <input type="text" class="form-control" id="all_env_count" name="all_env_count"#}
+                        {#                               value="{{ all_env_count }}" disabled/>#}
+                    </div>
+                </div>
+
+                <!-- 最大节点数 -->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_max_terminal_nodes' %}</label>
+                    <div class="col-sm-2" style="margin-top: 7px;">
+                        <p>{{ terminal_node_number }}</p>
+                        {#                        <input type="text" class="form-control" id="all_env_count" name="all_env_count"#}
+                        {#                               value="{{ all_env_count }}" disabled/>#}
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_validity' %}</label>
+                    <div class="col-sm-2" style="margin-top: 7px;">
+                        <p>{{ deadline_time }}</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,849 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+
+{% block title %}
+    <a href="{% url 'cms_practice_exercise:task_list' %}">{% trans "x_exercise" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_add_task' %}
+    {% else %}
+        {% trans 'x_edit_task' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+
+    <link rel="stylesheet" href="{% static "lib/bootstrap-switch-master/dists/css/bootstrap3/bootstrap-switch.css" %}"/>
+    <script src="{% static 'lib/bootstrap-switch-master/dists/js/bootstrap-switch.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+
+    <script type="text/javascript" src="{% static_v 'common_env/widgets/select_env/js/select_env.js' %}"></script>
+
+    <style>
+        .progress {
+            position: relative;
+            padding: 1px;
+            border-radius: 3px;
+            margin-left: 15px;
+        }
+
+        #progress-toggle {
+            display: none;
+        }
+
+        .bar {
+            background-color: #B4F5B4;
+            width: 0%;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        .percent {
+            position: absolute;
+            display: inline-block;
+            top: 3px;
+            left: 48%;
+        }
+
+        .bootstrap-switch-success-v1 {
+            color: #FFFFFF;
+            background: #00B293;
+        }
+
+        .bootstrap-switch-failure-v1 {
+            color: #FFFFFF;
+            background: #B2B2B2;
+        }
+
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_practice_exercise:cms_api:practice-exercise-task-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_practice_exercise:cms_api:practice-exercise-task-detail' task.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_title' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="title" name="title"
+                               value="{{ task.title }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_task_event' %}</label>
+
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="event_name" name="event" data-form-fixed="1"
+                                style="width: 220px;">
+                            {% for event in event_list %}
+                                <option {% if event.id == task.event %}selected{% endif %}
+                                        value="{{ event.id }}">{{ event.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_category' %}</label>
+
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="category" name="category" data-form-fixed="1"
+                                style="width: 220px;">
+                            {% for category in category_list %}
+                                <option {% if category.id == task.category %}selected{% endif %}
+                                        value="{{ category.id }}">
+                                    {% if LANGUAGE_CODE == 'zh-hans' %}{{ category.cn_name }}{% else %}
+                                        {{ category.en_name }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans "x_knowledge_point" %}</label>
+                    {% if task.knowledges_list %}
+                        {% for knowledge in task.knowledges_list %}
+                        <div name="konwl">
+                            <div class="col-sm-1 know-label toolTipBox" style="position: relative">
+                                <input class="btn btn-info" value="{{ knowledge }}" name="knowledges" data-form-fixed="1"
+                                onkeydown="change_tip(this)">
+                                <div class="toolTip">{{ knowledge }}</div>
+                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>
+                            </div>
+                        </div>
+                        {% endfor %}
+{#                    {% else %}#}
+{#                        <div name="points">#}
+{#                            <div class="col-sm-1 know-label">#}
+{#                                <input class="btn btn-info" name="knowledges">#}
+{#                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>#}
+{#                            </div>#}
+{#                        </div>#}
+                    {% endif %}
+                    <div name="second"></div>
+                    <div class="col-sm-1" style="width: 5px">
+                        <a style="font-size:20px;" class="text-danger" id="faPlus" onclick="add_point()">+</a>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_difficulty' %}</label>
+
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="difficulty_rating" name="difficulty_rating"
+                                data-form-fixed="1" style="width: 220px;">
+                            <option value="0"
+                                    　{% if task.difficulty_rating == 0 %}selected{% endif %}>{% trans 'x_easy' %}</option>
+                            <option value="1"
+                                    {% if task.difficulty_rating == 1 %}selected{% endif %}>{% trans 'x_normal' %}</option>
+                            <option value="2"
+                                    {% if task.difficulty_rating == 2 %}selected{% endif %}>{% trans 'x_hard' %}</option>
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{% trans 'x_content' %}</label>
+
+                        <div class="col-sm-6">
+                                <textarea class="form-control" id="content" name="content">{% if task.content %}{{ task.content }}{% endif %}</textarea>
+                        </div>
+                    </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group" id="taskFile">
+                    <label class="col-sm-2 control-label">{% trans 'x_annex' %}</label>
+
+                    <div class="col-sm-6" id="downloadFile"
+                         style="display: {% if task.file %}block{% else %}none{% endif %};">
+                        {% if task.file %}
+                            <a class="btn btn-success"
+                               href="javascript:window.open('{{ task.file_url.url }}', '_blank')">
+                                <i class="fa fa-cloud-download"></i>{% trans 'x_download_annex' %}
+                            </a>
+                        {% else %}
+                            <a></a>
+                        {% endif %}
+                        <button type="button" class="btn btn-danger" onclick="CALLBACK.deleteFile()">
+                            <i class="fa fa-cloud"></i> {% trans 'x_delete_annex' %}
+                        </button>
+                    </div>
+
+                    <div class="col-sm-6" id="uploadFile"
+                         style="display: {% if task.file %}none{% else %}block{% endif %};">
+                        <input type="file" class="form-control pretty-file" id="file" name="file">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group" id="taskUrl">
+                    <label class="col-sm-2 control-label">{% trans 'URL' %}</label>
+
+                    <label id="urlLabel" style="display: none" class="col-sm-3 label label-info"
+                           style="font-size: 18px;"></label>
+
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="url" name="url"
+                                {% if task.url %} value="{{ task.url }}" {% endif %}>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_dynamic_env' %}</label>
+                    <div class="col-sm-6">
+                        <input type="hidden" name="is_dynamic_env" data-form-fixed="1"
+                               value="{% if task.is_dynamic_env %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" id="is_dynamic_env"
+                               data-name="is_dynamic_env"
+                                {% if task.is_dynamic_env %} checked {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed" data-display="is_dynamic_env"></div>
+                <div class="form-group" data-display="is_dynamic_env">
+                    <label class="col-sm-2 control-label">{% trans 'x_sence_setting' %}</label>
+                    <div class="col-sm-2">
+                        <input type="hidden" id="task_env__env" name="task_env__env"
+                               {% if task.task_env and task.task_env.env %}value="{{ task.task_env.env }}"{% endif %}
+                        />
+                        <span class="btn btn-primary" onclick="showSelectEnv();">{% trans 'x_choose_scene' %}</span>
+                        <span class="hint">
+                            {% if task.task_env and task.task_env.env %}
+                                <a href="{% url 'cms_common_env:env_detail' task.task_env.env %}"
+                                   target="_blank">{{ task.task_env.title }}</a>
+                            {% endif %}
+                        </span><span style="font-size:20px" class="text-danger center">&nbsp;&nbsp;*</span>
+                    </div>
+
+                    <label class="col-sm-2 control-label">{% trans 'x_access_mode' %}</label>
+                    {% if mode == 0 %}
+                        <div class="col-sm-2">
+                            <input type="hidden" name="task_env__type" data-form-fixed="1"
+                                   value="1">
+                            <input type="checkbox" id="task_env__type" checked>
+                        </div>{% else %}
+                        <div class="col-sm-2">
+                            <input type="hidden" name="task_env__type" data-form-fixed="1"
+                                   value="{% if task.task_env %}{{ task.task_env.type }}{% else %}0{% endif %}">
+                            <input type="checkbox" id="task_env__type"
+                                    {% if task.task_env.type == 1 %} checked {% endif %}>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="hr-line-dashed" data-display="is_dynamic_env"></div>
+                <div class="form-group" data-display="is_dynamic_env">
+                    <label class="col-sm-2 control-label">{% trans 'x_dymaic_flag' %}</label>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="task_env__is_dynamic_flag" data-form-fixed="1"
+                               value="{% if task.task_env.is_dynamic_flag %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" id="task_env__is_dynamic_flag"
+                               data-name="task_env__is_dynamic_flag"
+                                {% if task.task_env.is_dynamic_flag %} checked {% endif %}>
+                    </div>
+
+                    <label class="col-sm-2 control-label">{% trans 'x_survival_time' %}</label>
+                    <div class="col-sm-2">
+                        <div class="input-group">
+                            <input type="number"  min="0" class="form-control"
+                                   data-form-fixed="1"
+                                   id="task_env__destroy_delay"
+                                   name="task_env__destroy_delay"
+                                   value="{% if task.task_env %}{{ task.task_env.destroy_delay }}{% else %}2{% endif %}"
+                                   style="background-color: transparent;outline: none;cursor: auto;" />
+                            <div class="input-group-addon">{% trans 'x_hours' %}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group solve_mode" data-display="problem_solving_mode">
+                    <label class="col-sm-2 control-label">{% trans "x_problem_solving_type" %}</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8">
+                        <div class="more">
+                            <input type="radio" id="more" name="solving_mode" onclick="checks(this.value)"
+                                   value="0" {% if not task.solving_mode %} check="more"  {% endif %} />
+                            <label for="more">{% trans "x_multi_solution_mode" %}</label>
+                        </div>
+                        <div class="step">
+                            <input type="radio" id="step" name="solving_mode" value="1" {% if task.solving_mode %}
+                                   check="step" score_set="{{ task.score_multiple }}" {% endif %}/>
+                            <label for="step">{% trans "x_step_by_step" %}</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="error-msg col-md-offset-2" id="mode-error"></div>
+                <div class="form-group error_answer">
+                    <div>
+                        <div name="score_flag">
+                            <label class="col-sm-2 control-label">{% trans 'Flags' %}</label>
+                            <div class="col-sm-2">
+                                <input type="text" class="form-control" name="answer"
+                                       placeholder='{% trans "x_multiple_flag_serparated" %}' data-form-fixed="1"
+                                        {% if task.answer %} value="{{ task.answer }}" {% endif %}>
+                            </div>
+{#                            <label class="col-sm-1 control-label">{% trans 'x_attach_server' %}</label>#}
+{#                            <div class="col-sm-1">#}
+{#                                <input type="hidden" id="initFlagServers" {% if task.flag_servers %}value="{{ task.flag_servers }}"{% endif %}>#}
+{#                                <select class="form-control flag-server" name="flag_servers" data-form-fixed="1">#}
+{#                                </select>#}
+{#                            </div>#}
+                            <label class="col-sm-1 control-label">{% trans 'x_score' %}</label>
+                            <div class="col-sm-1">
+                                <input type="number" class="form-control" id="score" name="score" min="0" max="2000"
+                                       data-form-fixed="1"
+                                        {% if task.score != None %} value="{{ task.score }}" {% endif %}>
+                                <div id="checkScore"></div>
+                            </div>
+                            <div style="padding-top:1px;font-size:25px" name="less">
+                                <a class="text-danger">*</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div name="second_div"></div>
+                    <div>
+                        <label name="adds" class="col-sm-2 control-label text-danger" onclick="add_div()"
+                               hidden="hidden"><div class="fa fa-plus"></div></label>
+                    </div>
+                </div>
+                <div class="error-msg col-md-offset-2" id="error-msg"></div>
+                {#                <div class="hr-line-dashed hidden" data-display="is_dynamic_env is_dynamic_flag"></div>#}
+                <div class="form-group hidden" data-display="is_dynamic_env is_dynamic_flag" name="flag_nums"
+                     hidden="hidden">
+                    <label class="col-sm-2 control-label">{% trans 'x_flag_count' %}</label>
+                    <div class="col-sm-6">
+                        {#                        <input type="number" class="form-control" id="flag_count" name="flag_count" min="1"#}
+                        {#                               value="{{ task.task_env.flag_count }}">#}
+                        <input type="number" class="form-control" id="task_env__flag_count" name="task_env__flag_count"
+                               min="1" value="1" data-form-fixed="1">
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-6">
+                        <input type="hidden" name="public" data-form-fixed="1"
+                               value="{% if task.public %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" id="public"
+                               data-name="public"
+                                {% if task.public %} checked {% endif %}>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_show_official_wp' %}</label>
+
+                    <div class="col-sm-6">
+                        <input type="hidden" name="public_official_writeup" data-form-fixed="1"
+                               value="{% if task.public_official_writeup %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" id="public_official_writeup"
+                               data-name="public_official_writeup"   {% if task.public_official_writeup %}
+                               checked="" {% endif %}>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_official_solve_problem' %}</label>
+
+                    <div class="col-sm-6">
+                            <textarea class="form-control" id="official_writeup" name="official_writeup">{% if task.official_writeup %}{{ task.official_writeup }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="form-group" id="progress-toggle">
+                    <label class="col-sm-2 control-label">"{% trans 'x_annex_uploading' %}"</label>
+                    <div class="progress col-sm-4 col-md-4">
+                        <div class="bar"></div>
+                        <div class="percent">0%</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white return">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit" id="save">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+                <input type="hidden" id="refer" name="refer">
+            </div>
+        </form>
+    </div>
+
+    <!-- 选择场景 -->
+    <div class='modal fade' id='selectEnv' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_choose_scene' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <div data-widget-id='select-env' data-instance-id='t1'></div>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="selectEnv();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_practice_exercise:task_list' %}";
+        {% if mode == 1 %}
+            var patchUrl = "{% url 'cms_practice_exercise:cms_api:practice-exercise-task-detail' task.id %}";
+        {% else %}
+            var patchUrl = "{% url 'cms_practice_exercise:cms_api:practice-exercise-task-list' %}";
+        {% endif %}
+
+    </script>
+    <script>
+        var returnUrl = urlparser.getQueryString("return");
+        returnUrl = returnUrl ? returnUrl : listUrl;
+        $("#content").initMarkdown();
+        $("#official_writeup").initMarkdown();
+        var CALLBACK = {
+
+            deleteFile: function () {
+                ajaxDialog.buttonClick(http.patch, patchUrl, {file: null}, function () {
+                    $("#downloadFile").hide();
+                    $("#uploadFile").show();
+                })
+            },
+
+        };
+
+        $(function () {
+            var ignoreShare = urlparser.getQueryString("ignore_share");
+            if (ignoreShare == 1) {
+                var action = $("#validateForm").attr('action');
+                action = action + '?ignore_share=1';
+                $("#validateForm").attr('action', action);
+            }
+        }());
+    </script>
+    <script>
+        $(function () {
+            $('.return').attr('href', returnUrl);
+            $('input[type="file"].pretty-file').prettyFile();
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                if (html.getAttribute('id') === 'task_env__is_dynamic_flag'){
+                    flag_switchery = new Switchery(html, {color: "#1AB394"});
+                }else {
+                    switchery = new Switchery(html, {color: "#1AB394"});
+                }
+
+                $(html).change(function () {
+                    var name = $(this).attr('data-name');
+                    var $input = $(this).siblings('[name=' + name + ']');
+                    if ($(this).prop('checked')) {
+                        $input.val(1);
+                    } else {
+                        $input.val(0);
+                    }
+                });
+            });
+            setDymaicEnvStyle();
+        });
+
+
+        $(function () {
+            $.validator.addMethod("answer_v", function (value, element) {
+                var $answers = $('[name=answer]');
+                var valueList = [];
+                for (var i = 0; i < $answers.length; i++) {
+                    var $answer = $answers.eq(i);
+                    var value = $answer.val();
+                    if (!$('#is_dynamic_env').prop('checked')) {
+                        if (value == "") {
+                            return false
+                        }
+                        valueList.push(value);
+                    }
+                    else {
+                        if ($('#task_env__is_dynamic_flag').prop('checked')) {
+                            return true
+                        } else {
+                            if (value == "") {
+                                return false
+                            }
+                            valueList.push(value);
+                        }
+                    }
+                }
+                return true;
+            }, gettext('x_flag_not_null'));
+            $("#validateForm").mvalidate({
+                rules: {
+                    category: {
+                        required: true,
+                    },
+                    event: {
+                        required: true,
+                    },
+                    title: {
+                        required: true,
+                    },
+                    score: {
+                        required: true,
+                        digits: true,
+                        min: 0
+                    },
+                    answer: {
+                        answer_v: true,
+                    },
+                    solving_mode: {
+                        required: true
+                    }
+                },
+                messages: {
+                    title: {
+                        required: "{% trans 'x_lose_title' %}"
+                    },
+                    score: {
+                        required: "{% trans 'x_lose_score' %}"
+                    },
+                    event: {
+                        required: "{% trans 'x_lose_task_event' %}"
+                    },
+                    category: {
+                        required: "{% trans 'x_lose_category' %}"
+                    },
+                    solving_mode: {
+                        required: "{% trans 'x_slelct_solution_mode' %}"
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    if ($.validator.errorSpecialPlacement) {
+                        $.validator.errorSpecialPlacement(error, element);
+                        error.appendTo(element.parent());
+                    }
+                    if ($(element).parents('.form-group').hasClass('error_answer')) {
+                        $(element).closest("form").find("#error-msg").append(error);
+                    }
+                    if ($(element).parents('.form-group').hasClass('solve_mode')) {
+                        $(element).closest("form").find("#mode-error").append(error);
+                    }
+                },
+                onsubmit: false
+            });
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = returnUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {})
+        });
+
+
+        function setDymaicEnvStyle() {
+            if ($('#is_dynamic_env').prop('checked')) {
+                $('[data-display*=is_dynamic_env]').show();
+
+                if ($('#task_env__is_dynamic_flag').prop('checked')) {
+                    $('#more').get(0).checked=true;
+                    checks();
+                    $("#score").val({{ task.score }});
+                    $('#step').attr("disabled","disabled");
+                    $('[name="answer"]').attr('placeholder', '{% trans 'x_flag_dynamicslly_generated' %}');
+                    $('[name="answer"]').attr("disabled", "disabled");
+                } else {
+                    $('[name="answer"]').removeAttrs("disabled");
+                    $('[name="answer"]').removeAttrs('placeholder')
+                    $('#step').removeAttr("disabled");
+                }
+            } else {
+                if ($('#task_env__is_dynamic_flag').prop('checked')) {
+                    $('[name="answer"]').removeAttrs("disabled");
+                    $('[name="answer"]').removeAttrs('placeholder');
+                    flag_switchery.setPosition(true);
+                }
+                $('#step').removeAttr("disabled");
+                $('[data-display*=is_dynamic_env]').hide();
+                $('[data-display*=not_dynamic_flag]').show();
+
+            }
+        }
+
+
+        $('#is_dynamic_env, #task_env__is_dynamic_flag').change(function () {
+            setDymaicEnvStyle();
+        });
+
+
+        // 选择场景
+        var selectEnvWidgetBindFlag = false;
+
+        function showSelectEnv() {
+            $SELECTENV(function () {
+                if (!selectEnvWidgetBindFlag) {
+                    $('[data-widget-id=select-env]').bindEnvSelectWidget({type: 1});
+                    selectEnvWidgetBindFlag = true;
+                }
+                $('#selectEnv').modal();
+            });
+        }
+
+        function selectEnv() {
+            var table = envSelectWidgetInstance.t1.table;
+            var ids = table.getCheckedValues();
+            if (ids.length != 1) {
+                popUtil.warningHint(gettext('x_choose_environment'));
+                return;
+            }
+            var envId = ids[0];
+            $('[name=task_env__env]').val(envId);
+            var data = table.getData(envId);
+            var editUrl = '{% url "cms_common_env:env_list" %}' + envId;
+            $('[name=task_env__env]').siblings('.hint').html('<a href="' + editUrl + '" target="_blank">' + data.name + '</a>');
+
+            $('#selectEnv').modal('hide');
+            reloadFlagServers();
+        }
+
+
+        var envServers = [];
+        function loadEnvServers(callback) {
+            var envId = $('[name=task_env__env]').val();
+            if (!envId) {
+                return;
+            }
+            http.get('{% url "cms_practice:env_servers" %}', {env_id: envId}, function(res){
+                var servers = res.response_data;
+                envServers = servers.sort(function (a, b) {
+                    if (a.name > b.name) {
+                        return 1;
+                    } else if (a.name < b.name) {
+                        return -1;
+                    } else {
+                        return 0;
+                    }
+                });
+                if (callback) {
+                    callback();
+                }
+            });
+        }
+
+        function reloadFlagServers() {
+            loadEnvServers(function () {
+                var envServerIds = [];
+                $.each(envServers, function (i, envServer) {
+                    envServerIds.push(envServer.id);
+                });
+                $.each($('.flag-server'), function (i, flagServer) {
+                    var val = $(flagServer).attr('data-value') || $(flagServer).val();
+                    $(flagServer).removeAttr('data-value');
+                    $(flagServer).html(generateServerOptions());
+                    if (val && arrayUtil.in(val, envServerIds)) {
+                        $(flagServer).val(val);
+                    }
+                });
+            });
+        }
+        function generateServerOptions() {
+            var html = '';
+            $.each(envServers, function (i, envServer) {
+                html = html + '<option value="' + envServer.id + '">' + envServer.name + '</option>';
+            });
+            return html;
+        }
+
+        $('[id="task_env__type"]').bootstrapSwitch({
+            onText: "{% trans 'x_private' %}",
+            offText: "{% trans 'x_shared' %}",
+            onColor: "failure-v1",
+            offColor: "success-v1",
+            size: "small",
+            animate: "true",
+            {% if event.public %}state:"true",{% endif %}
+            onSwitchChange: function (event, state) {
+                if (state == true) {
+                    $(this).attr("checked", true);
+                    $('[name="task_env__type"]').val(1)
+                } else {
+                    $(this).attr("checked", false);
+                    $('[name="task_env__type"]').val(0)
+                }
+            }
+        });
+    </script>
+
+    <script type="text/javascript">
+        function checks() {      //多解
+            $('[name="answer"]').val("");
+            $('[name="score"]').val("");
+            if ($('#task_env__is_dynamic_flag').prop('checked')) {
+                $('[name="answer"]').attr('placeholder', '{% trans 'x_flag_dynamicslly_generated' %}');
+            }
+            else {
+                $('[name="answer"]').attr('placeholder', gettext("x_multiple_flag_serparated"));
+            }
+            $('[name="second_div"]').empty();
+            $('[name=adds]').hide();
+        }
+
+        $(function () {
+            $('#more').attr("checked", true)
+        });
+
+        $('#step').change(function () {
+            if ($(this).prop('checked')) {
+                check();
+            }
+        });
+
+        function check() {   //分步
+            if ($('#task_env__is_dynamic_flag').prop('checked')) {
+                $('[name="answer"]').attr('placeholder', '{% trans 'x_flag_dynamicslly_generated' %}');
+            }
+            else {
+                $('[name="answer"]').removeAttrs('placeholder');
+            }
+            var score_set = $('#step').attr("score_set") || '';;
+            var addTime = (score_set.split("|").length - 1) || 1;
+            for (var i = 0; i < addTime; i++) {
+                add_flag = $('[name="score_flag"]').parent();
+                add_flag.find('[name="answer"]').removeAttrs("value");
+                add_flag.find('[name="score"]').removeAttrs("value");
+                $('[name="second_div"]').append(add_flag.html());
+                $('[name="second_div"]').find('.text-danger').html("-");
+                $('[name="second_div"]').find('.text-danger').attr("onclick", "less_div(this)");
+            }
+            $('[name="second_div"]').find('[name="score_flag"]').first().find('.text-danger').html("*");//把页面上第二个的-变成*
+            $('[name="second_div"]').find('[name="score_flag"]').first().find('.text-danger').removeAttrs("onclick")
+            $('[name=adds]').show();
+            $('[name ="task_env__flag_count"]').val(addTime + 1)
+        }
+
+        function add_div() {
+            add_flag = $('[name="score_flag"]').parent();
+            $('[name="second_div"]').append(add_flag.html());
+            $('[name="second_div"]').find('.text-danger').html("-");
+            $('[name="second_div"]').find('.text-danger').attr("onclick", "less_div(this)");
+            $('[name="second_div"]').find('[name="score_flag"]').first().find('.text-danger').html("*");//把页面上第二个的-变成*
+            $('[name="second_div"]').find('[name="score_flag"]').first().find('.text-danger').removeAttrs("onclick")
+        }
+
+        function less_div(ba) {
+            $(ba).parent().parent().remove();
+        }
+
+        function add_minus() {
+            $(".know-label").mouseenter(function () {
+                $(this).find(".delete").show();
+
+            });
+            $(".know-label").mouseleave(function () {
+                $(this).find(".delete").hide();
+            });
+        }
+
+        function add_point() {
+            var point_div = $("[name='points']").parent();
+            var addHtml = "<div name='points' class='toolTipBox'>" +
+                "                            <div class='col-sm-1 know-label'>" +
+                "                                <input class='btn btn-info' onkeydown='change_tip(this)' name='knowledges'>" +
+                "                                    <div class='toolTip'></div>" +
+                "                                <a class='delete' onclick='less_div(this)'><i class='fa fa-minus-square'></i></a>" +
+                "                            </div>" +
+                "                        </div>";
+
+            $("[name='second']").append(addHtml);
+            add_minus();
+            $('[name="knowledges"]').focus();
+        }
+
+        function change_tip(elem) {
+            var tip = $(elem).parent().find('.toolTip')
+            tip.html($(elem).val())
+        }
+    </script>
+
+    <script>
+        $(function () {
+        if  ($("#step").attr("check") == "step"){
+            $('#more').removeAttrs("checked");
+            $("#step").attr("checked", true);
+            var answer_set=$('[name="answer"]').val().split("|");
+{#            var flag_sever_set = $('[id="initFlagServers"]').val().split("|");#}
+            var score_set=$('#step').attr("score_set").split("|");
+            var answer_len = answer_set.length;
+            check();
+{#            if (answer_len > 2) {#}
+{#                for (var i = 2; answer_len - i != 0; i++) {#}
+{#                    add_div();#}
+{#                }#}
+{#            }#}
+            var $answers = $('[name=answer]');
+            var valueList = [];
+            for (var i = 0; i < $answers.length; i++) {
+                var $answer = $answers.eq(i);
+                var value = $answer.val(answer_set[i]);
+                valueList.push(value);
+            }
+
+
+            var $flagServers = $('[name=flag_servers]');
+            var flagServerList = [];
+            for (var i = 0; i < $answers.length; i++) {
+                var $flagServer = $flagServers.eq(i);
+{#                $flagServer.attr('data-value', flag_sever_set[i]);#}
+{#                flagServerList.push(flag_sever_set[i]);#}
+            }
+            reloadFlagServers(flagServerList);
+
+            var $scores = $('[name="score"]');
+            var scoreList = [];
+            for (var i = 0; i < $answers.length; i++) {
+                var $score = $scores.eq(i);
+                var values = $score.val(score_set[i]);
+                scoreList.push(values);
+            }
+        } else {
+            reloadFlagServers();
+        }
+
+        add_minus();
+    })
+    </script>
+{% endblock %}

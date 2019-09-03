@@ -1,0 +1,30 @@
+<div class="modal fade" tabindex="-1" role="dialog" id='myModal'>
+    <div class="modal-dialog" role="document" style='width:60%'>
+        <div class="modal-content">
+            <div class='modalHeadInner fl lineH40 pad5T pad20L'>
+                <!-- 添加笔记 -->
+            </div>
+            <div class="modal-header">
+                <button type="button" data-dismiss="modal" aria-label="Close" class='close whiteC'><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title mrg20B"></h4>
+            </div>
+            <form action="/comment/{{ category }}" method="post">
+            <div class="modal-body whiteC">
+                <div class="row mrg0A">
+                    <div class='col-md-12 pad0A' style='height:350px;margin:0 auto'>
+                            <input type="text" name="modalType" id="modalType" class='hidden' value=''>
+                            <input name="title" type="text" placeholder="Title?" class='form-control default-bg whiteC mrg20B'/>
+                            <textarea name="content" data-provide="markdown" rows="10" class='default-bg pad10A blackC'></textarea >
+
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name={{ category }} value="{{ id }}">
+            <div class="modal-footer">
+                <button type="submit" class="btn mainBg whiteC" id='determine' >{{ _("确定") }}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id='cancel'>{{ _("取消") }}</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

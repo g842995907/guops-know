@@ -1,0 +1,391 @@
+{% load static %}
+{% load i18n %}
+{% load static_v %}
+
+{% get_current_language as LANGUAGE_CODE %}
+<style>
+
+    div.nav-box .operate-btn {
+        display: flex;
+        display:-webkit-flex;
+        display: -moz-flex;
+}
+    #title-name {
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+}
+
+#title-name li {
+    -moz-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+}
+    div.nav-box .operate-btn li:first-child {
+  -moz-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;}
+</style>
+
+<div class="navbar-fixed-top nav-box">
+    <nav class="navbar navbar-default clearfix center-block">
+        <div class="container-fluid ">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header" style="width: 20%">
+                {#                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"#}
+                {#                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false"><span class="sr-only">Toggle navigation</span>#}
+                {#                    <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>#}
+                {#                </button>#}
+                <a class="navbar-brand" href="{% url 'common_web:home' %}">
+                    <img id="platform_logo" alt="Brand" class="img-responsive"
+                         {% if request.platform_logo %}
+                         src="/media/system_logo/{{ request.platform_logo }}"
+                         {% else %}
+                         src="{% static_v 'web/img/xlogo_'|add:LANGUAGE_CODE|add:'.png' %}"
+                         {% endif %}
+                    ></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav text-center mrg0A pad0A" style="width: 60%" id="title-name">
+                    {% for me in menu %}
+                        <li>
+                            <a style="display: inline;line-height: 60px" class="cursor hoverC"
+                               {% if me.href %}href="{{ me.href }}" {% endif %}>
+                                {% trans me.name %}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% verbatim %}
+
+                <ul class="nav navbar-nav navbar-right  pad0A text-right operate-btn" id="sys-notice"
+                    style="width:20%;" v-cloak>
+                    <li class="dropdown">
+                {% endverbatim %}
+                        {% if request.trial ==  "1" %}
+                        <span style="font-size: 18px; color: red">{% trans "x_trial_version" %}</span>
+                        {% endif %}
+                        <a class="nav-msg font18" href="{% url 'common_web:message' %}"><img
+                                src="{% static 'web/img/icon_news_normal.png' %}">
+                            {% verbatim %}
+                            <span class="tips whiteC posAbsoult text-center" style="display: none" id="notice_count">{{ notice_count }}</span>
+
+                        </a>
+                        <ul class="posAbsoult nav-msg-dropdown font14" style="">
+                            <li class="pad10L pad5T pad5R" v-for="notice in notices">
+                                <div>
+                                    <p>{{ notice.content }}</p>
+                                    <p class="time">{{ notice.last_edit_time }}</p></div>
+                            </li>
+
+                            <li class="pad10L pad5T pad5R row" v-if="team_notice_count>0">
+                        {% endverbatim %}
+                                <div class="col-md-8 pad0R mrg10T"><p class="orangeC">{% trans 'x_you_have' %}
+                        {% verbatim %}
+                                    {{ team_notice_count }}
+                        {% endverbatim %}
+                                    {% trans 'x_team_messages' %}
+                                     </p>
+                        {% verbatim %}
+                                </div>
+                                <div class="col-md-4 pad0R mrg10T">
+                                    <span class="cursor text-center whiteC deal-btn agree" v-on:click="goto_team">前往处理</span>
+                                </div>
+                            </li>
+
+
+                        </ul>
+                        {% endverbatim %}
+                        {# ===============#}
+                        <a href="#" class="dropdown-toggle font18" data-toggle="dropdown" role="button"
+                           aria-haspopup="true"
+                           aria-expanded="false">
+                            {#                            <i class="oj-icon oj-icon-E971 vertical-middle" style="background: #373737;padding: 5px;border-radius: 4px"></i>#}
+
+                            {% if request.user.logo %}
+                                {% if  request.user.logo.url %}
+                                    <span class="logo-bg">
+                                    <img class="img-circle" alt="image" width="26px" height="26px"
+                                         src="{{ request.user.logo.url }}">
+                                      </span>
+                                {% else %}
+                                    <span class="logo-bg">
+                                    <img class="img-circle" alt="image" width="26px" height="26px"
+                                         src="{% static 'x_person/img/user_default.jpg' %}"></span>
+                                {% endif %}
+                            {% else %}
+                                {#                                <span class="logo-bg">#}
+                                <img class="img-circle" alt="image" width="26px" height="26px"
+                                     src="{% static 'x_person/img/user_default.jpg' %}">
+                                {#                                </span>#}
+                            {% endif %}
+                            &nbsp;{{ user.first_name }}
+                        </a>
+                        <ul class="dropdown-menu head-dropdown-menu" style="background:rgba(0,0,0,0.7)">
+                            {#                            <li><a href="#"><i class="oj-icon oj-icon-E90E vertical-middle"></i>&nbsp;{% trans '锁定屏幕' %}#}
+                            {#                            </a></li>#}
+                            {#                            <li>#}
+                            {#                                <a href="#" data-toggle="modal" data-target="#message-list-modal"><i class="oj-icon oj-icon-E90C vertical-middle">&nbsp;{% trans '我的消息' %}#}
+                            {#                                    <span name="unread_count" class="orangeC font20"></span></i></a>#}
+                            {#                            </li>#}
+                            {#                            <li><a href="#" data-toggle="modal" data-target="#message-list-modal"><i#}
+                            {#                                    class="oj-icon oj-icon-E90C vertical-middle"></i> {% trans 'x_my_message' %}#}
+                            {#                            </a></li>#}
+                            <li><a href="javaScript:void(0)" data-target="#change-pwd-modal" data-toggle="modal"><i
+                                    class="oj-icon oj-icon-E90F vertical-middle"></i>&nbsp;{% trans 'x_modify_password' %}
+                            </a></li>
+                            <li><a href="{% url 'common_web:logout' %}"><i
+                                    class="oj-icon oj-icon-E910 vertical-middle"></i>&nbsp;{% trans 'x_exit_login' %}
+                            </a></li>
+                            {% if request.user.is_staff or request.user.is_superuser %}
+                                <li role="separator" class="divider"></li>
+                                <li><a href="/admin"><i
+                                        class="fa fa-dashboard vertical-middle"></i>&nbsp;{% trans 'x_admin' %}{{ request.user.group }}
+                                </a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {#二级导航#}
+    <div class="titles pad0A">
+        <div class="tab-list">
+            <div class="bg " style="display: none;">
+                <div class="coat">
+                    {% for me in menu %}
+                        {% if not me.hidden %}
+                            <ul class="list clearfix text-center hidden" style="opacity: 0; left: 100px;">
+                                {% for sub in me.sub_menu %}
+                                    {% if not sub.hidden %}
+                                        <li class="second mrg20L mrg20R text-center">
+                                            <a class="text-center" href="{{ sub.href }}">
+                                                <i class="{{ sub.icon.value }}"></i><br>
+                                                <span class="secondName whiteC"
+                                                      style="display:block">{% trans sub.name %}
+                                    </span>
+                                            </a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    Vue.config.devtools = true;
+{#    var system_url = "{% url 'system_configuration:api:system-configuration-list' %}"#}
+</script>
+<script>
+    var message_app = new Vue({
+        el: '#message-app',
+        delimiters: ["[[", "]]"],
+        data: {
+            common_message_list: '',
+            message_count: '99+',
+        },
+    });
+    var invite_count = 0;
+    var need_join_count = 0;
+    var sys_notice = new Vue({
+        el: '#sys-notice',
+        data: {
+            notices: {},
+            notice_count: 0,
+            team_notice_count: 0
+        },
+        watch:{
+            notice_count: function () {
+                if(sys_notice.notice_count <= 0){
+                    $('#notice_count').hide();
+                }
+            }
+        },
+        methods: {
+            goto_team: function () {
+                window.location.href="{% url 'x_person:team'%}"
+            }
+        }
+    });
+
+    var nav_CALLBACK = {
+        init_message_detail: function () {
+            var data = {
+                offset: 0,
+                limit: 3
+            };
+            http.get("/message/api/list/", data, function (data) {
+                message_app.common_message_list = data.rows
+            })
+        },
+        init_message_count: function () {
+            var data = {};
+            http.get("/message/api/count", null, function (data) {
+                message_app.message_count = data['count'];
+                var m_len = message_app.message_count;
+                if (m_len >= 99) {
+                    $("[name='unread_count']").html('99+');
+                } else if (m_len > 0) {
+                    $("[name='unread_count']").html(m_len);
+                }
+            })
+        },
+        init_sys_notice: function () {
+            var notice_count = 0;
+            http.get("{% url 'system_configuration:api:sys-notice-list' %}", {}, function(data){
+                sys_notice.notices = data.rows;
+                for(var i in data.rows){
+                    if(data.rows[i].read == false){
+                        notice_count += 1;
+                    }
+                }
+                sys_notice.notice_count = notice_count;
+                if (notice_count > 0){
+                $('#notice_count').show();
+                if (notice_count > 99){
+                    $('#notice_count').html('99+');
+                }
+            }
+            })
+        },
+        {#init_invite_message: function () {#}
+        {#    var data = {#}
+        {#        'invite': 1#}
+        {#    };#}
+        {#    http.get("{% url 'x_person:api:team-user-list' %}", data, function(data){#}
+        {#        invite_count = data.rows.length;#}
+        {#        sys_notice.team_notice_count += invite_count;#}
+        {#        notice_count += invite_count;#}
+        {#        nav_CALLBACK.init_need_join();#}
+        {#    })#}
+        {# },#}
+        {#init_need_join: function () {#}
+        {#    var data = {#}
+        {#        'join_message': 1,#}
+        {#        'need_join': 1#}
+        {#    };#}
+        {#    http.get("{% url 'x_person:api:team-user-list' %}", data, function(data){#}
+        {#        need_join_count = data.rows.length;#}
+        {#        sys_notice.team_notice_count += need_join_count;#}
+        {#        notice_count += need_join_count;#}
+        {#        nav_CALLBACK.init_sys_notice_count();#}
+        {#    })#}
+        {# },#}
+
+        init_sys_notice_count: function () {
+            sys_notice.notice_count = notice_count;
+            if (notice_count > 0){
+{#   $('.nav-msg').on('mouseenter', function () {#}
+{#                    $(this).find('img').attr('src', '{% static "web/img/icon_news_pressed.png" %}');#}
+{#                    $('.nav-msg-dropdown').slideDown();#}
+{#                });#}
+{#                $('.nav-msg-dropdown').on('mouseleave', function (e) {#}
+{#                    $(this).prev().find('img').attr('src', '{% static "web/img/icon_news_normal.png" %}');#}
+{#                    $(this).slideUp();#}
+{#                });#}
+                $('#notice_count').show();
+                if (notice_count > 99){
+                    $('#notice_count').html('99+');
+                }
+            }
+        }
+    };
+
+    $(function () {
+        nav_CALLBACK.init_message_detail();
+        nav_CALLBACK.init_message_count();
+        nav_CALLBACK.init_sys_notice();
+        {#nav_CALLBACK.init_invite_message();#}
+    });
+    $(function () {
+        $("#PasswordForm").validate({
+            rules: {
+                old_pwd: {
+                    required: true,
+                    minlength: 8,
+                },
+                new_pwd: {
+                    required: true,
+                    password_v: true
+                },
+                confirm_pwd: {
+                    required: true,
+                    equalTo: "#new_pwd",
+                },
+            },
+            messages: {
+                old_pwd: {
+                    required: gettext("x_please_enter_initial_password"),
+                    minlength: gettext("x_password_length_8"),
+                },
+                new_pwd: {
+                    required: gettext("x_please_enter_new_password"),
+                },
+                confirm_pwd: {
+                    required: gettext("x_please_confirm_new_password"),
+                    equalTo: gettext("x_password_inconsistent_twice"),
+                },
+            }
+        });
+
+        $.validator.addMethod("password_v", function (value, element) {
+                var Regx = /^.{8,20}$/;
+                {#var Regx = /^.*(?=.{8,20})(?=.*\d)(?=.*[A-Z]{1,})(?=.*[a-z]{1,})(?=.*[!@#$%^&*?\(\)]).*$/;#}
+                return this.optional(element) || Regx.test(value);
+            }, gettext("x_password_prompt"));
+
+        $("#PasswordForm").ajaxFormDialog(function () {
+            setTimeout(function () {
+                window.location.href = '/login/'
+            }, ajaxDialog.defaultDelayTime);
+        }, null);
+
+{#        http.get(system_url, {}, function (data) {#}
+{#            if (data.rows.length > 0) {#}
+{#                $.each(data.rows, function (index, value, array) {#}
+{#                    if (value.key == "logo") {#}
+{#                        var logo_url = '/media/system_logo/' + value.value#}
+{#                        $("#platform_logo").attr('src', logo_url);#}
+{#                    }#}
+{#                });#}
+{#            }#}
+{#            $("#platform_logo").removeClass('hidden');#}
+{#        })#}
+    })
+
+
+
+
+</script>
+{% verbatim %}
+<script id="bs_confirm" type="text/html">
+    <div class="modal fade common-msg-modal" id="bsConfirmModal" tabindex="-1" role="dialog"
+         aria-labelledby="bsConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title" id="bsConfirmModalLabel">{{title}}</h4>
+                </div>
+                <div class="modal-body centerDiv hint-msg">
+                    <p id="hint-msg">{{content}}</p>
+                </div>
+                <div class="modal-footer deal-btn">
+                    {{if showCancel}}
+                    <button type="button" class="btn-cancel" data-dismiss="modal">{{txtCancel}}</button>
+                    {{/if}}
+                    <button type="button" class="btn-confirm mainBg" id='bs_confirm_btn'>{{txtConfirm}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+{% endverbatim %}
+

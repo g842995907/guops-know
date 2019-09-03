@@ -1,0 +1,257 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'tools/css/tool_detail.css' %}"/>
+    <script src="{% static 'tools/js/tool.js' %}"></script>
+{#    <script src="{% static 'course/js/course_detail.js' %}"></script>#}
+    <style>
+        .course-label {
+            font-size: 0;
+        }
+        .course-label ul{
+            height: 18px;
+        }
+        .course-label li {
+            display: inline-block;
+            font-size:14px;
+            padding-right: 8px;
+        }
+
+        .course-label li a {
+            height: 22px;
+            line-height: 20px;
+            border-radius:20px;
+            border: 1px solid #FF9900;
+            display: block;
+            color: #FF9900;
+            padding-left: 12px;
+            padding-right: 12px;
+            cursor: pointer;
+        }
+    .tab-pane {
+        word-break:break-all;
+    }
+    </style>
+{% endblock %}
+
+{% block container %}
+<div class='container mrg93T'>
+    <div class="bread">
+        <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+        <span>&gt;&gt;</span>
+        <a href="{% url 'x_tools:list' %}">{% trans 'x_toolbox' %}</a>
+        <span>&gt;&gt;</span>
+        <a href="" class='active font15' name='name'></a>
+    </div>
+   <div class="content pad10T">
+    <div class="mrg0A mrg30B">
+        <ul class="course-label orangeC mrg10T">
+            {% for tip in knowledges_list %}
+                <li><a>{{ tip }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="col-md-9 pad20A">
+            <div class="row default-bg pad25A mrg30B pad40T posRelative oj_tool">
+                <div class="col-md-3">
+                    <span name="cover"></span>
+                </div>
+                <div class="col-md-8 pad10L">
+                    <div class="col-md-12">
+                        <div class="font26 row pad15L whiteC mrg10B">
+                            <span name="name"></span>
+                        </div>
+                        <div class='row'>
+                            <div class="col-md-5">
+                                <dl class='clearfix'>
+                                    <dd>{% trans 'x_version' %}：</dd>
+                                    <dt name="version"></dt>
+                                </dl>
+                                <dl class='clearfix'>
+                                    <dd>{% trans 'x_size' %}：</dd>
+                                    <dt name="size"></dt>
+                                </dl>
+                                <dl class='clearfix'>
+                                    <dd>{% trans 'x_update_time' %}：</dd>
+                                    <dt name="update_time"></dt>
+                                </dl>
+                            </div>
+                            <div class="col-md-7">
+                                <dl class='clearfix'>
+                                    <dd>{% trans 'x_category' %}：</dd>
+                                    <dt name="category_names"></dt>
+                                </dl>
+                                <dl class='clearfix'>
+                                    <dd>{% trans 'x_platform' %}：</dd>
+                                    <dt name="platforms"></dt>
+                                </dl>
+                                <dl class='clearfix'>
+                                    <dd>{% trans 'x_charge_mode' %}：</dd>
+                                    <dt name="license_model"></dt>
+                                </dl>
+                            </div>
+                        </div>
+                        <div class="pull-left btn-common mrg20T">
+                            <div class="left-right-line">
+                                <a href="" class='fill text-center' name="download">
+                                    <span class="mrg5R glyphicon whiteC download-icon"></span>
+                                    <span class="whiteC download-name"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{#                <div class="col-md-4">#}
+{#                    <div class="row" id='tool_chart'></div>#}
+{#                </div>#}
+                <div class="pad5A collect orangeC2 collectButton" style="display: none;">
+                    <span class="font14 mrg10R">{% trans 'x_collection' %}</span>
+                    <i class="oj-icon oj-icon-E90B whiteC"></i>
+                    <a href="#" class="fill inLine collectButton"></a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 pad0L pad0R couseDetail">
+                    <ul id="myTab" class="nav nav-tabs pad10T pad10B pad40L font16 default-bg">
+                        <li class="active mrg30L mrg30R">
+                            <a href="#tool_detail" data-toggle="tab" class="pad30L pad30R pad5T pad5B">
+                                {% trans 'x_tool_details' %}
+                            </a>
+                        </li>
+                        <li class="mrg30L mrg30R">
+                            <a href="#forum" data-toggle="tab" id="clicka" class="pad30L pad30R pad5T pad5B">{% trans 'x_cloud_exchange' %}</a>
+                        </li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content pad20T pad20B">
+                        <div class="tab-pane fade in active default-bg pad40A lineH30 " id="tool_detail" name="introduction">
+                        </div>
+                        <div class="tab-pane fade" id="forum" style="position:relative;">
+                            {% include "web/comment_template.html" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 pad20A">
+            <div class="row">
+                <div class="col-md-12 col-xs-12 fr">
+                    <div class="lineH40 mainBg pad20L whiteC">
+                        {% trans 'x_rlated_tools' %}
+                    </div>
+                    <div class="row default-bg pad25L pad25R mrg0A" id="releated-tool-list">
+                    </div>
+                    <div class="row text-center lineH40 default-bg grayC font14 mrg0A"
+                         style="position:relative;margin-top:-1px;">
+                        {% trans 'x_see_more' %}
+                        <a href="{% url 'x_tools:list' %}" class="fill"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+<div id="releated-tool-template" style="display: none;">
+    <div class="mrg10B pad20A">
+        <a>
+            <span name='rt-img'></span></a>
+        <a>
+            <div class="text-center font16 lineH30" name="rt-name">
+            </div>
+        </a>
+{#        <div class="text-center font14 orangeC2" name="rt-category">#}
+{#        </div>#}
+    </div>
+</div>
+
+<script type="text/javascript">
+
+function init_tool_detail() {
+    $.ajax({
+        url: "{% url 'x_tools:api:web-tool-detail' tool_id %}",
+        type: "get",
+        datatype: "json",
+        success: function (data) {
+            $("[name='name']").html(data.name);
+            var cover = data.cover;
+            if (cover == null || cover == ""){
+                cover = "{% static 'tools/img/gongj.png' %}";
+            }
+            $(".oj_tool span[name='cover']").css("background-image","url("+cover+")");
+            $("[name='category_names']").html(data.category_i18n_names);
+            $("[name='platforms']").html(platformFormatter(data.platforms));
+            $("[name='license_model']").html(licenseModelFormatter(data.license_model));
+            // $("[name='language']").html(supportLangsFormatter(data.language));
+            $("[name='update_time']").html(dateUtil.formatYMD(data.update_time));
+            $("[name='introduction']").html(marked(data.introduction));
+            if (data.online == false){
+                $("[name='size']").html(data.size);
+                $("[name='version']").html(codeUtil.htmlDecode(data.version));
+                if (data.save_path != null){
+                    $("a[name='download']").attr("href", "{% url 'x_tools:download' tool_id %}");
+                    $("a[name='download']>span.download-icon").addClass(" glyphicon-download-alt");
+                    $("a[name='download']>span.download-name").html("{% trans 'x_download' %}");
+                }else {
+                    $("a[name='download']").parent().parent().hide()
+                }
+            }else {
+                $("[name='size']").html("-");
+                $("[name='version']").html("-");
+                $("a[name='download']").attr("href", data.homepage);
+                $("a[name='download']").attr("target", "_blank");
+                $("a[name='download']>span.download-icon").addClass(" glyphicon-home");
+                $("a[name='download']>span.download-name").html("{% trans 'x_homepage' %}");
+            }
+
+            init_comment_list(data.hash);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            showPopMsg("{% trans 'x_unable_get_tool_details' %}。");
+        }
+    });
+}
+
+function init_releated_tools() {
+    var rt_list_div = $("#releated-tool-list");
+    var rt_tpl = $("#releated-tool-template");
+    $.ajax({
+        url: "{% url 'x_tools:recommand' %}",
+        type: "get",
+        data: {"tool_id": {{ tool_id }} },
+        datatype: "json",
+        success: function (data) {
+            var tool_list = data;
+            for (var i in tool_list) {
+                var img_src = tool_list[i].cover;
+                if (img_src == null || img_src == ""){
+                    img_src = "{% static 'tools/img/gongj.png' %}";
+                }
+                rt_tpl.find("a").attr("href", "{% url 'x_tools:detail' 0 %}".replace("0", tool_list[i].id));
+                rt_tpl.find("span[name='rt-img']").css("background-image","url("+img_src+")");
+                rt_tpl.find("div[name='rt-name']").html(tool_list[i].name);
+{#                rt_tpl.find("div[name='rt-category']").html(tool_list[i].category_names);#}
+                rt_list_div.append(rt_tpl.html());
+            }
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            showPopMsg("{% trans 'x_ubable_get_rlated_tools' %}。");
+        }
+    });
+}
+
+$(function () {
+    init_tool_detail();
+    init_releated_tools();
+
+    // 回复锚点跳转
+    var url = window.location.toString();
+    var click_to = url.split("#")[1];
+    if (click_to == "clicka") {
+        $("#" + click_to + "").click()
+    }
+})
+</script>
+{% endblock %}
+
+<!-- container end-->

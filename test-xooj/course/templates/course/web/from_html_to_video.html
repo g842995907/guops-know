@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script src="{% static 'lib/hplus/js/jquery.min.js' %}"></script>
+    <script src="{% static 'course/js/hls.js' %}"></script>
+    <script src="{% static 'course/js/chplayer-master/chplayer/chplayer.js' %}?t=2"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="video" style="width:100%;height: 100%;display: none"></div>
+<video id="old_video" src="" controls="controls" loop="loop" style="display: none;width:100%;height: 100%;">
+您的浏览器不支持 video 标签。
+</video>
+</body>
+
+<script>
+    var video_success = 1;
+    $.ajax({
+        url: "{% url 'course:api:lesson-new-detail' lesson.id %}",
+        type: "get",
+        data: {'change_serializer': 'yes'},
+        datatype: "json",
+        success: function (data) {
+            var video = data.video;
+            // 对video进行ts流显示，没有ts流的进行原路径显示video
+                // 判断视频转码成功
+            var video_scale = 1;
+            var video_change = video;
+            var video_poster = '';
+            var video_preview = '';
+            var get_loge = data.video_logo || '';
+
+            if (data.video_state === video_success) {
+                $("#video").show();
+                video_change = data.video_change;
+                video_poster = data.video_poster;
+                video_preview = data.video_preview;
+                if (data.video_scale) {
+                    video_scale = parseFloat(data.video_scale)
+                }
+                var videoObject_is_chrome = {
+                    container: '#video', //容器的ID,如果获到容器定义的是ID则需要增加#，如果是class，则不需要添加或添加.
+                    variable: 'player',//调用函数名称，该属性主要用于flashplayer发送监听内容时使用，如call('player.time',10)
+                    volume: 0.6, //默认音量，范围是0-1
+                    logo: get_loge || "cyberpeace",
+                    poster: video_poster, //封面图片地址
+                    autoplay: false, //是否自动播放，默认true=自动播放，false=默认暂停状态
+                    loop: false, //是否循环播放，默认false=不需要,true=需要
+                    live: false, //是否是直播，默认false=点播放，true=直播
+                    loaded: 'loadedHandler', //当播放器加载后执行的函数
+                    seek: 0, //默认需要跳转的时间
+                    drag: 'start', //在flashplayer情况下是否需要支持按关键帧拖动，不需要留空，需要请填写拖动时请求的属性，本例中使用start，如果需要强制按时间点拖动则增加前缀time_，本例中即time_start，如果需要强制按关键帧进行拖动，则前缀是frames_，本例中即：frames_start
+                    flashplayer: false,//强制使用flashplayer
+                    html5m3u8: false,//是否使用hls，默认不选择，如果此属性设置成true，则不能设置flashplayer:true,
+                    {% comment %} chtrack: {
+                         src: 'srt.srt',
+                         charset: 'utf-8'
+                     },//chplayer使用的字幕文件及编码{% endcomment %}
+                    preview: {
+                        src: [video_preview],
+                        scale: video_scale
+                    },//预览图片地址数组，src=图片地址数组，scale=图片截取时间间隔，单位：秒
+                    video: [
+                        {
+                            definition: '高清',
+                            list: [
+                                {
+                                    url: video_change,
+                                    type: 'video/m3u8',
+                                    weight: 10,
+                                },
+                            ]
+                        },
+                    ]
+                };
+                var videoObject_not_chorme = {
+                    container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
+                    variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
+                    autoplay: true,
+                    html5m3u8: true,
+                    video: video_change //视频地址
+                };
+                var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+                if (isChrome) {
+                    var videoObject = videoObject_is_chrome;
+                } else {
+                    var videoObject = videoObject_not_chorme;
+                }
+                var player = new chplayer(videoObject);//创建一个播放器函数并附给player变量，（player需要和 var videoObject里的属性variable相同）
+            }else {
+                //显示原视频
+                $("#old_video").attr('src', video);
+                $("#old_video").show();
+            }
+        },
+    });
+</script>
+</html>

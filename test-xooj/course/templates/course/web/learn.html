@@ -1,0 +1,335 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <title>{% trans "x_learning_course" %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/learn.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/video.css' %}">
+    <style>
+        .env-page-action {
+            padding: 3px 5px;
+            background-image: url("{% static 'course/img/bg.jpg' %}");
+            display: none;
+        }
+        .env-page-action .return {
+            border-radius: 2px;
+        }
+    </style>
+    <script src="{% static 'course/js/learn.js' %}"></script>
+    <script src="{% static 'course/js/tween.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.title-list li a').each(function () {
+                if ($($(this))[0].href == String(window.location)) {
+                    $(this)[0].style.color = 'orange';
+                    $(this).parent().parent()[0].style.display = 'block';
+                    $(this).parent().parent().prev()[0].style.color = 'orange';
+                    $(this).parent().parent().prev()[0].children[0].style.cssText = 'background:orange;border:none';
+                    $(this).parent().parent().prev()[0].play = false;
+                }
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        function setFocus() {
+            //alert('focus');
+            document.getElementById('iframeH').contentWindow.focus();
+        }
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class='black-bg' >
+        <div class='learn-title clearfix'>
+            <div class="bread container" style="margin-top: 109px">
+                <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+                <span>&gt;&gt;</span>
+                <a href="{% url 'course:list' %}">{% trans "x_course" %}</a>
+                <span>&gt;&gt;</span>
+                <a href="{% url 'course:detail' course_id %}" class='font15' name="course-name"></a>
+                <span>&gt;&gt;</span>
+                <a href="" class='active font15' name="lesson-name"></a>
+            </div>
+
+            <div class='appear' style="visibility: hidden"></div>
+        </div>
+        <div class='learn-content'>
+            <div class='inportant-main doc-hide frame-pdf'>
+                <div class='study-main'>
+                    <iframe class='gg' name="pdf" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-video'>
+                <div class='study-main'>
+                    <iframe class='gg' name="video" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-attachment'>
+                <div class='study-main'>
+                    <iframe class='gg' name="attachment" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+
+            <div class='inportant-main doc-hide frame-env'>
+                <div class='study-main'>
+                    <div class='env-page-action'>
+                        <span class="btn btn-sm btn-warning return">{% trans "x_return" %}</span>
+                    </div>
+                    <script>
+                        $(function () {
+                            var iframe = $('iframe[name=env]')[0];
+                            $('.env-page-action .return').click(function () {
+                                iframe.contentWindow.history.go(-1);
+                            });
+
+                            iframe.onload = function () {
+                                checkIframe();
+                            };
+
+                            function isUsingWebAccess() {
+                                var pathname =  iframe.contentWindow.location.pathname;
+                                return !(pathname == 'blank' || pathname.startsWith('/course/env/'));
+                            }
+
+                            function checkIframe() {
+                                var pathname =  iframe.contentWindow.location.pathname;
+                                if (isUsingWebAccess()) {
+                                    $('.env-page-action').show();
+                                    $(iframe).css('height', 'calc(100% - 36px)');
+                                } else {
+                                    $('.env-page-action').hide();
+                                    $(iframe).css('height', '100%');
+                                }
+                            }
+
+                            // guacamole重新获取焦点, 响应键盘输入
+                            function refocusWebAccessPanel() {
+                                if (isUsingWebAccess()) {
+                                    $(iframe.contentDocument).find('.clipboard-service-target').focus();
+                                }
+                            }
+
+                            $(iframe).mouseenter(function () {
+                                refocusWebAccessPanel();
+                            });
+                        });
+                    </script>
+                    <iframe class='gg' name="env" src="" frameborder='0' scrolling='auto'></iframe>
+                </div>
+            </div>
+
+            {#            <div class='inportant-main doc-hide frame-practice'>#}
+            {#                <div class='study-main'>#}
+            {#                    <iframe class='gg' name="practice" src="" frameborder='0' scrolling='auto'>#}
+            {#                    </iframe>#}
+            {#                </div>#}
+            {#            </div>#}
+            {#            <div class='inportant-main doc-hide frame-homework'>#}
+            {#                <div class='study-main'>#}
+            {#                    <iframe class='gg' name="homework" src="" frameborder='0' scrolling='auto'>#}
+            {#                    </iframe>#}
+            {#                </div>#}
+            {#            </div>#}
+            <div class='inportant-main doc-hide frame-note'>
+                <div class='study-main'>
+                    <iframe class='gg' name="note" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-report'>
+                <div class='study-main'>
+                    <iframe class='gg' name="report" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='course-detailed'>
+        <div class='pull-div'>
+            <div class="pull"><span></span>
+                <p>{% trans 'x_table_contents' %}</p></div>
+            <ul class='action-btn'>
+                <li media-name="pdf" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_handouts" %}</span>
+                </li>
+                <p class="s_line" style="display: none"></p>
+                <li media-name="video" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_video" %}</span>
+                </li>
+                <p class="s_line" style="display: none"></p>
+                <li media-name="attachment" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_annex" %}</span>
+                </li>
+                <p class="s_line" style="display: none"></p>
+                <li media-name="env" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_lab_environment" %}</span>
+                </li>
+                <p class="s_line" style="display: none"></p>
+                {#                <li media-name="practice" hidden="hidden">#}
+                {#                    <span class='video'></span>#}
+                {#                    <span class='action-btn-text'>{% trans "课堂练习" %}</span>#}
+                {#                </li>#}
+                {#                <li media-name="homework" hidden="hidden">#}
+                {#                    <span class='video'></span>#}
+                {#                    <span class='action-btn-text'>{% trans "课后作业" %}</span>#}
+                {#                </li>#}
+                <li media-name="note" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_my_note" %}</span>
+                </li>
+                <p class="s_line" style="display: none"></p>
+                <li media-name="report" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_experimental_report" %}</span>
+                </li>
+                <p class="s_line" style="display: none"></p>
+            </ul>
+        </div>
+        <div class='detailed-main'>
+            <div class='head-name' name="course-name">
+            </div>
+            <div class='inner'>
+                <ul class='assess-content' id="lesson-list-div">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="lesson-template-div" style="display: none;">
+        <li>
+            <span class='list-ico'></span>
+            <a href="" class='return listText' name="lt-name" lesson-id=""></a>
+        </li>
+    </div>
+    <script type="text/javascript">
+        var course_id = {{ course_id }};
+        var current_lesson_id = "";
+        {% if lesson_id %}
+            current_lesson_id = {{ lesson_id }};
+        {% endif %}
+
+        function init_lesson_list(lesson_id) {
+            var lesson_list_div = $("#lesson-list-div");
+            var lesson_tpl = $("#lesson-template-div");
+            var current_lesson = null;
+            lesson_list_div.empty();
+
+            $.ajax({
+                url: "{% url 'course:api:lesson-list' %}",
+                type: "get",
+                data: {"course_id": {{ course_id }}},
+                datatype: "json",
+                success: function (data) {
+                    if (data.total > 0) {
+                        var lesson_list = data.rows;
+                        var theory_index = 0;
+                        var exp_index = 0;
+
+                        // 生成列表
+                        for (var i in lesson_list) {
+                            var lesson_name;
+                            var lesson_obj = lesson_list[i];
+                            if (lesson_obj.type == '0') {
+                                theory_index = theory_index + 1;
+                                lesson_name = "{% trans "x_class_hours" %}" + theory_index + "： " + lesson_obj.name;
+                            } else {
+                                exp_index = exp_index + 1;
+                                lesson_name = "{% trans "x_experiment" %}" + exp_index + "： " + lesson_obj.name;
+                            }
+                            if (lesson_id == lesson_obj.id) {
+                                current_lesson = lesson_obj;
+                            }
+                            lesson_tpl.find("a[name='lt-name']").attr("lesson-id", lesson_obj.id);
+                            lesson_tpl.find("a[name='lt-name']").html(codeUtil.htmlEncode(lesson_name));
+                            lesson_tpl.find("a[name='lt-name']").attr("href",
+                                "{% url 'course:learn_lesson' course_id -1 %}".replace("-1", lesson_obj.id));
+                            lesson_list_div.append(lesson_tpl.html());
+                        }
+
+                        if (current_lesson == null || lesson_id == "") {
+                            current_lesson = lesson_list[0];
+                        }
+
+                        // 初始化当前lesson
+                        init_current_lesson(current_lesson)
+                    }
+                },
+                error: function () {
+                    showPopMsg("{% trans 'x_course_directory' %}");
+                }
+            });
+        }
+
+        function init_current_lesson(lesson) {
+            $("a[name='course-name']").html(codeUtil.htmlEncode(lesson.course_name));
+            $("a[name='lesson-name']").html(codeUtil.htmlEncode(lesson.name));
+            $("a[lesson-id='" + lesson.id + "']").css("color", "orange");
+            $("a[lesson-id='" + lesson.id + "']").prev().css('background', 'orange');
+
+            if (lesson.markdown) {
+                $("iframe[name='pdf']").attr("src", "{% url 'course:markdown' %}" + "?lesson_id=" + lesson.id);
+                $("li[media-name='pdf']").show();
+
+            }
+
+            if (lesson.pdf) {
+                $("iframe[name='pdf']").attr("src", "{% static 'web/pdfjs-1.8.188/web/viewer.html' %}?file=" + lesson.pdf);
+                console.info(lesson.pdf);
+                $("li[media-name='pdf']").show();
+
+            }
+
+
+            $("iframe[name='note']").attr("src", "{% url 'course:note' %}" + "?course_id={{ course_id }}");
+            $("li[media-name='note']").show();
+
+            if (lesson.type == "1") {
+                $("li[media-name='pdf'] .action-btn-text").html("{% trans "x_experimental_guidance" %}");
+
+                if (lesson.lesson_env) {
+                    $("iframe[name='env']").attr("async-src", "{% url 'course:env' %}" + "?lesson_id=" + lesson.id);
+                    $("li[media-name='env']").show();
+                }
+
+                $("iframe[name='report']").attr("src", "{% url 'course:report' %}" + "?lesson_hash=" + lesson.hash);
+                $("li[media-name='report']").show();
+            } else {
+                if (lesson.video) {
+                    $("iframe[name='video']").attr("src", "{% url 'course:video' %}" + "?video_url=" + lesson.video);
+                    $("li[media-name='video']").show();
+
+                }
+            }
+
+            if (lesson.attachment) {
+                $("iframe[name='attachment']").attr("src", "{% url 'course:attachment' %}" + "?attachment_url=" + lesson.attachment);
+                $("li[media-name='attachment']").show();
+
+            }
+            {#    if (lesson.practice){#}
+            {#        $("iframe[name='practice']").attr("src", "{% url 'course:task' %}"+"?task_hash=" + lesson.practice);#}
+            {#        $("li[media-name='practice']").show();#}
+            {#    }#}
+            {##}
+            {#    if (lesson.homework){#}
+            {#        $("iframe[name='homework']").attr("src", "{% url 'course:task' %}"+"?task_hash=" + lesson.homework);#}
+            {#        $("li[media-name='homework']").show();#}
+            {#    }#}
+        }
+
+        $(function () {
+            {#    $("a.return").attr("href", "{% url 'course:detail' course_id %}");#}
+
+            init_lesson_list(current_lesson_id);
+        })
+    </script>
+{% endblock %}
+

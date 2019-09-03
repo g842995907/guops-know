@@ -1,0 +1,12 @@
+[data-widget-id=select-paper-task] .filter{
+    margin-bottom: 10px;
+}
+
+[data-widget-id=select-paper-task] [data-filter-name=search]{
+    vertical-align: top;
+    margin-bottom: 0;
+
+}
+[data-widget-id=select-paper-task] [data-filter-name=search]+a{
+    margin-bottom: 0;
+}

@@ -1,0 +1,26 @@
+@charset "UTF-8";
+.fa-2x {
+    font-size: 2em;
+}
+
+.rect {
+    text-align: center;
+    display: -webkit-box;
+    -webkit-box-align: center;
+    -webkit-box-pack: center;
+}
+
+.rect p {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+
+.dynamic {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.dynamic div:last-child {
+    border-bottom: none;
+}

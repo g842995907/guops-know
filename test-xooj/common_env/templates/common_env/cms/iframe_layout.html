@@ -1,0 +1,14 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v %}
+
+{% block super_title %}
+    <div class="ibox-title clearfix">
+        <h5>{% block title %}{% endblock %}</h5>
+        <a class="scene-introduction pull-right" target="_blank" href="/help/"><i class="fa fa-hand-o-right"></i> {% trans 'x_quick_get_start' %}</a>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+<script src="{% static_v 'common_env/cms/js/constants.js' %}"></script>
+{% endblock %}

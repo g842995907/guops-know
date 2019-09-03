@@ -1,0 +1,608 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    <a href="{% url 'cms_practice_theory:task_list' %}">{% trans "x_theory" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_add_task' %}
+    {% else %}
+        {% trans 'x_edit_task' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_practice_theory:cms_api:choice-task-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_practice_theory:cms_api:choice-task-detail' task.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_task_event' %}</label>
+
+                    <div class="col-sm-2">
+                        <select class="form-control selectpicker" id="event_name" name="event" data-form-fixed="1">
+                            {% for event in event_list %}
+                                <option {% if event.id == task.event %}selected{% endif %}
+                                        value="{{ event.id }}">{{ event.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_category' %}</label>
+
+                    <div class="col-sm-2">
+                        <select class="col-sm-2 form-control selectpicker" id="category" name="category"
+                                data-form-fixed="1" >
+                            {% for category in category_list %}
+                                <option {% if category.id == task.category %}selected{% endif %}
+                                        value="{{ category.id }}">
+                                    {% if LANGUAGE_CODE == 'zh-hans' %}{{ category.cn_name }}{% else %}
+                                        {{ category.en_name }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans "x_knowledge_point" %}</label>
+                    {% if task.knowledges_list %}
+                        {% for knowledge in task.knowledges_list %}
+                        <div name="konwl">
+                            <div class="col-sm-1 know-label toolTipBox" style="position: relative">
+                                <input class="btn btn-info" value="{{ knowledge }}" name="knowledges" data-form-fixed="1"
+                                onkeydown="change_tip(this)">
+                                <div class="toolTip">{{ knowledge }}</div>
+                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>
+                            </div>
+                        </div>
+                        {% endfor %}
+{#                    {% else %}#}
+{#                        <div name="points">#}
+{#                            <div class="col-sm-1 know-label">#}
+{#                                <input class="btn btn-info" name="knowledges">#}
+{#                                <a class="delete" onclick="less_div(this)"><i class="fa fa-minus-square"></i></a>#}
+{#                            </div>#}
+{#                        </div>#}
+                    {% endif %}
+                    <div name="second"></div>
+                    <div class="col-sm-1" style="width: 5px">
+                        <a style="font-size:20px;" class="text-danger" id="faPlus" onclick="add_point()">+</a>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_content' %}</label>
+
+                    <div class="col-sm-6">
+                            <textarea class="form-control" id="content" name="content">{% if task.content %}{{ task.content }}{% endif %}</textarea>
+                    </div>
+
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group" id="isMultipleChoice">
+                    <label class="col-sm-2 control-label">{% trans 'x_title_type' %}</label>
+                    <div class="col-sm-2">
+
+                        <select class="col-sm-2 form-control selectpicker" name="multiple" id="multiple"
+                                data-form-fixed="1">
+                            <option {% if task.multiple == 0 %}selected {% endif %} value='0'>
+                                {% trans "x_single_choice" %}
+                            </option>
+
+                            <option {% if task.multiple == 1 %}selected {% endif %} value='1'>
+                                {% trans "x_multiple_choice" %}
+                            </option>
+
+                            <option {% if task.multiple == 2 %}selected {% endif %} value='2'>
+                                {% trans "x_judgment_problem" %}
+                            </option>
+                        </select>
+
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_difficulty' %}</label>
+
+                    <div class="col-sm-6">
+                        <select class="selectpicker" id="difficulty_rating" name="difficulty_rating"
+                                data-form-fixed="1" style="width: 220px;">
+                            <option value="0"
+                                    　{% if task.difficulty_rating == 0 %}selected{% endif %}>{% trans 'x_easy' %}</option>
+                            <option value="1"
+                                    {% if task.difficulty_rating == 1 %}selected{% endif %}>{% trans 'x_normal' %}</option>
+                            <option value="2"
+                                    {% if task.difficulty_rating == 2 %}selected{% endif %}>{% trans 'x_hard' %}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="judge_display"{% if task.multiple == 2 %} class="hide" {% endif %}>
+                    <div class="hr-line-dashed" id="isMultipleChoiceLine"></div>
+                <div class="form-group" id="optionsCount">
+                    <label class="col-sm-2 control-label">{% trans 'x_option_count' %}</label>
+
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <input class="form-control" type="number" id="options_count" disabled>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-danger" id="minusChoiceButton"
+                                    style="margin-left: 10px; margin-right: 10px;" type="button"
+                                    onclick="CALLBACK.minusChoice()"><i class="fa fa-minus"></i></button>
+                            <button class="btn btn-primary" id="plusChoiceButton"
+                                    style="margin-left: 10px; margin-right: 10px;" type="button"
+                                    onclick="CALLBACK.plusChoice()"><i class="fa fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed" id="optionsCountLine"></div>
+                <div class="form-group" id="optionsEditor">
+                    <label class="col-sm-2 control-label">{% trans 'x_option' %}</label>
+
+                    <div class="col-sm-6" id="summernotes">
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+{#                    <input type="text" class="col-sm-6 form-control" id="option" data-form-fixed="1" name="option">#}
+                </div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-6">
+                         <input type="text" style="display: none;" class="col-sm-6 form-control" id="option" data-form-fixed="1" name="option">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_answer' %}</label>
+
+                    <div class="col-sm-6" id="choiceAnswer">
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                    <label class="col-sm-2 control-label"></label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="answer" style="display: none;" name="answer"
+                                {% if task.answer %}
+                               value="{{ task.answer }}" {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-2">
+                        <input type="hidden" name="public" data-form-fixed="1"
+                               value="{% if task.public %}1{% else %}0{% endif %}">
+                        <input type="checkbox" class="form-control js-switch" id="public"
+                               data-name="public"
+                                {% if task.public %} checked {% endif %}>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white return">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit" id="save">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+                <input type="hidden" id="refer" name="refer">
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
+{% block bottom_js %}
+    <script>
+        var options = new Object();
+        var DELIMITER = '|';
+        var listUrl = "{% url 'cms_practice_theory:task_list' %}";
+        var CALLBACK = {
+            switchChoiceAnswer: function () {
+                if ($("#multiple").prop('checked')) {
+                    $("#choiceAnswer").html($("#choiceAnswer").html().replace(/radio/g, "checkbox"));
+                }
+                else {
+                    $("#choiceAnswer").html($("#choiceAnswer").html().replace(/checkbox/g, "radio"));
+                }
+                $('#answer').val("")
+            },
+            minusChoice: function () {
+                var count = parseInt($("#options_count").val());
+
+                if (count - 1 < 1) {
+                    $("#minusChoiceButton").prop("disabled", true);
+                    return false
+                } else {
+                    $("#minusChoiceButton").prop("disabled", false);
+                    $("#plusChoiceButton").prop("disabled", false);
+                }
+
+                $("#options_count").val(count - 1);
+                $("#summernotes").children().last().remove();
+                $("#choiceAnswer").children().last().remove();
+                if ($("#multiple").prop('checked')) {
+                    var answer = $("input:checkbox[name=inlineOption]:checked")
+                        .map(function () {
+                            return $(this).val();
+                        })
+                        .toArray().join(DELIMITER);
+                    $('#answer').val(answer)
+
+                } else {
+                    if ($('#answer').val().charCodeAt() - 0x41 >= (count - 1)) {
+                        $('#answer').val("")
+                    }
+                }
+
+
+            },
+            plusChoice: function () {
+                var count = parseInt($("#options_count").val());
+                if (count + 1 > 26) {
+                    $("#plusChoiceButton").prop("disabled", true);
+                    return false
+                } else {
+                    $("#minusChoiceButton").prop("disabled", false);
+                    $("#plusChoiceButton").prop("disabled", false);
+                }
+                $("#options_count").val(count + 1);
+
+                var option = String.fromCharCode(0x41 + count);
+
+                var type = "radio";
+                if ($('[data-id="multiple"]').attr('title') == gettext("x_multiple_choice")) {
+                    type = "checkbox";
+                }
+
+                $("#summernotes").append(CALLBACK.generateSummernoteHtml(option, ""));
+                $("#" + "summernote" + option).initMarkdown({demoUrl:'/media/markdown/demochoice.zip'});
+                $("#choiceAnswer").append(CALLBACK.generateChoiceAnswerHtml(type, option));
+            },
+            initOptions: function () {
+                options = "{{ task.option|escapejs }}";
+                if (options != "") {
+                    options = JSON.parse(options);
+                } else {
+                    options = {A: "", B: "", C: "", D: ""};
+                }
+
+                if (Object.keys(options).length != 0) {
+                    $("#options_count").val(Object.keys(options).length);
+                } else {
+                    $("#options_count").val(4);
+                }
+            },
+            generateChoiceArea: function () {
+                var count = Object.keys(options).length;
+
+                var type = "radio";
+                if ($("#multiple").val() == 1) {
+                    type = "checkbox";
+                }
+
+                var summernotesHtml = "";
+                var choiceAnswerHtml = "";
+                for (var i = 0; i != count; i++) {
+                    var option = String.fromCharCode(0x41 + i);
+                    summernotesHtml += CALLBACK.generateSummernoteHtml(option, options[option]);
+                    choiceAnswerHtml += CALLBACK.generateChoiceAnswerHtml(type, option);
+                }
+
+                $("#summernotes").html(summernotesHtml);
+                $("#choiceAnswer").html(choiceAnswerHtml);
+
+            },
+            generateSummernoteHtml: function (option, content) {
+                return '<div><label class="label label-info" style="font-size: 28px;display:inline-block;margin-bottom:10px;margin-top:10px;">' + option + '</label>' +
+                    '<textarea id="summernote' + option + '">' + codeUtil.htmlEncode(content) + '</textarea></div>';
+            },
+            generateChoiceAnswerHtml: function (type, option) {
+                {% if task.multiple == 2 %}
+                    if(option  == "A"){
+                        var options = "√"
+                    }
+                    else if (option == "B"){
+                        var options = "×"
+                    }
+                    else {
+                        var options = option
+                    }
+                {% else %}
+                    var options = option;
+                {% endif %}
+                return '<div class="' + type + ' ' + type + '-info ' + type + '-inline">' +
+                    '<input onchange="CALLBACK.associateAnswer()" type="' + type + '" name="inlineOption" id="' + type + option + '" value="' + option + '">' +
+                    '<label id="'+type+'s'+option+'"for="' + type + option + '">' + options + '</label>' +
+                    '</div>';
+            },
+            associateAnswer: function () {
+                var answer = "";
+                if ($("#multiple").val() == 1) {
+                    answer = $("input:checkbox[name=inlineOption]:checked")
+                        .map(function () {
+                            return $(this).val();
+                        })
+                        .toArray().join(DELIMITER);
+                }
+                else {
+                    answer = $("input:radio[name=inlineOption]:checked").val();
+                }
+
+                $("#answer").val(answer);
+            },
+            initChoiceAnswer: function () {
+                var answer = $("#answer").val();
+
+                if (answer != "") {
+                    if ($("#multiple").val() == 1) {
+                        answer.split(DELIMITER).forEach(function (value) {
+                            $("input:checkbox[name=inlineOption][value=" + value + "]").prop('checked', true)
+                        });
+                    }
+                    else {
+                        $("input:radio[name=inlineOption][value=" + answer + "]").prop('checked', true)
+                    }
+                }
+            },
+            initSummernotes: function () {
+                var count = Object.keys(options).length;
+
+                for (var i = 0; i != count; i++) {
+                    var option = String.fromCharCode(0x41 + i);
+                    $("#" + "summernote" + option).initMarkdown({demoUrl:'/media/markdown/demochoice.zip'});
+                }
+            },
+            addTask: function () {
+                var tempOptions = new Object();
+                var count = parseInt($("#options_count").val());
+
+                for (var i = 0; i != count; i++) {
+                    var option = String.fromCharCode(0x41 + i);
+                    tempOptions[option] = ($("#" + "summernote" + option)).val();
+                }
+
+                $("#option").val(JSON.stringify(tempOptions));
+            },
+        }
+    </script>
+    <script>
+        $('#multiple').change(function () {
+            if ($(this).val() == 0) {
+                $('#answer').val("");
+                change_options(4);
+                $("#judge_display").removeClass("hide");
+                if ($("#summernoteA").text() == "正确"){
+                    $("#summernoteA").html("");
+                    $("#summernoteB").html("");
+                }
+                $("#radiosA").text("A");
+                $("#radiosB").text("B");
+                $("#choiceAnswer").html($("#choiceAnswer").html().replace(/checkbox/g, "radio"));
+
+
+            } else if ($(this).val() == 1) {
+                $('#answer').val("");
+                change_options(4);
+                $("#judge_display").removeClass("hide");
+                if ($("#summernoteA").text() == "正确"){
+                    $("#summernoteA").html("");
+                    $("#summernoteB").html("");
+                }
+                $("#radiosA").text("A");
+                $("#radiosB").text("B");
+                $("#choiceAnswer").html($("#choiceAnswer").html().replace(/radio/g, "checkbox"));
+
+
+            } else if ($(this).val() == 2) {
+                $('#answer').val("");
+                change_options(2);
+                $("#choiceAnswer").html($("#choiceAnswer").html().replace(/checkbox/g, "radio"));
+                $("#judge_display").addClass("hide")
+                $("#summernoteA").html("正确");
+                $("#summernoteB").html("错误");
+                $("#radiosA").text("√");
+                $("#radiosB").text("×");
+
+            }
+
+        });
+
+        function change_options(num) {
+            var options_num = $("#summernotes").children('div').length - num
+            if ( options_num < 0) {
+                for (var i = 0; i < Math.abs(options_num); i++) {
+                    CALLBACK.plusChoice()
+                }
+            } else if (options_num > 0) {
+                for (var i = 0; i < Math.abs(options_num); i++) {
+                    CALLBACK.minusChoice();
+                }
+            }
+        }
+
+         function add_minus() {
+            $(".know-label").mouseenter(function () {
+                $(this).find(".delete").show();
+
+            });
+            $(".know-label").mouseleave(function () {
+                $(this).find(".delete").hide();
+            });
+        }
+
+        function less_div(elem) {
+            $(elem).parent().parent().remove();
+        }
+
+        function add_point() {
+            var point_div = $("[name='points']").parent();
+            var addHtml = "<div name='points' class='toolTipBox'>" +
+                "                            <div class='col-sm-1 know-label'>" +
+                "                                <input class='btn btn-info' onkeydown='change_tip(this)' name='knowledges'>" +
+                "                                    <div class='toolTip'></div>" +
+                "                                <a class='delete' onclick='less_div(this)'><i class='fa fa-minus-square'></i></a>" +
+                "                            </div>" +
+                "                        </div>";
+
+            $("[name='second']").append(addHtml);
+            add_minus();
+            $('[name="knowledges"]').focus();
+        }
+
+        function change_tip(elem) {
+            var tip = $(elem).parent().find('.toolTip')
+            tip.html($(elem).val())
+        }
+    </script>
+    <script>
+        var returnUrl = urlparser.getQueryString("return");
+        returnUrl = returnUrl ? returnUrl : listUrl;
+    </script>
+    <script>
+        $(function () {
+            $("#content").initMarkdown();
+            $('.return').attr('href', returnUrl);
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+
+                $(html).change(function () {
+                    var name = $(this).attr('data-name');
+                    var $input = $(this).siblings('[name=' + name + ']');
+                    if ($(this).prop('checked')) {
+                        $input.val(1);
+                    } else {
+                        $input.val(0);
+                    }
+                });
+            });
+
+            add_minus();
+        });
+
+        $(function () {
+            CALLBACK.initOptions();
+            CALLBACK.generateChoiceArea();
+            CALLBACK.initChoiceAnswer();
+            CALLBACK.initSummernotes();
+        });
+
+        $(function () {
+            $.validator.addMethod("content_v", function (value, element) {
+                //处理输入为空，输入处理空格
+                var value = $.trim(value).replace(/ /g, "").replace(/&nbsp;/ig, '').replace(/<p>(<br>)?<\/p>/ig, '');
+                var flag = true;
+                if (value === '') {
+                    flag = false;
+                }
+                return this.optional(element) || flag;
+            }, "{% trans 'x_lose_content' %}");
+            $.validator.addMethod("option_ve", function (value, element) {
+                var count = parseInt($("#options_count").val());
+                var validate_options_flag = true;
+                for (var i = 0; i != count; i++) {
+                    var option = String.fromCharCode(0x41 + i);
+                    if (!$("#" + "summernote" + option).val().match(/<img /g)) {
+                        var option_vals = $("#" + "summernote" + option).val().replace(/<\/?.+?>/g, "");
+                        var option_val = option_vals.replace(/ /g, "");
+                        if (option_val) {
+                            option_val = option_val.replace(/&nbsp;/ig, '');
+                        }
+                    } else {
+                        var option_val = $("#" + "summernote" + option).val()
+                    }
+                    if ($.trim(option_val) == '' || $.trim(option_val) == null) {
+                        validate_options_flag = false;
+                        break;
+                    }
+                }
+                return validate_options_flag;
+            }, "{% trans 'x_option_required' %}");
+            $("#validateForm").mvalidate({
+                rules: {
+                    category: {
+                        required: true
+                    },
+                    event: {
+                        required: true
+                    },
+                    content: {
+                        required: true,
+                        content_v: true
+                    },
+                    answer: {
+                        required: true
+                    },
+                    option: {
+                        option_ve: true
+                    }
+                },
+                messages: {
+                    content: {
+                        required: "{% trans 'x_lose_content' %}",
+                    },
+                    answer: {
+                        required: "{% trans 'x_lose_answer' %}",
+                    },
+                    event: {
+                        required: "{% trans 'x_lose_task_event' %}",
+                    },
+                    category: {
+                        required: "{% trans 'x_lose_category' %}",
+                    }
+                }
+            });
+
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = returnUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {
+                beforeSerialize: CALLBACK.addTask
+            });
+        });
+    </script>
+{% endblock %}

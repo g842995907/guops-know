@@ -1,0 +1,62 @@
+msgid "x_server_error"
+msgstr "Server Error"
+
+msgid "x_logout"
+msgstr "Logout"
+
+msgid "x_return_front"
+msgstr "Back Front"
+
+
+msgid "x_alarm_percent"
+msgstr "Alarm Percent"
+
+
+msgid "x_create_user"
+msgstr "Create User"
+
+
+msgid "x_used_percent"
+msgstr "Used Percent Is  "
+
+
+
+msgid "x_disk_used_too_much"
+msgstr "Disk Used Too Much  "
+
+
+msgid "x_cpu_used_too_much"
+msgstr "Cpu Used Too Much  "
+
+msgid "x_mem_used_too_much"
+msgstr "Memory Used Too Much  "
+
+
+msgid "x_service_error"
+msgstr " Service Error  "
+
+
+msgid "x_service_status"
+msgstr " Service Status    "
+
+msgid "x_system_normal"
+msgstr " System  Normal   "
+
+msgid "x_service_normal"
+msgstr "ALL Serivce Status Normal"
+
+
+msgid "x_vm_used"
+msgstr "VM Used"
+
+msgid "x_name_exist"
+msgstr "this name is exist {}"
+
+msgid "x_unzip_password_error"
+msgstr "Unzip Password Error"
+
+msgid "x_unzip_fail"
+msgstr "Unzip Fail"
+
+msgid "x_please_choose"
+msgstr "Please Choose"

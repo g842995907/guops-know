@@ -1,0 +1,72 @@
+msgid "x_test_paper_show_tip"
+msgstr "<span id=\"questioncount\">{number}</span> tasks, All <span id=\"scoresum\">{allScore}</span> points"
+
+msgid ""
+msgstr "The name already exists. Please re-enter it"
+
+msgid "x_choose_least_question"
+msgstr "Choose at least one question"
+
+msgid "x_enter_score"
+msgstr "Please enter a score"
+
+msgid "x_task"
+msgstr "task"
+
+msgid "x_attachment_download"
+msgstr "Attachment download"
+
+msgid "x_get_score"
+msgstr "Get Score"
+
+msgid "x_score_total_score"
+msgstr "Score / total score"
+
+msgid "x_socre_nbsp"
+msgstr " score"
+
+msgid "x_total_score"
+msgstr " Total score"
+
+msgid "x_submit_success_your_score_is"
+msgstr "submit success your score is"
+
+msgid "x_abnormal"
+msgstr "abnormal"
+
+
+msgid "x_list_questions"
+msgstr "List of questions"
+
+msgid "x_Scores"
+msgstr "score"
+
+msgid "x_idea_of_solving_problem"
+msgstr "idea of solving problem"
+
+msgid "x_answer"
+msgstr "Answer"
+
+msgid "x_fraction_score"
+msgstr " Score"
+
+msgid "x_questions_answers"
+msgstr "Questions"
+
+msgid "x_download_attachment"
+msgstr "Download Attachment"
+
+msgid "x_capability_name_required"
+msgstr "Capability name required "
+
+msgid "x_export_paper"
+msgstr "Export Testpaper"
+
+msgid "x_testpaper_export_confirm"
+msgstr "The testpaper contains operation tasks, export only choice tasks?"
+
+msgid "x_configuration_error"
+msgstr "Configuration error! Please re-select."
+
+msgid "x_select_set"
+msgstr "Please select a problem set"

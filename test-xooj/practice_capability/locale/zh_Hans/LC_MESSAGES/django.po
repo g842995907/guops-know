@@ -1,0 +1,83 @@
+msgid "x_add_test_paper"
+msgstr "新建试卷"
+
+msgid "x_edit_test_paper"
+msgstr "编辑试卷"
+
+msgid "x_test_paper_name"
+msgstr "试卷名称"
+
+msgid "x_pre_show"
+msgstr "预览"
+
+msgid "x_not_found_testpaper"
+msgstr "没有找到试卷"
+
+msgid "x_testpaper_description"
+msgstr "试卷描述"
+
+msgid "x_list_questions"
+msgstr "试题列表"
+
+msgid "x_Scores"
+msgstr "分值"
+
+msgid "x_idea_of_solving_problem"
+msgstr "解题思路"
+
+msgid "x_enter_correct_answer"
+msgstr "请输入您认为正确的答案……"
+
+msgid "x_self_test_paper_library"
+msgstr "试卷库"
+
+msgid "x_topic_status"
+msgstr "题目状态"
+
+msgid "x_title_difficulty"
+msgstr "题目难度"
+
+msgid "x_judge_paper"
+msgstr "一、判断题"
+
+msgid "x_single_paper"
+msgstr "二、单项选择题"
+
+msgid "x_multiple_paper"
+msgstr "三、多项选择题"
+
+msgid "x_operation_paper"
+msgstr "四、操作题"
+
+msgid "x_add_configuration"
+msgstr "添加配置"
+
+msgid "x_question_bank"
+msgstr "题库"
+
+msgid "x_bank_name"
+msgstr "题库名称"
+
+msgid "x_topic_num"
+msgstr "题目数量"
+
+msgid "x_score_per_question"
+msgstr "每题分值"
+
+msgid "x_select_set"
+msgstr "请选择习题集"
+
+msgid "x_test_already_exists"
+msgstr "试卷名称已存在"
+
+msgid "x_testpaper_cannot_empty"
+msgstr "试卷名称不能为空"
+
+msgid "x_random_import"
+msgstr "随机导入"
+
+msgid "x_questions"
+msgstr "题"
+
+msgid "x_each_question"
+msgstr "每题"

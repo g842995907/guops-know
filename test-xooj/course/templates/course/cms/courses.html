@@ -1,0 +1,709 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans 'x_course_management' %}
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link href="{% static 'lib/bootstrap-icheck/css/icheck-bootstrap.css' %}" type="text/css" rel="stylesheet"/>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <style>
+        .col-md-2 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+
+        pagination-box {
+            width: 100%;
+        }
+
+        #pagination {
+            background-color: transparent;
+            margin: -5px 0;
+            float: right;
+        }
+
+        .pagination-info {
+        }
+
+        .form-box-left {
+            display: flex;
+            display: -webkit-flex;
+            display: -moz-flex;
+            float: left;
+            width: 67%;
+            margin-bottom: -18px;
+        }
+
+        .form-box-left div {
+            flex: 1;
+            -webkit-flex: 1;
+            -moz-flex: 1;
+        }
+
+        .form-box-right {
+            width: 33%;
+            float: right;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .checkbox-success {
+            margin-right: 10px;
+        }
+
+        .checkbox-success:last-child {
+            margin-right: 0;
+        }
+        .float-e-margins .btn{
+            margin-bottom: -2px;
+        }
+    .checkbox+.checkbox{
+        margin-top: 5px;
+    }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div>
+                <div class="clearfix form-box-left">
+                    <div class="m-r">
+                        <select class="form-control m-b sticky" id="search_direction">
+                            <option value="">{% trans 'x_all_directions' %}</option>
+                            {% for d in directions %}
+                                <option value="{{ d.id }}">{% if LANGUAGE_CODE == 'zh-hans' %}{{ d.cn_name }}{% else %}
+                                    {{ d.en_name }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    {#                    <div class="m-r pull-left col-md-2">#}
+                    {#                        <select class="form-control m-b sticky select_search" id="search_sub_direction">#}
+                    {#                            <option value="">{% trans 'x_all_sub_direction' %}</option>#}
+                    {##}
+                    {#                            {% for sub_d in sub_directions %}#}
+                    {#                                <option value="{{ sub_d.id }}" data-parent="{{ sub_d.parent.id }}">#}
+                    {#                                    {% if LANGUAGE_CODE == 'zh-hans' %}{{ sub_d.cn_name }}{% else %}#}
+                    {#                                        {{ sub_d.en_name }}{% endif %}</option>#}
+                    {#                            {% endfor %}#}
+                    {#                        </select>#}
+                    {#                    </div>#}
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="search_difficulty">
+                            <option value="">{% trans 'x_all_difficulty' %}</option>
+                            {% for k,v in difficulty.items %}
+                                <option value="{{ v }}">{{ k }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r  ">
+                        <input class="form-control m-b sticky" id="search" placeholder="{% trans 'x_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="form-box-right ">
+
+
+                    <div class=" " style="height: 100%;">
+                        <a class="btn btn-primary pull-right" href="{% url 'cms_course:direction' %}" style="margin-left: 30px;">
+                            <i class=" fa fa-gear"></i> {% trans 'x_type_management' %}
+                        </a>
+                    </div>
+
+                    <div class="m-r {% if not debug %}hidden{% endif %}" id="coutrol_hidden">
+                        <a class="btn btn-success btn-primary pull-right" id="batchDumps" onclick="show_export_tip()"
+                           data-url="{% url 'cms_course:api:course-batch-dumps' %}" href="javascript:void(0);">
+                            <i class="fa fa-cloud-download"></i> {% trans 'x_export' %}
+                        </a>
+                        <button class="btn btn-primary pull-right" id="batchLoads"
+                                {% comment %}onclick="table.prepareBatchLoads(this);"{% endcomment %}
+                                data-toggle="modal" data-target="#selectBatchLoad_byinput"
+                                style="margin-right: 4px;">
+                            <i class="fa fa-cloud-upload"></i> {% trans 'x_import' %}
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="clearfix">
+                <div class="m-r pull-left" style="margin: 20px 0;">
+                    <a class="btn btn-primary" href="{% url 'cms_course:course_detail' 0 %}">
+                        <i class="fa fa-plus"></i> {% trans 'x_add' %}
+                    </a>
+                    <button class="btn btn-danger"
+                            data-url="{% url 'cms_course:api:course-batch-destroy' %}"
+                            onclick="table.batchDestroy(this);">
+                        <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                    </button>
+                    <button class="btn btn-success"
+                            data-url="{% url 'cms_course:api:course-batch-public' %}"
+                            onclick="table.batchPublic(this, 1);">
+                        <i class="fa fa-eye"></i> {% trans 'x_public' %}
+                    </button>
+                    <button class="btn btn-warning"
+                            data-url="{% url 'cms_course:api:course-batch-public' %}"
+                            onclick="table.batchPublic(this, 0);">
+                        <i class="fa fa-eye-slash"></i> {% trans 'x_hide' %}
+                    </button>
+                </div>
+
+                <div class="m-r pull-right" style="margin: 20px -33%;">
+                    <div class="checkbox checkbox-success pull-left " style="margin-top: 5px;">
+                        <input name="course-box" checked type="checkbox" class="checkall table_refresh" id="my-course"/>
+                        <label for="my-course" class="text-primary">{% trans "x_my_course" %}</label>
+                    </div>
+                    <div class="checkbox checkbox-success pull-left">
+                        <input name="course-box" checked type="checkbox" class="checkall table_refresh" id="sys-course"/>
+                        <label for="sys-course" class="text-primary">{% trans "x_system_course" %}</label>
+                    </div>
+                    <div class="checkbox checkbox-success pull-left">
+                        <input name="course-box" checked type="checkbox" class="checkall table_refresh" id="share-course"/>
+                        <label for="share-course" class="text-primary">{% trans "x_sharing_course" %}</label>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_course:api:course-list-manage' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="name" data-escape="true" data-sortable="true">{% trans 'x_name' %}</th>
+                <th data-field="direction_i18n_name" data-escape="true">{% trans 'x_direction' %}</th>
+                {#                <th data-field="sub_direction_i18n_name" data-escape="true">{% trans 'x_sub_direction' %}</th>#}
+                <th data-field="difficulty" data-formatter="table.difficultyFormatter">{% trans 'x_difficulty' %}</th>
+                <th data-field="count" data-sortable="true">{% trans 'x_num_hour' %}</th>
+                <th data-field="public" data-formatter="table.publicFormatter"
+                    data-sortable="true">{% trans 'x_is_public' %}</th>
+                <th data-field="creater_username" data-escape="true">{% trans 'x_creator' %}</th>
+                <th data-field="share_count"
+                    data-formatter="table.courseShareFormatter">{% trans 'x_authorization_Operation' %}</th>
+                <th data-field="all_auth_count" data-formatter="table.couseAuthFormatter">{% trans 'x_authorization_quantity' %}
+                <th data-field="id" data-formatter="table.operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="pagination-box clearfix">
+            <div style="float: left;margin-top: 15px;">
+                <span class="pagination-info"></span>
+            <span class="pagesize-info">{% trans 'x_pagination_info_left' %}<span class="btn-group dropup">
+                <button type="button" class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown" aria-expanded="false"><span
+                        class="page-size">10</span> <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu">
+                    <li role="menuitem" class="active">
+                        <a href="#">10</a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#">25</a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="#">50</a>
+                    </li>
+                </ul>
+            </span>{% trans 'x_pagination_info_right' %}</span>
+            </div>
+            <div id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- 选择导入 -->
+    <div class='modal fade' id='selectBatchLoad' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_import' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <table id="batchLoadTable"
+                           data-show-refresh="false"
+                           data-toolbar-align="center"
+                           data-search="false"
+                           data-pagination="false">
+                        <thead>
+                        <tr>
+                            <th data-field="name">{% trans 'x_name' %}</th>
+                            <th data-field="size"
+                                data-formatter="batchLoadTable.filesizeFormatter">{% trans 'x_size' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="batchLoadTable.batchLoads();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- input按钮选择导入 -->
+    <div class='modal fade' id='selectBatchLoad_byinput' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_import' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <form action="{% url "cms_course:api:course-batch-loads" %}" id="uploadCourseForm"  enctype="multipart/form-data"
+                          style="min-height: 100px"
+                            method="post">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" style="margin-top: 10px">{% trans 'x_course_compression_package' %}</label>
+                            <div class="col-sm-6" id="lessonAttachment-div"
+                                 style="display: block;">
+                                <input type="file" class="form-control" id="attachment" name="attachment"
+                                       accept="application/zip">
+                            </div>
+                        </div>
+                        <div class="form-group upload-progress" style="display: none;">
+                            <br>
+                            <div class="col-sm-6 col-md-offset-2">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                         aria-valuemax="100" style="width: 0%">
+                                        <span class="percent"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <br>
+                        <br>
+                    </form>
+                </div>
+                <div class='clearfix modal-footer'>
+{#                    <span class="btn btn-success" onclick="coursebatchLoads();" id="submit_course">{% trans 'x_confirm' %}</span>#}
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "x_close" %}
+                    </button>
+                    <button type="button"  onclick="coursebatchLoads();" id="submit_course" class="btn btn-primary">
+                        {% trans "x_confirm" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script src="{% static 'course/js/treegrid/treegrid.js' %}"></script>
+    <script src="{% static 'web/js/paginator.js' %}"></script>
+
+    <script type="text/javascript">
+        $('input[type="file"]').prettyFile();
+
+        function swal_reload(title, type){
+          swal({
+                title: title,
+                type: type,
+                confirmButtonText: "{% trans "x_confirm" %}"
+              }, function () {
+                location.reload();
+              });
+        }
+        function pollingLoads(slug) {
+          var RecordLoadsUrl = "{% url 'cms_x_note:record_loads_status' %}";
+          http.get(RecordLoadsUrl, {slug: slug}, function (data) {
+            if (data === "True") {
+              clearTimeout(uploadTimer);
+              swal_reload('{% trans "x_saved_successfully" %}', "success");
+            }else if (data === "False") {
+              clearTimeout(uploadTimer);
+              swal_reload("{% trans 'x_saved_fail' %}", "error");
+            }else {
+              console.log('is running')
+            }
+          })
+        }
+        function coursebatchLoads() {
+          var uploadToken = +new Date();
+          var bar = $('div.progress-bar');
+          var percent = $('span.percent');
+          var ajax_option = {
+            url: $("form").attr("action") + '?uploadToken=' + uploadToken,
+            type: $("form").attr("method"),
+            cache: false,
+            async: true,
+            timeout: 0,
+            beforeSubmit: function (contentArray, $form, options) {
+              var attachment_field = $("input[name='attachment']")[0];
+              if (attachment_field != undefined && attachment_field.files[0] != undefined) {
+                $('div.upload-progress').show();
+                $("#submit_course").attr("disabled", true);
+              } else {
+                return false
+              }
+            },
+            uploadProgress: function (event, position, total, percentComplete) {
+              var percentVal = percentComplete + '%';
+              bar.width(percentVal);
+              percent.html(percentVal);
+              if (percentComplete >= 100) {
+                percent.html(gettext('x_uploading'));
+              }
+            },
+            success: function (json) {
+              percent.html("{% trans "x_upload_completed" %}");
+              $("#submit_course").attr("disabled", false);
+              $("#selectBatchLoad_byinput").modal('toggle')
+              swal({
+                title: '<i class="fa fa-spin fa-spinner" style="font-size: 80px;"></i>',
+                html: true,
+                text: gettext("x_the_server_processing_please_wait"),
+                showConfirmButton: false,
+              });
+              uploadTimer = setInterval("pollingLoads("+uploadToken+")", 2000);
+            },
+            error: function (event, jqxhr, settings, thrownError) {
+              swal_reload("{% trans 'x_saved_fail' %}", "error");
+            }
+          };
+          $("#uploadCourseForm").ajaxSubmit(ajax_option);
+        }
+        function getCookie(cookieName) {
+            var strCookie = document.cookie;
+            var arrCookie = strCookie.split("; ");
+            for(var i = 0; i < arrCookie.length; i++){
+                var arr = arrCookie[i].split("=");
+                if(cookieName == arr[0]){
+                    return arr[1];
+                }
+            }
+            return "";
+        }
+        function show_export_tip(){
+            // 利用token进行download下载是否开始
+            var ids = table.getCheckedValues();
+            var title = gettext('x_please_choose');
+            if (ids.length === 0) {
+                $('#batchDumps').attr('href', 'javascript:void(0);').removeAttr('download');
+                swal({
+                    title: title,
+                    type: "warning",
+                    confirmButtonText: "{% trans "x_confirm" %}"
+                });
+                return false
+            }
+
+            var downloadToken = +new Date();
+            var url = $('#batchDumps').attr('data-url');
+            var params = [];
+            $.each(ids, function (i, id) {
+              params.push('ids=' + id);
+            });
+            var new_url = url + '?downloadToken=' + downloadToken + '&' + params.join('&');
+            $('#batchDumps').attr({
+              href: new_url,
+              download: '',
+            });
+
+            swal({
+              title: '<i class="fa fa-spin fa-spinner" style="font-size: 80px;"></i>',
+              html: true,
+              text: gettext("x_the_server_processing_please_wait"),
+              showConfirmButton: false,
+            });
+            function checkToken() {
+              var token = getCookie("downloadToken");
+              if (token && token == downloadToken) {
+                clearTimeout(downloadTimer);
+                swal({
+                  title: gettext('x_operation_success'),
+                  type: 'success',
+                  timer: 2000,
+                  showConfirmButton: false,
+                });
+              }
+            }
+            var downloadTimer = setInterval(checkToken, 1000);
+        }
+
+        var $table = $('#table');
+
+        pageWidgets.registerCheckTableRow($table, {
+            {% comment %}oncheck: function () {
+                var ids = table.getCheckedValues();
+                if (ids.length != 1) {
+                    $('#batchDumps').attr('href', 'javascript:void(0);').removeAttr('download');
+                    return;
+                }
+            }{% endcomment %}
+        });
+
+        pageWidgets.registerCheckTableRow($("#batchLoadTable"), {dataField: 'name'});
+
+
+        var table = bsTable.getTableModule($table, function () {
+            this.authUrl = '{% url 'cms_course:auth_class' 0 %}';
+            this.shareUrl = '{% url 'cms_course:share_teacher' 0 %}';
+
+            this.difficultyFormatter = function (value) {
+                if (value == 0) {
+                    return gettext('x_easy');
+                } else if (value == 1) {
+                    return gettext('x_intermediate');
+                } else if (value == 2) {
+                    return gettext('x_hard');
+                }
+            };
+
+            this.operatorFormatter = function (value, row, index) {
+                if (row.course == undefined) {
+                    var btns_course = [
+                        {
+                            type: 'link',
+                            class: 'btn-primary',
+                            icon: 'fa-edit',
+                            text: "{% trans 'x_edit' %}",
+                            url: "{% url 'cms_course:course' %}" + value,
+                            builtin: row.builtin,
+                        },
+                        {
+                            type: 'link',
+                            class: 'btn-warning',
+                            icon: 'fa-building',
+                            text: '{% trans 'x_class_management' %}',
+                            url: ('{% url 'cms_course:lesson' 0 %}').replace(0, value),
+                        }
+                    ];
+                    return table.getOperatorHtml(btns_course);
+                } else {
+                    var listUrl = "{% url 'cms_course:lesson_detail' 1 -1 %}";
+                    var btns_lesson = [
+                        {
+                            type: 'link',
+                            class: 'btn-primary',
+                            icon: 'fa-edit',
+                            text: "{% trans 'x_edit' %}",
+                            url: listUrl.replace(1, row.course).replace(-1, value)
+                        },
+                    ];
+                    return table.getOperatorHtml(btns_lesson);
+                }
+
+                var btns = [
+                    {
+                        type: 'link',
+                        class: 'btn-primary',
+                        icon: 'fa-edit',
+                        text: "{% trans 'x_edit' %}",
+                        url: "{% url 'cms_course:course' %}" + value,
+                        builtin: row.builtin,
+                    },
+                    {
+                        type: 'link',
+                        class: 'btn-warning',
+                        icon: 'fa-building',
+                        text: '{% trans 'x_class_management' %}',
+                        url: ('{% url 'cms_course:lesson' 0 %}').replace(0, value),
+                    }
+                ];
+                return table.getOperatorHtml(btns);
+            };
+
+            this.prepareBatchLoads = function (btn) {
+                http.get('{% url "cms_course:api:course-batch-loads" %}', {}, function (res) {
+                    var files = res.files;
+                    $("#batchLoadTable").bootstrapTable('load', files);
+                });
+                $('#selectBatchLoad').modal();
+            };
+
+            // 二级表，课程显示已授权，课时显示"-"
+            this.couseAuthFormatter = function (value, row, index) {
+                var authUrl = '{% url 'cms_course:auth_class' 0 %}';
+                if (authUrl != undefined && row.id > 0)
+                    authUrl = authUrl.replace('0', row.id);
+
+                var $display = $("<a class=\"btn \"></a >");
+                if (row.auth == 1) {
+                    $display.html(gettext('x_all_auth'));
+                    $display.addClass('btn-primary')
+                } else {
+                    if (value == 0) {
+                        $display.html(gettext('x_auth_forbidden'));
+                        $display.addClass('btn-danger')
+                    } else if (value == -1) {
+                        var $display = $("<span class=\"btn\"></span>");
+                        $display.html('&nbsp;&nbsp;&nbsp;&nbsp;-')
+                    } else {
+                        $display.html(gettext("x_have_auth").format({number: value}));
+                        $display.addClass('btn-primary')
+                    }
+                }
+
+                if (authUrl.length > 0) {
+                    $display.attr("href", authUrl);
+                }
+
+                if (row.share_count == -1) {
+                    $display.addClass('check_remove')
+                    $display.removeAttr("href").removeClass('btn btn-white btn-auth-share')
+                }
+
+                return $display.prop("outerHTML");
+            };
+
+            // 二级表，课程显示已授权，课时显示"-"
+            this.courseShareFormatter = function (value, row, index) {
+                var shareUrl = "{% url 'cms_course:share_teacher' 0 %}";
+                if (shareUrl != undefined && row.id > 0)
+                    shareUrl = shareUrl.replace('0', row.id);
+
+                var $display = "";
+                if (row.is_other_share) {
+                    $display = $("<a style='cursor: initial' class='\".text-success\"'></a >");
+                    $display.html(gettext("x_from_other_people_share").format({username: row.creater_username}));
+                } else {
+                    $display = $("<a class=\"btn\"></a >");
+                    if (row.share == 1) {
+                        $display.html(gettext('x_all_share'));
+                        $display.addClass('btn-primary')
+                    } else {
+                        if (value == 0) {
+                            $display.html(gettext('x_teacher_share_private'));
+                            $display.addClass('btn-success')
+                        } else if (value == -1) {
+                            var $display = $("<span class=\"btn btn-auth-share\"></span>");
+                            $display.html('&nbsp;&nbsp;&nbsp;&nbsp;-');
+                        } else {
+                            $display.html(gettext("x_teacher_share").format({number: value}));
+                            $display.addClass('btn-primary')
+                        }
+                    }
+
+                    if (shareUrl.length > 0) {
+                        $display.attr("href", shareUrl);
+                    }
+
+                    if (row.auth_count == -1) {
+                        $display.removeAttr("href").removeClass('btn btn-white btn-auth-share')
+                    }
+                }
+
+                return $display.prop("outerHTML");
+            };
+        });
+
+        var batchLoadTable = bsTable.getTableModule($('#batchLoadTable'), function () {
+            this.batchLoads = function () {
+                var filenames = batchLoadTable.getCheckedValues();
+                if (filenames.length == 0) {
+                    return;
+                }else if(filenames.length > 1){
+                    swal({
+                        title: gettext('x_please_choose_one'),
+                        type: "error",
+                        confirmButtonText: "{% trans "x_confirm" %}"
+                    });
+                    return false;
+                }
+                $('#selectBatchLoad').modal('hide');
+                ajaxDialog.buttonClickError(http.post, '{% url "cms_course:api:course-batch-loads" %}', {filenames: filenames}, function () {
+                    popUtil.successHint(gettext('x_import_success'));
+                    table.reload();
+                });
+            };
+        });
+        $("#batchLoadTable").bootstrapTable({data: {}});
+
+
+        $table.stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search_text = $("#search").val();
+                params.search_direction = $("#search_direction").val();
+                params.search_sub_direction = $("#search_sub_direction").val();
+                params.search_difficulty = $("#search_difficulty").val();
+                params.page = parseInt($('.pagination .active a').text());
+                params.pagesize = parseInt($('.page-size').text());
+                params.my_course = $('#my-course').is(":checked");
+                params.sys_course = $('#sys-course').is(":checked");
+                params.share_course = $('#share-course').is(":checked");
+                return params;
+            },
+            treeView: true,//是否开启树视图
+            treeId: "identity_id",//id字段
+            treeField: "name",
+            leafIcon:'blank_replace',
+            onLoadSuccess: function (data) {
+                $('#pagination').bootstrapPaginator({
+                    currentPage: data.page,
+                    totalPages: Math.ceil(data.total / data.pagesize) == 0 ? 1 : Math.ceil(data.total / data.pagesize),
+                });
+                if (data.total == 0) {
+                    $(".pagination-box").hide()
+                } else {
+                    var text = gettext('x_pagination_info');
+                    var info = text.replace('-1', data.data_start).replace('-2', data.data_end).replace('-3', data.total);
+                    $('.pagination-info').text(info);
+                    $(".pagination-box").show()
+                }
+            }
+        });
+
+        $('.dropdown-menu li').click(function () {
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.page-size').text(parseInt($(this).text()));
+            table.refresh();
+        });
+
+
+        $('#pagination, .table_refresh').click(function () {
+            table.refresh()
+        });
+
+        var sub_dir_param = $("#search_sub_direction");
+
+        $(function () {
+            function refresh_sub_direction(parent_id) {
+                sub_dir_param.children("option").show();
+                sub_dir_param.children("option:not([data-parent='" + parent_id + "'])").hide();
+                sub_dir_param.children("option[value='']").show();
+            }
+
+            $("#search_direction").change(function () {
+                refresh_sub_direction($(this).val());
+                sub_dir_param.val("");
+                sub_dir_param.children("option[value='']").attr("selected", true);
+                table.refresh();
+            });
+
+            refresh_sub_direction($("#search_direction").val());
+        })
+
+
+    </script>
+{% endblock %}

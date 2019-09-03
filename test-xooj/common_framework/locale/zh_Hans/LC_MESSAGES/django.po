@@ -1,0 +1,548 @@
+msgid "x_save"
+msgstr "保存"
+
+msgid "x_confirm"
+msgstr "确定"
+
+msgid "x_cancel"
+msgstr "取消"
+
+msgid "x_loading"
+msgstr "加载中..."
+
+msgid "x_title"
+msgstr "标题"
+
+msgid "x_search"
+msgstr "搜索"
+
+msgid "x_add"
+msgstr "新增"
+
+msgid "x_delete"
+msgstr "删除"
+
+msgid "x_public"
+msgstr "公开"
+
+msgid "x_hide"
+msgstr "隐藏"
+
+msgid "x_status"
+msgstr "状态"
+
+msgid "x_operation"
+msgstr "操作"
+
+msgid "x_name"
+msgstr "名称"
+
+msgid "x_zh_name"
+msgstr "中文名称"
+
+msgid "x_en_name"
+msgstr "英文名称"
+
+msgid "x_start_end_time"
+msgstr "起止时间"
+
+msgid "x_start_time"
+msgstr "开始时间"
+
+msgid "x_end_time"
+msgstr "结束时间"
+
+msgid "x_select_pic"
+msgstr "选择图片"
+
+msgid "x_introduction"
+msgstr "简介"
+
+msgid "x_is_public"
+msgstr "是否公开"
+
+msgid "x_rule"
+msgstr "规则"
+
+msgid "x_modify_logo"
+msgstr "修改Logo"
+
+msgid "x_pic_file"
+msgstr "图片文件"
+
+msgid "x_edit"
+msgstr "编辑"
+
+msgid "x_setting"
+msgstr "配置"
+
+msgid "x_score"
+msgstr "分数"
+
+msgid "x_category"
+msgstr "分类"
+
+msgid "x_test_dy_env"
+msgstr "测试动态环境"
+
+msgid "x_chinese_time"
+msgstr "中国标准时间"
+
+msgid "x_submit"
+msgstr "提交"
+
+msgid "x_content"
+msgstr "内容"
+
+msgid "x_modify"
+msgstr "修改"
+
+msgid "x_authorization"
+msgstr "授权管理"
+
+msgid "x_authorized"
+msgstr "授权"
+
+msgid "x_teacher_share"
+msgstr "教员共享"
+
+msgid "x_select_share_teacher"
+msgstr "请选择共享教员"
+
+msgid "x_type"
+msgstr "类型"
+
+msgid "x_creator"
+msgstr "创建者"
+
+msgid "x_download"
+msgstr "下载"
+
+msgid "x_all_directions"
+msgstr "全部方向"
+
+msgid "x_all_difficulty"
+msgstr "全部难度"
+
+msgid "x_all_category"
+msgstr "全部分类"
+
+msgid "x_all_status"
+msgstr "全部状态"
+
+msgid "x_type_management"
+msgstr "类型管理"
+
+msgid "x_direction"
+msgstr "方向"
+
+msgid "x_difficulty"
+msgstr "难度"
+
+msgid "x_all_type"
+msgstr "全部类型"
+
+msgid "x_new_type"
+msgstr "新建类型"
+
+msgid "x_edit_type"
+msgstr "编辑类型"
+
+msgid "x_course"
+msgstr "课程"
+
+msgid "x_annex"
+msgstr "附件"
+
+msgid "x_download_annex"
+msgstr "下载附件"
+
+msgid "x_delete_annex"
+msgstr "删除附件"
+
+msgid "x_annex_uploading"
+msgstr "附件上传中"
+
+msgid "x_lab_environment"
+msgstr "实验环境"
+
+msgid "x_choose_scene"
+msgstr "选择场景"
+
+msgid "x_access_mode"
+msgstr "访问模式"
+
+msgid "x_shared"
+msgstr "共享"
+
+msgid "x_private"
+msgstr "私有"
+
+msgid "x_easy"
+msgstr "初级"
+
+msgid "x_normal"
+msgstr "中级"
+
+msgid "x_hard"
+msgstr "高级"
+
+msgid "x_owned_question"
+msgstr "所属习题集"
+
+msgid "x_dynamic_scenes"
+msgstr "动态环境"
+
+msgid "x_env_type"
+msgstr "环境类型"
+
+msgid "x_remove"
+msgstr "清除"
+
+msgid "x_required_name"
+msgstr "名称：该字段必填"
+
+msgid "x_exam_name_required"
+msgstr "考试名称： 该字段必填"
+
+msgid "x_lose_title"
+msgstr "标题： 请填写标题"
+
+msgid "x_confirm_delete"
+msgstr "确认删除"
+
+msgid "x_upload_completed"
+msgstr "上传完成"
+
+msgid "x_saved_successfully"
+msgstr "保存成功"
+
+msgid "x_saved_fail"
+msgstr "保存失败"
+
+msgid "x_close"
+msgstr "关闭"
+
+msgid "x_courseware_content"
+msgstr "课件内容"
+
+msgid "x_experimental_report"
+msgstr "实验报告"
+
+msgid "x_courseware"
+msgstr "课件管理"
+
+msgid "x_user_name"
+msgstr "用户名"
+
+msgid "x_notes_content"
+msgstr "笔记内容"
+
+msgid "x_update_time"
+msgstr "更新时间"
+
+msgid "x_details"
+msgstr "详情"
+
+msgid "x_represents_first-level_type"
+msgstr "表示一级类型"
+
+msgid "x_represents_second-level_type"
+msgstr "表示二级类型"
+
+msgid "x_error_message"
+msgstr "错误提示"
+
+msgid "x_size"
+msgstr "大小"
+
+msgid "x_platform"
+msgstr "平台"
+
+msgid "x_language"
+msgstr "语言"
+
+msgid "x_zh-han"
+msgstr "中文"
+
+msgid "x_download_file"
+msgstr "下载文件"
+
+msgid "x_del_file"
+msgstr "删除文件"
+
+msgid "x_address"
+msgstr "地址"
+
+msgid "x_comment"
+msgstr "评论"
+
+msgid "x_user"
+msgstr "用户"
+
+msgid "x_submit_time"
+msgstr "提交时间"
+
+msgid "x_all_faculties"
+msgstr "全部院系"
+
+msgid "x_all_grades"
+msgstr "全部年级"
+
+msgid "x_role"
+msgstr "角色"
+
+msgid "x_all_role"
+msgstr "全部角色"
+
+msgid "x_select_all"
+msgstr "全选"
+
+msgid "x_password"
+msgstr "密码"
+
+msgid "x_confirm_password"
+msgstr "确认密码"
+
+msgid "x_management"
+msgstr "管理"
+
+msgid "x_env"
+msgstr "场景"
+
+msgid "x_error_info"
+msgstr "错误信息"
+
+msgid "x_scene_management"
+msgstr "场景管理"
+
+msgid "x_target_management"
+msgstr "标靶管理"
+
+msgid "x_system_configuration"
+msgstr "系统配置"
+
+msgid "x_copyright_information"
+msgstr "版权信息"
+
+msgid "x_sys_version"
+msgstr "版权号"
+
+msgid "x_system_type"
+msgstr "系统类型"
+
+msgid "x_package"
+msgstr "更新包"
+
+msgid "x_vm_count"
+msgstr "虚拟机数量"
+
+msgid "x_container_count"
+msgstr "容器数量"
+
+msgid "x_node_name"
+msgstr "节点名称"
+
+msgid "x_none"
+msgstr "无"
+
+msgid "x_name_required"
+msgstr "名称： 该字段必填"
+
+msgid "x_see_more"
+msgstr "查看更多"
+
+msgid "x_home"
+msgstr "首页"
+
+msgid "x_all"
+msgstr "全部"
+
+msgid "x_saining_training_platform"
+msgstr "赛宁实训平台"
+
+msgid "x_collection"
+msgstr "收藏"
+
+msgid "x_my_note"
+msgstr "我的笔记"
+
+msgid "x_cloud_exchange"
+msgstr "留言"
+
+msgid "x_download_attachment"
+msgstr "点击下载题目附件"
+
+msgid "x_input_answer"
+msgstr "点击输入答案"
+
+msgid "x_course_not_practiced"
+msgstr "当前课程没有练习"
+
+msgid "x_resource_type"
+msgstr "资源类型"
+
+msgid "x_switch_Problem_set_mode"
+msgstr "切换到习题集模式"
+
+msgid "x_switch_list_mode"
+msgstr "切换到列表模式"
+
+msgid "x_solved"
+msgstr "已解出"
+
+msgid "x_un_solved"
+msgstr "未解出"
+
+msgid "x_correct_answer"
+msgstr "正确答案"
+
+msgid "x_single_choice"
+msgstr "单选题"
+
+msgid "x_tip"
+msgstr "提示"
+
+msgid "x_ranking"
+msgstr "排名"
+
+msgid "x_my_message"
+msgstr "我的消息"
+
+msgid "x_modify_password"
+msgstr "修改密码"
+
+msgid "x_exit_login"
+msgstr "退出登录"
+
+msgid "x_admin"
+msgstr "后台管理"
+
+msgid "x_vulnerability"
+msgstr "漏洞库"
+
+msgid "x_toolbox"
+msgstr "工具箱"
+
+msgid "x_enter_name_testpaper"
+msgstr "请输入试卷名称"
+
+msgid "x_user_notes"
+msgstr "用户笔记"
+
+msgid "x_scene_have_existed"
+msgstr "场景已存在"
+
+msgid "x_topic_scene_not_configured"
+msgstr "题目场景还未配置"
+
+msgid "x_failed_extend_scene"
+msgstr "延长场景失败"
+
+msgid "x_failed_execute_script"
+msgstr "执行脚本失败"
+
+msgid "x_failed_create_scene"
+msgstr "创建场景失败"
+
+msgid "x_failed_delete_scene"
+msgstr "删除场景失败"
+
+msgid "x_missing_necessary_creation_parameters"
+msgstr "缺少必要的创建参数"
+
+msgid "x_command_execution_failed"
+msgstr "命令执行失败"
+
+msgid "x_class_hours_not_exist"
+msgstr "课时不存在"
+
+msgid "x_hides"
+msgstr "-"
+
+msgid "x_cloud_exchange_250"
+msgstr "留言……（250字以内）"
+
+msgid "x_status_normal"
+msgstr "正常"
+
+msgid "x_heoretical_lesson"
+msgstr "理论课"
+
+msgid "x_experiment_lesson"
+msgstr "实验课"
+
+msgid "x_authorization_quantity"
+msgstr "授权访问"
+
+msgid "x_authorization_Operation"
+msgstr "授权操作"
+
+msgid "x_survival_time"
+msgstr "存活时间"
+
+msgid "x_hours"
+msgstr "小时"
+
+msgid "x_knowledge_point"
+msgstr "知识点"
+
+msgid "x_system_module"
+msgstr "系统"
+
+msgid "x_system_login"
+msgstr "user[{}] login system"
+
+msgid "x_system_logout"
+msgstr "user[{}] logout system"
+
+msgid "x_course_schedule_notice"
+msgstr "课程安排"
+
+msgid "x_event_exam_notice"
+msgstr "考试通知"
+
+msgid "x_event_notice"
+msgstr "竞赛通知"
+
+msgid "x_team_notice"
+msgstr "队伍消息"
+
+msgid "x_auth_mode"
+msgstr "授权方式"
+
+msgid "x_reports_content"
+msgstr "实验报告内容"
+
+msgid "x_all_auth"
+msgstr "授权所有"
+
+msgid "x_custom_auth"
+msgstr "自定义"
+
+msgid "x_all_share"
+msgstr "共享所有"
+
+msgid "x_custom_share"
+msgstr "自定义共享"
+
+msgid "x_paper_configuration"
+msgstr "试卷配置"
+
+msgid "x_generate_test_paper"
+msgstr "导入试卷"
+
+msgid "x_first"
+msgstr "一、"
+
+msgid "x_two"
+msgstr "二、"
+
+msgid "x_three"
+msgstr "三、"
+
+msgid "x_four"
+msgstr "四、"
+
+msgid "x_clear"
+msgstr "清空"

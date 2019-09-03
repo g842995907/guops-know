@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="{% static 'course/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'web/js/pdfobject.min.js' %}"></script>
+     <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap" id="mypdf" style="height: 100%;"></div>
+<script>
+    $(function () {
+        var options = {
+            pdfOpenParams: { view: 'FitV', toolbar: '0' },
+            fallbackLink: "<p>This browser does not support inline PDFs. Please click here to view it: <a href='[url]'>Click</a></p>",
+        };
+        PDFObject.embed("{{ pdf_url }}", $("#mypdf"), options);
+    });
+</script>
+</body>
+</html>

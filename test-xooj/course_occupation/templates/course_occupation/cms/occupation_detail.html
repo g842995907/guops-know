@@ -1,0 +1,192 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    <a href="{% url 'cms_course_occupation:occupation_list' %}">{% trans "x_occupational_system" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_new_vocational_system' %}
+    {% else %}
+        {% trans 'x_edit_professional_system' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+{% endblock %}
+
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_course_occupation:api:occupation-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_course_occupation:api:occupation-detail' OccupationSystem.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_position' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ OccupationSystem.name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_difficulty_level' %}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="difficulty" id="difficulty" data-form-fixed="1"
+                                onchange="selectOnchang(this)">
+                            {% for k, v in difficulty.items %}
+                                <option value="{{ v }}"
+                                        {% if v == OccupationSystem.difficulty %}selected{% endif %}>{{ k }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <!-- 进阶职位 -->
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_advanced_position' %}</label>
+
+                    <div class="col-sm-2">
+                        <select class="selectpicker" multiple data-actions-box="true" id="advanced_name"
+                                name="advanced_name" title="{% trans 'x_choose_advance_position' %}"
+                                data-style="btn-white">
+                        </select>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_position_description' %}</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="describe" name="describe">{% if OccupationSystem.describe %}{{ OccupationSystem.describe }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-2">
+                        <input type="checkbox" class="form-control js-switch" data-form-fixed="1" id="public"
+                               name="public"
+                                {% if OccupationSystem.public != 0 %} checked="" {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_course_occupation:occupation_list' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_course_occupation:occupation_list' %}";
+        var DifficlutUrl = "{% url 'cms_course_occupation:occupation_difficult' %}";
+        var get_advanced_names_url = '{% url "cms_course_occupation:api:occupation-get-advanced-names" %}';
+        var has_difficult_id = "{{ OccupationSystem.difficulty }}" || "1";
+
+        {% if occupation_link_list %}
+            var occupation_link_list = {{ occupation_link_list | safe}};
+        {% else %}
+            var occupation_link_list = '';
+        {% endif %}
+
+        $(function () {
+                $('#validateForm').mvalidate({
+                    rules: {
+                        name: {
+                            required: true
+                        },
+                        difficulty: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        name: {
+                            required: gettext('x_position_required')
+                        },
+                        difficulty: {
+                            required: gettext('x_difficlty_choose')
+                        }
+                    }
+                });
+                $("#validateForm").ajaxFormDialog(function () {
+                    setTimeout(function () {
+                        window.location.href = listUrl;
+                    }, ajaxDialog.defaultDelayTime);
+                });
+            });
+
+        $().ready(function () {
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: '{% url "cms_course_occupation:api:occupation-get-advanced-names" %}',
+                data: {'difficulty': has_difficult_id},
+                dataType: 'json',
+                success: function (data) {
+                    //页面加载完成执行，进阶职位初始换
+                    init_jinjiezhiwei(data)
+                }
+            });
+        });
+
+        function selectOnchang(obj) {
+            var nandu_value = obj.value;
+            http.get(get_advanced_names_url, {difficulty: nandu_value}, function (data) {
+                //当难度级别改变的时候，重新初始化进阶职位的值
+                $('#advanced_name').empty();
+                $('.selectpicker').selectpicker('refresh');
+                init_jinjiezhiwei(data);
+            })
+        }
+
+        function init_jinjiezhiwei(get_advanced_names) {
+            $.each(get_advanced_names, function (index, item) {
+                var is_selected = 'selected';
+                if ($.inArray(item.id, occupation_link_list) == -1) {
+                    is_selected = ''
+                }
+                $('#advanced_name').append("<option value=" + item.id + " " + is_selected + ">" + codeUtil.htmlEncode(item.name) + "</option>");
+            });
+            $(".selectpicker").selectpicker('refresh');
+        }
+    </script>
+{% endblock %}

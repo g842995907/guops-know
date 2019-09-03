@@ -1,0 +1,202 @@
+/*
+* @Author: Marte
+* @Date:   2017-06-23 10:44:02
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-06-23 12:33:59
+*/
+.collect {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+
+.list-ico {
+    width: 10px;
+    height: 10px;
+    background: orange;
+    display: inline-block;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+@keyframes add {
+    0% {
+        transform: translateY(0px);
+        opacity: 0;
+    }
+    60% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-40px);
+        opacity: 0.2;
+    }
+}
+
+.addNoteButton {
+    position: absolute;
+    right: 40px;
+    top: -62px;
+    padding: 0 10px;
+    color: white;
+}
+
+/*//markdown*/
+
+.close {
+    opacity: 1;
+    font-size: 35px;
+    line-height: 0.7;
+}
+
+.prev:hover, .next:hover {
+    color: #ff9801;
+}
+
+.oj-icon-F014 {
+    transform: rotate(180deg);
+}
+
+.studyIco {
+    background: url(../img/maozi.png) no-repeat center center;
+    transform: rotate(0);
+    transition: .6s;
+}
+
+.learn:hover .studyIco {
+    transform: rotate(360deg);
+}
+
+.collectIco {
+    width: 18px;
+    height: 16px;
+    background: url(../img/collect.png) no-repeat center center;
+    background-size: 100% 100%;
+    display: inline-block;
+    vertical-align: -1px;
+}
+
+.discuss-area, .comment-area, .reply-area {
+    border: none;
+}
+
+.discuss-area, .comment-area {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.discuss-area::placeholder {
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.note-editing-area {
+    min-height: 300px;
+}
+
+/*.oj_course span[name='logo']{*/
+/*background-position: center;*/
+/*width:100%;*/
+/*height: 200px;*/
+/*background-size: cover;*/
+/*display: block;*/
+/*}*/
+
+/*#releated-course-list-div span[name='rc-img']{*/
+/*display: block;*/
+/*width: 100%;*/
+/*height: 150px;*/
+/*background-position: center;*/
+/*background-size: cover;*/
+/*}*/
+
+div[name='rc-name'] {
+    color: #ff9900;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*div[name='rc-name']:hover {*/
+/*color: #ff9900;*/
+/*height: auto;*/
+/*text-overflow: inherit;*/
+/*overflow: visible;*/
+/*white-space: inherit;*/
+/*}*/
+.directory {
+    /*margin-bottom: 15px;*/
+    line-height: 30px;
+    padding: 4px 0;
+}
+
+.directory-selected {
+    background-color: #0f2441;
+}
+
+.directory-selected span[name='lt-name'] {
+    color: orange;
+}
+
+span[name='lt-name'] {
+    margin-left: 10px;
+}
+
+.directory-list span[name='orange-dot'] {
+    width: 10px;
+    height: 10px;
+    background: orange;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.directory-list span[name='orange-learning'] {
+    width: 10px;
+    height: 10px;
+    background: url('../img/learning.png') center no-repeat;
+    display: inline-block;
+}
+
+.directory-list span[name='orange-hollow'] {
+    width: 10px;
+    height: 10px;
+    background: transparent;
+    display: inline-block;
+    border-radius: 50%;
+    border: 1px solid orange;
+}
+
+.directory-list > div:nth-child(2) span {
+    background-color: #1b304f;
+    display: inline-block;
+    padding: 0 10px;
+    margin-left: 5px;
+    width: auto;
+    height: 30px;
+    line-height: 30px;
+}
+
+.directory-list > div:nth-child(2) span:nth-child(2) {
+    color: #fff;
+}
+
+.directory-list > div:nth-child(2) span.unlearned {
+    color: #5e7ba3;
+}
+
+.directory-list > div:nth-child(2) span.learned {
+    color: #f2890c;
+}
+
+.directory-list > div:nth-child(2) span.learning {
+    color: #00abff;
+}
+
+span[name='introduction'] {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+}

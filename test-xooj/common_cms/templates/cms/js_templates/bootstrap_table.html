@@ -1,0 +1,79 @@
+{% verbatim %}
+<script id="bst_operator" type="text/html">
+    <div class="bst_operator_container">
+        {{ each btns as btn }}
+            {{ if btn.builtin != 1 && btn.builtin != true}}
+                {{if btn.type == 'link'}}
+                <a class="btn {{btn.class}}" onclick="{{btn.click}}" {{if btn.url}}href="{{btn.url}}"{{/if}} {{if btn.target}}target="{{btn.target}}"{{/if}}>
+                    <i class="fa {{btn.icon}}"></i> <span>{{btn.text}}</span>
+                </a>
+                {{else}}
+                <button class="btn {{btn.class}}" data-value="{{btn.value}}" onclick="{{btn.click}}" data-url="{{btn.url}}">
+                    <i class="fa {{btn.icon}}"></i> <span>{{btn.text}}</span>
+                </button>
+                {{/if}}
+            {{ /if }}
+        {{ /each }}
+    </div>
+</script>
+<script id="bst_dd_operator" type="text/html">
+    <div class="bst_dd_operator_container">
+        {{ each btns as btn }}
+        {{ if btn.builtin != 1 && btn.builtin != true}}
+        <div class="{{if btn.subs && btn.subs.length > 0}}dropdown{{ else }}button{{/if}}">
+            {{ if btn.type == 'link' }}
+            <a class="btn {{btn.class}}" onclick="{{btn.click}}" {{if btn.url}}href="{{btn.url}}"{{/if}} {{if btn.target}}target="{{btn.target}}"{{/if}}>
+                <i class="fa {{btn.icon}}"></i> <span class="text">{{btn.text}}</span>
+                {{ if btn.subs && btn.subs.length > 0 }}
+                <span class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </span>
+                {{ /if }}
+            </a>
+            {{ else }}
+            <button class="btn {{btn.class}} dropdown-toggle" data-value="{{btn.value}}" onclick="{{btn.click}}" data-url="{{btn.url}}" data-toggle="dropdown">
+                <i class="fa {{btn.icon}}"></i> <span class="text">{{btn.text}}</span>
+                {{ if btn.subs && btn.subs.length > 0 }}
+                <span class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </span>
+                {{ /if }}
+            </button>
+            {{ /if }}
+            {{ if btn.subs && btn.subs.length > 0 }}
+            <ul class="dropdown-menu">
+                {{ each btn.subs as sub }}
+                    <li>
+                    {{ if sub.type == 'link' }}
+                    <a class="{{sub.class}}" onclick="{{sub.click}}" {{if sub.url}}href="{{sub.url}}"{{/if}} {{if sub.target}}target="{{sub.target}}"{{/if}}>
+                        <i class="fa {{sub.icon}}"></i> <span>{{ sub.text }}</span>
+                    </a>
+                    {{ else }}
+                    <a class="{{sub.class}}" href="#" data-value="{{sub.value}}" onclick="{{sub.click}}" data-url="{{sub.url}}">
+                        <i class="fa {{sub.icon}}"></i> <span>{{ sub.text }}</span>
+                    </a>
+                    {{ /if }}
+                    </li>
+                {{ /each }}
+            </ul>
+            {{ /if }}
+        </div>
+        {{ /if }}
+        {{ /each }}
+    </div>
+</script>
+<script id="bst_th_checkall" type="text/html">
+    <th data-field="{{ dataField }}" data-formatter="bsTable.checkboxFormatter" class="th_checkall">
+        <div class="checkbox checkbox-success text-center">
+            <input type="checkbox" class="checkall" id="checkall-{{ index }}" />
+            <label for="checkall-{{ index }}"></label>
+        </div>
+    </th>
+</script>
+<script id="bst_checkbox" type="text/html">
+    <div class="checkbox checkbox-success text-center">
+        <input type="checkbox" class="checkrow" id="checkrow-{{ index }}" value="{{ value }}" />
+        <label for="checkrow-{{ index }}"></label>
+    </div>
+</script>
+{% endverbatim %}

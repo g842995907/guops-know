@@ -1,0 +1,361 @@
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+<script src="{% static 'course/js/hls.js' %}"></script>
+<script src="{% static 'course/js/chplayer-master/chplayer/chplayer.js' %}?t=2"></script>
+<script src="{% static 'web/js/base.js' %}"></script>
+<script src="{% static 'web/js/utils.js' %}"></script>
+
+<div class='action-btn-wrapper'>
+{#    <div class="apply-env-action-btn default-bg" media-name="apply-env-action-btn">#}
+{#        <a class='action-icon env-btn'></a>#}
+{#        <div class='action-btn-text'>{% trans "申请环境" %}</div>#}
+{#    </div>#}
+
+    <ul class='action-btn default-bg'>
+        <li class="" media-name="prev_lesson" style="opacity: 0.2">
+            <a class='action-icon' href="javaScript:void(0)" data-name="prev_lesson"></a>
+            <div class='action-btn-text'>{% trans "x_last_section" %}</div>
+        </li>
+        <li class="" media-name="env" hidden="hidden">
+            <a class='action-icon' href="javaScript:void(0)" data-id="show_env"
+               data-name="show_env"></a>
+            <div class='action-btn-text'>{% trans "x_experiment_scene" %}</div>
+        </li>
+        <li class="" media-name="video" hidden="hidden">
+            <a class='action-icon' href="javaScript:void(0)" data-name="video_new" data-id="show_video"></a>
+            <div class='action-btn-text'>{% trans "x_video" %}</div>
+        </li>
+        <li class="" media-name="markdown">
+            <a class='action-icon' href="javaScript:void(0)"
+               data-name="markdown_new" data-id="all_guidance"></a>
+            <div class='action-btn-text'>{% if lesson_type == 0 %}
+                    {% trans "x_handouts" %}{% else %}{% trans "x_experimental_guidance" %}{% endif %}</div>
+        </li>
+        <li class="" media-name="QandA">
+            <a class='action-icon text-center' href="javaScript:void(0)" data-id="cloud_communication" data-name="cloud_communication"></a>
+            <div class='action-btn-text'>{% trans "x_Q_A" %}</div>
+        </li>
+
+        <li class="" media-name="note">
+            <a class='action-icon' href="javaScript:void(0)" data-name="note_new"></a>
+            <div class='action-btn-text'>{% trans "x_my_note" %}</div>
+        </li>
+        <li class="" media-name="report" hidden="hidden">
+            <a class='action-icon' href="javaScript:void(0)" data-name="report_new"></a>
+            <div class='action-btn-text'>{% trans "x_experimental_report" %}</div>
+        </li>
+        <li class="" media-name="attachment" hidden="hidden">
+            <a class='action-icon' href="" data-name="attachment_new" download=""></a>
+            <div class='action-btn-text'>{% trans "x_download_annex" %}</div>
+        </li>
+        <li class="" media-name="exercise" hidden="hidden">
+            <a class='action-icon' href="{% url 'course:exam_paper_detail' course_id lesson_id %}" data-name="lesson_exercise"></a>
+            <div class='action-btn-text'>{% trans "x_lesson_exercises" %}</div>
+        </li>
+        <li class="" media-name="double_screen">
+            <a class='action-icon' href="{% url 'course:html' %}?lesson_id={{ lesson_id }}"
+               data-name="double_screen"></a>
+            <div class='action-btn-text'>{% trans "x_double_screen_display" %}</div>
+        </li>
+        <li class="" media-name="next_lesson" style="opacity: 0.2">
+            <a class='action-icon' href="javaScript:void(0)" data-name="next_lesson"></a>
+            <div class='action-btn-text'>{% trans "x_next_section" %}</div>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+
+    var video_success = 1;
+    var current_lesson_id = "{{ lesson_id }}";
+    var seekTime = 0;
+    var globalvideoObject = {};
+    $(document).ready(function () {
+        init_lesson_data();
+
+        prev_next_lesson();
+
+        window.localStorage.course_screen='one_screen';
+
+        $('.action-btn li,.apply-env-action-btn ').hover(function () {
+            var currentWidth = $(this).find('.action-btn-text ').width();
+            $(this).find('.action-btn-text ').animate({
+                left: -currentWidth - 20  ,
+                opacity: '1'
+            }, "slow");
+        }, function () {
+              var currentWidth = $(this).find('.action-btn-text ').width();
+            $(this).find('.action-btn-text ').animate({
+                left: currentWidth + 20 ,
+                opacity: '0'
+            }, "slow");
+        });
+
+
+    });
+
+    //导航初始化navInit
+    $(function () {
+        var matching = window.location.pathname.match(/course\/(\w+)/i);
+        {#        console.log(matching)#}
+        if (matching) {
+            $('.action-btn a[data-name=' + matching[1] + ']').addClass('active');
+        }
+    });
+
+    $('.action-btn a').click(function () {
+        var data_name = $(this).attr('data-name');
+        if (data_name === 'next_lesson' || data_name === 'prev_lesson'){
+            return
+        }
+        $('.action-btn a').removeClass('active');
+        $(this).addClass('active');
+        // 点击展开左侧
+        var temp_id = $(this).attr('data-id');
+        if (temp_id !== undefined){
+            if ($("#" + temp_id).children(":last").css('display') === 'none') {
+                {#$(temp_id + ' .toggle-icon').siblings().slideToggle(100);#}
+                $("#" + temp_id).children(":last").css('display', 'block')
+            }
+            $(document).scrollTop($("#" + temp_id).offset().top -60);
+        }
+
+    });
+    $('.env-btn').click(function () {
+        $(this).addClass('active');
+        $('.action-btn a').removeClass('active');
+        window.location = "{% url 'course:markdown_new' %}"+"?course_id="+{{ course_id }} + "&lesson_id="+{{ lesson_id }}
+    });
+
+
+    function init_lesson_data() {
+            $.ajax({
+                url: "{% url 'course:api:lesson-new-detail' lesson_id %}",
+                type: "get",
+                data: {'change_serializer': 'yes'},
+                datatype: "json",
+                success: function (data) {
+                    var course_name = data.course_name;
+                    var lesson_name = data.name;
+                    var attachment_url= data.attachment;
+                    var video = data.video;
+                    var lesson_hash = data.hash;
+                    var lesson_exercise = data.lesson_exercise;
+                    var exercise_public = data.exercise_public;
+
+                    init_comment_list(lesson_hash);
+                    init_course_note(lesson_hash);
+                    if (lesson_name) {
+                        $("a[name='course-name']").html(codeUtil.htmlEncode(course_name));
+                        $("a[name='lesson-name']").html(codeUtil.htmlEncode(lesson_name));
+                    }
+                    if (attachment_url) {
+                        var list_down_name = attachment_url.split("/");
+                        var down_name = decodeURI(list_down_name[list_down_name.length - 1]);
+                        $("a[data-name='attachment_new']").attr('href', attachment_url);
+                        $("a[data-name='attachment_new']").attr('download', down_name);
+                        $("li[media-name='attachment']").removeAttr('hidden')
+                    }
+
+                    // 对video进行ts流显示，没有ts流的进行原路径显示video 实验课不显示视频
+                    if (video || data.video_state === video_success) {
+                        $("li[media-name='video']").removeAttr('hidden');
+                        // 判断视频转码成功
+                        var video_scale = 1;
+                        var video_change = video;
+                        var video_poster = '';
+                        var video_preview = '';
+                        var get_loge = '';
+                        if (data.video_state === video_success) {
+                            video_change = data.video_change;
+                            video_poster = data.video_poster;
+                            video_preview = data.video_preview;
+                            if (data.video_scale) {
+                                video_scale = parseFloat(data.video_scale)
+                            }
+                        }
+                        if (data.video_logo) {
+                            get_loge = data.video_logo
+                        }
+
+                        var videoObject_is_chrome = {
+                            container: '#video', //容器的ID,如果获到容器定义的是ID则需要增加#，如果是class，则不需要添加或添加.
+                            variable: 'player',//调用函数名称，该属性主要用于flashplayer发送监听内容时使用，如call('player.time',10)
+                            volume: 0.6, //默认音量，范围是0-1
+                            logo: get_loge || "cyberpeace",
+                            poster: video_poster, //封面图片地址
+                            autoplay: false, //是否自动播放，默认true=自动播放，false=默认暂停状态
+                            loop: false, //是否循环播放，默认false=不需要,true=需要
+                            live: false, //是否是直播，默认false=点播放，true=直播
+                            loaded: 'loadedHandler', //当播放器加载后执行的函数
+                            seek:0, //默认需要跳转的时间
+                            drag: 'start', //在flashplayer情况下是否需要支持按关键帧拖动，不需要留空，需要请填写拖动时请求的属性，本例中使用start，如果需要强制按时间点拖动则增加前缀time_，本例中即time_start，如果需要强制按关键帧进行拖动，则前缀是frames_，本例中即：frames_start
+                            flashplayer: false,//强制使用flashplayer
+                            html5m3u8: false,//是否使用hls，默认不选择，如果此属性设置成true，则不能设置flashplayer:true,
+                            {% comment %} chtrack: {
+                                 src: 'srt.srt',
+                                 charset: 'utf-8'
+                             },//chplayer使用的字幕文件及编码{% endcomment %}
+                            preview: {
+                                src: [video_preview],
+                                scale: video_scale
+                            },//预览图片地址数组，src=图片地址数组，scale=图片截取时间间隔，单位：秒
+                            video: [
+                                {
+                                    definition: '高清',
+                                    list: [
+                                        {
+                                            url: video_change,
+                                            type: 'video/m3u8',
+                                            weight: 10,
+                                        },
+                                    ]
+                                },
+                            ]
+                        };
+                        var videoObject_not_chorme = {
+                            container: '#video',//“#”代表容器的ID，“.”或“”代表容器的class
+                            variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
+                            autoplay: true,
+                            html5m3u8: true,
+                            video: video_change //视频地址
+                        };
+                        var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+                        if (isChrome) {
+                            var videoObject = videoObject_is_chrome;
+                        } else {
+                            var videoObject = videoObject_not_chorme;
+                        }
+                        $.extend(true, globalvideoObject, videoObject);
+                        window.player = new chplayer(videoObject);//创建一个播放器函数并附给player变量，（player需要和 var videoObject里的属性variable相同）
+                    }
+
+                    // 不是实验课没有实验报告
+                    if (data.type == 1) {
+                        init_lesson_report(data.hash);
+                        $("li[media-name='report']").removeAttr('hidden');
+                        // 取消申请场景显示
+                        if (data.lesson_env) {
+                            // 申请环境存在
+                            $("#show_env").show();
+                            $("li[media-name='env']").removeAttr('hidden');
+                        }
+                    }else {
+                        $("#experiment_report").remove();
+                    }
+                    if (!data.lesson_env) {
+                        // 申请环境不存在
+                        $("#show_env").remove()
+                    }
+
+                    //课后练习
+                    if(lesson_exercise && exercise_public){
+                        $("a[data-name='lesson_exercise']").parent().removeAttr('hidden')
+                    }
+
+                },
+                error: function () {
+                    showPopMsg("{% trans 'x_unable_get_details' %}");
+                }
+            });
+        }
+
+    // 获取上一节， 下一节的数据
+    function prev_next_lesson() {
+        $.ajax({
+            url: "{% url 'course:api:lesson-jstree-list' %}",
+            type: "get",
+            data: {"course_id": {{ course_id }}, 'filter_type': 'file'},
+            datatype: "json",
+            success: function (data) {
+                // 只有一条数据就不需要进行遍历
+                if (data.total > 1) {
+                    var lessonjstree_list = data.rows;
+                    for (var i in lessonjstree_list) {
+                        var lesson_obj_id = lessonjstree_list[i].lesson.lesson_id;
+                        if (lesson_obj_id == current_lesson_id) {
+                            // 获取当前课程的索引值
+                            if (i == 0) {
+                                // 第一个没有上一页, 显示下一页面
+                                $("li[media-name='next_lesson']").css('opacity', '');
+                                $("a[data-name='next_lesson']").attr('href', "{% url 'course:markdown_new' %}?course_id={{ course_id }}&lesson_id=" + lessonjstree_list[parseInt(i) + 1].lesson.lesson_id);
+
+                            } else if ((parseInt(i) + 1) == lessonjstree_list.length) {
+                                // 最后一个课程没有下一页， 显示上一页
+                                $("li[media-name='prev_lesson']").css('opacity', '');
+                                $("a[data-name='prev_lesson']").attr('href', "{% url 'course:markdown_new' %}?course_id={{ course_id }}&lesson_id=" + lessonjstree_list[parseInt(i) - 1].lesson.lesson_id);
+                            } else {
+                                // 中间的部分上一页下一页都是显示的
+                                $("li[media-name='prev_lesson']").css('opacity', '');
+                                $("li[media-name='next_lesson']").css('opacity', '');
+                                $("a[data-name='prev_lesson']").attr('href', "{% url 'course:markdown_new' %}?course_id={{ course_id }}&lesson_id=" + lessonjstree_list[parseInt(i) - 1].lesson.lesson_id);
+                                $("a[data-name='next_lesson']").attr('href', "{% url 'course:markdown_new' %}?course_id={{ course_id }}&lesson_id=" + lessonjstree_list[parseInt(i) + 1].lesson.lesson_id);
+                            }
+                            break;
+                        }
+                    }
+                }
+            },
+            error: function () {
+                showPopMsg("{% trans 'x_course_directory' %}");
+            }
+        })
+    }
+
+    var play_time = 0;
+    var start;
+    var end;
+    var total_time = 0;
+    var loadtime = 1;
+    function loadedHandler() {
+        //播放器加载成功，可以注册监听
+        player.addListener('timeupdate', timeUpdateHandler); //监听播放时间
+        player.addListener("ended",endedHandler);
+        player.addListener("play",playHandler);
+        player.addListener('pause', pauseHandler);
+    }
+
+    function endedHandler() {
+        loadtime = player.loadTime;
+    }
+
+    function timeUpdateHandler() {
+        play_time = player.time;
+    }
+
+    function playHandler() {
+        start = new Date();
+    }
+
+    function pauseHandler() {
+        end = new Date();
+        times = end.getTime() - start.getTime();
+        times = Math.ceil(times / 1000);
+        if (times > 3){
+            total_time = total_time + times;
+        }
+
+    }
+
+    var system_url = ("{% url 'course:api:lesson-schedule-video-progress' 0 %}").replace(0, {{ lesson_id }});
+    if ($("#video").html() != undefined) {
+        $(window).bind('beforeunload', function (e) {
+            $.ajax({
+                type: 'POST',
+                async: false, //同步提交
+                url: system_url,
+                data: {
+                    play_time: play_time,
+                    total_time: total_time,
+                    loadtime: loadtime,
+                }
+            });
+        })
+    }
+
+
+
+</script>
+
+

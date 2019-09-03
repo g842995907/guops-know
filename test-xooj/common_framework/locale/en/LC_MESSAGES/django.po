@@ -1,0 +1,548 @@
+msgid "x_save"
+msgstr "Save"
+
+msgid "x_confirm"
+msgstr "Confirm"
+
+msgid "x_cancel"
+msgstr "Cancel"
+
+msgid "x_loading"
+msgstr "Loading..."
+
+msgid "x_title"
+msgstr "Name"
+
+msgid "x_search"
+msgstr "Search"
+
+msgid "x_add"
+msgstr "New"
+
+msgid "x_delete"
+msgstr "Delete"
+
+msgid "x_public"
+msgstr "Public"
+
+msgid "x_hide"
+msgstr "Hide"
+
+msgid "x_status"
+msgstr "Status"
+
+msgid "x_operation"
+msgstr "Action"
+
+msgid "x_name"
+msgstr "Name"
+
+msgid "x_zh_name"
+msgstr "Chinese Name"
+
+msgid "x_en_name"
+msgstr "English Name"
+
+msgid "x_start_end_time"
+msgstr "Duration"
+
+msgid "x_start_time"
+msgstr "Start Time"
+
+msgid "x_end_time"
+msgstr "End Time"
+
+msgid "x_select_pic"
+msgstr "Select Picture"
+
+msgid "x_introduction"
+msgstr "Introduction"
+
+msgid "x_is_public"
+msgstr "Public"
+
+msgid "x_rule"
+msgstr "Rule"
+
+msgid "x_modify_logo"
+msgstr "Modify Logo"
+
+msgid "x_pic_file"
+msgstr "Picture"
+
+msgid "x_edit"
+msgstr "Edit"
+
+msgid "x_setting"
+msgstr "Setting"
+
+msgid "x_score"
+msgstr "Score"
+
+msgid "x_category"
+msgstr "Category"
+
+msgid "x_test_dy_env"
+msgstr "Test dynamic Scene"
+
+msgid "x_chinese_time"
+msgstr "Chinese Time"
+
+msgid "x_submit"
+msgstr "Submit"
+
+msgid "x_content"
+msgstr "Content"
+
+msgid "x_modify"
+msgstr "Modify"
+
+msgid "x_authorization"
+msgstr "Authorization"
+
+msgid "x_authorized"
+msgstr "Authorized"
+
+msgid "x_teacher_share"
+msgstr "Share"
+
+msgid "x_select_share_teacher"
+msgstr "Select Trainer"
+
+msgid "x_type"
+msgstr "Category"
+
+msgid "x_creator"
+msgstr "Author"
+
+msgid "x_download"
+msgstr "Download"
+
+msgid "x_all_directions"
+msgstr "All Directions"
+
+msgid "x_all_difficulty"
+msgstr "All Difficulty"
+
+msgid "x_all_category"
+msgstr "All Category"
+
+msgid "x_all_status"
+msgstr "All Status"
+
+msgid "x_type_management"
+msgstr "Category Management"
+
+msgid "x_direction"
+msgstr "Direction"
+
+msgid "x_difficulty"
+msgstr "Difficulty"
+
+msgid "x_all_type"
+msgstr "All Category"
+
+msgid "x_new_type"
+msgstr "New Category"
+
+msgid "x_edit_type"
+msgstr "Edit Category"
+
+msgid "x_course"
+msgstr "Course"
+
+msgid "x_annex"
+msgstr "Attachment"
+
+msgid "x_download_annex"
+msgstr "Download"
+
+msgid "x_delete_annex"
+msgstr "Delete"
+
+msgid "x_annex_uploading"
+msgstr "uploading..."
+
+msgid "x_lab_environment"
+msgstr "Scene"
+
+msgid "x_choose_scene"
+msgstr "Choose Scene"
+
+msgid "x_access_mode"
+msgstr "Access Mode"
+
+msgid "x_shared"
+msgstr "Shared"
+
+msgid "x_private"
+msgstr "Private"
+
+msgid "x_easy"
+msgstr "Easy"
+
+msgid "x_normal"
+msgstr "Normal"
+
+msgid "x_hard"
+msgstr "Expert"
+
+msgid "x_owned_question"
+msgstr "Event"
+
+msgid "x_dynamic_scenes"
+msgstr "Dynamic Scene"
+
+msgid "x_env_type"
+msgstr "Scene Category"
+
+msgid "x_remove"
+msgstr "Remove"
+
+msgid "x_required_name"
+msgstr "Name Required"
+
+msgid "x_exam_name_required"
+msgstr "ExamName required"
+
+msgid "x_lose_title"
+msgstr "Title Required"
+
+msgid "x_confirm_delete"
+msgstr "Confirm Delete"
+
+msgid "x_upload_completed"
+msgstr "Upload Completed"
+
+msgid "x_saved_successfully"
+msgstr "Save Successfully"
+
+msgid "x_saved_fail"
+msgstr "Save Failed"
+
+msgid "x_close"
+msgstr "Close"
+
+msgid "x_courseware_content"
+msgstr "Content"
+
+msgid "x_experimental_report"
+msgstr "Report"
+
+msgid "x_courseware"
+msgstr "Courseware Management"
+
+msgid "x_user_name"
+msgstr "Username"
+
+msgid "x_notes_content"
+msgstr "Note Content"
+
+msgid "x_update_time"
+msgstr "Update Time"
+
+msgid "x_details"
+msgstr "Detail"
+
+msgid "x_represents_first-level_type"
+msgstr "First Level"
+
+msgid "x_represents_second-level_type"
+msgstr "Second Level"
+
+msgid "x_error_message"
+msgstr "Error message"
+
+msgid "x_size"
+msgstr "Size"
+
+msgid "x_platform"
+msgstr "Platform"
+
+msgid "x_language"
+msgstr "Language"
+
+msgid "x_zh-han"
+msgstr "Chinese"
+
+msgid "x_download_file"
+msgstr "Download"
+
+msgid "x_del_file"
+msgstr "Delete"
+
+msgid "x_address"
+msgstr "Address"
+
+msgid "x_comment"
+msgstr "Post"
+
+msgid "x_user"
+msgstr "User"
+
+msgid "x_submit_time"
+msgstr "Submit time"
+
+msgid "x_all_faculties"
+msgstr "All Faculty"
+
+msgid "x_all_grades"
+msgstr "All Grade"
+
+msgid "x_role"
+msgstr "Role"
+
+msgid "x_all_role"
+msgstr "All Role"
+
+msgid "x_select_all"
+msgstr "Select All"
+
+msgid "x_password"
+msgstr "Password"
+
+msgid "x_confirm_password"
+msgstr "Confirm"
+
+msgid "x_management"
+msgstr "Management"
+
+msgid "x_env"
+msgstr "Scene"
+
+msgid "x_error_info"
+msgstr "Error Info"
+
+msgid "x_scene_management"
+msgstr "Scene Management"
+
+msgid "x_target_management"
+msgstr "Node Management"
+
+msgid "x_system_configuration"
+msgstr "System Config"
+
+msgid "x_copyright_information"
+msgstr "Copyright"
+
+msgid "x_sys_version"
+msgstr "Version"
+
+msgid "x_system_type"
+msgstr "System Category"
+
+msgid "x_package"
+msgstr "Update Package"
+
+msgid "x_vm_count"
+msgstr "Total Virtual Machine(s)"
+
+msgid "x_container_count"
+msgstr "Total Container(s)"
+
+msgid "x_node_name"
+msgstr "Node Name"
+
+msgid "x_none"
+msgstr "None"
+
+msgid "x_name_required"
+msgstr "Name Require"
+
+msgid "x_see_more"
+msgstr "More"
+
+msgid "x_home"
+msgstr "Home"
+
+msgid "x_all"
+msgstr "All"
+
+msgid "x_saining_training_platform"
+msgstr "OJ Platform"
+
+msgid "x_collection"
+msgstr "Collection"
+
+msgid "x_my_note"
+msgstr "Note"
+
+msgid "x_cloud_exchange"
+msgstr "Leave Messages"
+
+msgid "x_download_attachment"
+msgstr "Download Attachment"
+
+msgid "x_input_answer"
+msgstr "Input Answer"
+
+msgid "x_course_not_practiced"
+msgstr "Have None Exercise"
+
+msgid "x_resource_type"
+msgstr "Resource Category"
+
+msgid "x_switch_Problem_set_mode"
+msgstr "Switch Task Mode"
+
+msgid "x_switch_list_mode"
+msgstr "Switch List Mode"
+
+msgid "x_solved"
+msgstr "Solved"
+
+msgid "x_un_solved"
+msgstr "Unsolved"
+
+msgid "x_correct_answer"
+msgstr "Correct Answer"
+
+msgid "x_single_choice"
+msgstr "Single Choice"
+
+msgid "x_tip"
+msgstr "Tip"
+
+msgid "x_ranking"
+msgstr "Rank"
+
+msgid "x_my_message"
+msgstr "My Message"
+
+msgid "x_modify_password"
+msgstr "Reset Password"
+
+msgid "x_exit_login"
+msgstr "Sign Out"
+
+msgid "x_admin"
+msgstr "Admin Dashboard"
+
+msgid "x_vulnerability"
+msgstr "Vulnerability"
+
+msgid "x_toolbox"
+msgstr "Toolbox"
+
+msgid "x_enter_name_testpaper"
+msgstr "Please enter the name of the test paper"
+
+msgid "x_user_notes"
+msgstr "User Notes"
+
+msgid "x_scene_have_existed"
+msgstr "Scenario already existed"
+
+msgid "x_topic_scene_not_configured"
+msgstr "Subject scene has not been configured"
+
+msgid "x_failed_extend_scene"
+msgstr "Failed to extend the scene"
+
+msgid "x_failed_execute_script"
+msgstr "Failed to execute script"
+
+msgid "x_failed_create_scene"
+msgstr "Failed to create scene"
+
+msgid "x_failed_delete_scene"
+msgstr "Failed to delete the scene"
+
+msgid "x_missing_necessary_creation_parameters"
+msgstr "Missing necessary creation parameters"
+
+msgid "x_command_execution_failed"
+msgstr "Command execution failed"
+
+msgid "x_class_hours_not_exist"
+msgstr "Class hours do not exist"
+
+msgid "x_hides"
+msgstr "-"
+
+msgid "x_cloud_exchange_250"
+msgstr "Leave Message (length:0-250)"
+
+msgid "x_status_normal"
+msgstr "Normal"
+
+msgid "x_heoretical_lesson"
+msgstr "Theory Class"
+
+msgid "x_experiment_lesson"
+msgstr "Experiment Class"
+
+msgid "x_authorization_quantity"
+msgstr "Authorized"
+
+msgid "x_authorization_Operation"
+msgstr "Share"
+
+msgid "x_survival_time"
+msgstr "Survival Time"
+
+msgid "x_hours"
+msgstr "Hours"
+
+msgid "x_knowledge_point"
+msgstr "Knowledge Point"
+
+msgid "x_system_module"
+msgstr "System"
+
+msgid "x_system_login"
+msgstr "user[{}] login system"
+
+msgid "x_system_logout"
+msgstr "user[{}] logout system"
+
+msgid "x_course_schedule_notice"
+msgstr "A New Course Schedule"
+
+msgid "x_event_exam_notice"
+msgstr "A new exam notice"
+
+msgid "x_event_notice"
+msgstr "A new event notice"
+
+msgid "x_team_notice"
+msgstr "A new team notice"
+
+msgid "x_auth_mode"
+msgstr "Auth Mode"
+
+msgid "x_reports_content"
+msgstr "Report Content"
+
+msgid "x_all_auth"
+msgstr "All"
+
+msgid "x_custom_auth"
+msgstr "Custom Auth"
+
+msgid "x_all_share"
+msgstr "All"
+
+msgid "x_custom_share"
+msgstr "Custom Share"
+
+msgid "x_paper_configuration"
+msgstr "Test paper configuration"
+
+msgid "x_generate_test_paper"
+msgstr "Import test paper"
+
+msgid "x_first"
+msgstr "Part 1:"
+
+msgid "x_two"
+msgstr "Part 2:"
+
+msgid "x_three"
+msgstr "Part 3:"
+
+msgid "x_four"
+msgstr "Part 4:"
+
+msgid "x_clear"
+msgstr "Clear"

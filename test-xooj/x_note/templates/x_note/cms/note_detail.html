@@ -1,0 +1,29 @@
+{% load i18n %}
+<style type="text/css">
+    #introduction{
+        height: 400px;
+        resize: none;
+        margin-bottom: 20px;
+        overflow: auto;
+        background-color: #eee;
+        opacity: 1;
+        padding: 10px;
+    }
+</style>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">{% trans 'x_experimental_report' %} : {{ note.user.username }}</h4>
+</div>
+<div class="modal-body" style="padding-bottom: 0;">
+{#    <textarea class="form-control" id="introduction" name="introduction" readonly="readonly">#}
+    <div class="form-control" id="introduction" name="introduction">
+        {% autoescape off %}
+            {{ note.content }}
+        {% endautoescape %}
+    </div>
+{#    </textarea>#}
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-white" data-dismiss="modal">{% trans "x_close" %}</button>
+</div>

@@ -1,0 +1,108 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans '编辑权限' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm" action="{% url 'cms_x_person:cms_api:group-detail' group.id %}"
+              method="patch"
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="name" name="name" readonly="readonly"
+                               value="{{ group.name }}"/>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">角色权限</label>
+                    <div class="col-sm-10">
+                        <table class="table table-bordered" id="permissions_table">
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <div class="checkbox checkbox-success text-center">
+                                        <input type="checkbox" class="checkall" id="checkall"/>
+                                        <label for="checkall"></label>
+                                    </div>
+                                </td>
+                                {% for i in permission_col_range %}
+                                    <td>
+                                        <div class="checkbox checkbox-success">
+                                            <input type="checkbox" class="checkcol" id="checkcol{{ i }}"/>
+                                            <label for="checkcol{{ i }}"></label>
+                                        </div>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            {% for permission_group in permissions %}
+                                <tr>
+                                    <td>
+                                        <div class="checkbox checkbox-success text-center">
+                                            <input type="checkbox" class="checkrow" id="checkrow{{ forloop.counter }}"/>
+                                            <label for="checkrow{{ forloop.counter }}"></label>
+                                        </div>
+                                    </td>
+                                    {% for permission in permission_group %}
+                                        <td>
+                                            <div class="checkbox checkbox-success">
+                                                <input type="checkbox" class="checkitem" name="permissions"
+                                                       value="{{ permission.id }}" id="permissions{{ permission.id }}"
+                                                       {% if permission.id in group.permissions %}checked{% endif %}
+                                                       data-form-fixed="1"/>
+                                                <label for="permissions{{ permission.id }}"> {{ permission.codename }}</label>
+                                            </div>
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-primary" type="submit">{% trans "保存" %}</button>
+                        <a class="btn btn-white" href="{% url 'cms_x_person:group_list' %}">{% trans "x_cancel" %}</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script>
+        var listUrl = "{% url 'cms_x_person:group_list' %}";
+    </script>
+
+    <script>
+
+        $(function () {
+            $("#validateForm").validate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 30
+                    },
+                }
+            });
+            pageWidgets.registerCheckTable($("#permissions_table"));
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            }, null, {});
+        })
+    </script>
+{% endblock %}

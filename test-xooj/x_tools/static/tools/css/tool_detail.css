@@ -1,0 +1,73 @@
+.oj_tool dd, .oj_tool dt {
+    float: left;
+    font-weight: normal;
+}
+
+.oj_tool dl {
+    margin-bottom: 0;
+    font-size: 14px;
+}
+
+#tool_chart {
+    width: 100%;
+    height: 180px;
+}
+
+@keyframes add {
+    0% {
+        transform: translateY(0px);
+        opacity: 0;
+    }
+    60% {
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-40px);
+        opacity: 0.2;
+    }
+}
+
+.collectIco {
+    width: 18px;
+    height: 16px;
+    background: url(../img/collect.png) no-repeat center center;
+    background-size: 100% 100%;
+    display: inline-block;
+    vertical-align: -1px;
+}
+
+.discuss-area, .comment-area, .reply-area {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border: none;
+}
+
+.discuss-area::placeholder {
+    padding-top: 20px;
+    padding-left: 20px;
+}
+
+.col-md-3 .tool-cover > img{
+    width: auto;
+}
+
+.oj_tool span[name='cover']{
+    background-position: center;
+    width:100%;
+    height: 160px;
+    background-size: cover;
+    display: block;
+}
+
+#releated-tool-list span[name='rt-img']{
+    display: block;
+    width: 100%;
+    height: 130px;
+    background-position: center;
+    background-size: cover;
+}
+
+div[name='rt-name']{
+    color: #ff9900;
+}

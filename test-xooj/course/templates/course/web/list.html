@@ -1,0 +1,713 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/course.css' %}"/>
+    <style>
+        .new-filtrate > div > .sub-filtrate span.activated {
+            background: #ff9900;
+            color: #fff;
+        }
+
+        .new-filtrate > div > a.activated {
+            color: #ff9900;
+        }
+
+        @media screen and (max-width: 1600px) {
+            .search-warp {
+                margin-top: 0px !important;
+            }
+
+            #course-list-div {
+                padding-bottom: 0 !important;
+            }
+
+          /*  .pagination {
+                margin: 0 0 5px 0;
+            } */
+        }
+
+        @media screen and (max-width: 1366px) {
+            .container {
+                margin-top: 70px !important;
+            }
+
+            .search-warp {
+                margin-top: -20px !important;
+            }
+
+            .classify-title {
+                line-height: 20px !important;
+            }
+
+            #course-list-div {
+                padding-bottom: 0 !important;
+                padding-top: 25px !important;
+            }
+
+            #course-list-div div {
+                margin-bottom: 5px !important;
+            }
+
+            /* .pagination {
+                margin: 0 0 5px 0;
+            } */
+        }
+
+        @media (min-width: 1200px) {
+            .right-clock {
+                text-align: right;
+            }
+        }
+
+        @media screen and (max-width: 1199px)  {
+            .right-clock{
+                text-align: left;
+                padding-left: 15px !important;
+            }
+        }
+
+    .lesson-box{
+        padding: 10px 40px;
+        margin: 25px 0;
+    }
+    .lesson-box h3{
+        font-size: 16px;
+        font-weight: 400;
+        margin: 20px 0 25px 0px;
+        position: relative;
+        padding-left: 8px;
+    }
+    .lesson-box h3:before{
+        content: "";
+        display: block;
+        height: 18px;
+        width: 3px;
+        background-color: #FF9900;
+        position: absolute;
+        left:0;
+        top: 0;
+    }
+    </style>
+    <script>
+        {#        $(function(){#}
+        {#            var $eles = $('a[name="direction-list"]');#}
+        {#            $eles.each(function () {#}
+        {#                if ($(this).text().length > 5){#}
+        {#                    var text = $(this).text().substring(0,5) + '...';#}
+        {#                    $(this).text(text);#}
+        {#                    $(this).append('<i class="down fa fa-angle-down pull-right font20P"></i><i class="s_line"></i>')#}
+        {#                }#}
+        {#            })#}
+        {#        })#}
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+            <span>&gt;&gt;</span>
+            <a href="{% url 'course:list' %}" class='active font15'>{% trans "x_course" %}</a>
+        </div>
+        <div class="content pad10T">
+            {#            <div class="default-bg layout-color new-filtrate clearfix">#}
+            {#                <div class="pull-left"><a href="javaScript:void(0)" class="cursor direction-list activated sticky"#}
+            {#                                          name="direction-list" id="direction-all" value="">{% trans "全部课程" %}</a></div>#}
+            {#                {% for direction in directions %}#}
+            {#                    <div class="pull-left"><a href="javaScript:void (0)" data-id="{{ direction.id }}"#}
+            {#                                              class="posRelative cursor direction-list"#}
+            {#                                              name="direction-list"#}
+            {#                                              value="{{ direction.id }}">{{ direction.name }}<i#}
+            {#                            class="down fa fa-angle-down pull-right font20P"></i><i class="s_line"></i> </a>#}
+            {#                        <div class="sub-filtrate mainBg">#}
+            {#                            {% for sub_direction in sub_directions %}#}
+            {#                                {% if sub_direction.parent_id == direction.id %}#}
+            {#                                    <span class="cursor sub-direction-list"#}
+            {#                                          name="sub-direction-list" value="{{ sub_direction.id }}"#}
+            {#                                          data-id="{{ sub_direction.id }}"#}
+            {#                                          data-parent="{{ sub_direction.parent_id }}">{{ sub_direction.name }}<i#}
+            {#                                            class="s_line"></i></span>#}
+            {#                                {% endif %}#}
+            {#                            {% endfor %}#}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                {% endfor %}#}
+            {##}
+            {#                <div class="pull-left text-center difficulty"><a class="cursor posRelative">{% trans "难度" %}<i#}
+            {#                        class="down fa fa-angle-down pull-right font20P"></i><i class="s_line"></i></a>#}
+            {#                    <div class="sub-filtrate mainBg" id="difficulty-list">#}
+            {#                        <span class="cursor difficulty-list activated sticky"#}
+            {#                              name="difficulty-list" id="difficulty-all"#}
+            {#                              value="">{% trans "全部" %}<i class="s_line"></i></span>#}
+            {#                        <span class="cursor difficulty-list"#}
+            {#                              name="difficulty-list"#}
+            {#                              value="0">{% trans "入门" %}<i class="s_line"></i></span>#}
+            {#                        <span class="cursor difficulty-list"#}
+            {#                              name="difficulty-list"#}
+            {#                              value="1">{% trans "提高" %}<i class="s_line"></i></span>#}
+            {#                        <span class="cursor difficulty-list"#}
+            {#                              name="difficulty-list"#}
+            {#                              value="2">{% trans "专家" %}</span>#}
+            {#                    </div>#}
+            {##}
+            {#                </div>#}
+            {#            </div>#}
+            {# =================================#}
+            <table class="filtrate">
+                <tr>
+                    <td width="50" class="top10">{% trans "x_category" %}:</td>
+                    <td width="60" class="top10">
+                                    <span><a href="javaScript:void(0)" class="direction-list activated sticky"
+                                             name="direction-list"
+                                             id="direction-all" value="">{% trans "x_all" %}</a></span>
+                    </td>
+                    <td>
+                        {% for direction in directions %}
+                            <span><a href="javaScript:void (0)" class="direction-list" name="direction-list"
+                                     value="{{ direction.id }}">{{ direction.name }}</a>
+                                        </span>
+                        {% endfor %}
+
+                    </td>
+                </tr>
+                {#                            <tr>#}
+                {#                                <td width="50" class="top10">{% trans "子分类" %}:</td>#}
+                {#                                <td width="60" class="top10">#}
+                {#                                    <span><a href="javaScript:void(0)" class="sub-direction-list activated sticky"#}
+                {#                                             name="sub-direction-list"#}
+                {#                                             id="sub-direction-all" value="">{% trans "全部" %}</a></span>#}
+                {#                                </td>#}
+                {#                                <td id="sub-direction-td">#}
+                {#                                    {% for sub_direction in sub_directions %}#}
+                {#                                        <span><a href="javaScript:void (0)" class="sub-direction-list" name="sub-direction-list"#}
+                {#                                                 value="{{ sub_direction.id }}"#}
+                {#                                                 data-parent="{{ sub_direction.parent_id }}">{{ sub_direction.name }}</a></span>#}
+                {#                                    {% endfor %}#}
+                {#                                </td>#}
+                {#                            </tr>#}
+                <!-- 取消难度查询， 进行职业查询 -->
+                {#                <tr>#}
+                {#                    <td width="50" class="top10">{% trans "职位" %}:</td>#}
+                {#                    <td width="60" class="top10">#}
+                {#                                    <span><a href="javaScript:void(0)" class="occupation-list activated sticky"#}
+                {#                                             name="occupation-list"#}
+                {#                                             id="occupation-all" value="">{% trans "x_all" %}</a></span></td>#}
+                {#                    <td>#}
+                {#                        {% for occupation in occupations %}#}
+                {#                            <span><a href="javaScript:void(0)" class="occupation-list" name="occupation-list"#}
+                {#                                     value="{{ occupation.id }}">{{ occupation.name }}</a></span>#}
+                {#                        {% endfor %}#}
+                {##}
+                {##}
+                {#                    </td>#}
+                {#                </tr>#}
+
+                <tr>
+                    <td width="50" class="top10">{% trans "x_difficulty" %}:</td>
+                    <td width="60" class="top10">
+                                                    <span><a href="javaScript:void(0)"
+                                                             class="difficulty-list activated sticky"
+                                                             name="difficulty-list"
+                                                             id="difficulty-all" value="">{% trans "x_all" %}</a></span>
+                    </td>
+                    <td>
+                                                    <span><a href="javaScript:void(0)" class="difficulty-list"
+                                                             name="difficulty-list"
+                                                             value="0">{% trans "x_easy" %}</a></span>
+                        <span><a href="javaScript:void(0)" class="difficulty-list" name="difficulty-list"
+                                 value="1">{% trans "x_normal" %}</a></span>
+                        <span><a href="javaScript:void(0)" class="difficulty-list" name="difficulty-list"
+                                 value="2">{% trans "x_hard" %}</a></span>
+                    </td>
+                </tr>
+                <div class="search default-bg fr" style="margin-top: 10px;">
+                    <input class="search-text pad10L fl sticky" placeholder="{% trans "x_search" %}" type="text"
+                           id="search-text">
+                    <span class="search-bg mainBg fr font18 text-center cursor" id="tool-search">
+                            <i class="oj-icon search-btn whiteC oj-icon-E911"></i>
+                            </span>
+                </div>
+            </table>
+            {# =================================#}
+{#            <div class='clearfix mrg20B mrg20T search-warp'>#}
+{#            #}
+{#            </div>#}
+            <div class="layout-color">
+                {% if occupation_course_count != 0 %}
+                    <div class="  lesson-box  default-bg">
+                        <h3>{% trans "x_recommended_learning" %}</h3>
+
+                          <div class="row">
+
+                        {#                <div  id="course-list-div">#}
+                        {#                </div>#}
+                        <div id="recommend-courses"></div>
+                    </div>
+
+                    </div>
+                    <div class=" lesson-box default-bg">
+                        <h3>{% trans "x_learning_content" %}</h3>
+
+                    <div class="row ">
+
+                        <div id="course-list-div">
+                        </div>
+
+                    </div>
+                      <div class="paginationBox" style="">
+                    <div class="pagination" ></div>
+                </div>
+                    </div>
+
+                {% else %}
+                    <div class="default-bg lesson-box" style="">
+                        <h3>{% trans "x_learning_content" %}</h3>
+
+                         <div class="row " id="course-list-div">
+                         </div>
+                        <div class="paginationBox" style="">
+                        <div class="pagination" ></div>
+                    </div>
+
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    <div style="display: none;" id="course-template-div">
+        <div class="col-lg-2 col-md-3 col-sm-3 col-xs-6 mrg20B ">
+            <a href="" class='posRelative inLine overflows'>
+
+                <img src="{% static 'course/img/kec.png' %}" style="width:100%" class="hoverImg">
+
+                <span class='oj_labelTitle name hoverC'></span>
+                <div class="mask-layer" title="此内容仅在正式版提供"><i class="fa fa-lock fa-4x"></i></div>
+
+            </a>
+            {#            <div>#}
+            {#                <div class="lineH40 font14 classify-title">#}
+            {#                    <div class="pull-left of-hide" style="width: 98%;">#}
+            {#                        <span>{% trans "x_category" %}：</span>#}
+            {#                        <span class="direction_cn_name"></span>#}
+            {#                    </div>#}
+            {#                    <div class="pull-right" style="width: 20%;text-align: right;">#}
+            {#                        <span class="type"></span>#}
+            {#                    </div>#}
+            {#                </div>#}
+            {#            </div>#}
+            {#            <div class="font14 ">#}
+            {#                <span>{% trans "x_class_hours" %}：</span>#}
+            {#                <span class="theory_count" title="{% trans "x_heoretical_lesson" %}"></span>#}
+            {#                <span class="experiment_count" title="{% trans "x_experiment_lesson" %}"></span>#}
+            {#            </div>#}
+
+            <div class="font14 row lineH40">
+                <div class="col-lg-6 col-md-6 col-sm-6 pad0R">
+{#                    <i class="oj-icon oj-icon-E900 font20P"></i>#}
+                    <span class="total_count" title=""></span>
+                    <span>{% trans "x_class_hours" %}</span>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 pad0L pad20R  right-clock" >
+                    <i class="fa fa-clock-o"></i>&nbsp;<span class="course_lesson_alltime"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="{% static "web/js/paginator.js" %}"></script>
+    <script src="{% static "web/js/sticky.js" %}"></script>
+    <script type="text/javascript">
+
+        {#        $(function () {#}
+        {# var rowNum = Math.round($(".filtrate-box").height() / parseFloat($(".filtrate-box").css('line-height')));#}
+        {# alert("当前有" + rowNum + "行");#}
+        {#            var filtrateBoxWidth = $('.filtrate-box').outerWidth();#}
+        {#            var filtrateBoxWidth = $('.filtrate-box').outerWidth();#}
+        {#            alert(filtrateBoxWidth)#}
+        {#            var firsRowWidth = 0;#}
+        {#            $(".filtrate-box span").each(function (index, ele) {#}
+        {#                 alert($(this).width());#}
+        {#                firsRowWidth = firsRowWidth + $(this).outerWidth();#}
+        {#                 alert(firsRowWidth)#}
+        {#                if (firsRowWidth >= filtrateBoxWidth) {#}
+        {#                    $(this).hide()#}
+        {#                }#}
+        {##}
+        {#            });#}
+        {##}
+        {#        })#}
+        function get_query_string(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null)return unescape(r[2]);
+            return null;
+        }
+        function recommoned_course() {
+            var recommend_courses_div = $("#recommend-courses");
+            $.ajax({
+                url: "{% url 'course:api:course-recommend' %}",
+                type: 'get',
+                data: {},
+                datatype: 'json',
+                success: function (data) {
+                    var course_list = data;
+                    for (var i in course_list) {
+                        var course_tpl = $("#course-template-div");
+                        course_tpl.find('.total_count').html(course_list[i].count);
+                        var get_hour_minutes = toHourMinute(course_list[i].duration_sum);
+                        course_tpl.find('.course_lesson_alltime').html(get_hour_minutes);
+
+                        if (course_list[i].lock == 1) {
+                            course_tpl.find("a").attr("href", "javascript:void(0);");
+                            course_tpl.find(".mask-layer").show();
+                        } else {
+                            course_tpl.find("a").attr("href", "{% url 'course:detail' 0 %}".replace(0, course_list[i].id));
+                            course_tpl.find(".mask-layer").hide();
+                        }
+                        var img_src = course_list[i].logo;
+                        if (course_list[i].logo == null || course_list[i].logo == "") {
+                            img_src = "{% static 'course/img/kec.png' %}";
+                        }
+                        course_tpl.find("a>img").attr("src", img_src);
+                        course_tpl.find("span.name").html(codeUtil.htmlEncode(course_list[i].name));
+                        course_tpl.find("span.direction_cn_name").html(codeUtil.htmlEncode(course_list[i].direction_i18n_name));
+                        {#                                if (course_list[i].type == "1") {#}
+                        {#                                    course_tpl.find("span.type").html("<i class='oj-icon oj-icon-E923 font20P'></i>");#}
+                        {#                                } else {#}
+                        {#                                    course_tpl.find("span.type").html("<i class='oj-icon oj-icon-E900 font20P'></i>");#}
+                        {#                                }#}
+                        if (course_list[i].theory_count > 0) {
+                            course_tpl.find("span.theory_count").html("<i class='oj-icon oj-icon-E900 font20P'></i> "
+                                + course_list[i].theory_count + "&nbsp;&nbsp;&nbsp;&nbsp;");
+                        } else {
+                            course_tpl.find("span.theory_count").html("")
+                        }
+                        if (course_list[i].experiment_count > 0) {
+                            course_tpl.find("span.experiment_count").html("<i class='oj-icon oj-icon-E923 font20P'></i> "
+                                + course_list[i].experiment_count);
+                        } else {
+                            course_tpl.find("span.experiment_count").html("")
+                        }
+                        recommend_courses_div.append(course_tpl.html());
+                    }
+                }
+            })
+        }
+        var pageSize = 12;
+        var flag = true
+        $(document).ready(function () {
+            function refresh_sub_direction(direction_id) {
+
+                if (direction_id) {
+                    $("#sub-direction-td .sub-direction-list").parent("span").hide();
+                    $("#sub-direction-td .sub-direction-list[data-parent='" + direction_id + "']").parent("span").show();
+                } else {
+                    $("#sub-direction-td .sub-direction-list").parent("span").show();
+                }
+            }
+            function loadSuccess () {
+                if(flag){
+                    $("div.pagination").after("<div class='pageBox'>" +
+                    "<div class='goPage'>" + gettext('x_go_page') +"<input class='pageNum' type='text'>" + gettext('x_page') +"</div>" +
+                    "<input type='button' value='GO' class='pageBtn'></div>")
+                     flag = false
+                    $(".pageBtn").click(function () {
+                        let goPage = $(".pageNum").val()
+                        if(!goPage){
+                            return
+                        }
+                        let limit = pageSize;
+                        var offset = (goPage-1)*limit
+                        $('div.pagination').bootstrapPaginator("show",goPage)
+                        var search_text = $("#search-text").val();
+                        var direction = $(".direction-list.activated").attr("value");
+                        var sub_direction = $(".sub-direction-list.activated").attr("value");
+                        var difficulty = $(".difficulty-list.activated").attr("value");
+                        var occupation = $(".occupation-list.activated").attr("value");
+                        refresh_course_list(search_text, direction, sub_direction, difficulty, offset, occupation, limit);
+                        $(".pageNum").val('')
+                });
+                }else {
+                    return
+                }
+            }
+            // 初始化工具列表
+            function refresh_course_list(search_text, direction, sub_direction, difficulty, offset, occupation, limit) {
+                if (limit == "") {
+                    limit = pageSize;
+                }
+                offset = Number(offset);
+
+                $('div.pagination').empty();
+                var course_list_div = $("#course-list-div");
+
+                $.ajax({
+                    url: "{% url 'course:api:course-list' %}",
+                    type: "get",
+                    data: {
+                        "search": search_text,
+                        "search_direction": direction,
+                        "search_sub_direction": sub_direction,
+                        "search_difficulty": difficulty,
+                        "search_occupation": occupation,
+                        "offset": offset,
+                        "limit": limit
+                    },
+                    datatype: "json",
+                    success: function (data) {
+                        var total = data.total;
+                        course_list_div.empty();
+                        if (total > 0) {
+                            var course_list = data.rows;
+                            for (var i in course_list) {
+                                var course_tpl = $("#course-template-div");
+                                course_tpl.find('.total_count').html(course_list[i].count);
+                                var get_hour_minutes = toHourMinute(course_list[i].duration_sum);
+                                course_tpl.find('.course_lesson_alltime').html(get_hour_minutes);
+
+                                if (course_list[i].lock == 1) {
+                                    course_tpl.find("a").attr("href", "javascript:void(0);");
+                                    course_tpl.find(".mask-layer").show();
+                                } else {
+                                    course_tpl.find("a").attr("href", "{% url 'course:detail' 0 %}".replace(0, course_list[i].id));
+                                    course_tpl.find(".mask-layer").hide();
+                                }
+                                var img_src = course_list[i].logo;
+                                if (course_list[i].logo == null || course_list[i].logo == "") {
+                                    img_src = "{% static 'course/img/kec.png' %}";
+                                }
+                                course_tpl.find("a>img").attr("src", img_src);
+                                course_tpl.find("span.name").html(codeUtil.htmlEncode(course_list[i].name));
+                                course_tpl.find("span.direction_cn_name").html(codeUtil.htmlEncode(course_list[i].direction_i18n_name));
+                                {#                                if (course_list[i].type == "1") {#}
+                                {#                                    course_tpl.find("span.type").html("<i class='oj-icon oj-icon-E923 font20P'></i>");#}
+                                {#                                } else {#}
+                                {#                                    course_tpl.find("span.type").html("<i class='oj-icon oj-icon-E900 font20P'></i>");#}
+                                {#                                }#}
+                                if (course_list[i].theory_count > 0) {
+                                    course_tpl.find("span.theory_count").html("<i class='oj-icon oj-icon-E900 font20P'></i> "
+                                        + course_list[i].theory_count + "&nbsp;&nbsp;&nbsp;&nbsp;");
+                                } else {
+                                    course_tpl.find("span.theory_count").html("")
+                                }
+                                if (course_list[i].experiment_count > 0) {
+                                    course_tpl.find("span.experiment_count").html("<i class='oj-icon oj-icon-E923 font20P'></i> "
+                                        + course_list[i].experiment_count);
+                                } else {
+                                    course_tpl.find("span.experiment_count").html("")
+                                }
+                                course_list_div.append(course_tpl.html());
+                            }
+                            $('div.pagination').bootstrapPaginator({
+                                currentPage: (offset / limit) + 1,
+                                totalPages: Math.ceil(total / limit),
+                                onPageClicked: function (event, originalEvent, type, page) {
+                                    if ((1 / limit) + 1 == page) return;
+                                    offset = (page - 1) * limit;
+                                    refresh_course_list(search_text, direction, sub_direction, difficulty, offset, occupation, limit);
+                                }.bind(this)
+                            });
+                            $(".paginationBox").show("fast")
+                            loadSuccess(total)
+                        } else {
+                            $(".paginationBox").hide("fast")
+                            return;
+                        }
+                    }.bind(this),
+                    error: function () {
+                        showPopMsg("{% trans 'x_unable_get_course' %}");
+                    }
+                })
+            }
+            function init_course_list() {
+                var search_text = "",
+                    direction = "",
+                    sub_direction = "",
+                    difficulty = "",
+                    occupation = "",
+                    offset = 0;
+
+                if (location.search == "") {
+                    search_text = get_params_from_ls("search-text");
+                    direction = get_params_from_ls("direction-list");
+                    sub_direction = get_params_from_ls("sub-direction-list");
+                    difficulty = get_params_from_ls("difficulty-list");
+                    // 默认选中已有职业
+                    {#                    {% if occupation_id %}#}
+                    {#                        occupation = "{{ occupation_id }}";#}
+                    {#                    {% else  %}#}
+                    {#                        occupation = get_params_from_ls('occupation-list');#}
+                    {#                    {% endif %}#}
+                    offset = get_params_from_ls("offset");
+                } else {
+                    search_text = get_query_string("search");
+                    direction = get_query_string("search_direction");
+                    sub_direction = get_query_string("search_sub_direction");
+                    difficulty = get_query_string("search_difficulty");
+                    // 默认选中已有职业
+                    {#                    {% if occupation_id %}#}
+                    {#                        occupation = "{{ occupation_id }}";#}
+                    {#                    {% else  %}#}
+                    {#                        occupation = get_params_from_ls('occupation-list');#}
+                    {#                    {% endif %}#}
+                    offset = get_query_string("offset");
+                }
+                $("[name='search-text']").val(search_text);
+                init_activate_elem("direction-list", direction);
+                init_activate_elem("sub-direction-list", sub_direction);
+                init_activate_elem("difficulty-list", difficulty);
+                init_activate_elem("occupation-list", occupation);
+                refresh_sub_direction(direction);
+                refresh_course_list(search_text, direction, sub_direction, difficulty, offset, occupation, "");
+            }
+
+            // 初始化分类样式
+
+            {#            activate_course_direction("difficulty");#}
+            {#            activate_course_direction("direction");#}
+            {#            activate_course_sub_direction("sub-direction");#}
+
+            activate_effects("direction");
+            activate_effects("difficulty");
+            activate_effects("occupation");
+
+            // 生成列表
+            init_course_list();
+            // 生成推荐学习列表
+            {% if recommoned_course != 0 %}
+            recommoned_course();
+            {% endif %}
+
+
+            function research() {
+                var search_text = $("#search-text").val();
+                var direction = $(".direction-list.activated").attr("value");
+                var sub_direction = $(".sub-direction-list.activated").attr("value");
+                var difficulty = $(".difficulty-list.activated").attr("value");
+                var occupation = $(".occupation-list.activated").attr("value");
+
+                refresh_course_list(search_text, direction, sub_direction, difficulty, "0", occupation, "")
+            }
+
+            // 点击搜索按钮
+            $("#tool-search").click(research);
+            $("a[name='direction-list']").click(function () {
+                $(".sub-direction-list").removeClass('activated');
+                $(".sub-direction-list[value='']").addClass('activated');
+                refresh_sub_direction($(".direction-list.activated").attr("value"));
+                var search_text = $("#search-text").val();
+                var direction = $(".direction-list.activated").attr("value");
+                var sub_direction = $(".sub-direction-list.activated").attr("value");
+                var difficulty = $(".difficulty-list.activated").attr("value");
+                var occupation = $(".occupation-list.activated").attr("value");
+
+                refresh_course_list(search_text, direction, sub_direction, difficulty, "0", occupation, "")
+            });
+            $("a[name='sub-direction-list']").click(function () {
+                var search_text = $("#search-text").val();
+                var direction = $(".direction-list.activated").attr("value");
+                var sub_direction = $(this).attr("value");
+                var difficulty = $(".difficulty-list.activated").attr("value");
+                var occupation = $(".occupation-list.activated").attr("value");
+
+                refresh_course_list(search_text, direction, sub_direction, difficulty, "0", occupation, "")
+            });
+            $("a[name='difficulty-list']").click(function () {
+                var search_text = $("#search-text").val();
+                var direction = $(".direction-list.activated").attr("value");
+                var sub_direction = $(".sub-direction-list.activated").attr("value");
+                var difficulty = $(this).attr("value");
+                var occupation = $(".occupation-list.activated").attr("value");
+
+                refresh_course_list(search_text, direction, sub_direction, difficulty, "0", occupation, "")
+            });
+            $("a[name='occupation-list']").click(function () {
+                var search_text = $("#search-text").val();
+                var direction = $(".direction-list.activated").attr("value");
+                var sub_direction = $(".sub-direction-list.activated").attr("value");
+                var difficulty = $(".difficulty-list.activated").attr("value");
+                var occupation = $(this).attr("value");
+
+                refresh_course_list(search_text, direction, sub_direction, difficulty, "0", occupation, "")
+            });
+
+
+            $("#search-text").keydown(function (e) {
+                if (e.keyCode == 13) {
+                    research();
+                }
+            });
+        });
+        $(function () {
+            //   分类筛选
+            $('.new-filtrate > div').hover(function () {
+                $(this).find('.sub-filtrate').css('min-width', $(this).width());
+                $(this).find('.sub-filtrate').stop().slideToggle();
+            })
+        })
+
+
+        function activate_course_direction(elem_name) {
+            var elem_list = $("." + elem_name + "-list");
+            var elem_all = $("#" + elem_name + "-all");
+
+            for (var i = 0; i < elem_list.length; i++) {
+                elem_list[i].onclick = function () {
+                    var currentelemId = $(this).attr('value');
+                    if (currentelemId == "") {
+                        elem_list.removeClass('activated');
+                        elem_all.addClass('activated');
+                    } else {
+                        elem_all.removeClass('activated');
+                        elem_list.removeClass('activated');
+                        $(this).addClass('activated');
+
+                    }
+                }
+            }
+        }
+
+        function activate_course_sub_direction(elem_name) {
+            var elem_list = $("." + elem_name + "-list");
+            var elem_all = $("#" + elem_name + "-all");
+
+            for (var i = 0; i < elem_list.length; i++) {
+                elem_list[i].onclick = function () {
+                    var currentelemId = $(this).attr('value');
+                    if (currentelemId == "") {
+                        elem_list.removeClass('activated');
+                        elem_all.addClass('activated');
+
+                    } else {
+                        elem_all.removeClass('activated');
+                        elem_list.removeClass('activated');
+                        $(this).addClass('activated');
+                        var parent_id = $(this).attr("data-parent");
+                        $(".direction-list").removeClass('activated');
+                        $(".direction-list[data-id='" + parent_id + "']").addClass('activated')
+
+                    }
+                }
+            }
+        }
+
+        function toHourMinute(minutes) {
+            // 计算时间显示
+            if (Math.floor(minutes / 60) == 0) {
+                return (minutes % 60) + gettext("x_course_min");
+            } else {
+                return Math.floor(minutes / 60) + gettext("x_hour");
+            }
+            {#            return (Math.floor(minutes / 60) + gettext("x_hour") + (minutes % 60) + gettext("x_minutes"));#}
+            // 也可以转换为json，以方便外部使用
+            // return {hour:Math.floor(minutes/60),minute:(minutes%60)};
+        }
+
+    </script>
+{% endblock %}
+
+<!-- container end-->

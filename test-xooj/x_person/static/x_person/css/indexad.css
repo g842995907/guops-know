@@ -1,0 +1,291 @@
+.head-show {
+    max-height: 84px;
+}
+
+.index-info {
+
+}
+
+.title {
+    background: -moz-linear-gradient(left, #498ce4 5%, rgba(73, 140, 228, 0)); /*Mozilla*/
+    background: -webkit-gradient(linear, 0 50%, 100% 50%, from(#498ce4), to(rgba(73, 140, 228, 0))); /*Old gradient for webkit*/
+    background: -webkit-linear-gradient(left, #498ce4 10%, rgba(73, 140, 228, 0)); /*new gradient for Webkit*/
+    background: -o-linear-gradient(left, #498ce4 5%, rgba(73, 140, 228, 0)); /*Opera11*/
+}
+
+.tabs > div {
+    display: inline-block;
+}
+
+.tabs > div.active {
+    color: #ffa31f;
+    border-bottom: 2px solid;
+}
+
+.tabs-content {
+
+}
+
+.tabs-content > div {
+    width: 100%;
+    display: none;
+}
+
+.tabs-content > div span:before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: #ffa31f;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.tabs-content > div.active {
+    display: block;
+}
+
+.profession-icon span:nth-of-type(1) {
+    /*color: #ffaa06;*/
+}
+
+.profession-icon span:nth-of-type(2) {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.level-line {
+    background: -moz-linear-gradient(left, #ffdd1f 0%, #ffdd1f 33.3333%, #ffad1f 0, #ffad1f 66.6666%, #ff7e1f 0, #ff7e1f 99.9999%); /*Mozilla*/
+    background: -webkit-linear-gradient(left, #ffdd1f 0%, #ffdd1f 33.3333%, #ffad1f 0, #ffad1f 66.6666%, #ff7e1f 0, #ff7e1f 99.9999%); /*new gradient for Webkit*/
+    background: -o-linear-gradient(left, #ffdd1f 0%, #ffdd1f 33.3333%, #ffad1f 0, #ffad1f 66.6666%, #ff7e1f 0, #ff7e1f 99.9999%); /*Opera11*/
+    height: 5px;
+    position: relative;
+}
+
+.level-1 .dotstyle-1,
+.level-2 .dotstyle-1,
+.level-3 .dotstyle-1 {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    text-align: center;
+    position: absolute;
+    top: -7px;
+}
+
+.level-1 > .level-title,
+.level-2 > .level-title,
+.level-3 > .level-title {
+    margin-top: -27px;
+}
+
+.level-1 > .level-title {
+    color: #ffdd1f;
+}
+
+.level-2 > .level-title {
+    color: #ffad1f;
+}
+
+.level-3 .level-title {
+    color: #ff7e1f;
+}
+
+.level-1 .dotstyle-1 {
+    border: 1px solid #ffdd1f;
+}
+
+.level-2 .dotstyle-1 {
+    border: 1px solid #ffad1f;
+}
+
+.level-3 .dotstyle-1 {
+    border: 1px solid #ff7e1f;
+}
+
+.level-1 .dotstyle-1 > span,
+.level-2 .dotstyle-1 > span,
+.level-3 .dotstyle-1 > span {
+    width: 14px;
+    height: 14px;
+    outline: none;
+    border-radius: 50%;
+    background-color: #ffdd1f;
+    text-indent: -999em;
+    cursor: pointer;
+    display: block;
+}
+
+.level-1 .dotstyle-1 span {
+    background-color: #ffdd1f;
+}
+
+.level-2 .dotstyle-1 span {
+    background-color: #ffad1f;
+}
+
+.level-3 .dotstyle-1 span {
+    background-color: #ff7e1f;
+}
+
+.level-1 > ul.dotstyle,
+.level-2 > ul.dotstyle,
+.level-3 > ul.dotstyle {
+    position: absolute;
+    left: 45px;
+    top: -6px;
+}
+
+.level-1 > ul.dotstyle {
+    width: calc(100% - 15px - 15px - 20px);
+}
+
+.level-1 > ul.dotstyle li,
+.level-2 > ul.dotstyle li,
+.level-3 > ul.dotstyle li {
+    display: inline-block;
+    margin-left: 15px;
+}
+
+.level-1 > ul.dotstyle li a,
+.level-2 > ul.dotstyle li a,
+.level-3 > ul.dotstyle li a {
+    width: 12px;
+    height: 12px;
+    background-color: #fff;
+    display: block;
+    border-radius: 50%;
+    position: relative;
+}
+
+.level-1 > ul.dotstyle li a > div,
+.level-2 > ul.dotstyle li a > div,
+.level-3 > ul.dotstyle li a > div {
+    position: absolute;
+    min-width: 300px;
+    min-height: 100px;
+    background-color: #0d223e;
+    top: -3000px;
+    left: -28px;
+    border: 1px solid #498ce4;
+    border-radius: 7px;
+    z-index: 99;
+}
+
+.level-1 > ul.dotstyle li
+.level-2 > ul.dotstyle li
+.level-3 > ul.dotstyle li {
+
+}
+
+.level-1 > ul.dotstyle li a > div:before,
+.level-2 > ul.dotstyle li a > div:before,
+.level-3 > ul.dotstyle li a > div:before {
+    content: '';
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-bottom: 12px solid #498ce4;
+    position: absolute;
+    top: -12px;
+    left: 20px;
+}
+
+.level-1 > ul.dotstyle li a > div:after,
+.level-2 > ul.dotstyle li a > div:after,
+.level-3 > ul.dotstyle li a > div:after {
+    content: '';
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #0d223e;
+    position: absolute;
+    top: -10px;
+    left: 22px;
+}
+
+.required {
+    color: #ffad1f;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 0 10px 0 10px;
+}
+
+.level-1 > ul.dotstyle li a:hover.current {
+    background-color: #ffdd1f;
+}
+
+.level-2 > ul.dotstyle li a:hover.current {
+    background-color: #ffad1f;
+}
+
+.level-3 > ul.dotstyle li a:hover.current {
+    background-color: #ff7e1f;
+}
+
+/*进度条*/
+.progress-warp {
+
+}
+
+.progress {
+    height: 10px;
+    background-color: #45648d;
+    margin-bottom: 0;
+    width: calc(100% - 100px);
+    display: inline-block;
+}
+
+.progress-bar-level-1 {
+    background-color: #ffdd1f;
+}
+
+.progress-bar-level-2 {
+    background-color: #ffad1f;
+}
+
+.progress-bar-level-3 {
+    background-color: #ff7e1f;
+}
+
+.percentage {
+    position: absolute;
+    right: 0;
+    top: 20px;
+}
+
+.percentage-tip {
+    position: absolute;
+    right: -5px;
+    top: 0px;
+}
+
+/**/
+.level-block {
+    background-color: #0d223e;
+    border-radius: 8px;
+    min-height: 275px;
+}
+
+.level-block .level-title {
+    background-color: #498ce4;
+    color: #fff;
+    text-align: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.visible-hidden {
+    visibility: hidden;
+}
+
+.new-member-apply {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    position: absolute;
+    text-align: center;
+    font-size: 12px;
+    line-height: 20px;
+}

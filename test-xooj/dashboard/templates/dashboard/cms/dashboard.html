@@ -1,0 +1,1016 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load static %}
+{% load i18n sizeformat %}
+
+{% block super_title %}
+    <div class="ibox-title">
+        <h5>{% trans 'x_data_statistics' %}</h5>
+         <a id="down_button" style="display: none"></a>
+         <a type="button" onclick="snapshot()" class="btn btn-primary pull-right text-center" style="margin-top: -8px">{% trans 'x_save_data' %}</a>
+    </div>
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cms/css/common.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/ojicon.css' %}"/>
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+    <link href="{% static 'lib/font-awesome/font-awesome.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'lib/hplus/css/plugins/toastr/toastr.min.css' %}" rel="stylesheet" type="text/css"/>
+
+    <script src="{% static 'lib/echarts/echarts.js' %}"></script>
+    <script src="{% static 'lib/echarts/macarons.js' %}"></script>
+    <script src="{% static 'dashboard/js/dashboard.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/jsKnob/jquery.knob.js' %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'lib/html2canvas/html2canvas.js' %}"></script>
+    <script>
+        $(function () {
+            $('.knob').each(function () {
+                var knob_value = $(this).val();
+                if (knob_value > 90) {
+                    $(this).knob({
+                        fgColor: '#F25667'
+                    });
+                }
+                else if (knob_value > 60) {
+                    $(this).knob({
+                        fgColor: '#FCAB62'
+                    });
+                }
+                else {
+                    $(this).knob({
+                        fgColor: '#00B293'
+                    });
+                }
+            })
+        })
+    </script>
+    <style>
+        .ibox-content {
+            padding: 5px 20px 10px;
+        }
+
+        .font14 {
+            font-size: 14px;
+        }
+
+        .pull-left.pagination-detail:nth-child(2) {
+            display: none;
+        }
+
+        .pull-left.pagination-detail span {
+            color: #53616d; !important;
+        }
+
+    </style>
+{% endblock %}
+{% block container %}
+{#    <div class="ibox-content">#}
+{#        <div class="row mrg0A">#}
+{#            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dashboard-top" id="top_div">#}
+{#                <div class="row mrg0A" id="show_all">#}
+{#                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mrg10T" id="user_link"#}
+{#                         data-id="{% url 'cms_x_person:user_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div id="user_link"#}
+{#                                 class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+{##}
+{#                                <i class="fa fa-user fa-1.5x font14"><br>{% trans "x_user" %}</i>#}
+{#                                <p>{{ summary.user_count }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mrg10T" id="course_link"#}
+{#                         data-id="{% url 'cms_practice_exercise:task_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div class="row mrg0A">#}
+{#                                <div id="course_time"#}
+{#                                     class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 blue-bg">#}
+                                    {#                                      <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                    <i class="fa fa-tasks fa-1.5x font14"><br>{% trans "x_subject" %}</i>#}
+{#                                    <p>{{ summary.practice_count }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mrg10T" id="standard_derice_link"#}
+{#                         data-id="cms_common_env:standard_device_list">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div class="row mrg0A">#}
+{#                                <div id="standard_derice_link"#}
+{#                                     class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 red-bg">#}
+                                    {#                                                                        <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                    <i class="fa fa-skyatlas fa-1.5x font14"><br>{% trans "x_target" %}</i>#}
+{#                                    <p>{{ summary.scene_count }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mrg10T" id="env_link"#}
+{#                         data-id="cms_common_env:env_list">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div class="row mrg0A">#}
+{#                                <div id="env_link"#}
+{#                                     class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+                                    {#                                                                        <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                    <i class="fa fa-globe fa-1.5x font14"><br>{% trans "x_scene" %}</i>#}
+{#                                    <p>{{ summary.env_count }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#                <div class="row mrg0A" id="show_ad">#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="user_ad_link"#}
+{#                         data-id="{% url 'cms_x_person:user_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div id="user_ad_link"#}
+{#                                 class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+                                {#                                                                <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                <i class="fa fa-user fa-1.5x font14"><br>{% trans "x_user" %}</i>#}
+{#                                <p>{{ summary.user_count }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="team_link"#}
+{#                         data-id="{% url 'cms_x_person:team_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div class="row mrg0A">#}
+{#                                <div id="team_count"#}
+{#                                     class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 blue-bg">#}
+                                    {#                                      <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                    <i class="fa fa-tasks fa-1.5x font14"><br>{% trans "x_team" %}</i>#}
+{#                                    <p>{{ summary.team_count }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="lilunsai_link"#}
+{#                         data-id="{% url 'cms_event_exam:api:event-list' %} ">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div class="row mrg0A">#}
+{#                                <div id="lilunsai_count"#}
+{#                                     class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 red-bg">#}
+                                    {#                                                                        <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                    <i class="fa fa-cc-amex fa-1.5x font14"><br>{% trans "x_theory" %}</i>#}
+{#                                    <p>{{ summary.theory_base_count }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="duoqijieti_ad_link"#}
+{#                         data-id="{% url 'cms_practice_exercise:task_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div class="row mrg0A">#}
+{#                                <div id="duoqijieti_ad_link"#}
+{#                                     class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+                                    {#                                                                        <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                    <i class="fa fa-skyatlas fa-1.5x font14"><br>{% trans "x_exercise" %}</i>#}
+{#                                    <p>{{ summary.duoqijieti_count }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="duoqigongfang_link"#}
+{#                         data-id="{% url 'cms_practice_exercise:task_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div class="row mrg0A">#}
+{#                                <div id="duoqigongfang_link"#}
+{#                                     class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 red-bg">#}
+                                    {#                                                                        <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                    <i class="fa  fa-flag fa-1.5x font14"><br>{% trans "x_ad_mode" %}</i>#}
+{#                                    <p>{{ summary.duoqigongfang_count }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="zhenshiloudong_ad_link"#}
+{#                         data-id="{% url 'cms_practice_real_vuln:task_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div class="row mrg0A">#}
+{#                                <div id="zhenshiloudong_ad_link"#}
+{#                                     class="col-lg-10 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+                                    {#                                                                        <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                    <i class="fa fa-trello fa-1.5x font14"><br>{% trans "x_real_vuln" %}</i>#}
+{#                                    <p>{{ summary.realvuln_count }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#                <div class="row mrg0A" id="show_oj">#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="user_oj_link"#}
+{#                         data-id="{% url 'cms_x_person:user_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div id="user_oj_link"#}
+{#                                 class="col-lg-12 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+                                {#                                                                <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                <i class="fa fa-user fa-1.5x font14"><br>{% trans "x_user" %}</i>#}
+{#                                <p>{{ summary.user_count }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="lilunke_link"#}
+{#                         data-id="{% url 'cms_x_person:user_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div id="lilunke_link"#}
+{#                                 class="col-lg-12 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+{#                                <i class="fa fa-tasks fa-1.5x font14"><br>{% trans "x_theory_course" %}</i>#}
+{#                                <p>{{ summary.lilunke_count }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="shiyanke_link"#}
+{#                         data-id="{% url 'cms_x_person:user_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div id="shiyanke_link"#}
+{#                                 class="col-lg-12 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+{#                                <i class="fa  fa-wrench fa-1.5x font14"><br>{% trans "x_experiment_course" %}</i>#}
+{#                                <p>{{ summary.shiyanke_count }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="lilunjichu_link"#}
+{#                         data-id="{% url 'cms_practice_theory:task_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div id="lilunjichu_link"#}
+{#                                 class="col-lg-12 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+                                {#                                                                <img src="{% static 'dashboard/img/dashboard_icon.png' %}">#}
+{#                                <i class="fa fa-th fa-1.5x font14"><br>{% trans "x_theory" %}</i>#}
+{#                                <p>{{ summary.theory_base_count }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="duoqijieti_link"#}
+{#                         data-id="{% url 'cms_practice_exercise:task_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div id="duoqijieti_link"#}
+{#                                 class="col-lg-12 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+{#                                <i class="fa fa-skyatlas fa-1.5x font14"><br>{% trans "x_exercise" %}</i>#}
+{#                                <p>{{ summary.duoqijieti_count }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12 mrg10T" id="zhenshiloudong_link"#}
+{#                         data-id="{% url 'cms_practice_real_vuln:task_list' %}">#}
+{#                        <div class="row mrg0A">#}
+{#                            <div id="zhenshiloudong_link"#}
+{#                                 class="col-lg-12 col-md-12 col-sm-12 col-xs-12 rect widget style1 navy-bg">#}
+{#                                <i class="fa fa-trello fa-1.5x font14"><br>{% trans "x_real_vuln" %}</i>#}
+{#                                <p>{{ summary.realvuln_count }}</p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+    <div class="ibox-content">
+{#        <a id="down_button" style="display: none"></a>#}
+{#        <a type="button" onclick="snapshot()" class="btn btn-primary pull-right">下载图片</a>#}
+
+        <div class="row mrg0A">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dashboard-top">
+                <div class="row mrg0A">
+                    {% if LANGUAGE_CODE == 'zh-hans' %}
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12" style="font-size: 20px; margin: 60px auto">
+                    {% else %}
+                    <div class="col-lg-2 col-md-2 col-sm-6 col-xs-12" style="font-size: 18px; margin: 60px auto">
+                    {% endif %}
+                        <div>
+                            <span class="text-primary" style="display:none" id="current_class_number">{% trans 'x_current_class_number' %}</span>
+                            <span id="class_number" class="text-primary"></span>
+                        </div>
+                        </br>
+                        <div>
+                            <span class="text-primary" style="display:none" id="current_online_user">{% trans 'x_current_online_user' %}</span>
+                            <span id="online_user" class="text-primary"></span>
+                        </div>
+                        </br>
+                        <div>
+                            <span class="text-primary" style="display:none" id="current_active_scene">{% trans 'x_current_active_scene' %}</span>
+                            <span id="active_scene" class="text-primary"></span>
+                        </div>
+                    </div>
+                    {% if summary.type == 'AD' %}
+                        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 mrg10T">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mrg10T">
+                                <div id="userPie" style="width: 260px; height: 260px"></div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mrg10T">
+                                <div id="exercisePie" style="width: 260px; height: 260px"></div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mrg10T">
+                                <div id="scenePie" style="width: 260px; height: 260px"></div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 mrg10T">
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mrg10T">
+                                <div id="userPie" style="width: 260px; height: 260px"></div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mrg10T">
+                                <div id="lessonPie" style="width: 260px; height: 260px"></div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mrg10T">
+                                <div id="exercisePie" style="width: 260px; height: 260px"></div>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 mrg10T">
+                                <div id="scenePie" style="width: 260px; height: 260px"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mrg20T">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dashboard-middle">
+                <div class="ibox-title">
+                    <h5>{% trans 'X_online_user_monitor' %}</h5>
+                </div>
+                <div class="ibox-content">
+                    <table id="userTable"
+                               data-toggle="table"
+                               data-toolbar-align="center"
+                               data-show-refresh="false"
+                               data-search="false"
+                               data-pagination="true"
+                               data-side-pagination="server"
+                               data-url="{% url 'cms_dashboard:online_user_monitor' %}"
+                            >
+                                <thead>
+                                <tr>
+                                    <th data-field="username" data-escape="true" >{% trans 'x_user_name' %}</th>
+                                    <th data-field="first_name" data-escape="true" data-formatter="userTable.firstNameFormatter">{% trans 'x_name_surname' %}</th>
+                                    <th data-field="organization" data-escape="true" data-formatter="userTable.organizationFormatter">{% trans 'x_org' %}</th>
+                                    <th data-field="action" data-escape="true" data-formatter="userTable.actionFormatter">{% trans 'x_action' %}</th>
+                                    <th data-field="learn_object" data-escape="true" data-formatter="userTable.learnObjectFormatter">{% trans 'x_object' %}</th>
+                                    <th data-field="total_online_time" data-escape="true" data-formatter="userTable.onlineTimeFormatter">{% trans 'x_total_online_time' %}</th>
+                                    <th data-field="monitor" data-escape="true" data-formatter="userTable.operatorFormatter">{% trans 'x_shared_monitor' %}</th>
+                                </tr>
+                                </thead>
+                            </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {#&&&&&&&&&&&&=================#}
+    <div class="mrg20T">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dashboard-middle">
+                <div class="row">
+                    <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8 text-center">
+                        <div class="ibox-title">
+                            <h5>{% trans 'x_platform_status' %}</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <div id="main" style="width: 100%;height: 250px;"></div>
+                        </div>
+                        <div class="mrg20T">
+                            <div class="ibox-title">
+                                <h5>{% trans 'x_cluster_status' %}  ({% trans 'x_vm_used' %})</h5>
+                            </div>
+                            <div class="row mrg0A ibox-content " id="cluster_div">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <div>{% trans "x_vm_count" %}</div>
+                                            <div class="m-r-md inline mrg20T" id="test">
+                                                <input class="knob change"
+                                                   type="text" value="0"
+                                                   id="vm_count"
+                                                   data-width="100"
+                                                   data-max="500"
+                                                   data-fgColor="rgb(26, 179, 148)"
+                                                   data-skin="tron"
+                                                   data-thickness=".1"
+                                                   data-angleOffset="0"
+                                                   readOnly></div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <div>{% trans "VCPU" %} (%)</div>
+                                            <div class="m-r-md inline mrg20T">
+                                                <input class="knob change" type="text"
+                                                     id="cpu_used" value=0
+                                                     data-width="100"
+                                                     data-fgColor="rgb(248, 172, 89)"
+                                                     data-skin="tron"
+                                                     data-thickness=".1"
+                                                     data-angleOffset="0" readOnly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <div>{% trans "x_memory" %} (%)</div>
+                                            <div class="m-r-md inline mrg20T">
+                                                <input class="knob change" type="text"
+                                                     id="ram_used" value=0
+                                                     data-width="100"
+                                                     data-fgColor="rgb(237, 85, 101)"
+                                                     data-skin="tron"
+                                                     data-thickness=".1"
+                                                     data-angleOffset="0" readOnly>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+                                            <div>{% trans "x_disk" %} (%)</div>
+                                            <div class="m-r-md inline mrg20T">
+                                                <input class="knob change" type="text"
+                                                     id="disk_used" value=0
+                                                     data-width="100"
+                                                     data-fgColor="rgb(35, 198, 200)"
+                                                     data-skin="tron"
+                                                     data-thickness=".1"
+                                                     data-angleOffset="0" readOnly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 dynamic-box">
+                        <div class="ibox-title">
+                            <h5>{% trans 'x_dynamic' %}</h5>
+                        </div>
+                        <div class="ibox-content" style="height: 493px;">
+                            <div class="row mrg0A">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dynamic">
+                                    <ul class="sortable-list connectList agile-list ui-sortable">
+                                        {% if task_envs %}
+                                            {% for env in task_envs %}
+                                                <li class="warning-element">
+                                                    {% trans "x_user" %}<b>&nbsp;{{ env.user.first_name }}&nbsp;</b>{% trans "x_create_scene" %}&nbsp;{{ env.name }}
+                                                    <div class="agile-detail">
+                                                        <i class="fa fa-clock-o"></i> {{ env.create_time|timesince }} {% trans "x_ago" %}
+                                                    </div>
+                                                </li>
+                                            {% endfor %}
+                                        {% else %}
+                                            <div>{% trans "x_no_dynamic" %}</div>
+                                        {% endif %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {#&&&&&&&&&&&&=================#}
+    <div class="mrg20T">
+        <div class="ibox-title">
+            <h5>{% trans 'x_node_status' %}  ({% trans 'x_vm_used' %})</h5>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="row mrg0A">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 dashboard-bottom">
+                <table class="table table-hover dashboard-table" id='hyperTable' data-toggle='table'
+                       data-show-refresh='false' data-search='false' data-side-pagination='server'
+                       data-url="{% url 'cms_dashboard:get_hyper_list' %}" data-pagination="true" data-page-size="10">
+                    <thead>
+                    <tr>
+                        <th data-field='name' data-formatter='hyperTable.nameFormatter'>{% trans 'x_node_name' %}</th>
+                        <th data-field='ip' data-formatter='hyperTable.ipFormatter'>{% trans 'x_node_IP' %}</th>
+                        <th data-field='service'
+                            data-formatter='hyperTable.serviceFormatter'>{% trans 'x_service_status' %}</th>
+                        <th data-field='state'
+                            data-formatter='hyperTable.stateFormatter'>{% trans 'x_node_status' %}</th>
+                        <th data-field='cpu' data-formatter='hyperTable.cpuFormatter'>{% trans 'x_CPU' %}</th>
+                        <th data-field='mem' data-formatter='hyperTable.memFormatter'>{% trans 'x_memory' %}</th>
+                        <th data-field='disk' data-formatter='hyperTable.diskFormatter'>{% trans 'x_hard_disk' %}</th>
+                        <th data-field="vm" data-formatter="hyperTable.vmFormatter">{% trans 'x_vm_count' %}</th>
+                        <th data-field="container"
+                            data-formatter="hyperTable.containerFormatter">{% trans 'x_container_count' %}</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        $(function () {
+            $('.icon').each(function () {
+                status_icon = $(this).parent().text();
+                if (status_icon == " enabled") {
+                    $(this).addClass("icon-circle-blank").css('color', '#00B293');
+                }
+                else if (status_icon == " disabled") {
+                    $(this).addClass("icon-circle-blank").css('color', '#F25667');
+                }
+                else if (status_icon == " down") {
+                    $(this).addClass("icon-ban-circle").css('color', '#F25667');
+                }
+                else {
+                    $(this).addClass("icon-refresh").css('color', '#00B293');
+                }
+            })
+        });
+
+        $(function () {
+            $(".cpu_used").each(function () {
+                cpu_used = $(this).text();
+                cpu_used = Number(cpu_used);
+                vcpus_used = $(this).parent().text();
+                cpu_used_count = vcpus_used.replace(/(.*)\//, '');
+                cpu_used_count = Number(cpu_used_count);
+                if (cpu_used / cpu_used_count == 0) {
+                    $(this).css("color", "#F25667");
+                }
+                else if (cpu_used / cpu_used_count >= 0.9) {
+                    $(this).css('color', "#F25667");
+                }
+                else if (cpu_used / cpu_used_count >= 0.6) {
+                    $(this).css('color', "#FCAB62")
+                }
+            })
+        });
+
+        $(function () {
+            $('.hyper_number').each(function () {
+                hyper_number = $(this).text()
+                var newstr_mb = hyper_number.replace(/%/, '');
+                newstrs_mb = Number(newstr_mb)
+                if (newstrs_mb > 90) {
+                    $(this).css("color", "#F25667")
+                }
+                else if (newstrs_mb >= 60) {
+                    $(this).css("color", "#FCAB62")
+                }
+                else if (newstrs_mb == 0) {
+                    $(this).css("color", "#F25667")
+                }
+            })
+        })
+
+        $(function () {
+            $('.container_number').each(function () {
+                container_number = $(this).text();
+                if (container_number.toString().trim() == '获取数据出错') {
+                    $(this).css("color", "#8B0000")
+                } else {
+                    $(this).css("color", "#00B293")
+                }
+            })
+        })
+    </script>
+
+    <style type="text/css">
+        span {
+            color: #00B293;
+        }
+    </style>
+    <script>
+        part_show();
+
+        function addTabs(url, id, title) {
+            $('.J_menuTab.active', parent.document).removeClass("active");
+
+            var isExists = false;
+
+            $(".page-tabs-content", parent.document).children("[data-id]").each(function () {
+                if (id == $(this).attr("data-id")) {
+                    $(this).addClass("active");
+                    $(".J_mainContent", parent.document).children("[data-id]").each(function () {
+                        if (id == $(this).attr("data-id")) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                    isExists = true;
+                }
+            });
+
+            if (!isExists) {
+                var r = '<iframe class="J_iframe" name="iframe1" width="100%" height="100%" src="' + url + '" frameborder="0" data-id="' + id + '" seamless></iframe>';
+                $('.J_menuTabs .page-tabs-content', parent.document).append(' <a href="javascript:;" class="active J_menuTab" data-id="' + id + '">' + title + ' <i class="fa fa-times-circle"></i></a>');
+                $(".J_mainContent", parent.document).find("iframe.J_iframe").hide().parents(".J_mainContent").append(r);
+            }
+        }
+
+        function part_show() {
+            var sys_type = '{{  summary.type }}';
+            {% if summary.type == 'AD' %}
+                // $('#top_div').appendChild()
+                $("#show_ad").show();
+                $("#show_oj").remove();
+                $("#show_all").remove();
+                $('#user_ad_link').on('click', function () {
+                    addTabs("{% url 'cms_x_person:user_list' %}", '/admin/x_person/user_list', "{% trans 'x_user_manage' %}");
+                });
+                $('#team_link').on('click', function () {
+                    addTabs("{% url 'cms_x_person:team_list' %}", "/admin/x_person/team_list", "{% trans "x_team_manage" %}");
+                });
+
+                $('#lilunsai_link').on('click', function () {
+                    addTabs("{% url 'cms_practice_theory:task_list'  %}", "/admin/practice_theory/task_list/", "{% trans "x_theory" %}");
+                });
+
+                $('#duoqijieti_ad_link').on('click', function () {
+                    addTabs("{% url 'cms_practice_exercise:task_list'  %}", "/admin/practice_exercise/task_list/", "{% trans "x_exercise" %}");
+                });
+
+                $('#zhenshiloudong_ad_link').on('click', function () {
+                    addTabs("{% url 'cms_practice_real_vuln:task_list'  %}", "/admin/practice_real_vuln/task_list/", "{% trans "x_real_vuln" %}");
+                });
+
+                $('#duoqigongfang_link').on('click', function () {
+                    addTabs("{% url 'cms_practice_attack_defense:task_list' %}", "/admin/practice_attack_defense/task_list", "{% trans "x_ad_mode" %}");
+                });
+            {% elif summary.type == 'OJ' %}
+
+                $("#show_ad").remove();
+                $("#show_oj").show();
+                $("#show_all").remove();
+                $('#user_oj_link').on('click', function () {
+                    addTabs("{% url 'cms_x_person:user_list' %}", '/admin/x_person/user_list', "{% trans 'x_user_manage' %}");
+                });
+                $('#lilunke_link').on('click', function () {
+                    addTabs("{% url 'cms_course:course'  %}", "/admin/course/course/", "{% trans "x_course" %}");
+                });
+
+                $('#shiyanke_link').on('click', function () {
+                    addTabs("{% url 'cms_course:course'  %}", "/admin/course/course/", "{% trans "x_course" %}");
+                });
+
+                $('#lilunjichu_link').on('click', function () {
+                    addTabs("{% url 'cms_practice_theory:task_list'  %}", "/admin/practice_theory/task_list/", "{% trans "x_theory" %}");
+                });
+
+                $('#duoqijieti_link').on('click', function () {
+                    addTabs("{% url 'cms_practice_exercise:task_list'  %}", "/admin/practice_exercise/task_list/", "{% trans "x_exercise" %}");
+                });
+
+                $('#zhenshiloudong_link').on('click', function () {
+                    addTabs("{% url 'cms_practice_real_vuln:task_list'  %}", "/admin/practice_real_vuln/task_list/", "{% trans "x_real_vuln" %}");
+                });
+
+            {% else %}
+                $("#show_ad").hide();
+                $("#show_oj").hide();
+                $("#show_all").show();
+            {% endif %}
+        }
+
+        $('#user_link').on('click', function () {
+            addTabs("{% url 'cms_x_person:user_list' %}", '/admin/x_person/user_list', "{% trans 'x_user_manage' %}");
+        });
+
+
+        //$(".mrg10T").css("cursor","pointer").click(function(){});
+
+        $('#course_link').on('click', function () {
+            {#            addTabs("{% url 'cms_course:course' %}", "/admin/course/course", "{% trans "x_course" %}");#}
+            addTabs("{% url 'cms_practice:event_list' %}", "admin/practice/event_list/", "{% trans "x_event_manage" %}");
+        });
+
+        $('#standard_derice_link').on('click', function () {
+            addTabs("{% url 'cms_common_env:standard_device_list' %}", "/admin/common_env/standard_device_list", "{% trans 'x_target_management' %}");
+        });
+
+        $('#env_link').on('click', function () {
+            addTabs("{% url 'cms_common_env:env_list' %}", "/admin/common_env/env_list", "{% trans "x_scene_management" %}");
+        });
+
+        $('#vm_link').on('click', function () {
+            addTabs("{% url 'cms_common_scene:instance_api_list' %}?#tab-1", "/admin/common_scene/instance_api_list", "{% trans "x_instance_api_list" %}");
+        });
+
+        $('#container_link').on('click', function () {
+            addTabs("{% url 'cms_common_scene:instance_api_list' %}?#tab-2", "/admin/common_scene/instance_api_list", "{% trans "x_instance_api_list" %}");
+        });
+
+
+        get_alarm();
+        //每5分钟执行一次
+        setInterval(function () {
+            get_alarm();
+        }, 300000);
+
+        // 告警信息获取
+        function get_alarm() {
+
+            $.ajax({
+                url: "{% url 'cms_dashboard:get_alarm'  %}",
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    var alarm_list = JSON.parse(data.alarm_list);
+                    if (alarm_list.length !=0) {
+                        for (item in alarm_list) {
+
+                            doalarm(alarm_list[item].service, alarm_list[item].state,'error')
+                        }
+                    }else{
+                         doalarm("{% trans "x_system_normal" %}","{% trans "x_service_normal" %}",'success')
+                    }
+
+                },
+                error: function () {
+                    //get alarm failed
+                  {% comment %} doalarm("{% trans "x_get_alarm_error" %}", "{% trans "x_get_alarm_error" %}",'failed'){% endcomment %}
+                }
+            });
+        }
+
+        function doalarm(key, value,type) {
+
+            toastr.options = {
+                closeButton: true,
+                debug: false,
+                progressBar: true,
+                positionClass: "toast-top-right",
+                onclick: null,
+                showDuration: "300",
+                hideDuration: "1000",
+                timeOut: "60000",
+                extendedTimeOut: "1000",
+                showEasing: "swing",
+                hideEasing: "linear",
+                showMethod: "fadeIn",
+                hideMethod: "fadeOut"
+            };
+            if(type=='error'){
+                if (typeof(value) == 'number') {
+
+                    if (value > 90) {
+                        if (key == '磁盘使用率过高'){
+                            toastr.error("{% trans "x_used_percent" %}" + value, "{% trans  "x_disk_used_too_much" %}");
+                        }else if(key == 'cpu使用率过高'){
+                            toastr.error("{% trans "x_used_percent" %}" + value, "{% trans  "x_cpu_used_too_much" %}");
+                        }else if(key == '内存使用率过高'){
+                            toastr.error("{% trans "x_used_percent" %}" + value, "{% trans  "x_mem_used_too_much" %}");
+                        }
+                    } else {
+                         if (key == '磁盘使用率过高'){
+                            toastr.warning("{% trans "x_used_percent" %}" + value, "{% trans  "x_disk_used_too_much" %}");
+                        }else if(key == 'cpu使用率过高'){
+                            toastr.warning("{% trans "x_used_percent" %}" + value, "{% trans  "x_cpu_used_too_much" %}");
+                        }else if(key == '内存使用率过高'){
+                            toastr.warning("{% trans "x_used_percent" %}" + value, "{% trans  "x_mem_used_too_much" %}");
+                        }
+
+                    }
+
+                } else {
+                    toastr.error("{% trans "x_service_status" %}" + value, key + "{% trans "x_service_error" %}");
+                }
+            }else if (type=='success'){
+                    toastr.success(value,key);
+            }else{
+                 toastr.error(value,key);
+            }
+
+        };
+
+        $("#cluster_div").ready(function () {
+            $.ajax({
+                url: "{% url 'cms_dashboard:hyperv_stats'  %}",
+                type: "GET",
+                cache: false,
+                async: true,
+                dataType: "json",
+                success: function (result) {
+                    if(result.hasOwnProperty('cluster_state')) {
+                        var cluster_state = result.cluster_state;
+                        $("#vm_count").val(cluster_state.vms).trigger('change');
+                        $("#cpu_used").val(cluster_state.vcpu).trigger('change');
+                        $("#ram_used").val(cluster_state.ram).trigger('change');
+                        $("#disk_used").val(cluster_state.disk).trigger('change');
+                    }
+                },
+                error: function () {
+                    console.info("error");
+                }
+            });
+        })
+        var hyperTable = bsTable.getTableModule($('#hyperTable'), function () {
+            this.nameFormatter = function (value, row, index) {
+                return row.hypervisor_hostname ? row.hypervisor_hostname : '-';
+            };
+            this.ipFormatter = function (value, row, index) {
+                return row.host_ip ? row.host_ip : '-';
+            };
+            this.serviceFormatter = function (value, row, index) {
+                if (row.status == 'enabled') {
+                    return '<i class="icon-circle-blank" style="color:#00B293"></i>&nbsp;' + row.status
+                } else {
+                    return '<i class="icon-circle-blank" style="color:#F25667"></i>&nbsp;' + row.status
+                }
+            };
+            this.stateFormatter = function (value, row, index) {
+                if (row.state == 'up') {
+                    return '<i class="icon-refresh" style="color:#00B293"></i>&nbsp;' + row.state
+                } else {
+                    return '<i class="icon-ban-circle" style="color:#F25667"></i>&nbsp;' + row.state
+                }
+            };
+            this.cpuFormatter = function (value, row, index) {
+                if (row.state == 'up') {
+                    if (row.vcpus_percent > 90) {
+                        return '<span  style="color:#F25667">' + row.vcpus_percent + '%</span>&nbsp;';
+                    } else if (row.vcpus_percent > 60) {
+                        return '<span  style="color:#FCAB62">' + row.vcpus_percent + '%</span>&nbsp;';
+                    } else {
+                        return '<span style="color:#00B293">' + row.vcpus_percent + '%</span>'
+                    }
+                } else {
+                    return '<span  style="color:#F25667">0%</span>&nbsp;'
+                }
+            };
+            this.memFormatter = function (value, row, index) {
+                if (row.state == 'up') {
+                    if (row.vcpus_percent > 90) {
+                        return '<span  style="color:#F25667">' + row.ram_percent + '%</span>&nbsp;';
+                    } else if (row.vcpus_percent > 60) {
+                        return '<span  style="color:#FCAB62">' + row.ram_percent + '%</span>&nbsp;';
+                    } else {
+                        return '<span style="color:#00B293">' + row.ram_percent + '%</span>'
+                    }
+                } else {
+                    return '<span  style="color:#F25667">0%</span>&nbsp;'
+                }
+            };
+            this.diskFormatter = function (value, row, index) {
+                if (row.state == 'up') {
+                    if (row.vcpus_percent > 90) {
+                        return '<span  style="color:#F25667">' + row.disk_percent + '%</span>&nbsp;';
+                    } else if (row.vcpus_percent > 60) {
+                        return '<span  style="color:#FCAB62">' + row.disk_percent + '%</span>&nbsp;';
+                    } else {
+                        return '<span style="color:#00B293">' + row.disk_percent + '%</span>'
+                    }
+                } else {
+                    return '<span  style="color:#F25667">0%</span>&nbsp;'
+                }
+            };
+            this.vmFormatter = function (value, row, index) {
+                return row.running_vms ? '<div  id="container_link" onclick="vm_click()"' + 'data-id="{% url 'cms_common_scene:instance_api_list' %}">' + ' <a class="container_number">' + row.running_vms + '</a>' + ' </div>' : '0';
+            };
+            this.containerFormatter = function (value, row, index) {
+                if (row.container_count == '获取数据出错') {
+                    return '<span  style="color:#F25667">' + "{% trans "x_get_container_error" %}" + '</span>&nbsp;';
+                } else {
+                    return row.container_count ? '<div  id="container_link" onclick="con_click()"' + 'data-id="{% url 'cms_common_scene:instance_api_list' %}">' + ' <a class="container_number">' + row.container_count + '</a>' + ' </div>' : '0';
+                }
+            };
+        });
+
+        function vm_click() {
+            addTabs("{% url 'cms_common_scene:instance_api_list' %}?#tab-1", "/admin/common_scene/instance_api_list", "{% trans "x_instance_api_list" %}");
+        }
+
+        function con_click() {
+            addTabs("{% url 'cms_common_scene:instance_api_list' %}?#tab-2", "/admin/common_scene/instance_api_list", "{% trans "x_instance_api_list" %}");
+        }
+
+         function snapshot() {
+            html2canvas(document.body, {backgroundColor: "#f3f3f4"}).then(function(canvas) {
+                var dataURL = canvas.toDataURL('image/jpeg');
+
+                $('#down_button').attr( 'href' , canvas.toDataURL() ) ;
+                $('#down_button').attr( 'download' , 'status.png' ) ;
+
+                document.getElementById('down_button').click();
+            });
+        }
+    </script>
+
+    <script type="text/javascript">
+        var lesson_monitor_url = "{% url 'cms_course:lesson_monitor' 0 %}?type=1";
+
+        var userTable = bsTable.getTableModule($('#userTable'), function () {
+            this.firstNameFormatter = function (value, row, index) {
+                if (value) {
+                    return value;
+                }else {
+                    return null;
+                }
+            };
+            
+            this.onlineTimeFormatter = function (value, row, index) {
+                if (value) {
+                var day = Math.floor(value / (60 * 60 * 24));
+                var hour = Math.floor(value / (60 * 60)) - (day * 24);
+                var minute = Math.floor(value / 60) - (day * 24 * 60) - (hour * 60);
+                var second = Math.floor(value) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+                var text = '';
+                if (day) {
+                    text = text + day + gettext('x_day')
+                }
+                if (hour) {
+                    text = text + hour + gettext('x_hour')
+                }
+                if (minute) {
+                    if (text.length > 1){
+                        text = text + minute + gettext('x_time_minute')
+                    }
+                    else {
+                        text = text + minute + gettext('x_minutes')
+                    }
+                }
+                return text
+            } else {
+                    return '-';
+                }
+            };
+
+            this.actionFormatter = function (value, row, index) {
+                switch(value) {
+                    case '学习':
+                        return gettext('x_study')
+                        break
+                    case '练习':
+                        return gettext('x_practice')
+                        break
+                    case '考试':
+                        return gettext('x_exam')
+                        break
+                }
+            };
+            
+            this.learnObjectFormatter = function (value, row, index) {
+                if (value == null) {
+                    return null
+                }
+                if (row.action === '考试') {
+                    var learn_type = gettext('x_exam');
+                    var lesson_name = value;
+                    var new_lesson_name = "";
+                    if (lesson_name.length >= 50) {
+                        new_lesson_name = lesson_name.substring(0, 50) + "...";
+                        } else {
+                            new_lesson_name = lesson_name;
+                        }
+                    var data = '<span style="color: #f7a54a">' + '【' + learn_type + '】' + '</span>' + ' / ' +
+                                '<span style="color: #23c6c8" data-toggle="tooltip" title="' + lesson_name + '">' + new_lesson_name + '</span>';
+                    return data;
+                } else {
+                    if (value.split('：')[0] === '题目') {
+                        var learn_type = gettext('x_subject')
+                    } else {
+                        var learn_type = gettext('x_course')
+                    }
+                    var course_name = value.split('：')[1].split('/')[0];
+                    var lesson_name = value.split('：')[1].split('/')[1];
+                    var new_lesson_name = "";
+                    if (lesson_name.length >= 50) {
+                        new_lesson_name = lesson_name.substring(0, 50) + "...";
+                        } else {
+                            new_lesson_name = lesson_name;
+                        }
+                    var data = '<span style="color: #f7a54a">' + '【' + learn_type + '】' + '</span>' + ' / ' +
+                                '<span style="color: #23c6c8">' + course_name + '</span>' + ' / ' +
+                                '<span style="color: #53616d" data-toggle="tooltip" title="' + lesson_name + '">' + new_lesson_name + '</span>';
+                    return data;
+                }
+
+            };
+
+            this.operatorFormatter = function(value, row, index) {
+                var btns = [
+                    {
+                        type: 'link',
+                        //class: 'btn-primary',
+                        icon: 'fa fa-television',
+                        //text: "{% trans 'x_log_detail' %}",
+                        url: lesson_monitor_url.replace(0, row.lesson_id)
+                    }
+                ];
+                if (row.action == gettext('x_study') && row.lesson_id != null) {
+                    return bsTable.getOperatorHtml(btns);
+                } else {
+                    return null;
+                }
+            };
+
+            this.organizationFormatter = function (value, row, index) {
+                if (value != null) {
+                    var organization_list = value.split('/');
+                    var data = '<span style="color: #f7a54a">' + organization_list[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + organization_list[1] + '</span>' + ' / ' + organization_list[2];
+                    return data;
+                }
+                else {
+                    return null
+                }
+            };
+        });
+    </script>
+{% endblock %}

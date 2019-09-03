@@ -1,0 +1,271 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'x_vulns/css/list.css' %}">
+{% endblock %}
+{% block container %}
+    {% verbatim %}
+    <div class='container mrg93T' id="main">
+        <div class="bread">
+            <a :href="indexUrl">{{ 'x_home' | trans }}</a>
+            <span>&gt;&gt;</span>
+            <a :href="vulnListUrl">{{ 'x_vulnerability' | trans }}</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active font15' v-cloak>{{ vuln._id }}</a>
+        </div>
+        <div class="row mrg30T mrg0L mrg0R mrg25B">
+            <div class="default-bg pad40A posRelative" v-cloak>
+                <div class="row mrg0A pad30L oj_bug">
+                    <div class="col-md-8 mrg10B">
+                        <h3 class='whiteC'>{{ vuln._id }}</h3>
+                        <small class='mrg30R' v-if="vuln.pub_datetime">{{ 'x_release' | trans }}：{{ vuln.pub_datetime.$date | formatYMD }}
+                        </small>
+                        <small v-if="vuln.upd_datetime">{{ 'x_updated' | trans }}：{{ vuln.upd_datetime.$date | formatYMD }}</small>
+                    </div>
+                    <!-- icon列表 -->
+                    <div class="col-md-12 clearfix font14">
+                        <div class="fl vul_grade" v-if="vuln.cvss_data.has_data==0">
+                            <span class="grade_ball grays" data-toggle="tooltip" data-placement="bottom" title=""
+                                  v-bind:data-original-title="'x_cvss_score' | trans">-</span>
+                            <div class="temperature clearfix">
+                                <span class="grays" data-toggle="tooltip" data-placement="bottom" title=""
+                                      v-bind:data-original-title="'x_attack_vector' | trans">AV</span>
+                                <span class="grays" data-toggle="tooltip" data-placement="bottom" title=""
+                                      v-bind:data-original-title="'x_attack_complexity' | trans">AC</span>
+                                <span class="grays" data-toggle="tooltip" data-placement="bottom" title=""
+                                      v-bind:data-original-title="'x_authentication' | trans">AU</span>
+                                <span class="grays" data-toggle="tooltip" data-placement="bottom" title=""
+                                      v-bind:data-original-title="'x_confidentiality_impact' | trans">C</span>
+                                <span class="grays" data-toggle="tooltip" data-placement="bottom" title=""
+                                      v-bind:data-original-title="'x_integrity_impact' | trans">I</span>
+                                <span class="grays" data-toggle="tooltip" data-placement="bottom" title=""
+                                      v-bind:data-original-title="'x_usability_implications' | trans">A</span>
+                            </div>
+                        </div>
+                        <div class="fl vul_grade" v-else>
+                            <span class="grade_ball" v-bind:class="vuln.cvss_data.severity.style" data-toggle="tooltip"
+                                  data-placement="bottom" title="" v-html="vuln.cvss_data.value.score"
+                                  v-bind:data-original-title="'x_cvss_score' | trans"></span>
+                            <div class="temperature clearfix">
+                                <span v-bind:class="vuln.cvss_data.value.av[1]" data-toggle="tooltip"
+                                      data-placement="bottom" title=""
+                                      v-bind:data-original-title="vuln.cvss_data.title.av + ':' + vuln.cvss_data.value.av[2]">AV</span>
+                                <span v-bind:class="vuln.cvss_data.value.ac[1]" data-toggle="tooltip"
+                                      data-placement="bottom" title=""
+                                      v-bind:data-original-title="vuln.cvss_data.title.ac + ':' + vuln.cvss_data.value.ac[2]">AC</span>
+                                <span v-bind:class="vuln.cvss_data.value.au[1]" data-toggle="tooltip"
+                                      data-placement="bottom" title=""
+                                      v-bind:data-original-title="vuln.cvss_data.title.au + ':' + vuln.cvss_data.value.au[2]">AU</span>
+                                <span v-bind:class="vuln.cvss_data.value.c[1]" data-toggle="tooltip"
+                                      data-placement="bottom" title=""
+                                      v-bind:data-original-title="vuln.cvss_data.title.c + ':' + vuln.cvss_data.value.c[2]">C</span>
+                                <span v-bind:class="vuln.cvss_data.value.i[1]" data-toggle="tooltip"
+                                      data-placement="bottom" title=""
+                                      v-bind:data-original-title="vuln.cvss_data.title.i + ':' + vuln.cvss_data.value.i[2]">I</span>
+                                <span v-bind:class="vuln.cvss_data.value.a[1]" data-toggle="tooltip"
+                                      data-placement="bottom" title=""
+                                      v-bind:data-original-title="vuln.cvss_data.title.a + ':' + vuln.cvss_data.value.a[2]">A</span>
+                            </div>
+                        </div>
+                        <div class="fl hidden-xs mrg10B mrg30R mrg10T mrg30L bugs">
+
+                            <span class="ico_tag" v-bind:class="vuln.title_zh?'chinese_True':'chinese_False'"
+                                  data-toggle="tooltip" data-placement="bottom" title=""
+                                  v-bind:data-original-title="vuln.title_zh?'x_have_CH_data':'x_no_chinese_data' | trans "></span>
+
+                            <span class="ico_tag" v-bind:class="vuln.exploits.length > 0?'exploit_True':'exploit_False'"
+                                  data-toggle="tooltip" data-placement="bottom" title=""
+                                  v-bind:data-original-title="vuln.exploits.length > 0?'x_have_xploit_code':'x_no_xploit_code' | trans "></span>
+
+                            <span class="ico_tag" v-bind:class="vuln.has_data?'details_True':'details_False'"
+                                  data-toggle="tooltip" data-placement="bottom" title=""
+                                  v-bind:data-original-title="vuln.has_data?'x_vulnerability_details':'x_no_vulnerability_details' | trans "></span>
+
+                            <span class="ico_tag"
+                                  v-bind:class="vuln.cpe_list.length > 0?'software_True':'software_False'"
+                                  data-toggle="tooltip" data-placement="bottom" title=""
+                                  v-bind:data-original-title="vuln.cpe_list.length > 0?'x_vulnerabilit_arrier':'x_no_vulnerabilit_arrier' |trans "></span>
+
+                            <span class="ico_tag"
+                                  v-bind:class="vuln.cpe_list.length > 0?'analyzer_True':'analyzer_False'"
+                                  data-toggle="tooltip" data-placement="bottom" title=""
+                                  v-bind:data-original-title="vuln.cpe_list.length > 0?'x_vulnerability_detection_script':'x_no_vulnerability_detection_script' | trans "></span>
+
+                        </div>
+                    </div>
+                    <!-- icon列表 -->
+                    <div class="col-md-8 mrg10B">
+                        <h3 class='whiteC'>{{ "x_vulnerability_title" | trans }}：</h3>
+                        <small class='mrg30R'>{{ isEn ? vuln.title_en : vuln.title_zh }}</small>
+                    </div>
+                    <div class="col-md-8 mrg10B">
+                        <h3 class='whiteC'>{{ "x_vulnerability_overview" | trans}}：</h3>
+                        <small class='mrg30R'>{{ isEn ? vuln.description_en : vuln.description_zh }}</small>
+                    </div>
+
+                </div>
+                <div class='btn-common simulateButton hidden'>
+                    <div class="left-right-line">
+                        <span>{{ "x_environmental_simulation" | trans }}</span>
+                        <span class='icon-icons-08'></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mrg0A bugDetail">
+            <div class="col-md-12 pad0L mrg20B pad0R">
+                <ul id="myTab" class="nav nav-tabs pad10T font16" v-cloak>
+                    <li class="borderOrange active" id="logBtn">
+                        <a href="#log" data-toggle="tab" class="pad30L pad30R pad5T pad5B fill whiteC">
+                            Summary
+                        </a>
+                    </li>
+                    <li class="borderOrange" id="eventBtn" v-if="exploit.exp_name" v-for="exploit, i in vuln.exploits">
+                        <a :href="'#event_' + i + 1" data-toggle="tab" class="pad30L pad30R pad5T pad5B fill whiteC">
+                            POC {{ i + 1 }}
+                        </a>
+                    </li>
+                </ul>
+                <div id="myTabContent" class="tab-content borderOrange font14" v-cloak>
+                    <div class="row tab-pane fade in active mrg0A pad40A" id="log">
+                        <div>
+                            <table class="table" v-if="vuln.cvss && vuln.cvss.score">
+                                <thead>
+                                <tr>
+                                    <th>{{ "x_cvss_basis_points" | trans}}</th>
+                                    <th>{{ "x_AV" | trans }}</th>
+                                    <th>{{ "x_AC" | trans }}</th>
+                                    <th>{{ "x_AU" | trans }}</th>
+                                    <th>{{ "x_C" | trans }}</th>
+                                    <th>{{ "x_I" | trans }}</th>
+                                    <th>{{ "x_A" | trans}}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ vuln.cvss['score'] }}</td>
+                                    <td>{{ vuln.cvss['access-vector'] }}</td>
+                                    <td>{{ vuln.cvss['access-complexity'] }}</td>
+                                    <td>{{ vuln.cvss['authentication'] }}</td>
+                                    <td>{{ vuln.cvss['confidentiality-impact'] }}</td>
+                                    <td>{{ vuln.cvss['integrity-impact'] }}</td>
+                                    <td>{{ vuln.cvss['availability-impact'] }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div>
+                            <span class="subtitle">
+                                <span v-if="vuln.pub_datetime">{{ "x_release" | trans }}：{{ vuln.pub_datetime.$date | formatYMD }}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                <span v-if="vuln.upd_datetime">{{ "x_updated" | trans }}：{{ vuln.upd_datetime.$date | formatYMD }}</span>
+                            </span>
+                                <h5><strong>{{ "x_vulnerability_overview" | trans }}：</strong></h5>
+                                <p>{{ isEn ? vuln.description_en : vuln.description_zh }}</p>
+                                <h5 v-if="vuln.solution_en || vuln.solution_zh"><strong>{{ "x_mitigation_program" | trans }}：</strong></h5>
+                                <p v-if="vuln.solution_en || vuln.solution_zh">{{ (isEn ? vuln.solution_en :
+                                    vuln.solution_zh) || vuln.solution_en || vuln.solution_zh }}</p>
+                            </div>
+
+                            <div v-if="vuln.software_list">
+                                <h5><strong>{{ "x_affected_products" | trans }}：</strong></h5>
+                                <table class="table praTable">
+                                    <tbody>
+                                    <tr v-for="product in vuln.software_list">
+                                        <td>
+                                            {{ product.app_name }}
+                                            <template v-if="product.app_platform.length > 0">
+                                                (
+                                                <template v-for="platform in product.app_platform">{{ platform }}
+                                                </template>
+                                                )
+                                            </template>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div v-if="vuln.reference && vuln.reference.length > 0">
+                                <h5><strong>{{ "x_reference_link" | trans }}：</strong></h5>
+                                <table class="table praTable">
+                                    <tbody>
+                                    <tr v-for="vul_ref in vuln.reference">
+                                        <td><a :href="vul_ref.url" target="_blank">{{ vul_ref.url }}</a><br>{{
+                                            vul_ref.source }} &nbsp;{{ vul_ref.text }}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row tab-pane fade mrg0A pad40A" :id="'event_' + i + 1" v-if="exploit.exp_name"
+                         v-for="exploit, i in vuln.exploits">
+                        <div>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th v-if="exploit.exp_CVE">{{ "x_numbering" |trans }}</th>
+                                    <th v-if="exploit.exp_type">{{ "x_resource_type" | trans }}</th>
+                                    <th v-if="exploit.exp_platform">x_platform</th>
+                                    <th v-if="exploit.exp_author">{{ "x_author" | trans }}</th>
+                                    <th v-if="exploit.exp_verify">{{ "x_verify_status" | trans }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td v-if="exploit.exp_CVE">{{ exploit.exp_CVE[0] }}</td>
+                                    <td v-if="exploit.exp_type">{{ exploit.exp_type }}</td>
+                                    <td v-if="exploit.exp_platform">{{ exploit.exp_platform }}</td>
+                                    <td v-if="exploit.exp_author">{{ exploit.exp_author }}</td>
+                                    <td v-if="exploit.exp_verify">{{ exploit.exp_verify }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <h5><strong>{{ "x_resource_title" | trans }}</strong></h5>
+                            <p>{{ exploit.exp_name }}</p>
+                            <h5><strong>{{ "x_code_content" | trans }}</strong></h5>
+                            <div class="highlight">
+                            <pre style="background-color: rgba(153, 153, 153, 0.2);　color: #b2b6bf;">
+                                <code class="language-html">{{ exploit.exp_code }}</code>
+                            </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endverbatim %}
+    <img class="vuln-logo" style="width: 80px; height: 80px;position: fixed;left: 10px;bottom: 10px;"
+         src="{% static 'x_vulns/img/logo.png' %}">
+    <script type="text/javascript">
+        $(function () {
+            var pk = '{{ pk }}';
+            var url = "{% url 'x_vulns:api_vuln_detail' pk %}";
+            http.get(url, {}, function (res) {
+                console.log(res);
+                new Vue({
+                    el: '#main',
+                    data: {
+                        indexUrl: "{% url 'common_web:home' %}",
+                        vulnListUrl: "{% url 'x_vulns:vuln_list' %}",
+                        vuln: res,
+                    },
+                    methods:{
+                        trans:function (info) {
+                           return gettext(info)
+                        }
+                    }
+                });
+                $("[data-toggle='tooltip']").tooltip();
+            },function (data) {
+                ierror(JSON.parse(data.responseText).detail.message)
+            });
+        });
+
+
+    </script>
+{% endblock %}
+

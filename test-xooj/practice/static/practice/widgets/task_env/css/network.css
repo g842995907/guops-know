@@ -1,0 +1,24 @@
+[data-widget-id=common-env] .destory-time-count-down{
+    color: #fff;
+    margin: 0px 0px 10px;
+    font-size: 20px;
+    z-index: 20;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    -webkit-transform: translate(-50%, 0);
+    -moz-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
+    display: none;
+}
+
+[data-widget-id=common-env] .current-env-hint{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 24px;
+    z-index: 10;
+    color: #ffffff;
+    font-weight: bolder;
+}
+

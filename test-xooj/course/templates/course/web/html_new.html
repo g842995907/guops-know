@@ -1,0 +1,505 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static static_v i18n %}
+{% block other_css_js %}
+    <title></title>
+    <link rel="stylesheet" href="{% static 'course/css/learn_new.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/network.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/markdown/bootstrap-markdown.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/markdown.css' %}"/>
+    <script src="{% static 'course/js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'web/js/pdfobject.min.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'course/widgets/lesson_env/js/network.js' %}"></script>
+    <style>
+        .pdfobject-container {
+            margin: 0 auto;
+            background-color: rgba(0, 24, 54, .5);
+            border: 10px solid rgba(0, 0, 0, .2);
+        }
+
+        .pdfobject {
+            background-color: rgba(0, 24, 54, .5);
+        }
+
+        .apply-env {
+            font-size: 16px;
+            border-radius: 2px;
+            cursor: pointer;
+            padding: 8px 15px;
+            color: #fff;
+            background-color: #f99d12;
+            border: 1px solid #e48a01;
+            cursor: pointer;
+            {#right: 10px;#}
+            top: 0px;
+            position: absolute;
+        }
+
+        #mynetwork {
+            background-color: #333333;
+        }
+
+        .clipboard {
+            display: none;
+        }
+
+        .md-editor .md-footer, .md-editor > .md-header {
+            background: transparent;
+        }
+
+        .btn-white {
+            color: #fff;
+            background-color: #FF9900;
+            border-color: #FF9900;
+        }
+
+        .md-editor {
+            border: 1px solid #569bf2;
+        }
+
+{#        .md-editor > textarea {#}
+{#            border-top: 1px dashed #569bf2;#}
+{#            border-bottom: 1px dashed #569bf2;#}
+{#        }#}
+
+        .md-editor > textarea,
+        .md-editor > .md-preview {
+            background: transparent !important;
+        }
+
+        .warpper-block p {
+            margin: 0;
+        }
+
+        #drag {
+            z-index: 999;
+        }
+
+        .b_line {
+            height: 1px;
+            margin-top: 3px;
+            margin-left: -10px;
+            margin-right: -10px;
+           border-bottom: 1px dashed rgba(176, 222, 254, .16);
+        }
+
+        .course-label {
+            font-size: 0;
+        }
+        .course-label li {
+            display: inline-block;
+            font-size:14px;
+            padding-right: 8px;
+        }
+
+        .course-label li a {
+            height: 22px;
+            line-height: 20px;
+            border-radius:20px;
+            border: 1px solid #FF9900;
+            display: block;
+            color: #FF9900;
+            padding-left: 12px;
+            padding-right: 12px;
+            cursor: pointer;
+        }
+    .form-control{
+            border: 1px solid #66afe9;
+    }
+    </style>
+    <script>
+       {% comment %} $(function () {
+            $('.content').height($('.container ').height() - $('.bread').height() - 93)
+        }){% endcomment %}
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class='container posRelative' style="padding-top: 93px;">
+        {% include './bread.html' %}
+        <ul class="course-label orangeC mrg10T">
+            {% for tip in knowledges_list %}
+                <li><a>{{ tip }}</a></li>
+            {% endfor %}
+        </ul>
+        <div class="wrapper">
+            <div class="warpper-block default-bg pad10A mrg10T" id="show_env" style="display: none;">
+                <div class="whiteC cursor active toggle-icon">
+                    <i class="fa fa-angle-double-down pad5R font18"></i>{% trans "x_experiment_scene" %}
+                    <div class="b_line"></div>
+                </div>
+                {% if lesson_id %}
+                    <div class="mrg10T" data-widget-id="common-env" data-lesson-hash="{{ lesson_id }}"></div>
+                {% endif %}
+            </div>
+
+            {% if video or video_state %}
+                <div class="warpper-block default-bg pad10A mrg10T" id="show_video">
+                    <div class="whiteC cursor toggle-icon"><i
+                            class="fa fa-angle-double-down pad5R font18"></i>{% trans "x_study_video" %}
+                       <div class="b_line"></div>
+                    </div>
+                    <div class='content mrg10T' style="height: 800px;">
+                        <div id="video" style="width:100%;height:100%;"></div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- ppt, pdf-->
+            <div class="warpper-block default-bg pad10A mrg10T" id="all_guidance">
+                <div class="whiteC cursor toggle-icon"><i
+                        class="fa fa-angle-double-down pad5R font18"></i>{% if lesson_type == 0 %}
+                    {% trans "x_handouts" %}{% else %}{% trans "x_experimental_guidance" %}{% endif %}
+                {% if lesson_content_type == 'new_html' %}
+                <a class="whiteC pull-right" target="_blank" href="{{ html }}"><span
+                            class="fa fa-arrows-alt"></span></a>
+                {% endif %}
+                    <div class="b_line"></div>
+                </div>
+                <div class="mrg10T">
+                    {% if lesson_content_type == 'old_pdf' %}
+                        <iframe id="mypdf" src="/static/lib/pdfjs-1.8.188/web/viewer.html?file={{ pdf_url }}"
+                                style="height:700px;" width="100%"
+                        ></iframe>
+                    {% elif lesson_content_type == 'old_markdown' %}
+                        <div class="markdown-wrapper demo-gallery photoswipe">
+                            <div class="pad20L pad20R pad5T posRelative">
+                                {{ markdown | safe }}
+                            </div>
+                        </div>
+                    {% elif lesson_content_type == 'new_html' %}
+                        <iframe id="md_pdf" src="{{ html }}"
+                                width="100%"
+                                scrolling="no" frameborder=0
+                                {% if html_type == 1 %}
+                                style="background-color: #fff;min-height: 900px;"
+                                onload="setIframeHeight(this)"
+                                {% else %}
+                                style="background-color: #fff;min-height: 700px"
+                                {% endif %}></iframe>
+                    {% else %}
+                        <div>{% trans "x_no_guide" %}</div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- 云端交流 -->
+            <div class="warpper-block default-bg pad10A mrg10T mrg20B" id="cloud_communication">
+                <div class="whiteC cursor toggle-icon"><i
+                        class="fa fa-angle-double-down pad5R font18"></i>{% trans "x_Q_A" %}
+                    <div class="b_line"></div>
+                </div>
+                <div class="mrg10T">{% include "web/comment_template.html" %}</div>
+            </div>
+        </div>
+        {% include './sidebar.html' %}
+
+        {#    我的笔记&&实验报告#}
+        <div class="network" id="drag" style="position: fixed;right: 20px;top: 70px;">
+            <div class="tab-wrap">
+                <div class="tab-head clearfix">
+                    <div class="bread pull-left">
+                        <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+                        <span style="color: #b2b6bf;">&gt;&gt;</span>
+                        <a href="{% url 'course:list' %}">{% trans "x_course" %}</a>
+                        <span style="color: #b2b6bf;">&gt;&gt;</span>
+                        <a href="{% url 'course:detail' course_id %}" class='font15' name="course-name"></a>
+                        <span style="color: #b2b6bf;">&gt;&gt;</span>
+                        <a href="" class='active font15' name="lesson-name"></a>
+                    </div>
+                    <span class="close-tab fa fa-minus-square-o mrg5R cursor pull-right"></span>
+                </div>
+                <div class="tabs">
+                    <ul class="tab-title pad10L pad10R cursor">
+                        <li class="active">{% trans "x_note" %}</li>
+                        <li id="experiment_report">{% trans "x_experimental_report" %}</li>
+                    </ul>
+                    <div class="tab-content-wrap">
+                        <div class="tab-content pad20B pad10L pad10R pad15T">
+                            <div class="tab-block">
+                                <form id="mynote-form">
+                                    <div>
+                                        <input type="text" name="hash" value="" hidden="hidden" readonly/>
+                                        <textarea id="mynote" name="content"></textarea>
+                                    </div>
+                                    <div class="text-right mrg10T">
+                                        <input type="button" class="btn mainBg whiteC no-radius" id="addNote-btn"
+                                               style="width: 120px;" value="{% trans 'x_save' %}">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-content pad20B pad10L pad10R pad15T">
+                            <div class="tab-block">
+                                <form id="report-form">
+                                    <div>
+                                        <input type="text" name="report_hash" value="" hidden="hidden" readonly/>
+                                        <textarea id="report" name="content"></textarea>
+                                    </div>
+                                    <div class="text-right mrg10T">
+                                        <input type="button" class="btn mainBg whiteC no-radius" id="addReport-btn"
+                                               style="width: 120px;" value="{% trans 'x_save' %}">
+                                    </div>
+                                </form>
+                                <div class="pad20L pad20R pad10T" id="mynot-ispass" hidden>
+                                  <div class="clearfix report-comment">
+                                      <div class="pull-left" data-report="report-comment" style="word-break: break-all;">
+                                      </div>
+                                      <div class="pull-right orangeC text-right" data-report="report-score">90分
+                                          <span>{% trans 'x_ispass' %}</span>
+                                      </div>
+                                  </div>
+                                  <div class="report-content pad10A mrg20T" data-report="report-content" style="word-break: break-all;">
+
+                                  </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#        <div class="drag-icon text-right"><i class="fa fa-arrows-alt"></i></div>#}
+            </div>
+        </div>
+        {#    我的笔记&&实验报告#}
+    </div>
+    <script type="text/javascript">
+        {% if lesson_id %}
+        var LANGUAGE_CODE = '{{ LANGUAGE_CODE }}';
+        $LESSON_ENV(function () {
+            $('[data-widget-id=common-env]').registerLessonEnvWidget({
+                common: {
+                    lang: LANGUAGE_CODE,
+                    alert: ialert,
+                    confirm: iconfirm,
+                    webAccessTargets: ['_blank'],
+                    webAccessUrlHandler: function (url, server) {
+                        return '{% url "course:network" course_id lesson_id %}?url={0}&host_ip={1}'.format(escape(url), server.host_ip || '')
+                    }
+                }
+            });
+
+            $('[data-widget-id=common-env]').getLessonEnv();
+        });
+        {% endif %}
+    </script>
+    <script type="text/javascript">
+        $('.toggle-icon').click(function () {
+            if ($(this).find('i').hasClass('fa-angle-double-right')) {
+                $(this).find('i').removeClass('fa-angle-double-right').addClass('fa-angle-double-down');
+            } else {
+                $(this).find('i').removeClass('fa-angle-double-down').addClass('fa-angle-double-right');
+            }
+            $(this).siblings().slideToggle(100, function () {
+                if ($(this).is(":visible") && window.player !== undefined && $(this).children().attr('id') === 'video') {
+                    seekTime = parseInt(player.time);
+                    player = null;
+                    $.extend(true, globalvideoObject, {seek: seekTime, autoplay: true});
+                    player = new chplayer(globalvideoObject);
+                }
+                if ($(this).is(":visible") && $.fn.getLessonEnv && $(this).attr('data-widget-id') === 'common-env'){
+                    var network = envWidget.getInstance($('[data-widget-id=common-env]')).network;
+                    network.redraw();
+                    network.fit();
+                }
+            });
+        });
+
+
+        function setIframeHeight(iframe) {
+            if (iframe) {
+                var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+                if (iframeWin.document.body) {
+                    iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+                }
+            }
+        };
+        {% if html_type == 1 %}
+            {% comment %}window.onload = function () {
+                setIframeHeight(document.getElementById("md_pdf"));
+            };{% endcomment %}
+            var markdown_iframe = document.getElementById("md_pdf");
+            setInterval(function () {
+                setIframeHeight(markdown_iframe);
+            }, 2000);
+        {% endif %}
+
+        {# 我的笔记&&实验报告#}
+        // 初始化用户笔记数据
+        function init_course_detail() {
+            // 修改成每个lesson下面
+            $.ajax({
+                url: "{% url 'course:api:course-detail' course_id %}",
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    // 初始化评论
+                    init_comment_list(data.hash);
+                },
+                error: function () {
+                    showPopMsg("{% trans 'x_unable_get_details' %}");
+                }
+            });
+        }
+        function init_course_note(resource_id) {
+            $("#mynote-form input[name='hash']").val(resource_id);
+            $.ajax({
+                url: "{% url 'common_web:note:mynote' %}",
+                type: "get",
+                data: {"resource": resource_id},
+                datatype: "json",
+                async: true,
+                success: function (data) {
+                    // console.info(data);
+                    $("#mynote").val(data.content);
+                },
+            });
+
+            $('#mynote').initMarkdown();
+        }
+
+        // 初始化实验报告数据
+        function init_lesson_report(resource_id) {
+            $("input[name='report_hash']").val(resource_id + '_report');
+            $.ajax({
+                url: "{% url 'common_web:note:mynote' %}",
+                type: "get",
+                data: {"resource": resource_id + '_report'},
+                datatype: "json",
+                async: true,
+                success: function (data) {
+                    // console.info(data);
+                    if (data.ispass == true){
+                        // not not edit
+                        var markcomment = data.markcomment? data.markcomment: gettext('x_no_guide');
+                        var score_html = data.score + gettext('x_report_score') +"<span>"+gettext('x_pass')+"</span>";
+                        var comment_html = "<span class='orangeC'>" + gettext("x_mark_comment") +
+                            "：</span>" + "&nbsp;&nbsp;" + markcomment;
+                        $("#report-form").remove();
+                        $("#mynot-ispass").removeAttr("hidden");
+                        $('#mynot-ispass [data-report="report-comment"]').html(comment_html);
+                        $('#mynot-ispass [data-report="report-score"]').html(score_html);
+                        $('#mynot-ispass [data-report="report-content"]').html(marked(data.content));
+                    }else {
+                        // can edit
+                        $("#report").val(data.content);
+                        $("#report").initMarkdown();
+                    }
+                },
+                error: function (xhr) {
+                    $("#report").initMarkdown();
+                }
+            });
+        }
+
+
+        function save_note() {
+            $("#mynote-form").ajaxSubmit({
+                url: "{% url 'common_web:note:save_note' %}",
+                type: "post",
+                traditional: true,
+                beforeSubmit: function () {
+                },
+                success: function (json) {
+                    showHintMsg("{% trans 'x_saved_successfully' %}");
+                },
+                error: function (json) {
+                    showPopMsg("{% trans 'x_saved_fail' %}");
+                }
+            });
+            return false;
+        }
+        function save_report() {
+            $("#report-form").ajaxSubmit({
+                url: "{% url 'common_web:note:save_note' %}",
+                type: "post",
+                traditional: true,
+                beforeSubmit: function () {
+                },
+                success: function (json) {
+                    showHintMsg("{% trans 'x_saved_successfully' %}");
+                },
+                error: function (json) {
+                    showPopMsg("{% trans 'x_saved_fail' %}");
+                }
+            });
+            return false;
+        }
+
+        $(function () {
+            $('.tab-wrap').css({
+                'width': $(window).width() / 2,
+                'height': $(window).height() * 0.8,
+            });
+            $('.tabs').css({
+                'width': $('.tab-wrap').width(),
+                'height': $('.tab-wrap').height() - $('.tab-head').height(),
+            });
+            $(window).resize(function () {
+                $('.tabs').css({
+                    'width': $('.tab-wrap').width(),
+                    'height': $('.tab-wrap').height() - $('.tab-head').height(),
+                });
+            })
+            $('#drag').css({
+                'width': $(window).width() / 2,
+                'height': $(window).height() * 0.8,
+            })
+            $("#drag").draggable();
+
+            {#init_course_detail();#}
+
+
+            $("#addNote-btn").click(save_note);
+            $("#addReport-btn").click(save_report);
+        });
+        //    关闭弹框 显示操作按钮
+        $('.tab-wrap .close-tab').on('click', function () {
+            $('.action-btn-wrapper').animate({
+                right: '0',
+            });
+            $('#drag').hide('slow');
+        });
+        $('.action-btn > li').on('click', function () {
+            if ($(this).attr('media-name') == 'note') {
+                $('.tab-title > li:first').addClass('active').siblings().removeClass('active');
+                $('.tab-content:first').show('slow').siblings().hide('fast');
+            } else if ($(this).attr('media-name') == 'report') {
+                $('.tab-title > li:last').addClass('active').siblings().removeClass('active');
+                $('.tab-content:last').show('slow').siblings().hide('fast');
+            } else {
+                return;
+            }
+            $(this).find('a').addClass('active').parent().siblings().find('a').removeClass('active');
+            $('.action-btn-wrapper').animate({
+                right: '-128px',
+            });
+            $('#drag').show('slow');
+
+        });
+
+        $('.tab-title > li').on('click', function () {
+            var index = $(this).index();
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.tab-content ').eq(index).show('slow').siblings().hide('fast');
+            if (index == 0) {
+                $(".action-btn > li[media-name='note']").find('a').addClass('active').parent().siblings().find('a').removeClass('active');
+            } else if (index = 1) {
+                $(".action-btn > li[media-name='report']").find('a').addClass('active').parent().siblings().find('a').removeClass('active');
+            }
+
+        });
+
+        {% comment %}window.addEventListener('hashchange',function(e) {
+            if (e.oldURL === e.newURL){
+
+            }
+            window.scrollBy(0, -70);
+        },false);{% endcomment %}
+
+
+        setInterval(function () {
+            http.get('{% url "course:attend_class_time" lesson_id %}', {seconds: 60 * 3});
+        }, 60000 * 3);
+    </script>
+{% endblock %}

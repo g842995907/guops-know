@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.utils.translation import ugettext_lazy as _
+
+INVALID_VALUE = _('x_invalid_value')
+NO_ENV_CONFIG = _('x_no_env_config')
+ENV_NAME_EXISTS = _('x_env_name_exists')
+NO_TMP_ENV = _('x_no_tmp_env')
+NO_BASE_IMAGE = _('x_no_base_image')
+UNSUPPORTED_ACCESS_MODE = _('x_unsupported_access_mode')
+TMP_ENV_CONFLICT = _('x_tmp_env_conflict')
+IMAGE_SAVING = _('x_image_saving')
+STANDARD_DEVICE_NO_LOGO = _('x_standard_device_no_logo')
+STANDARD_DEVICE_TYPE_EXISTS = _('x_standard_device_type_exists')
+NAME_HAVE_EXISTED = _('x_name_have_existed')
+STANDARD_DEVICE_ACCESSMODE_ERROR = _('x_standard_device_accessmode_error')
+NO_IMAGE_FILE = _('x_no_image_file')
+CONFLICT_WITH_BASE_IMAGE_NAME = _('x_conflict_with_base_image_name')
+REQUIRED_FIELD = _('x_required_field')
+NO_DISK_FORMAT = _('x_no_disk_format')
+NO_ATTACKER_CONFIG = _('x_no_attacker_config')
+URL_ERROR = _('x_url_error')
+INVALID_Token = _('x_invalid_Token')
+NO_PERMISSION = _('x_permission_Denied')
+OTHER_EXCEPTION = _('x_other_Exception')
+METHOD_UNALLOWED =_('x_method_not_allowed')
+OTHER_ERROR = _('x_other_error')
+SNAPSHOT_BAN_UPLOAD = _('x_snapshot_ban_upload')
+IMAGE_NOT_FOUND = _('x_image_not_found')

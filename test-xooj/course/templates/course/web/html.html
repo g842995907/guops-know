@@ -1,0 +1,393 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static static_v i18n %}
+{% block other_css_js %}
+    <title></title>
+    <link rel="stylesheet" href="{% static 'course/css/learn_new.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/network.css' %}">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/markdown/bootstrap-markdown.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/markdown.css' %}"/>
+    <link rel="stylesheet" href="{% static 'course/css/double-screen.css' %}"/>
+    <script src="{% static 'course/js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static_v 'common_remote/js/remote.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'course/widgets/lesson_env/js/network.js' %}"></script>
+    <style>
+      .form-control{
+            border: 1px solid #66afe9;
+    }
+    </style>
+    <script>
+    </script>
+{% endblock %}
+
+{% block container %}
+    <div class='container-fluid posRelative' style="padding-top: 93px;">
+        <div class="row">
+            {% include './bread.html' %}
+
+            {% include './sidebar_new.html' %}
+            <div class="wrapper pad20T pad20B clearfix">
+                <div class="wrap">
+                    <div class='frame-box'>
+                        <iframe name="markdown_iframe" src="" frameborder='0'
+                                scrolling='auto'>
+                        </iframe>
+                    </div>
+                    <div class='frame-box' style="position: relative;">
+                        <div class='env-page-action' style="position: absolute;">
+                            <span class="btn btn-sm btn-warning return">{% trans "x_return" %}</span>
+                        </div>
+                        <script>
+                            $(function () {
+                                var iframe = $('iframe[name=env]')[0];
+                                $('.env-page-action .return').click(function () {
+                                    iframe.src = "{% url 'course:env' %}?lesson_id={{ lesson_id }}";
+                                });
+
+                                iframe.onload = function () {
+                                    if (!isUsingWebAccess()) {
+                                        $('.env-page-action').hide();
+                                    }
+                                };
+
+                                function isUsingWebAccess() {
+                                    try {
+                                        var pathname =  iframe.contentWindow.location.pathname;
+                                        return !(pathname == 'blank' || pathname.startsWith('/course/env/'));
+                                    } catch (e) {
+                                        return true;
+                                    }
+                                }
+
+                                $(iframe).mouseenter(function () {
+                                    if (isUsingWebAccess()) {
+                                        $('.env-page-action').hide();
+                                        remoteUtil.focus(iframe);
+                                    }
+                                });
+                                $(iframe).mouseleave(function () {
+                                    if (isUsingWebAccess()) {
+                                        $('.env-page-action').show();
+                                    }
+                                });
+                            });
+                        </script>
+                        <iframe name="env" src=""
+                                frameborder='0' scrolling='auto'>
+                        </iframe>
+                    </div>
+                    <div class='frame-box'>
+                        <iframe name="video" src="" frameborder='0'
+                                scrolling='auto'>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#    我的笔记&&实验报告#}
+        <div class="network" id="drag" style="position: fixed;right: 20px;top: 93px;">
+            <div class="tab-wrap">
+                <div class="tab-head clearfix">
+                    <div class="bread pull-left">
+                        <a href="{% url 'common_web:home' %}">{% trans "x_home" %}</a>
+                        <span style="color: #b2b6bf;">&gt;&gt;</span>
+                        <a href="{% url 'course:list' %}">{% trans "x_course" %}</a>
+                        <span style="color: #b2b6bf;">&gt;&gt;</span>
+                        <a href="{% url 'course:detail' course_id %}" class='font15' name="course-name"></a>
+                        <span style="color: #b2b6bf;">&gt;&gt;</span>
+                        <a href="" class='active font15' name="lesson-name"></a>
+                    </div>
+                    <span class="close-tab fa fa-minus-square-o mrg5R cursor pull-right"></span>
+                </div>
+                <div class="tabs">
+                    <ul class="tab-title pad10L pad10R cursor">
+                        <li class="active">{% trans "x_note" %}</li>
+                        <li id="experiment_report">{% trans "x_experimental_report" %}</li>
+                        <li id="x_Q_A">{% trans "x_Q_A" %}</li>
+                    </ul>
+                    <div class="tab-content-wrap">
+                        <div class="tab-content pad20B pad10L pad10R pad15T">
+                            <div class="tab-block">
+                                <form id="mynote-form">
+                                    <div>
+                                        <input type="text" name="hash" value="" hidden="hidden" readonly/>
+                                        <textarea id="mynote" name="content"></textarea>
+                                    </div>
+                                    <div class="text-right mrg10T">
+                                        <input type="button" class="btn mainBg whiteC no-radius" id="addNote-btn"
+                                               style="width: 120px;" value="{% trans 'x_save' %}">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-content pad20B pad10L pad10R pad15T">
+                            <div class="tab-block">
+                                <form id="report-form">
+                                    <div>
+                                        <input type="text" name="report_hash" value="" hidden="hidden" readonly/>
+                                        <textarea id="report" name="content"></textarea>
+                                    </div>
+                                    <div class="text-right mrg10T">
+                                        <input type="button" class="btn mainBg whiteC no-radius" id="addReport-btn"
+                                               style="width: 120px;" value="{% trans 'x_save' %}">
+                                    </div>
+                                </form>
+                                <div class="pad20L pad20R pad10T" id="mynot-ispass" hidden>
+                                    <div class="clearfix report-comment">
+                                        <div class="pull-left" data-report="report-comment"
+                                             style="word-break: break-all;">
+                                        </div>
+                                        <div class="pull-right orangeC text-right" data-report="report-score">90分
+                                            <span>{% trans 'x_ispass' %}</span>
+                                        </div>
+                                    </div>
+                                    <div class="report-content pad10A mrg20T" data-report="report-content"
+                                         style="word-break: break-all;">
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="tab-content pad20B pad10L pad10R pad15T">
+                            <div class="tab-block">
+                                {% include "web/comment_template.html" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#        <div class="drag-icon text-right"><i class="fa fa-arrows-alt"></i></div>#}
+            </div>
+        </div>
+
+        <div id="lesson-template-div" style="display: none;">
+            <div class="mrg15B"><a href="" class='return listText' name="lt-name" lesson-id="">
+                </a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var current_lesson_id = "{{ lesson_id }}";
+        var current_course_id = "{{ course_id }}";
+        var LessonNewUrlDetailUrl = "{% url 'course:api:lesson-new-detail' lesson_id %}";
+        var FromHtmlURL = "{% url 'course:from_html_video' lesson_id %}";
+        var FromHtmlEnvUrl = "{% url 'course:env' %}?lesson_id={{ lesson_id }}";
+        var LessonJstreeListUrl = "{% url 'course:api:lesson-jstree-list' %}";
+        var LessonListUrl = "{% url 'course:api:lesson-jstree-list' %}";
+        var LessonHtmlDetailUrl = "{% url 'course:html' %}?lesson_id=0";
+        var MarkDownUrl = "{% url 'course:markdown' %}?lesson_id={{ lesson_id }}";
+        var PDFDownUrl = "/static/lib/pdfjs-1.8.188/web/viewer.html?file=";
+
+    </script>
+    <script type="text/javascript" src="{% static 'course/js/html.js' %}"></script>
+    <script type="text/javascript">
+        $('.toggle-icon').click(function () {
+            if ($(this).find('i').hasClass('fa-angle-double-right')) {
+                $(this).find('i').removeClass('fa-angle-double-right').addClass('fa-angle-double-down');
+            } else {
+                $(this).find('i').removeClass('fa-angle-double-down').addClass('fa-angle-double-right');
+            }
+            $(this).siblings().slideToggle(100, function () {
+                if ($(this).is(":visible") && window.player !== undefined && $(this).children().attr('id') === 'video') {
+                    seekTime = parseInt(player.time);
+                    player = null;
+                    $.extend(true, globalvideoObject, {seek: seekTime, autoplay: true});
+                    player = new chplayer(globalvideoObject);
+                }
+                if ($(this).is(":visible") && $.fn.getLessonEnv && $(this).attr('data-widget-id') === 'common-env') {
+                    var network = envWidget.getInstance($('[data-widget-id=common-env]')).network;
+                    network.redraw();
+                    network.fit();
+                }
+            });
+        });
+
+
+        function setIframeHeight(iframe) {
+            if (iframe) {
+                var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+                if (iframeWin.document.body) {
+                    iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+                }
+            }
+        };
+        {% if html_type == 1 %}
+            window.onload = function () {
+                setIframeHeight(document.getElementById("md_pdf"));
+            };
+        {% endif %}
+
+        {# 我的笔记&&实验报告#}
+        // 初始化用户笔记数据
+        function init_course_detail() {
+            $.ajax({
+                url: "{% url 'course:api:course-detail' course_id %}",
+                type: "get",
+                datatype: "json",
+                success: function (data) {
+                    // 初始化评论
+                    init_comment_list(data.hash);
+                },
+                error: function () {
+                    showPopMsg("{% trans 'x_unable_get_details' %}");
+                }
+            });
+        }
+        function init_course_note(resource_id) {
+            $("#mynote-form input[name='hash']").val(resource_id);
+            $.ajax({
+                url: "{% url 'common_web:note:mynote' %}",
+                type: "get",
+                data: {"resource": resource_id},
+                datatype: "json",
+                async: true,
+                success: function (data) {
+                    // console.info(data);
+                    $("#mynote").val(data.content);
+                },
+            });
+
+            $('#mynote').initMarkdown();
+        }
+
+        // 初始化实验报告数据
+        function init_lesson_report(resource_id) {
+            $("input[name='report_hash']").val(resource_id + '_report');
+            $.ajax({
+                url: "{% url 'common_web:note:mynote' %}",
+                type: "get",
+                data: {"resource": resource_id + '_report'},
+                datatype: "json",
+                async: true,
+                success: function (data) {
+                    // console.info(data);
+                    if (data.ispass == true) {
+                        // not not edit
+                        var markcomment = data.markcomment ? data.markcomment : gettext('x_no_guide');
+                        var score_html = data.score + gettext('x_report_score') + "<span>" + gettext('x_pass') + "</span>";
+                        var comment_html = "<span class='orangeC'>" + gettext("x_mark_comment") +
+                            "：</span>" + "&nbsp;&nbsp;" + markcomment;
+                        $("#report-form").remove();
+                        $("#mynot-ispass").removeAttr("hidden");
+                        $('#mynot-ispass [data-report="report-comment"]').html(comment_html);
+                        $('#mynot-ispass [data-report="report-score"]').html(score_html);
+                        $('#mynot-ispass [data-report="report-content"]').html(marked(data.content));
+                    } else {
+                        // can edit
+                        $("#report").val(data.content);
+                        $("#report").initMarkdown();
+                    }
+                },
+                error: function (xhr) {
+                    $("#report").initMarkdown();
+                }
+            });
+        }
+
+
+        function save_note() {
+            $("#mynote-form").ajaxSubmit({
+                url: "{% url 'common_web:note:save_note' %}",
+                type: "post",
+                traditional: true,
+                beforeSubmit: function () {
+                },
+                success: function (json) {
+                    showHintMsg("{% trans 'x_saved_successfully' %}");
+                },
+                error: function (json) {
+                    showPopMsg("{% trans 'x_saved_fail' %}");
+                }
+            });
+            return false;
+        }
+        function save_report() {
+            $("#report-form").ajaxSubmit({
+                url: "{% url 'common_web:note:save_note' %}",
+                type: "post",
+                traditional: true,
+                beforeSubmit: function () {
+                },
+                success: function (json) {
+                    showHintMsg("{% trans 'x_saved_successfully' %}");
+                },
+                error: function (json) {
+                    showPopMsg("{% trans 'x_saved_fail' %}");
+                }
+            });
+            return false;
+        }
+
+        $(function () {
+            $('.tab-wrap').css({
+                'width': $(window).width() / 2,
+                'height': $(window).height() * 0.8,
+            });
+            $('.tabs').css({
+                'width': $('.tab-wrap').width(),
+                'height': $('.tab-wrap').height() - $('.tab-head').height(),
+            });
+            $(window).resize(function () {
+                $('.tabs').css({
+                    'width': $('.tab-wrap').width(),
+                    'height': $('.tab-wrap').height() - $('.tab-head').height(),
+                });
+            })
+            $('#drag').css({
+                'width': $(window).width() / 2,
+                'height': $(window).height() * 0.8,
+            })
+            $("#drag").draggable();
+
+            {#init_course_detail();#}
+
+
+            $("#addNote-btn").click(save_note);
+            $("#addReport-btn").click(save_report);
+        });
+        //    关闭弹框 显示操作按钮
+        $('.tab-wrap .close-tab').on('click', function () {
+            $('.action-btn-wrapper').animate({
+                right: '0',
+            });
+            $('#drag').hide('slow');
+        });
+        $('.action-btn > li').on('click', function () {
+            if ($(this).attr('media-name') == 'note') {
+                $('.tab-title > li:first').addClass('active').siblings().removeClass('active');
+                $('.tab-content:first').show('slow').siblings().hide('fast');
+            } else if ($(this).attr('media-name') == 'report') {
+                $('.tab-title > li:last').addClass('active').siblings().removeClass('active');
+                $('.tab-content:last').show('slow').siblings().hide('fast');
+            } else {
+                return;
+            }
+            $(this).find('a').addClass('active').parent().siblings().find('a').removeClass('active');
+            $('.action-btn-wrapper').animate({
+                right: '-128px',
+            });
+            $('#drag').show('slow');
+
+        });
+
+        $('.tab-title > li').on('click', function () {
+            var index = $(this).index();
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.tab-content ').eq(index).show('slow').siblings().hide('fast');
+            if (index == 0) {
+                $(".action-btn > li[media-name='note']").find('a').addClass('active').parent().siblings().find('a').removeClass('active');
+            } else if (index = 1) {
+                $(".action-btn > li[media-name='report']").find('a').addClass('active').parent().siblings().find('a').removeClass('active');
+            }
+
+        });
+
+        {% comment %}window.addEventListener('hashchange',function(e) {
+            if (e.oldURL === e.newURL){
+
+            }
+            window.scrollBy(0, -70);
+        },false);{% endcomment %}
+    </script>
+{% endblock %}

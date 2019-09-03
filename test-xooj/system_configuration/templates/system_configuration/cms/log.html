@@ -1,0 +1,336 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load static %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    {% trans 'x_log_manage' %}
+{% endblock %}
+
+{% block other_css_js %}
+        <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+{#        <ul class="nav nav-tabs">#}
+{#            <li>#}
+{#                <a data-toggle="tab" href="#tab-1" aria-expanded="false">{% trans 'x_system_log' %}</a>#}
+{#            </li>#}
+{#            <li>#}
+{#                <a data-toggle="tab" href="#tab-2" aria-expanded="false">{% trans 'x_operate_log' %}</a>#}
+{#            </li>#}
+{#        </ul>#}
+
+        <div class="clearfix tab-content">
+{#            <div id="tab-1" class="tab-pane">#}
+{#                <div class="ibox-content">#}
+{#                    <div id="system-log">#}
+{#                        <div id="tableToolbar">#}
+{#                            <div class="form-group">#}
+{#                                <div class="clearfix">#}
+{##}
+{#                                    <div class="m-r pull-left" style="width:196px">#}
+{#                                        <select class="form-control m-b sticky select_search" id="status">#}
+{#                                            <option value="">{% trans 'x_all_status' %}</option>#}
+{#                                            <option data-id="option-rendering"#}
+{#                                                    data-list='ListModelConstant.LoggerManage.LogStatus'>{% trans 'x_loading' %}</option>#}
+{#                                        </select>#}
+{#                                    </div>#}
+{#                                    <div class="m-r pull-left">#}
+{#                                        <input class="form-control m-b" id="search"#}
+{#                                               placeholder="{% trans 'x_keyword_name' %}"#}
+{#                                               type="text"/>#}
+{#                                    </div>#}
+{#                                    <div class="m-r pull-left">#}
+{#                                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">#}
+{#                                            <i class="fa fa-search"></i> {% trans 'x_search' %}#}
+{#                                        </a>#}
+{#                                    </div>#}
+{#                                </div>#}
+{##}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <table id="table"#}
+{#                               data-toggle="table"#}
+{#                               data-show-refresh="false"#}
+{#                               data-search="false"#}
+{#                               data-pagination="true"#}
+{#                               data-side-pagination="server"#}
+{#                               data-url="{% url 'cms_system_configuration:cms_api:system-log-list' %}"#}
+{#                        >#}
+{#                            <thead>#}
+{#                            <tr>#}
+{#                                <th data-field="create_username" data-escape="true">{% trans 'x_user' %}</th>#}
+{##}
+{#                                <th data-field="title" data-escape="true" data-escape="true">{% trans 'x_title' %}</th>#}
+{#                                <th data-field="content" data-escape="true" data-escape="true">{% trans 'x_detail_content' %}</th>#}
+{#                                <th data-field="level"#}
+{#                                    data-formatter="logLevelFormatter">{% trans 'x_logger_level' %}</th>#}
+{#                                <th data-field="log_status"#}
+{#                                    data-formatter="logStatusFormatter">{% trans 'x_status' %}</th>#}
+{#                                <th data-field="create_time"#}
+{#                                    data-formatter="table.datetimeFormatter">{% trans 'x_time' %}</th>#}
+{#                            </tr>#}
+{#                            </thead>#}
+{#                        </table>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+            <div id="tab-2" class="tab-pane">
+                <div class="ibox-content">
+                    <div id="operate-log">
+                        <div id="tableToolbar">
+                            <div class="form-group">
+                                <div class="clearfix">
+{#                                    <div class="m-r pull-left" style="width:196px">#}
+                                    <div class="m-r pull-left col-md-2">
+
+                                        <select class="form-control m-bm select_search" refresh_id="operateTable"
+                                                id="module">
+                                            <option value="">{% trans 'x_all_module' %}</option>
+                                            <option data-id="option-rendering" data-load='loadAllModuleSelect'
+                                                    async>{% trans 'x_loading' %}</option>
+                                        </select>
+
+                                    </div>
+
+{#                                    <div class="m-r pull-left" style="width:196px">#}
+                                    <div class="m-r pull-left col-md-2">
+                                        <select class="form-control m-b sticky select_search" refresh_id="operateTable"
+                                                id="status">
+                                            <option value="">{% trans 'x_all_status' %}</option>
+                                            <option data-id="option-rendering"
+                                                    data-list='ListModelConstant.LoggerManage.LogStatus'>{% trans 'x_loading' %}</option>
+                                        </select>
+                                    </div>
+                                    <div class="m-r pull-left col-md-2">
+                                        <input class="form-control m-b" id="search"
+                                               placeholder="{% trans 'x_keyword_name' %}"
+                                               type="text"/>
+                                    </div>
+                                    <div class="m-r pull-left">
+                                        <a class="btn btn-primary" id="_table_refresh"
+                                           onclick="operateTable.refresh();">
+                                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <table id="table2"
+                               data-toggle="table"
+                               data-show-refresh="false"
+                               data-search="false"
+                               data-pagination="true"
+                               data-side-pagination="server"
+                               data-url="{% url 'cms_system_configuration:cms_api:operation-log-list' %}"
+                        >
+                            <thead>
+                            <tr>
+                                <th data-field="user_name" data-escape="true">{% trans 'x_user' %}</th>
+                                <th data-field="module_name" data-escape="true">{% trans 'x_module' %}</th>
+
+                                <th data-field="operation_type" data-escape="true"
+                                    data-formatter="logOperateTypeFormatter">{% trans 'x_operation_type' %}</th>
+                                <th data-field="operation_str" data-escape="true">{% trans 'x_operation_str' %}</th>
+
+                                <th data-field="content" data-escape="true"
+                                    data-formatter="logDetailFormatter">{% trans 'x_detail_content' %}</th>
+{#                                <th data-field="level"#}
+{#                                    data-formatter="logLevelFormatter">{% trans 'x_logger_level' %}</th>#}
+                                <th data-field="log_status"
+                                    data-formatter="logStatusFormatter">{% trans 'x_status' %}</th>
+                                <th data-field="create_time"
+                                    data-formatter="table.datetimeFormatter">{% trans 'x_time' %}</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade in" id="log_detail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" style="top: 200px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">{% trans 'x_detail_content' %}</h4>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="form-group clearfix">
+                            <label class="col-sm-2 control-label col-sm-offset-2">{% trans 'x_time' %}</label>
+                            <div class="col-sm-4">
+                                <label id="log_time"></label>
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-sm-2 control-label col-sm-offset-2">{% trans 'x_user' %}</label>
+                            <div class="col-sm-6">
+                                <label id="log_user"></label>
+                            </div>
+                        </div><div class="form-group clearfix">
+                            <label class="col-sm-2 control-label col-sm-offset-2">{% trans 'x_model' %}</label>
+                            <div class="col-sm-6">
+                                <label id="log_module"></label>
+                            </div>
+                        </div><div class="form-group clearfix">
+                            <label class="col-sm-2 control-label col-sm-offset-2">{% trans 'x_sys_con_operation' %}</label>
+                            <div class="col-sm-6">
+                                <label id="log_opt_type"></label>
+                            </div>
+                        </div><div class="form-group clearfix">
+                            <label class="col-sm-2 control-label col-sm-offset-2">{% trans 'x_object' %}</label>
+                            <div class="col-sm-6">
+                                <label id="log_opt_obj"></label>
+                            </div>
+                        </div><div class="form-group clearfix">
+                            <label class="col-sm-2 control-label col-sm-offset-2">{% trans 'x_loglevel' %}</label>
+                            <div class="col-sm-6">
+                                <label id="log_level"></label>
+                            </div>
+                        </div><div class="form-group clearfix">
+                            <label class="col-sm-2 control-label col-sm-offset-2">{% trans 'x_status' %}</label>
+                            <div class="col-sm-6">
+                                <label id="log_status"></label>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group clearfix">
+                            <label class="col-sm-2 control-label col-sm-offset-2">{% trans 'x_detail' %}</label>
+                            <div class="col-sm-8">
+                                <textarea style="width: 80%;height: 200px" id="log_content"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script src="{% static_v 'system_configuration/cms/js/constants.js' %}"></script>
+
+    <script type="text/javascript">
+        (function () {
+            var myOptions = pageUtil.getOptions("myOptions");
+            var tab = myOptions.tab ? myOptions.tab : 'tab-2';
+            $('[href=#' + tab + ']').parent().addClass('active');
+            $('#' + tab).addClass('active');
+            $ONUNLOAD(function () {
+                var activeTab = $('.tab-pane.active').attr('id');
+                pageUtil.saveOptions("myOptions", {tab: activeTab});
+            });
+        }());
+    </script>
+
+    <script>
+        logLevelFormatter = function (value, row, index) {
+            return DictModelConstant.LoggerManage.Level[value];
+        };
+
+        logStatusFormatter = function (value, row, index) {
+            return DictModelConstant.LoggerManage.LogStatus[value];
+        };
+
+        logOperateTypeFormatter = function (value, row, index) {
+            return DictModelConstant.LoggerManage.OperateType[value];
+        };
+
+        logDetailFormatter = function (value, row, index) {
+            if(value == undefined){
+                return "";
+            }
+            return "<a onclick='modalDetail(" + index +");'> {% trans 'x_log_detail' %}</a>";
+        };
+
+        var table = bsTable.getTableModule($('#table'), function () {
+        });
+
+        var operateTable = bsTable.getTableModule($('#table2'), function () {
+            this.getData = function (index) {
+                var data = operateTable.$table.bootstrapTable('getData');
+                if (data.length <= index){
+                    return null;
+                }
+
+                return data[index];
+            }
+        });
+
+
+        $("#table").stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.level = $("#system-log #level").val();
+                params.status = $("#system-log #status").val();
+
+                params.search = $("#system-log #search").val();
+                return params;
+            },
+        });
+
+        $("#table2").stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.module = $("#operate-log #module").val();
+                params.level = $("#operate-log #level").val();
+                params.status= $("#operate-log #status").val();
+
+                params.search = $("#operate-log #search").val();
+                return params;
+            },
+        });
+
+        // 日志详情
+        function modalDetail(index){
+            data = operateTable.getData(index);
+            if(!data){
+                return;
+            }
+
+            $('#log_detail #log_time').html(data.create_time);
+            $('#log_detail #log_user').html(data.user_name);
+            $('#log_detail #log_module').html(data.module_name);
+            $('#log_detail #log_opt_type').html(DictModelConstant.LoggerManage.OperateType[data.operation_type]);
+            $('#log_detail #log_opt_obj').html(data.operation_str);
+            $('#log_detail #log_level').html(DictModelConstant.LoggerManage.Level[data.level]);
+            $('#log_detail #log_status').html(DictModelConstant.LoggerManage.LogStatus[data.log_status]);
+            $('#log_detail #log_content').val(JSON.stringify(data.content, null, 4));
+            $('#log_detail').modal();
+        }
+
+    </script>
+    <script>
+        function loadAllModuleSelect(callback) {
+            http.get("{% url 'cms_system_configuration:module' %}", {}, function (res) {
+                var options = [];
+                $.each(res, function (i, module) {
+                    options.push({
+                        value: module.id,
+                        text: module.name,
+                    });
+                });
+                callback(options);
+            });
+        }
+    </script>
+{% endblock %}

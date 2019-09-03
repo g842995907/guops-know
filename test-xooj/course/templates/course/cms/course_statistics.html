@@ -1,0 +1,239 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v static %}
+
+{% block title %}
+    <a href="{% url 'cms_course:class_statistics_list' %}">{% trans "x_learning_statistics" %}</a> >
+    {{ course.name }}
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static 'lib/jstree/css/style.css' %}"/>
+
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky" id="faculty_name" onchange="CALLBACK.majorlist()">
+                            <option value="0" selected="selected">
+                                {% trans "x_all" %}{{ ORGANIZATION.Second_level }}</option>
+                            {% for faculty in faculty_list %}
+                                <option value=
+                                                {{ faculty.id }}{% if faculty.id == userinfo.faculty %}selected{% endif %}>{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky" id="major_name" onchange="CALLBACK.classlist()">
+                            <option value="0" selected="selected">
+                                {% trans "x_all" %}{{ ORGANIZATION.Third_level }}</option>
+                            {% for faculty in major_list %}
+                                <option value={{ faculty.id }} {% if faculty.id == userinfo.major %}selected{% endif %}>{{ faculty.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <select class="form-control m-b sticky select_search" id="classes_name">
+                            <option value="0" selected="selected">
+                                {% trans "x_all" %}{{ ORGANIZATION.Fourth_level }}</option>
+                            {% for classes in classes_list %}
+                                <option value={{ classes.id }} {% if classes.id == userinfo.classes %}selected{% endif %}>{{ classes.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r pull-left col-md-2">
+                        <input class="form-control m-b sticky" id="search"
+                               placeholder={% trans 'x_user_or_name' %} type="text">
+                        </input>
+                    </div>
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_course:api:course-statistics' %}?course_id={{ course.id }}"
+        >
+            <thead>
+            <tr>
+                <th data-field="first_name" data-escape="true">{% trans 'x_name_surname' %}</th>
+                <th data-field="organization" data-escape="true" data-formatter="table.organizationFormatter">{% trans 'x_organization' %}</th>
+                <th data-field="complete_practice" data-formatter="table.practiceFormatter">{% trans 'x_complete_practice' %}</th>
+                {% if course_type != 0 %}
+                    <th data-field="id" data-formatter="table.experimentFormatter">{% trans 'x_experimental_report' %}</th>
+                    <th data-field="experiment_mark_score" data-formatter="table.markscoreFormatter">{% trans 'x_experiment_mark_score' %}</th>
+                {% endif %}
+                <th data-field="update_time" data-formatter="bsTable.datetimeFormatter">{% trans 'x_update_time' %}</th>
+            </tr>
+            </thead>
+        </table>
+        <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="detailModel">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_course:statistics_detail' course.id -1 %}";
+        var major_list = "{% url 'cms_x_person:cms_api:major-list' %}";
+        var classes_list = "{% url 'cms_x_person:cms_api:classes-list' %}";
+        var updateNoteUrl = "{% url 'cms_x_note:api:note-detail' 0 %}";
+    </script>
+    <script type="text/javascript">
+        {#pageWidgets.registerCheckTableRow($("#table"));#}
+
+        $('#testEnvModal').on('hidden.bs.modal', function () {
+            $('[data-widget-id=common-env]').empty();
+            $('[data-widget-id=common-env]').clearLessonEnvInstance();
+        });
+
+        $("#detailModel").on("hidden.bs.modal", function() {
+            $(this).removeData("bs.modal");
+        });
+
+        var table = bsTable.getTableModule($('#table'), function () {
+            this.operatorFormatter = function(value, row, index) {
+                return value;
+            };
+
+            this.lessonFormatter = function (value, row, index) {
+                return CALLBACK.addUnit(value, gettext("x_lesson"))
+            };
+
+            this.organizationFormatter = function (value, row, index) {
+                if (value == null) {
+                    return null;
+                }
+                var organization_list = value.split('/');
+                var data = '<span style="color: #f7a54a">' + organization_list[0] + '</span>' + ' / ' +
+                    '<span style="color: #23c6c8">' + organization_list[1] + '</span>' + ' / ' +
+                        '<span>' + organization_list[2] + '</span>';
+                return data;
+                };
+
+            this.experimentFormatter = function (value, row, index) {
+                if (row.experiment_is_pass == false) {
+                    return "<div class='text-danger'>" + gettext('x_not_submit') + "</div>";
+                }
+                return [
+                    '<div>',
+                    '<a class="btn btn-primary" href="'+"{% url "cms_course:report_detail" 0 %}".replace(0, row.report_id)+'" ' +
+                    'style="margin-left: 5px; margin-right: 5px;" data-toggle="modal" data-target="#detailModel">',
+                    '<i class="fa fa-eye"></i> {% trans "x_show" %}',
+                    '</a>',
+                    '</div>'
+                ].join('');
+            };
+
+            this.practiceFormatter = function (value, row, index) {
+                return CALLBACK.addUnit(value, gettext('x_lesson_task'))
+            };
+
+            this.markscoreFormatter = function (value, row, index) {
+                return CALLBACK.addUnit(value, '')
+            }
+
+        });
+
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: function (params) {
+                params.faculty = $("#faculty_name").val();
+                params.major = $("#major_name").val();
+                params.classes = $("#classes_name").val();
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+
+        var CALLBACK = {
+            batchSet: function (btn) {
+                var ids = table.getCheckedValues();
+                if (ids.length == 0) {
+                    return;
+                }
+                var url = $(btn).attr('data-url');
+                var fieldname = $(btn).attr('data-field');
+                var value = $(btn).attr('data-value');
+                var data = {
+                    ids: ids,
+                };
+                data[fieldname] = value;
+                ajaxDialog.buttonClick(http.patch, url, data, function (res) {
+                    if (res) {
+                        if (res.error_code == 0) {
+                            swal({
+                                title: res.info,
+                                type: "info",
+                                confirmButtonText: "{% trans 'x_select_share_teacher' %}",
+                                confirmButtonColor: '#DD6B55'
+                            });
+                            return false
+                        }
+                    }
+                    table.reload();
+                });
+            },
+            majorlist: function () {
+                var facultyid = $("#faculty_name").val();
+                $("#major_name").empty();
+                $('#major_name').append("<option value=0 selected=selected> {% trans 'x_all' %}{{ ORGANIZATION.Third_level }}</option>");
+                http.get(major_list, {'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#major_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                })
+                CALLBACK.classlist()
+            },
+            classlist: function () {
+                var major_id = $("#major_name").val();
+                var facultyid = $("#faculty_name").val();
+                $("#classes_name").empty();
+                $('#classes_name').append("<option value=0 selected=selected> {% trans 'x_all' %}{{ ORGANIZATION.Fourth_level }}</option>");
+                http.get(classes_list, {'major': major_id, 'faculty': facultyid}, function (data) {
+                    $.each(data.rows, function (n, value) {
+                        $('#classes_name').append("<option value=" + value.id + ">" + value.name + "</option>");
+                    });
+                });
+                table.refresh();
+            },
+            addUnit: function (value, unit) {
+                if (value != 0) {
+                    return value + unit
+                }
+            }
+        };
+    </script>
+{% endblock %}

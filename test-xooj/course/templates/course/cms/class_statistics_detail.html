@@ -1,0 +1,183 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v static %}
+
+{% block title %}
+    <a href="{% url 'cms_course:class_statistics_list' %}">{% trans "x_learning_statistics" %}</a> >
+    {{ class_name }}
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static 'lib/jstree/css/style.css' %}"/>
+    <script src="{% static 'lib/echarts/echarts.js' %}"></script>
+    <script src="{% static 'lib/echarts/macarons.js' %}"></script>
+    <style>
+        .pull-left {
+            margin-right: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div class="row mrg0A">
+            <div>
+                <div class="pull-left">
+                    <label>{{ ORGANIZATION.Second_level }}:</label>
+                    <span id="faculty_name"></span>
+                </div>
+                <div class="pull-left">
+                    <label>{{ ORGANIZATION.Third_level }}:</label>
+                    <span id="major_name"></span>
+                </div>
+                <div class="pull-left">
+                    <label>{% trans 'x_student_nums' %}:</label>
+                    <span id="student_nums"></span>
+                </div>
+                <div class="pull-left">
+                    <label>{% trans 'x_complete_lessons' %}:</label>
+                    <span id="complete_lessons"></span>
+                </div>
+                <div class="pull-left">
+                    <label>{% trans 'x_complete_experiment' %}:</label>
+                    <span id="complete_experiment"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row mrg0A">
+            <div id="main" style="width: 100%;height: 600px;">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var class_id = {{ class_id }};
+        var completeUrl = "{% url 'cms_course:api:course-class-statistics' %}"
+        var singleClassUrl = "{% url 'cms_course:api:course-single-class-statistics' %}"
+    </script>
+    
+    <script type="text/javascript">
+        $().ready(function () {
+            $.ajax({
+                url: completeUrl,
+                data: {"class_id": class_id},
+                type: "GET",
+                datatype: "json",
+                success: function (result) {
+                    var organization_list = result.organization.split('/');
+                    $("#class").text(result.class_name + gettext('x_learning_statistics'));
+                    $("#faculty_name").text(organization_list[0]);
+                    $("#major_name").text(organization_list[1]);
+                    $("#student_nums").text({{ student_nums }});
+                    $("#complete_lessons").text(result.complete_lessons);
+                    $("#complete_experiment").text(result.complete_experiment);
+                }
+            });
+
+            var chart = echarts.init(document.getElementById('main'), 'macarons');
+            // chart.showLoading();//显示等待条
+            var option = {
+                tooltip : {
+                    trigger: 'axis',
+                    show: true
+                },
+                legend: {
+                    // selectedMode: false,//不可点击
+                    data: [gettext('x_lessons'), gettext('x_experiment'), gettext('x_average_score')]
+                },
+                grid: {
+                    left: 100
+                },
+                /*dataZoom: [{
+                      type: 'slider',
+                      show: true,
+                      xAxisIndex: [0],
+                      left: '9%',
+                      bottom: -5,
+                      start: 10,
+                      end: 90
+                  }],*/
+                xAxis: {
+                        type: 'category',
+                        splitLine: {//显示分割线
+                            show: true
+                        },
+                        axisLabel: {
+                            interval:0,
+                            rotate:40
+                        }
+                    },
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: gettext('x_lessons') + '/' + gettext('x_experiment'),
+                        splitLine: {//不显示分割线
+                            show: false
+                        },
+                        /*axisLabel: {
+                            formatter: '{value} ml'
+                        }*/
+                    },
+                    {
+                        type: 'value',
+                        name: gettext('x_average_score'),
+                        /*axisLabel: {
+                            formatter: '{value} °C'
+                        },*/
+                        splitLine: {
+                            show: false
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        type: 'bar',
+                        smooth:true,
+                        itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    },
+                    {
+                        type: 'bar',
+                        smooth:true,
+                        itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                    },
+                    {
+                        type: 'line',
+                        smooth:true,
+                        // itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                        yAxisIndex: 1,//索引从0开始
+                    }
+                ]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            // chart.setOption(option);
+            //两秒后关闭等待进度条
+            /*setTimeout(function () {
+                chart.hideLoading();//隐藏等待条
+            }, 500);*/
+
+            $.ajax({
+                url: singleClassUrl,
+                data: {class_id: {{ class_id }}},
+                type: "GET",
+                datatype: "json",
+                success: function (result) {
+                    option.xAxis.data = result.x_axis.data;
+                    option.series[0].data = result.lesson.data;
+                    option.series[1].data = result.experiment.data;
+                    option.series[2].data = result.score.data;
+
+                    option.series[0].name = option.legend.data[0] = gettext('x_lessons');
+                    option.series[1].name = option.legend.data[1] = gettext('x_experiment');
+                    option.series[2].name = option.legend.data[2] = gettext('x_average_score');
+
+                    chart.setOption(option);
+                }
+            });
+
+        })
+    </script>
+{% endblock %}
+</html>

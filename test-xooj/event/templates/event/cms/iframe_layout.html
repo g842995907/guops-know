@@ -1,0 +1,17 @@
+{% extends 'cms/iframe_layout.html' %}
+
+{% load static_v %}
+
+{% block other_css_js %}
+{{ block.super }}
+<script src="{% static_v 'event/cms/js/common.js' %}"></script>
+<script src="{% static_v 'event/cms/js/constants.js' %}"></script>
+    <style>
+        .col-md-2{
+            position: relative;
+            min-height: 1px;
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    </style>
+{% endblock %}

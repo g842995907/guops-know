@@ -1,0 +1,560 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <style>
+        .brief_introduction i {
+            font-size: 12px;
+            width: auto;
+            float: none;
+            margin-right: 0;
+            line-height: normal;
+        }
+        .brief_introduction .note-editing-area {
+            min-height: auto;
+        }
+        .note-editor, .panel-body, .note-toolbar, .note-statusbar, .note-icon-bar, .note-resizebar{
+            background-color: #132439!important;
+        }
+        .note-editor.note-frame{
+            border: none;
+        }
+        .note-toolbar{
+            border-color: #1f68cd!important;
+        }
+        .note-btn {
+            border-color: #1f68cd!important;
+            background-color: #132439!important;
+            color: #1f68cd!important;
+
+        }
+
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="{% url 'x_person:info' %}" class='active font15'>{% trans 'x_my_profile' %}</a>
+        </div>
+        <div class="content mrg30T default-bg pad60T mrg0L mrg0R ">
+            <div class="row centerDiv" id="user_info">
+                <form class="col-lg-10 col-md-12 col-sm-12 " id="validateForm"
+                      action="{% url 'x_person:api:user-detail' user.id %}"
+                      method="patch">{% csrf_token %}
+
+                    {# 左侧头像#}
+                    <div class='text-center fl col-sm-12 col-xs-12' id="preview">
+                    <span class="preview-img-box mrg10B">
+                        <img id="headShow" class="img-responsive img-circle" v-if="userinfo.logo_url"
+                             v-bind:src="userinfo.logo_url">
+                        <img id="headShow" class="img-responsive img-circle" v-else
+                             src="{% static 'x_person/img/user_default.jpg' %}"></span>
+                        </span>
+                        <div class='cursor orangeC' onclick="$('#up_userLogo').click();">
+                            {% trans 'x_click_change_avatar' %}
+                        </div>
+                        <input id="up_userLogo" name="logo" type="file" onchange="previewImage(this)"
+                               style="display: none;">
+                    </div>
+
+                    {# 右侧信息#}
+                    <div class="row col-md-10">
+                        <div class="info-form personal-info-form">
+                            <div class="form-group clearfix">
+                                {% if user.status == 2 %}
+                                    <span style="color:red">[{% trans 'x_new_user' %}]</span>
+                                {% elif user.status == 1 and audit == '1' %}
+                                    <span style="color:red">[!{% trans 'x_not_audited' %}]</span>
+                                    {#                                {% else %}#}
+                                    {#                                    <span style="color:red">{% trans '[正常]' %}</span>#}
+                                {% endif %}
+                                <i class='icon-icons-10' for="" title="{% trans 'x_user_name' %}"></i>
+                                <span style="font-size: 14px;line-height: 40px;" v-html="userinfo.username"></span>
+                            </div>
+                            <div class="form-group form-inline clearfix">
+                                <i class='fa fa-sitemap' for="" title="{% trans 'x_organizational_structure_manage' %}"></i>
+                                <input disabled type="text" style="padding-left: 10px" value="{{ school_name }}">
+                                <template>
+                                    {% if user.status == 2 %}
+                                        <select id="faculty" name="faculty" style="padding-left: 5px; max-width: 230px">
+                                            <option value="">{% trans "x_please_choose" %}{{ ORGANIZATION_CN.Second_level }}</option>
+                                            <option v-for="faculty in faculty_list" v-html="faculty.name"
+                                                    v-bind:value="faculty.id"></option>
+                                        </select>
+                                    {% elif user.status == 3 or user.status == 1 %}
+                                        <input disabled id="faculty" name="faculty" style="padding-left: 10px" type="text" value={{ faculty }}>
+                                        {#                                        <select disabled id="faculty" name="faculty"#}
+                                        {#                                                style="padding-left: 5px; max-width: 230px">#}
+                                        {#                                            <option>{{ faculty }}</option>#}
+                                        {#                                        </select>#}
+                                    {% endif %}
+                                    {#                                    <span style="font-size: 14px;line-height: 40px;" v-html="faculty.name"></span>#}
+                                </template>
+                                <template>
+                                    {#                                    <span style="font-size: 14px;line-height: 40px;" v-html="major.name"></span>#}
+                                    {% if user.status == 2 %}
+                                        <select id="major" name="major" style="padding-left: 5px; max-width: 230px">
+                                        </select>
+                                    {% elif user.status == 1 or user.status == 3 %}
+                                        <input disabled id="major" name="major" style="padding-left: 10px" type="text" value={{ major }}>
+                                        {#                                        <select disabled id="major" name="major"#}
+                                        {#                                                style="padding-left: 5px; max-width: 230px">#}
+                                        {#                                            <option>{{ major }}</option>#}
+                                        {#                                        </select>#}
+                                    {% endif %}
+                                </template>
+                                <template>
+                                    {% if user.status == 2 %}
+                                        <select id="classes" name="classes" style="padding-left: 5px; max-width: 230px">
+                                        </select>
+                                    {% elif user.status == 1 or user.status == 3 %}
+                                        <input disabled id="classes" name="classes" style="padding-left: 10px" type="text" value={{ classes }}>
+                                        {#                                        <select disabled id="classes" name="classes"#}
+                                        {#                                                style="padding-left: 5px; max-width: 230px">#}
+                                        {#                                            <option>{{ classes }}</option>#}
+                                        {#                                        </select>#}
+                                    {% endif %}
+                                    {#                                    <span style="font-size: 14px;line-height: 40px;" v-html="classes.name"></span>#}
+                                </template>
+                                <span class="text-danger">*</span>
+                            </div>
+                            {#                                <select class="form-control" id="faculty" name="faculty" @change="majorlist">#}
+                            {#                                    <template v-for="faculty in faculty_list">#}
+                            {#                                        <option v-if="faculty.id==userinfo.faculty" selected#}
+                            {#                                                v-bind:value="faculty.id" v-html="faculty.name"></option>#}
+                            {#                                        <option v-else v-bind:value="faculty.id" v-html="faculty.name"></option>#}
+                            {##}
+                            {#                                    </template>#}
+                            {#                                </select>#}
+                            {#                                <select class="form-control" id="major" name="major" >#}
+                            {#                                    <template v-for="major in major_list">#}
+                            {#                                        <option v-if="major.id==userinfo.major" selected#}
+                            {#                                                v-bind:value="major.id" v-html="major.name"></option>#}
+                            {#                                        <option v-else v-bind:value="major.id" v-html="major.name"></option>#}
+                            {#                                    </template>#}
+                            {#                                </select>#}
+                            {#                                <select class="form-control" id="classes" name="classes">#}
+                            {#                                    <template v-for="classes in classes_list">#}
+                            {#                                        <option v-if="classes.id==userinfo.classes" selected#}
+                            {#                                                v-bind:value="classes.id" v-html="classes.name"></option>#}
+                            {#                                        <option v-else v-bind:value="classes.id" v-html="classes.name"></option>#}
+                            {#                                    </template>#}
+                            {#                                </select>#}
+                            {#                                <span class="need-info">*</span>#}
+                            <div class="form-group form-inline clearfix">
+                                <i class='fa fa-user-md' for="" title="{% trans 'x_name_surname' %}"></i>
+                                <input class='form-control layout-color'
+                                       name="first_name" v-model="userinfo.first_name"
+                                       style="cursor:default;"
+                                       type="text" {% if user.status == 1 or user.status == 3 %}disabled {% endif %}
+                                       value="" placeholder="{% trans 'x_name_surname' %}">
+                                <span class="text-danger">*</span>
+                            </div>
+                            <div class="form-group form-inline clearfix">
+                                <i class='fa fa-barcode' for="" title="{% trans 'x_student_id' %}"></i>
+                                <input class='form-control layout-color'
+                                       name="student_id" type="text" value=""
+                                       style="cursor:default;"
+                                       placeholder="{% trans 'x_student_id' %}"
+                                       v-model="userinfo.student_id">
+                            </div>
+{#                            <div class="form-group form-inline clearfix posRelative">#}
+{#                                <i class='fa fa-envelope-o' for="" title="{% trans 'x_email' %}"></i>#}
+{#                                <input class='form-control layout-color' name="email" type="email" value=""#}
+{#                                       placeholder="{% trans 'x_email' %}"#}
+{#                                       v-model="userinfo.email">#}
+{#                                {% if user.email_validate == False %}#}
+{#                                    {% if user.status == 1 or user.status == 3 %}#}
+{#                                        <span class="verify-abbdon" id="validate_email" style="cursor:pointer">{% trans 'x_click_verify' %}</span>#}
+{#                                    {% endif %}#}
+{#                                {% else %}#}
+{#                                    <span class="verify-abbdon">{% trans 'x_verified' %}</span>#}
+{#                                {% endif %}#}
+{##}
+{#                                <span class="text-danger">*</span>#}
+                                {#                                <span class="need-info">*</span>#}
+{#                            </div>#}
+
+                            <div class="form-group form-inline">
+                                <i class='fa fa-mobile-phone' for="" title="{% trans 'x_phone_num' %}"></i>
+                                <input class='form-control layout-color' name="mobile" type="text" value=""
+                                       placeholder="{% trans 'x_phone_num' %}"
+                                       v-model="userinfo.mobile">
+{#                                <span class="text-danger">*</span>#}
+                                {#                                <span class="need-info">*</span>#}
+                            </div>
+{#                            <div class="form-group ">#}
+{#                                <i class='fa fa-globe' for="" title="{% trans 'x_nickname_cloud_exchange' %}"></i>#}
+{#                                <input class='form-control layout-color' name="nickname" type="text" value=""#}
+{#                                       v-model="userinfo.nickname"#}
+{#                                       placeholder="{% trans 'x_nickname_cloud_exchange' %}">#}
+{#                            </div>#}
+                            <div class="form-group form-inline clearfix">
+                                <i class='fa fa-address-card-o' for="" title={% trans "x_address" %}></i>
+                                <input class='form-control layout-color' name="address" type="text" value=""
+                                       placeholder="{% trans 'x_address' %}"
+                                       v-model="userinfo.address">
+                                {#                                <span class="need-info">*</span>#}
+                            </div>
+                            <div class="form-group form-inline clearfix">
+                                <i class='fa fa-credit-card' for="" title="{% trans 'x_id_number' %}"></i>
+                                <input class='form-control layout-color' name="ID_number" type="text" value=""
+                                       placeholder="{% trans 'x_id_number' %}"
+                                       v-model="userinfo.ID_number">
+                            </div>
+                            <div class="form-group form-inline clearfix">
+                                <i class='fa fa-commenting-o' for="" title="{%  trans 'x_personal_profile' %}"></i>
+{#                                <textarea rows="3" class='form-control col-sm-11 layout-color' name="brief_introduction"#}
+{#                                          type="text" value=""#}
+{#                                          placeholder="{% trans 'x_personal_profile' %}"#}
+{#                                          v-model="userinfo.brief_introduction"></textarea>#}
+                                 <textarea rows="3" class='form-control col-sm-11 layout-color' name="brief_introduction"
+                                          type="text" value=""
+                                          placeholder="{% trans 'x_personal_profile' %}"
+                                          v-model="userinfo.brief_introduction" maxlength="50"></textarea>
+{#                                <div class='col-sm-11 layout-color brief_introduction' style="padding-left: 0;">#}
+{#                                    <textarea id="brief_introduction" name="brief_introduction"#}
+{#                                       v-model="userinfo.brief_introduction">#}
+{#                                    </textarea>#}
+{#                                </div>#}
+                            </div>
+                            <p class="text-center">
+                                <button class="btn-common mrg50B mrg20T" type="submit"><div class="left-right-line">{% trans 'x_save' %}</div></button>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    {% include 'x_person/web/js_templates/bootstrap_modal.html' %}
+{% endblock %}
+{% block document_ready %}
+    <script>
+        $(function () {
+            autosize(document.querySelectorAll('textarea'));
+        })
+    </script>
+    <script>
+        var facultyApiList = "{% url 'x_person:api:faculty-list' %}";
+        var majorApiList = "{% url 'x_person:api:major-list' %}";
+        var classesApiList = "{% url 'x_person:api:classes-list' %}";
+        var userInfoUrl = "{% url 'x_person:info' %}";
+        $(function () {
+            $('#validate_email').click(function () {
+                http.post("{% url 'x_person:send_validate_email' user.id %}", {}, function () {
+                    $('#hint-msg').html(gettext('x_E-mail_verification'));
+                    $("#hint-msg-warp").modal();
+                    $("#hint-msg-warp").show();
+                })
+            })
+        })
+    </script>
+    <script>
+        var returnUrl = urlparser.getQueryString("return");
+        returnUrl = returnUrl ? returnUrl : userInfoUrl;
+    </script>
+    <script>
+        var CALLBACK = {
+            init_user_detail: function () {
+                http.get("{% url 'x_person:api:user-detail' user.id %}", null, function (data) {
+                    personal_info.userinfo = data
+                })
+            },
+            get_organization_list: function () {
+                http.get(facultyApiList, null, function (data) {
+                    personal_info.faculty_list = data.rows;
+                    return data.rows;
+                });
+                {#                http.get(majorApiList, null, function (data) {#}
+                {#                    personal_info.major_list = data.rows;#}
+                {#                });#}
+                {#                http.get(classesApiList, null, function (data) {#}
+                {#                    personal_info.classes_list = data.rows;#}
+                {#                });#}
+            }
+        };
+
+        //图片上传预览
+        window.onload = function () {
+            new uploadPreview({UpBtn: "up_userLogo", DivShow: "headBox", ImgShow: "headShow"});
+        };
+
+        $(function () {
+            CALLBACK.init_user_detail();
+            CALLBACK.get_organization_list();
+        });
+        var personal_info = new Vue({
+            el: '#user_info',
+            data: {
+                userinfo: '',
+                faculty_list: '',
+            }
+        });
+
+{#        var personal_info;#}
+{#        http.get("{% url 'x_person:api:user-detail' user.id %}", null, function (data) {#}
+{#            var userinfo = data;#}
+{#            http.get(facultyApiList, null, function (data) {#}
+{#                var faculty_list = data.rows;#}
+{#                personal_info = new Vue({#}
+{#                el: '#user_info',#}
+{#                data: {#}
+{#                    userinfo: userinfo,#}
+{#                    faculty_list: faculty_list,#}
+{#                },#}
+{#                mounted: function () {#}
+{#                    $('#brief_introduction').summernote({#}
+{#                        lang: 'zh-CN',#}
+{#                        minHeight: 200,#}
+{#                        placeholder: "{% trans 'x_personal_profile' %}",#}
+{#                        toolbar: [#}
+{#                            ['history', ['undo', 'redo']],#}
+{#                            ['style', ['style']],#}
+{#                            ['font', ['bold', 'italic', 'underline', 'clear']],#}
+{#                            ['fontname', ['fontname']],#}
+{#                            ['color', ['color']],#}
+{#                            ['para', ['ul', 'ol', 'paragraph']],#}
+{#                            ['table', ['table']],#}
+{#                            ['insert', ['link', 'picture', 'video']],#}
+{#                            ['view', ['help']]#}
+{#                        ],#}
+{#                        callbacks: {#}
+{#                            onInit: function (obj) {#}
+{#                                // image/* 太慢#}
+{#                                var $imageInput = obj.editor.find('input[type=file][accept="image/*"]');#}
+{#                                if (!!$imageInput) {#}
+{#                                    $imageInput.attr('accept', 'image/gif,image/jpeg,image/png,image/bmp');#}
+{#                                }#}
+{#                            },#}
+{#                            onImageUpload: function (files) {#}
+{#                                var editor = $(this);#}
+{#                                var formData = new FormData();#}
+{#                                formData.append("image_file", files[0]);#}
+{##}
+{#                                $.ajax({#}
+{#                                    type: "POST",#}
+{#                                    url: "{% url 'common_cms:common_upload_image' %}",#}
+{#                                    data: formData,#}
+{#                                    cache: false,#}
+{#                                    processData: false,#}
+{#                                    contentType: false,#}
+{#                                    success: function (json) {#}
+{#                                        editor.summernote('insertImage', json.url);#}
+{#                                    }#}
+{#                                });#}
+{#                            },#}
+{#                            onImageRemove: function (target) {#}
+{#                                $.ajax({#}
+{#                                    type: "POST",#}
+{#                                    url: "{% url 'common_cms:common_remove_image' %}",#}
+{#                                    data: {url: target[0].src}#}
+{#                                });#}
+{#                            }#}
+{#                        }#}
+{#                    });#}
+{#                }#}
+{#            });#}
+{#            });#}
+{#        });#}
+        $(function () {
+            $("#faculty").change(function () {
+                init_faculty($(this).val());
+            });
+            $("#major").change(function () {
+                init_major($(this).val());
+            });
+            $("#classes").change(function () {
+                init_classes($(this).val());
+            });
+
+            function init_faculty(parent_id) {
+                var option = $('#faculty').find('option');
+                for (i in option) {
+                    if (option[i].value == parent_id) {
+                        option[i].setAttribute('selected', 'true');
+                        break;
+                    }
+                }
+                $("#major").empty();
+                $("#classes").empty();
+                $.ajax({
+                    type: "GET",
+                    url: majorApiList,
+                    data: {"parent_id": parent_id},
+                    datatype: "json",
+                    success: function (json) {
+                        if (json.total == 0) {
+                            $("#major").append("<option value=''>{% trans "   ----   " %}</option>");
+                        }
+                        else {
+                            var major = json.rows;
+                            $("#major").append("<option value=''>{% trans "x_please_choose" %}{{ ORGANIZATION_CN.Third_level }}</option>");
+                            for (i in major) {
+                                $("#major").append("<option value='" + major[i].id + "'>" +codeUtil.htmlEncode(major[i].name) + "</option>")
+                            }
+                        }
+                    }
+                })
+            }
+        });
+
+        function init_major(parent_id) {
+            var option = $('#major').find('option');
+            for (i in option) {
+                if (option[i].value == parent_id) {
+                    option[i].setAttribute('selected', 'true');
+                    break;
+                }
+            }
+            $("#classes").empty();
+            $.ajax({
+                type: "GET",
+                url: classesApiList,
+                data: {"parent_id": parent_id},
+                datatype: "json",
+                success: function (json) {
+                    if (json.total == 0) {
+                        $("#classes").append("<option value=''>{% trans "   ----   " %}</option>");
+                    }
+                    else {
+                        var classes = json.rows;
+                        $("#classes").append("<option value=''>{% trans "x_please_choose" %}{{ ORGANIZATION_CN.Fourth_level }}</option>");
+                        for (i in classes) {
+                            $("#classes").append("<option value='" + classes[i].id + "'>" +codeUtil.htmlEncode(classes[i].name) + "</option>")
+                        }
+                    }
+                }
+            })
+        };
+
+        function init_classes(parent_id) {
+            var option = $('#classes').find('option');
+            for (i in option) {
+                if (option[i].value == parent_id) {
+                    option[i].setAttribute('selected', 'true');
+                    break;
+                }
+            }
+        }
+
+        {#        var personal_info = new Vue({#}
+        {#            el: '#user_info',#}
+        {#            data: {#}
+        {#                userinfo: '',#}
+        {#                faculty_list: '',#}
+        {#                major_list: '',#}
+        {#                classes_list: '',#}
+        {#            },#}
+        {#            methods: {#}
+        {#                majorlist: function () {#}
+        {#                    var data = {#}
+        {#                        'faculty': $("#faculty").val()#}
+        {#                    };#}
+        {#                    http.get(majorApiList, data, function (data) {#}
+        {#                        personal_info.major_list = data.rows;#}
+        {#                        personal_info.classeslist(data.rows[0].id)#}
+        {##}
+        {#                    });#}
+        {#                },#}
+        {#                classeslist: function (major) {#}
+        {#                    var data = {#}
+        {#                        'major': major#}
+        {#                    };#}
+        {#                    http.get(classesApiList, data, function (data) {#}
+        {#                        personal_info.classes_list = data.rows;#}
+        {#                    });#}
+        {#                }#}
+        {#            }#}
+        {#        });#}
+
+        $(function () {
+                $("#validateForm").validate({
+                    rules: {
+                        nickname: {
+                            check_nickname: true
+                        },
+                        first_name: {
+                            required: true,
+                            maxlength: 30
+                        },
+                        mobile: {
+                            {#                            required: true,#}
+                            mobile_v: true
+                        },
+                        email: {
+                            required: true,
+                            email: true
+                        },
+                        classes: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        first_name: {
+                            required: gettext("x_required"),
+                            maxlength: gettext("x_max_length_30")
+                        },
+                        {#                        mobile: {#}
+                        {#                            required: gettext("必填")#}
+                        {#                        },#}
+                        email: {
+                            required: gettext("x_required")
+                        },
+                        classes: {
+                            required: gettext("x_required")
+                        }
+                    },
+                    errorPlacement: function (error, element) {
+                        error.appendTo(element.parent());
+                        error.css('margin-left', 40);
+                    }
+                });
+                jQuery.validator.addMethod("email", function (value, element) {
+                    var Regx = /^[^\._-][\w\.-]+@(?:[A-Za-z0-9]+\.)+(com|cn|gov|net|org)$/;
+                    return this.optional(element) || Regx.test(value);
+                }, gettext("x_email_prompt"));
+                jQuery.validator.addMethod("mobile_v", function (value, element) {
+                    var Regx = /^0\d{2,3}[ \-]+?\d{7,8}$|^1[358]\d{9}$|^147\d{8}$|^176\d{8}$/;
+                    return this.optional(element) || Regx.test(value);
+                }, gettext("x_enter_china_phone"));
+                jQuery.validator.addMethod("check_nickname", function (value, element) {
+                    var re = /^((?!(admin)|(root)|(管理员)).)*$/
+                    return this.optional(element) || re.test(value);
+                }, gettext("x_invaild_symbol_admin"));
+
+                $("#validateForm").ajaxFormDialog(function () {
+                    setTimeout(function () {
+                        window.location.href = returnUrl;
+                    }, ajaxDialog.defaultDelayTime);
+                }, function (xhr, ts, et) {
+                    ierror(JSON.parse(xhr.responseText).detail);
+                }, {
+                    beforeSerialize: function () {
+                        {#                        $("#bsConfirmModal").modal('hide').off('hidden.bs.modal').on('hidden.bs.modal', function () {#}
+                        {#                        });#}
+                        if ($("#up_userLogo").val() == "") {
+                            var $ele = $("#validateForm").find('[name="logo"]');
+                            $ele.attr('data-form-hidden-name', "logo").removeAttr('name');
+                        }
+                    },
+                    popConfig: {
+                        title: gettext('x_save_cannot_changed'),
+                    }
+                })
+            }
+        )
+
+
+
+    </script>
+{% endblock %}
+
+<!-- container end-->

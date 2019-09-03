@@ -1,0 +1,90 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_type' %}
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+
+                    <div class="col-md-3 col-sm-3">
+                        <input class="form-control m-b" id="search" placeholder="{% trans 'x_title' %}"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-2 col-sm-2">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-md-6 col-sm-6">
+                        <a class="btn btn-primary" href="{% url 'cms_experiment:direction_detail' 0 %}">
+                            <i class="fa fa-plus"></i> {% trans "x_add" %}
+                        </a>
+                        <button class="btn btn-danger"
+                                data-url="{% url 'cms_experiment:api:direction-batch-destroy' %}"
+                                onclick="table.batchDestroy(this);">
+                            <i class="fa fa-remove"></i> {% trans "x_delete" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-toolbar-align="center"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_experiment:api:direction-list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="cn_name">{% trans 'x_zh_name' %}</th>
+                <th data-field="en_name">{% trans 'x_en_name' %}</th>
+                <th data-field="id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var listUrl = "{% url 'cms_experiment:direction' %}";
+    </script>
+    <script type="text/javascript">
+        pageWidgets.registerCheckTableRow($("#table"));
+        var table = bsTableClass($('#table'));
+
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.search = $("#search").val();
+                return params;
+            }
+        });
+
+        function operatorFormatter(value, row, index) {
+            var btns = [
+                {
+                    type: 'link',
+                    class: 'btn-primary',
+                    icon: 'fa-edit',
+                    text: "{% trans 'x_edit' %}",
+                    url: listUrl + value
+                }
+            ];
+            return bsTable.getOperatorHtml(btns);
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,431 @@
+msgid "x_yes"
+msgstr "是"
+
+msgid "x_no"
+msgstr "否"
+
+msgid "x_name"
+msgstr "名称"
+
+msgid "x_operation"
+msgstr "操作"
+
+msgid "x_to_create"
+msgstr "等待创建"
+
+msgid "x_re_create"
+msgstr "重建"
+
+msgid "x_error"
+msgstr "错误"
+
+msgid "x_score"
+msgstr "分数"
+
+msgid "x_category"
+msgstr "分类"
+
+msgid "x_search"
+msgstr "搜索"
+
+msgid "x_status"
+msgstr "状态"
+
+msgid "x_has_deleted"
+msgstr "已删除"
+
+msgid "x_team_leader"
+msgstr "队长"
+
+msgid "x_unknown"
+msgstr "宕机"
+
+msgid "x_want_to_continue"
+msgstr "确定继续吗"
+
+msgid "x_confirm"
+msgstr "确定"
+
+msgid "x_save"
+msgstr "保存"
+
+msgid "x_cancel"
+msgstr "取消"
+
+msgid "x_operation_success"
+msgstr "操作成功"
+
+msgid "x_server_error"
+msgstr "服务器出错了"
+
+msgid "x_close"
+msgstr "关闭"
+
+msgid "x_select_file"
+msgstr "选择文件"
+
+msgid "x_none"
+msgstr "无"
+
+msgid "x_private"
+msgstr "私有"
+
+msgid "x_share"
+msgstr "共享"
+
+msgid "x_team"
+msgstr "队伍"
+
+msgid "x_not_configured"
+msgstr "未配置"
+
+msgid "x_setting_private_environment"
+msgstr "设为私有场景"
+
+msgid "x_experimental_report"
+msgstr "实验报告"
+
+msgid "x_easy"
+msgstr "初级"
+
+msgid "x_normal"
+msgstr "中级"
+
+msgid "x_hard"
+msgstr "高级"
+
+msgid "x_public"
+msgstr "公开"
+
+msgid "x_hide"
+msgstr "隐藏"
+
+msgid "x_shared_environment"
+msgstr "共享场景"
+
+msgid "x_private_environment"
+msgstr "私有场景"
+
+msgid "x_group_environment"
+msgstr "小组场景"
+
+msgid "x_remaining_time"
+msgstr "剩余时间"
+
+msgid "x_is_withdraw"
+msgstr "还有{minute}分{second}秒将撤回场景，是否需要延长场景？"
+
+msgid "x_right_click_switch"
+msgstr "点击右键进行编辑"
+
+msgid "x_cannot_add_subnode"
+msgstr "当前节点无法添加子节点"
+
+msgid "x_cannot_edit_node"
+msgstr "当前节点无法编辑"
+
+msgid "x_cantnot_del_rootnode"
+msgstr "根节点无法删除"
+
+msgid "x_delete"
+msgstr "删除"
+
+msgid "x_no_match_found"
+msgstr "未找到匹配的记录"
+
+msgid "x_charge"
+msgstr "收费"
+
+msgid "x_free"
+msgstr "免费"
+
+msgid "x_limit"
+msgstr "限制"
+
+msgid "x_starting"
+msgstr "启动中"
+
+msgid "x_running"
+msgstr "运行中"
+
+msgid "x_deploying"
+msgstr "部署中"
+
+msgid "x_creating"
+msgstr "创建中"
+
+msgid "x_add"
+msgstr "新增"
+
+msgid "x_user_name"
+msgstr "用户名"
+
+msgid "x_zh-han"
+msgstr "中文"
+
+msgid "x_English"
+msgstr "英文"
+
+msgid "x_day"
+msgstr "天"
+
+msgid "x_hour"
+msgstr "小时"
+
+msgid "x_time_minute"
+msgstr "分"
+
+msgid "x_second"
+msgstr "秒"
+
+msgid "x_type"
+msgstr "类型"
+
+msgid "x_introduction"
+msgstr "描述"
+
+msgid "x_password"
+msgstr "密码"
+
+msgid "x_sorry_not_start"
+msgstr "抱歉，尚未开始！"
+
+msgid "x_paused"
+msgstr "暂停中"
+
+msgid "x_underway"
+msgstr "正在进行"
+
+msgid "x_upcoming"
+msgstr "即将开始"
+
+msgid "x_archive"
+msgstr "已经结束"
+
+msgid "x_question_no_title"
+msgstr "本题无题干"
+
+msgid "x_set_shared_environment"
+msgstr "设为共享场景"
+
+msgid "x_exam"
+msgstr "考试"
+
+msgid "x_jeopardy"
+msgstr "解题赛"
+
+msgid "x_ad_game"
+msgstr "攻防赛"
+
+msgid "x_single_choice"
+msgstr "单选题"
+
+msgid "x_title"
+msgstr "标题"
+
+msgid "x_required"
+msgstr "必填"
+
+msgid "x_ranking"
+msgstr "排名"
+
+msgid "x_drag_picture_here"
+msgstr "将图片拖拽至此处"
+
+msgid "x_click_download_attachments"
+msgstr "点击下载附件"
+
+msgid "x_status_normal"
+msgstr "正常"
+
+msgid "x_unable_comment"
+msgstr "无法发表评论。"
+
+msgid "x_you_are_here"
+msgstr "你在这里"
+
+msgid "x_connect_env_with_oj"
+msgstr "通过实训平台连接到环境"
+
+msgid "x_connect_network_with_route"
+msgstr "通过路由连接到网络"
+
+msgid "x_no_free_harddisk"
+msgstr "磁盘空间不足"
+
+msgid "x_web_ssh"
+msgstr "WEB-SSH登录"
+
+msgid "x_web_rep"
+msgstr "WEB-RDP登录"
+
+msgid "x_web_login"
+msgstr "WEB登录"
+
+msgid "x_web_login_new_tab"
+msgstr "新窗口登录"
+
+msgid "x_vulnerability"
+msgstr "漏洞库"
+
+msgid "x_enter_chinese"
+msgstr "中文名称： 请输入中文名称"
+
+msgid "x_enter_english"
+msgstr "英文名称： 请输入英文名称"
+
+msgid "x_enter_name_testpaper"
+msgstr "请输入试卷名称"
+
+msgid "x_edit"
+msgstr "编辑"
+
+msgid "x_vm_count"
+msgstr "虚拟机数量"
+
+msgid "x_update_failure"
+msgstr "更新失败"
+
+msgid "x_update_completed"
+msgstr "更新完成"
+
+msgid "x_start"
+msgstr "开始"
+
+msgid "x_hides"
+msgstr "-"
+
+msgid "x_unable_get_comment_list"
+msgstr "无法获取评论列表"
+
+msgid "x_please_select_picture"
+msgstr "请选择图片文件！"
+
+msgid "x_upload_successfully"
+msgstr "上传成功"
+
+msgid "x_value_small"
+msgstr "值太小"
+
+msgid "x_please_select_zip"
+msgstr "请选择压缩包!"
+
+msgid "x_download_annex"
+msgstr "下载附件"
+
+msgid "x_markdown_add_image_or_drop"
+msgstr "拖拽图片(或者附件)到此或者"
+
+msgid "x_markdown_select_pic"
+msgstr "点击上传"
+
+msgid "x_markdown_upload_img"
+msgstr "上传图片..."
+
+msgid "x_create"
+msgstr "创建"
+
+msgid "x_update"
+msgstr "更新"
+
+msgid "x_input_answer"
+msgstr "点击输入答案"
+
+msgid "x_minutes"
+msgstr "分钟"
+
+msgid "x_want_to_continue_log"
+msgstr "更新配置将会清空所有日志，是否要继续？"
+
+msgid "x_subject_name"
+msgstr "题目名称："
+
+msgid "x_subject_desc"
+msgstr "题目描述："
+
+msgid "x_sys_time"
+msgstr "系统当前时间"
+
+msgid "x_sun"
+msgstr "星期日"
+
+msgid "x_mon"
+msgstr "星期一"
+
+msgid "x_tues"
+msgstr "星期二"
+
+msgid "x_wed"
+msgstr "星期三"
+
+msgid "x_thurs"
+msgstr "星期四"
+
+msgid "x_fri"
+msgstr "星期五"
+
+msgid "x_sat"
+msgstr "星期六"
+
+msgid "x_auth_class"
+msgstr "授权班级({number})"
+
+msgid "x_have_auth"
+msgstr "已授权({number})"
+
+msgid "x_auth_forbidden"
+msgstr "未授权"
+
+msgid "x_teacher_share"
+msgstr "共享教师({number})"
+
+msgid "x_teacher_share_private"
+msgstr "私有"
+
+msgid "x_all_auth"
+msgstr "授权所有"
+
+msgid "x_custom_auth"
+msgstr "自定义"
+
+msgid "x_all_share"
+msgstr "共享所有"
+
+msgid "x_custom_share"
+msgstr "自定义共享"
+
+msgid "x_from_other_people_share"
+msgstr "来自<t style=\"color: #ed5565;\">{username}</t>的分享"
+
+msgid "x_generate_test_paper"
+msgstr "导入试卷"
+
+msgid "x_score_per_question"
+msgstr "每题分值"
+
+msgid "x_configure_test_paper"
+msgstr "请配置试卷"
+
+msgid "x_select_quantity_score"
+msgstr "请选择数量和分值"
+
+msgid "x_insufficient_number_reconfigure"
+msgstr "题目数量不足，请从新配置"
+
+msgid "x_select_course_class"
+msgstr "请选择课程和课时"
+
+msgid "x_generated"
+msgstr "生成中..."
+
+msgid "x_please_select_lesson"
+msgstr "请选择课时"
+
+msgid "x_please_select_course"
+msgstr "请选择课程"
+
+msgid "x_question_bank"
+msgstr "题库"
+
+msgid "x_no_markdown_zip_demo"
+msgstr "非markdown格式压缩包"

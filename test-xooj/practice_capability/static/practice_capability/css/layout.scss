@@ -1,0 +1,80 @@
+@charset "utf-8";
+
+//已完成
+$exam-done: "../img/tip_02.png";
+$exam-unfinished: "../img/tip_01.png";
+.container {
+  max-width: 1200px;
+}
+
+.exam {
+  padding: 60px 0px 0px 60px;
+  margin-top: 45px;
+}
+.exam > div:nth-of-type(1),
+.exam >div:nth-of-type(2){
+  margin-top: -40px;
+}
+.exam-img {
+  position: relative;
+}
+
+.exam-img img {
+
+}
+
+.exam-img span {
+  position: absolute;
+  display: inline-block;
+  width: 72px;
+  height: 72px;
+  top: 0px;
+  right: 0px;
+  max-width: 100%;
+  //height: auto;
+}
+
+.exam-img .exam-done {
+  background: url($exam-done) no-repeat center;
+}
+
+.exam-img .exam-unfinished {
+  background: url($exam-unfinished) no-repeat center;
+}
+
+.exam-score {
+  padding-right: 0px !important;
+
+}
+
+.exam-score img {
+  max-width: 95px;
+  max-height: 122px;
+}
+
+.exam-score p > span {
+  font-size: 16px;
+}
+
+.exam-score p {
+  font-size: 40px;
+  font-weight: 900;
+  text-align: center;
+  margin-top: -40px;
+}
+
+.exam-score-A {
+  color: #00ff01;
+}
+
+.exam-score-B {
+  color: #ffff01;
+}
+
+.exam-score-C {
+  color: #ff9a00;
+}
+
+.exam-score-D {
+  color: #ff6600;
+}

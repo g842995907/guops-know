@@ -1,0 +1,35 @@
+msgid "x_all_vulnerability"
+msgstr "全部漏洞库"
+
+msgid "x_mobile_internet_vulnerability"
+msgstr "移动互联网漏洞库"
+
+msgid "x_internet_vulnerability"
+msgstr "物联网漏洞库"
+
+msgid "x_industrial_control_vulnerability"
+msgstr "工控漏洞库"
+
+msgid "x_big_data_vulnerability"
+msgstr "大数据漏洞库"
+
+msgid "x_search_options"
+msgstr "搜索选项"
+
+msgid "x_chinese_data"
+msgstr "中文数据"
+
+msgid "x_numbering"
+msgstr "编号"
+
+msgid "x_low_risk"
+msgstr "低危"
+
+msgid "x_medium_risk"
+msgstr "中危"
+
+msgid "x_high_risk"
+msgstr "高危"
+
+msgid "x_vuln_connected_failed"
+msgstr "漏洞库连接失败"

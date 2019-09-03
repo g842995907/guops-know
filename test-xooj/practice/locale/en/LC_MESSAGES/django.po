@@ -1,0 +1,269 @@
+msgid "x_practice"
+msgstr "Practice"
+
+msgid "x_event_manage"
+msgstr "Quiz List Management"
+
+msgid "x_self_test_paper"
+msgstr "Self-evaluation papers"
+
+msgid "x_all_task_event"
+msgstr "All Quiz List"
+
+msgid "x_task_name"
+msgstr "Challenge Name"
+
+msgid "x_theory"
+msgstr "Theoretical Basis"
+
+msgid "x_real_vuln"
+msgstr "Real Vulnerability"
+
+msgid "x_exercise"
+msgstr "CTF Jeopardy"
+
+msgid "x_man_machine"
+msgstr "Man-machine attack and defense"
+
+msgid "x_ad_mode"
+msgstr "CTF AD"
+
+msgid "x_infiltration"
+msgstr "Infiltration"
+
+#msgid "x_experiment"
+#msgstr "Experiment"
+
+msgid "x_weight"
+msgstr "Weight"
+
+msgid "x_task_count"
+msgstr "Total Challenge(s)"
+
+msgid "x_task_event"
+msgstr "Quiz List"
+
+msgid "x_add_event"
+msgstr "New Event"
+
+msgid "x_edit_event"
+msgstr "Edit Event"
+
+msgid "x_option"
+msgstr "Option"
+
+msgid "x_answer"
+msgstr "Answer"
+
+msgid "x_add_task"
+msgstr "New task"
+
+msgid "x_edit_task"
+msgstr "Edit Task"
+
+msgid "x_lose_score"
+msgstr "Score Require"
+
+msgid "x_lose_task_event"
+msgstr "Quiz List Require"
+
+msgid "x_lose_category"
+msgstr "Category Require"
+
+msgid "x_lose_content"
+msgstr "Content Require"
+
+msgid "x_lose_answer"
+msgstr "Answer Require"
+
+msgid "x_is_not_null"
+msgstr "Not Null"
+
+msgid "x_public_wp"
+msgstr "Public Solution"
+
+msgid "x_hide_wp"
+msgstr "Hide Solution"
+
+msgid "x_official_wp"
+msgstr "Official Solution"
+
+msgid "x_is_show_official_wp"
+msgstr "Show Official Solution"
+
+msgid "x_dynamic_env"
+msgstr "Dynamic Scene"
+
+msgid "x_sence_setting"
+msgstr "Sence Setting"
+
+msgid "x_dymaic_flag"
+msgstr "Dymaic Flag"
+
+msgid "x_flag_count"
+msgstr "Total Flag(s)"
+
+msgid "x_flag_split"
+msgstr "Multiple flags should be separated by '|'"
+
+msgid "x_wp_status"
+msgstr "Solution Status"
+
+msgid "x_name_len_lt_30"
+msgstr "Name length (0-30)"
+
+msgid "x_title_num"
+msgstr "ID"
+
+msgid "x_last_edit_time"
+msgstr "Last Edit Time"
+
+msgid "x_previous_question"
+msgstr "Previous"
+
+msgid "x_next_question"
+msgstr "Next"
+
+msgid "x_my_question_bank"
+msgstr "My Quiz List"
+
+msgid "x_practiceing"
+msgstr "practicing"
+
+msgid "x_official_solve_problem"
+msgstr "Official solution"
+
+msgid "x_test_environment"
+msgstr "Test Scene"
+
+msgid "x_practical_exercises"
+msgstr "Practical exercises"
+
+msgid "x_long_length_30"
+msgstr "Long length (30 characters)"
+
+msgid "x_title_too_long"
+msgstr "The title is too long"
+
+msgid "x_title_already_exists"
+msgstr "Title already exists"
+
+msgid "x_no_environmental_documents"
+msgstr "No environmental documents"
+
+msgid "x_file_missing_scene_configuration"
+msgstr "Environment file is missing scene configuration"
+
+msgid "x_invalid_scene_configuration"
+msgstr "Invalid scene configuration"
+
+msgid "x_lack_flag"
+msgstr "Lack FLAG"
+
+msgid "x_invalid_scene"
+msgstr "Invalid Scene"
+
+msgid "x_please_select_scene"
+msgstr "Please select a scene"
+
+msgid "x_lack_environmental_information"
+msgstr "Lack of environmental information"
+
+msgid "x_length_not_greater_30"
+msgstr "The length of the field can not be greater than 30"
+
+msgid "x_score_2000"
+msgstr "Score over 2000"
+
+msgid "x_score_type_error"
+msgstr "Score type error"
+
+msgid "x_multi_solution_mode"
+msgstr "Multi-mode ---- multiple FLAG, successfully submitted any FLAG can solve the problem."
+
+msgid "x_step_by_step"
+msgstr "Step-by-Step Score - Multiple FLAGs, submit the corresponding FLAG, according to the number of FLAG submission successful."
+
+msgid "x_problem_solving_type"
+msgstr "Problem solving type"
+
+msgid "x_multiple_flag_serparated"
+msgstr "Multiple flags are separated by '|'"
+
+msgid "x_slelct_solution_mode"
+msgstr "Please select the solution mode"
+
+msgid "x_flag_dynamicslly_generated"
+msgstr "FLAG Dynamically Generated"
+
+msgid "x_flag_repeat"
+msgstr "FLAG repeat"
+
+msgid "x_score_field_required"
+msgstr "Score: This field is required"
+
+msgid "x_score_small"
+msgstr "Score can not be less than or equal to 0"
+
+msgid "x_team_not_exist"
+msgstr "Team Not Exist"
+
+msgid "x_export"
+msgstr "Export"
+
+msgid "x_import"
+msgstr "Import"
+
+msgid "x_answer_env_error"
+msgstr "Dynamic answering environment error"
+
+msgid "x_select_solution_mode"
+msgstr "Please select a solution mode"
+
+msgid "x_parameter_error"
+msgstr "Parameter error"
+
+msgid "x_has_all_answered"
+msgstr "All has been answered"
+
+msgid "x_return_to_practice"
+msgstr "return to practice"
+
+msgid "x_practice_library"
+msgstr "Practice Bank"
+
+msgid "x_attach_server"
+msgstr "Attach Server"
+
+msgid "x_empty"
+msgstr "Empty"
+
+msgid "x_public_ex"
+msgstr "Open Lesson Exercise"
+
+msgid "x_hide_ex"
+msgstr "Hide Lesson Exercise"
+
+msgid "x_exercise_status"
+msgstr "Lesson Exercise Status"
+
+msgid "x_name_conventions"
+msgstr "Please use numbers, letters, Chinese, and underscores"
+
+msgid "x_flag_error"
+msgstr "Do not include '|' in the flag!"
+
+msgid "x_practice_package"
+msgstr "Practice Package"
+
+msgid "x_flag_error_new"
+msgstr "In the step-by-step scoring mode, do not include '|' in the flag."
+
+msgid "x_jump_two_seconds"
+msgstr "Automatic jump after two seconds."
+
+msgid "x_get_start"
+msgstr "Getting Started"
+
+msgid "x_title_type"
+msgstr "Title Category"

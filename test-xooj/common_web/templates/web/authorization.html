@@ -1,0 +1,113 @@
+{% load staticfiles %}
+{% load static_v %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>{% trans 'x_authorized'|capfirst %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/css/default.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'web/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'web/css/common.css' %}"/>
+
+    <link rel="stylesheet" media="screen" href="{% static_v 'web/css/styleLogin.css' %}">
+    <script src="{% static_v 'web/js/jquery-3.2.1.min.js' %} "></script>
+    <script src="{% static 'web/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+    <script src="{% static "web/js/ajax.csrf.js" %}"></script>
+</head>
+<style type="text/css">
+    html, body {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+        background-size: 100% 100%;
+    }
+
+    .modal {
+        top: 400px;
+    }
+
+    .hardware-info {
+        font-size: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
+        word-break:break-all;
+        word-wrap:break-word;
+    }
+
+    .modal-dialog {
+        width: 1200px;
+        margin: 30px auto;
+    }
+    .hint-msg p {
+        font-size: 20px;
+        margin-left: 20px;
+        margin-right: 20px;
+        word-break:break-all;
+        word-wrap:break-word;
+        max-width: 1100px !important;
+    }
+
+    .common-msg-modal .hint-msg:before {
+        content: none;
+    }
+
+</style>
+<body>
+<div class="count-particles hidden">
+    <span class="js-count-particles">--</span>
+</div>
+<!-- particles.js container -->
+<div id="particles-js">
+{#    <div class="hardware-info">{% trans 'license info ：' %}{{ hardware_info }}</div>#}
+</div>
+<div class="centerDiv authorization">
+    <img src="{% static_v 'web/img/authorization.png' %}" alt="">
+    <div class='authoriztion-info'>
+        <p>{% trans 'x_system_not_active' %}</p>
+        <p>The system is not atcive...</p>
+        <p>{% trans 'x_upload_Licnece_activation' %}</p>
+        <button onclick="modalInfo()">{% trans "x_get_license_info" %}</button>
+        <button onclick="$('#upload-license').click();">{% trans "x_upload_Licnence" %}</button>
+        <input type="file" id="upload-license">
+    </div>
+</div>
+{% include "web/message_modal.html" %}
+</body>
+{#<script src="{% static_v 'web/js/particles.min.js' %}"></script>#}
+{#<script src="{% static_v 'web/js/app.js' %}"></script>#}
+{#<script src="{% static_v 'web/js/stats.js' %}"></script>#}
+<script>
+    $(function () {
+        $('#upload-license').change(function (e) {
+            var license_file = e.target.files[0];
+            var formData = new FormData();
+            formData.append("license", license_file);
+            $.ajax({
+                url: "{% url 'common_web:license_upload' %}",
+                type: 'POST',
+                cache: false,
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (json) {
+                    if (json.error_code != 0) {
+                        $('#hint-msg').html(json.info);
+                        $("#hint-msg-warp").modal();
+                        $("#hint-msg-warp").show();
+                    } else {
+                        window.location.href = '{% url 'common_web:login' %}'
+                    }
+                }
+            });
+        })
+    })
+    function modalInfo(){
+        ialert("{{ hardware_info }}")
+    }
+</script>
+
+</html>

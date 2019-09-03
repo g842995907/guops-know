@@ -1,0 +1,64 @@
+/*
+* @Author: Marte
+* @Date:   2017-01-05 10:25:29
+* @Last Modified by:   Marte
+* @Last Modified time: 2017-01-11 15:23:59
+*/
+html,body{
+    width:100%;
+    height:100%;
+    padding:0;
+    margin:0;
+}
+input{
+    border:none;
+    background:none;
+    padding:0;
+    margin:0;
+}
+.wrap{
+    width:100%;
+    height:100%;
+    background:rgba(255,255,255,.2);
+    color:white;
+    padding-top:150px;
+    box-sizing:border-box;
+}
+.oneTask{
+    width:540px;
+    margin:0 auto;
+    transition:50s;
+}
+.task-title{
+    font-weight:bold;
+}
+.task-title,.accessory,.commit{
+    height:40px;
+    line-height:40px;
+    font-size:20px;
+    margin-bottom:20px;
+}
+.text{
+    width:400px;
+    height:36px;
+    line-height:36px;
+    font-size:16px;
+    background:rgba(255,255,255,.2);
+    border-radius: 5px;
+    border:1px solid #414141;
+    margin-top:5px;
+    padding-left:20px;
+    color:white;
+}
+.button,.button2{
+    width:54px;
+    height:32px;
+    line-height:24px;
+    color:white;
+    background:url(../image/anniu123.png) no-repeat;
+    background-size:100% 100%;
+    display:inline-block;
+    font-size:14px;
+    text-align:center;
+    cursor:pointer;
+}

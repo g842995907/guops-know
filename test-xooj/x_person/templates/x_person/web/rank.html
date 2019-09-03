@@ -1,0 +1,185 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/bootstrap-select/css/bootstrap-select.min.css" %}"/>
+
+    <script src="{% static "lib/bootstrap-select/js/bootstrap-select.js" %}"></script>
+    <style>
+        .table th, .table td {
+
+            text-align: center;
+            height: 38px;
+
+        }
+
+        th {
+            vertical-align: middle !important;
+        }
+
+        .default-table-v2 thead tr th, .default-table-v2 thead th:first-child {
+            border: 1px solid #3f6797;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .fixed-table-pagination {
+            text-align: center;
+        }
+
+        .fixed-table-pagination div.pagination {
+            float: none !important;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active font15'>{% trans 'x_scoreboard' %}</a>
+        </div>
+        <div class="content pad10T">
+            <div class="row layout-color mrg100B oj_table">
+
+                {#                        <div>#}
+                {#                            <select class="form-control sticky" id="type" onchange="CALLBACK.refresh()">#}
+                {#                                <option value="" selected="selected">{% trans 'x_rank_dimension' %}</option>#}
+                {#                                <option value="1">{% trans 'x_faculties' %}</option>#}
+                {#                                <option value="2">{% trans 'x_grade' %}</option>#}
+                {#                                <option value="3">{% trans 'x_class' %}</option>#}
+                {#                                <option value="4">{% trans 'x_personal' %}</option>#}
+                {##}
+                {#                            </select>#}
+                {#                        </div>#}
+                <table class="filtrate">
+                    <tr>
+                        <td {% if LANGUAGE_CODE == 'zh-hans' %} width="80"{% else %}width="120"{% endif %}
+                                                                class="top10">{% trans 'x_rank_dimension' %}:
+                        </td>
+                        <td class="top10">
+                                    <span><a href="javaScript:void(0)" class="type_list" value="1"
+                                             onclick="CALLBACK.refresh(this)">{{ ORGANIZATION.Second_level }}</a></span>
+
+                            <span class="mrg15L"><a href="javaScript:void(0)" class="type_list" value="2"
+                                                    onclick="CALLBACK.refresh(this)">{{ ORGANIZATION.Third_level }}</a></span>
+
+                            <span class="mrg15L"><a href="javaScript:void(0)" class="type_list" value="3"
+                                                    onclick="CALLBACK.refresh(this)">{{ ORGANIZATION.Fourth_level }}</a></span>
+
+                            <span class="mrg15L"><a href="javaScript:void(0)" class="type_list activated"
+                                                    value="4"
+                                                    onclick="CALLBACK.refresh(this)">{% trans 'x_personal' %}</a></span>
+                        </td>
+                    </tr>
+
+                </table>
+
+                <div class='clearfix mrg20B'>
+                    <div class="search default-bg fr">
+                        <input class="search-text pad10L fl " placeholder="{% trans 'x_search' %}" type="text"
+                               id="search">
+                        <span class="search-bg mainBg fr font18 text-center cursor"
+                              onclick="CALLBACK.refresh_table()">
+                            <i class="oj-icon search-btn whiteC oj-icon-E911"></i>
+                            </span>
+                    </div>
+                </div>
+
+                <table class="default-table-v2" id="table"
+                       data-toggle="table"
+                       data-show-refresh="false"
+                       data-search="false"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-url="{% url 'practice:api:practice-rank-list' %}">
+                    <thead>
+                    <tr>
+                        <th data-rowspan="2" data-formatter="rankFormatter">{% trans 'x_ranking' %}</th>
+                        <th data-rowspan="2" data-field="obj_name" data-escape="true">{% trans 'x_name' %}</th>
+                        <th data-colspan="2">{% trans 'x_theory' %}</th>
+                        <th data-colspan="2">{% trans 'x_real_vuln' %}</th>
+                        <th data-colspan="2">{% trans 'x_exercise' %}</th>
+                        <th data-colspan="2">{% trans 'x_infiltration' %}</th>
+                        <th data-colspan="2">{% trans 'x_summary' %}</th>
+                    </tr>
+                    <tr>
+                        <th data-field="theory_count">{% trans 'x_solved_count' %}</th>
+                        <th data-field="theory_score">{% trans 'x_score' %}</th>
+                        <th data-field="real_vuln_count">{% trans 'x_solved_count' %}</th>
+                        <th data-field="real_vuln_score" data-formatter="scoreFormatter">{% trans 'x_score' %}</th>
+                        <th data-field="exercise_count">{% trans 'x_solved_count' %}</th>
+                        <th data-field="exercise_score" data-formatter="scoreFormatter">{% trans 'x_score' %}</th>
+                        <th data-field="infiltration_count">{% trans 'x_solved_count' %}</th>
+                        <th data-field="infiltration_score" data-formatter="scoreFormatter">{% trans 'x_score' %}</th>
+                        <th data-field="solved_count">{% trans 'x_solved_count' %}</th>
+                        <th data-field="sum_score" data-formatter="scoreFormatter">{% trans 'x_score' %}</th>
+                    </tr>
+                    </thead>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var pageSize = 10;
+
+        var $table = $('#table');
+
+        var CALLBACK = {
+            refresh: function (btn) {
+                $(".type_list").removeClass("activated");
+                $(btn).addClass('activated');
+                CALLBACK.refresh_table()
+            },
+            refresh_table: function () {
+                $('#table').bootstrapTable('refreshOptions', {pageNumber: 1});
+                $('#table').bootstrapTable('refresh')
+            }
+        };
+
+        function queryParams(params) {
+            params.type = $(".type_list.activated").attr("value");
+            params.search = $('#search').val();
+            return params;
+
+        }
+        $('#table').bootstrapTable({
+            ajaxOptions: {
+                traditional: true,
+            },
+            queryParams: queryParams,
+        });
+
+        function rankFormatter(value, row, index) {
+            //获取每页显示的数量
+            var pageSize = $('#table').bootstrapTable('getOptions').pageSize;
+            //获取当前是第几页
+            var pageNumber = $('#table').bootstrapTable('getOptions').pageNumber;
+            //返回序号，注意index是从0开始的，所以要加上1
+            return pageSize * (pageNumber - 1) + index + 1;
+        };
+
+        function scoreFormatter(value, row, index) {
+            return parseFloat(value.toFixed(2));
+        }
+
+        $("#search").keydown(function (e) {
+            if (e.keyCode == 13) {
+                CALLBACK.refresh_table();
+            }
+        });
+
+
+    </script>
+{% endblock %}
+

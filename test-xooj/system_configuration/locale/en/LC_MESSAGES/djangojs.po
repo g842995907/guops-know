@@ -1,0 +1,72 @@
+msgid "x_scene_num"
+msgstr "Total Scene(s)"
+
+msgid "x_shut_down"
+msgstr "Powered Off"
+
+msgid "x_scene_people"
+msgstr "Scene/people"
+
+msgid "x_scene_limit"
+msgstr "Env Limit"
+
+msgid "x_critical"
+msgstr "Critical"
+
+msgid "x_logger_error"
+msgstr "Error"
+
+msgid "x_warn"
+msgstr "Warn"
+
+msgid "x_info"
+msgstr "Info"
+
+msgid "x_debug"
+msgstr "Debug"
+
+msgid "x_file_count_5"
+msgstr "5"
+
+msgid "x_file_count_10"
+msgstr "10"
+
+msgid "x_file_count_15"
+msgstr "15"
+
+msgid "x_file_count_20"
+msgstr "20"
+
+msgid "x_file_size_10"
+msgstr "10M"
+
+msgid "x_file_size_20"
+msgstr "20M"
+
+msgid "x_file_size_30"
+msgstr "30M"
+
+msgid "x_severe"
+msgstr "Severe"
+
+msgid "x_logger_success"
+msgstr "Success"
+
+msgid "x_logger_fail"
+msgstr "Fail"
+
+msgid "x_logger_partial_success"
+msgstr "Partial Success"
+
+msgid "x_logger_opreating"
+msgstr "Operating"
+
+msgid "x_all_user"
+msgstr "All User"
+
+msgid "x_teacher_group"
+msgstr "Teacher Group"
+
+msgid "x_student_group"
+msgstr "Student Group"
+

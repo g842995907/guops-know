@@ -1,0 +1,54 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}{% trans 'x_saining_training_platform' %}{% endblock %}</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <linK rel="stylesheet" href="{% static 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/common.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/default.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
+
+    <link rel="stylesheet" href="{% static 'web/css/toastr.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/task.css' %}">
+
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <script src="{% static 'web/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static "web/js/ajax.csrf.js" %}"></script>
+    <script src="{% static 'web/vue/vue.min.js' %}"></script>
+    <script src="{% static 'web/bootstrap-3.3.7/js/bootstrap.min.js' %}"></script>
+
+
+</head>
+<body>
+
+<div class='wrapper load-page'>
+    <div class="centerDiv">
+        <div>
+            <div class="progress-warp centerDiv">
+                <div class="progress">
+                    <div class="progress-bar"
+                         role="progressbar"
+                         aria-valuenow="20" aria-valuemin="0"
+                         aria-valuemax="100"
+                         style="width: 55%">
+                    </div>
+                </div>
+                <div class="mrg20B font18 orangeC font-bold mrg10L">55%</div>
+            </div>
+
+            <div class="reflect orangeC text-center font30 font-bold">虚拟机xxx镜像准备中...</div>
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+
+</script>
+
+</body>

@@ -1,0 +1,269 @@
+msgid "x_system_management"
+msgstr "系统管理"
+
+msgid "x_system_name"
+msgstr "系统名称"
+
+msgid "x_scene_people"
+msgstr "场景/人"
+
+msgid "x_scene_limit"
+msgstr "场景上限"
+
+msgid "x_max_terminal_nodes"
+msgstr "场景最大终端节点数量"
+
+msgid "x_open_registration"
+msgstr "是否开放注册"
+
+msgid "x_registered_users_review"
+msgstr "注册用户是否需要审核"
+
+msgid "x_must_input_system"
+msgstr "系统名称：该字段必填"
+
+msgid "x_input_sysytem_30"
+msgstr "系统名称：该字段长度不得超过30"
+
+msgid "x_restart_service"
+msgstr "重启服务"
+
+msgid "x_all_shut"
+msgstr "全部关机"
+
+msgid "x_all_restart"
+msgstr "全部重启"
+
+msgid "x_shut"
+msgstr "关机"
+
+msgid "x_shut_down"
+msgstr "已关机"
+
+msgid "x_restart"
+msgstr "重启"
+
+msgid "x_proportional_description"
+msgstr "虚拟比例说明"
+
+msgid "x_virtual_proportion"
+msgstr "虚拟比例"
+
+msgid "x_operation_service"
+msgstr "运维服务"
+
+msgid "x_random_flag_prefix"
+msgstr "随机答案前缀"
+
+msgid "x_determine_relevant_complete_execution"
+msgstr "注意：该操作会影响所有使用中的虚拟机资源，请确定相关任务以执行结束"
+
+msgid "x_reboot_5_min"
+msgstr "重启时间约5分钟！！！\\n确定重启?"
+
+msgid "x_determine_shutdown"
+msgstr "开始关机流程后将无法终止！！！\\n确认关机?"
+
+msgid "x_input_1"
+msgstr "请输入数字1 进行确认"
+
+msgid "x_wait_patiently"
+msgstr "正在处理中,请耐心等待..."
+
+msgid "x_re_enforced"
+msgstr "远程链接失败,请重新执行"
+
+msgid "x_input_not_empty"
+msgstr "输入不能为空！"
+
+msgid "x_backup_failed"
+msgstr "备份失败"
+
+msgid "x_import_failed"
+msgstr "导入失败"
+
+msgid "x_not_exceed_max"
+msgstr "每人场景数不得超过最大场景数"
+
+msgid "x_length_30"
+msgstr "该字段最大长度为30"
+
+msgid "x_log_manage"
+msgstr "日志管理"
+
+msgid "x_logger_level"
+msgstr "日志级别"
+
+msgid "x_log_file_size"
+msgstr "日志文件大小"
+
+msgid "x_log_file_count"
+msgstr "日志文件个数"
+
+msgid "x_export_log"
+msgstr "导出日志"
+
+msgid "x_log_file_list"
+msgstr "日志文件列表"
+
+msgid "x_log_size"
+msgstr "文件大小"
+
+msgid "x_log_name"
+msgstr "文件名"
+
+msgid "x_updated"
+msgstr "更新"
+
+msgid "x_not_limited"
+msgstr "不限"
+
+msgid "x_run_log_manage"
+msgstr "运行日志"
+
+msgid "x_system_log"
+msgstr "系统日志"
+
+msgid "x_operate_log"
+msgstr "操作日志"
+
+msgid "x_all_logger_level"
+msgstr "全部级别"
+
+msgid "x_logger_key_word"
+msgstr "日志关键字"
+
+msgid "x_detail_content"
+msgstr "详细内容"
+
+msgid "x_all_module"
+msgstr "所有模块"
+
+msgid "x_module"
+msgstr "模块"
+
+msgid "x_operation_type"
+msgstr "操作类型"
+
+msgid "x_operation_str"
+msgstr "操作对象"
+
+msgid "x_shenji_log"
+msgstr "审计日志"
+
+msgid "x_log_detail"
+msgstr "查看详情"
+
+msgid "x_sys_notice"
+msgstr "系统公告"
+
+msgid "x_edit_time"
+msgstr "编辑时间"
+
+msgid "x_new_sys_notice"
+msgstr "新增系统公告"
+
+msgid "x_edit_sys_notice"
+msgstr "编辑系统公告"
+
+msgid "x_notice_title"
+msgstr "公告标题"
+
+msgid "x_notice_text"
+msgstr "公告内容"
+
+msgid "x_notice_group"
+msgstr "群组"
+
+msgid "x_select_notice_group"
+msgstr "选择群组"
+
+msgid "x_all_user"
+msgstr "全部用户"
+
+msgid "x_teacher_group"
+msgstr "教员群组"
+
+msgid "x_student_group"
+msgstr "学员群组"
+
+msgid "x_choose_class"
+msgstr "选择班级"
+
+msgid "x_keyword_name"
+msgstr "日志关键字/用户"
+
+msgid "x_clearall_scene"
+msgstr "清空全部场景"
+
+msgid "x_validity"
+msgstr "有效期"
+
+msgid "x_time"
+msgstr "时间"
+
+msgid "x_user"
+msgstr "用户"
+
+msgid "x_model"
+msgstr "模块"
+
+msgid "x_sys_con_operation"
+msgstr "操作类型"
+
+msgid "x_object"
+msgstr "操作对象"
+
+msgid "x_loglevel"
+msgstr "日志等级"
+
+msgid "x_status"
+msgstr "状态"
+
+msgid "x_detail"
+msgstr "详细内容"
+
+msgid "x_sys_message"
+msgstr "系统信息"
+
+msgid "x_team_message"
+msgstr "队伍消息"
+
+msgid "x_schedule_message"
+msgstr "课程消息"
+
+msgid "x_event_message"
+msgstr "竞赛消息"
+
+msgid "x_user_message"
+msgstr "用户消息"
+
+msgid "x_publish_object"
+msgstr "发布对象"
+
+msgid "x_publisher"
+msgstr "发布人"
+
+msgid "x_lost_title"
+msgstr "名称：名称为必填"
+
+msgid "x_lost_content"
+msgstr "内容：内容为必填"
+
+msgid "x_content_length_lt_100"
+msgstr "内容：该字段长度不得超过100"
+
+msgid "x_name_length_lt_20"
+msgstr "名称：该字段长度不得超过20"
+
+msgid "x_desktop_transmission_quality"
+msgstr "桌面传输质量"
+
+msgid "x_desktop_transmission_quality_low"
+msgstr "低"
+
+msgid "x_desktop_transmission_quality_middle"
+msgstr "中"
+
+msgid "x_desktop_transmission_quality_high"
+msgstr "高"

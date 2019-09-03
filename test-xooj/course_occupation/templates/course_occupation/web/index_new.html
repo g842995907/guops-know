@@ -1,0 +1,764 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% load static_v %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static_v 'course_occupation/css/index.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <script src="{% static 'web/echarts/echarts.min.js' %}"></script>
+    <script src="{% static_v 'course_occupation/js/index.js' %}"></script>
+    <link href="{% static 'course/fullcalendar/fullcalendar.css'%}" rel="stylesheet">
+
+    <script src="{% static 'course/fullcalendar/lib/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'course/fullcalendar/lib/moment.min.js' %}"></script>
+    <script src="{% static 'course/fullcalendar/fullcalendar.min.js' %}"></script>
+    <script src="{% static 'course/fullcalendar/locale/zh-cn.js' %}"></script>
+    <style>
+        .head-show {
+            max-width: 84px;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .fixed-table-pagination {
+            text-align: center;
+        }
+
+        .fixed-table-pagination div.pagination {
+            float: none !important;
+        }
+
+        .table > tbody {
+            border-top: 1px solid #42648c;
+        }
+        .fc-today {
+            background: rgba(0, 24, 54, 0.35) !important;
+            border: none !important;
+            border-top: 1px solid #ddd !important;
+            font-weight: bold;
+        }
+        #calendar{
+            background: rgba(0, 24, 54, 0.35) !important;
+        }
+
+        .fc-prev-button{
+            background: rgba(73, 140, 228, 0) !important;
+            color: white !important;
+        }
+        .fc-next-button{
+            background: rgba(73, 140, 228, 0) !important;
+            color: white !important;
+        }
+        .fc-today-button{
+            background: rgba(73, 140, 228, 0) !important;
+            color: white !important;
+        }
+        .fc-minor{
+            {#border: 0px solid !important;#}
+        }
+        .fc-event {
+            text-align: center;
+            font-size: 12px;
+            color: #fff;
+            {#top:-2px;#}
+            min-height:3.6em !important;
+            border: #1ab394;
+            background-color: #2f62de;
+            {#background-color:rgba(0,0,0,.5);#}
+            margin-top: 0px;
+        }
+        .fc-title{
+            overflow:hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
+        .fc-event .fc-time{
+            text-align: center;
+            {#background-color: #3479BF;#}
+
+        }
+        .fc-event :hover{
+             {#background-color:yellow#}
+            cursor:pointer;
+        }
+        .fc-time-grid .fc-slats td {
+            height: 3.2em;
+        }
+
+        .fc-unthemed th,
+        .fc-unthemed td,
+        .fc-unthemed thead,
+        .fc-unthemed tbody,
+        .fc-unthemed .fc-divider,
+        .fc-unthemed .fc-row,
+        .fc-unthemed .fc-content,
+        .fc-unthemed .fc-popover,
+        .fc-unthemed .fc-list-view,
+        .fc-unthemed .fc-list-heading td{
+            border-color:#42648c;
+        }
+        .fc-header-toolbar{
+            margin-bottom: 1px !important;
+            background: -moz-linear-gradient(left, #498ce4 5%, rgba(73, 140, 228, 0)); /*Mozilla*/
+            background: -webkit-gradient(linear, 0 50%, 100% 50%, from(#498ce4), to(rgba(73, 140, 228, 0))); /*Old gradient for webkit*/
+            background: -webkit-linear-gradient(left, #498ce4 10%, rgba(73, 140, 228, 0)); /*new gradient for Webkit*/
+            background: -o-linear-gradient(left, #498ce4 5%, rgba(73, 140, 228, 0)); /*Opera11*/
+            color: #fff;
+        }
+
+        .fc-header-toolbar h2 {
+            font-size: 20px;
+            padding: 2px 0;
+        }
+    </style>
+    <script>
+        $(function () {
+            $('.head-show').height($('.head-show').width());
+
+        })
+        $(window).resize(function () {
+                $('.head-show').height($('.head-show').width())
+            }
+        )
+
+    </script>
+{% endblock %}
+
+{% block container %}
+    <!-- container start-->
+    <section class="container mrg93T mrg20B">
+        <div class="bread layout-color">
+            <a class="layout-color" href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a> >>
+            <a class="active font15" href="javascript:void(0)">{% trans 'x_personal_center' %}</a>
+        </div>
+
+        <div class="justify default-bg mrg20T pad10T pad10B pad30L pad30R">
+            <div class="index-head centerDiv">
+                <div class="head-img">
+                    {% if request.user.logo %}
+                        {% if  request.user.logo.url %}
+                            <img id="headShow" class="head-show img-responsive img-circle"
+                                 src="{{ request.user.logo.url }}">
+                        {% else %}
+                            <img aid="headShow" class="head-show img-responsive img-circle"
+                                 src="{% static 'course_occupation/img/user_default.jpg' %}">
+                        {% endif %}
+                    {% else %}
+                        <img aid="headShow" class="head-show img-responsive img-circle"
+                             src="{% static 'course_occupation/img/user_default.jpg' %}">
+                    {% endif %}
+                </div>
+
+                <div class="index-info mrg10L">
+                    <div class=""><span
+                            class="white-color font-bold font20">{% trans 'x_name_surname' %}：{{ request.user.first_name |default_if_none:'' }}&nbsp;&nbsp;&nbsp;</span><span
+                            class="orangeC fa fa-edit cursor"
+                            onclick="edit_info()">{% trans 'x_revising_personal_data' %}</span></div>
+                    <div class="">{% trans 'x_team_name' %}：<a class="orangeC" href="{% url "x_person:team" %}">{{ request.user.team.name|default:'' }}</a>
+                        {% if request.user.team.name %}
+{#                            {% if teamleader %}&nbsp;&nbsp;#}
+{#                                <span class="orangeC fa fa-edit cursor"#}
+{#                                      onclick="edit_team()">{% trans 'x_amend_the_team_information' %}</span>#}
+{#                            {% else %}#}
+{#                                &nbsp;&nbsp;&nbsp;&nbsp;<span class="orangeC fa fa-share cursor"#}
+{#                                                              onclick="CALLBACK.quit_team()">{% trans 'x_quit_team' %}</span>#}
+{#                            {% endif %}#}
+
+                        {% else %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="orangeC fa fa-plus cursor"
+                                                          onclick="edit_creat_team()">{% trans 'x_create_team' %}</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="orangeC fa fa-link cursor"
+                                                          onclick="edit_join_team()">{% trans 'x_join_team' %}</span>
+                        {% endif %}</div>
+                    <div class="">{% trans 'x_personal_signature' %}：{{ request.user.brief_introduction|default_if_none:'' }}</div>
+                </div>
+            </div>
+
+            <div class="index-course-info centerDiv text-center">
+                <div class=""><p class="orangeC"><span class="font20">{{ course_count }}</span>{% trans 'x_door' %}
+                </p>
+                    <p class="comment-clr ">{% trans 'x_learning_courses' %}</p></div>
+{#                <div class="mrg25L"><p class="orangeC"><span class="font20">22</span>{% trans 'x_hour' %}</p>#}
+{#                    <p class="comment-clr">{% trans "x_learning_time" %}</p></div>#}
+                <div class="mrg25L"><p class="orangeC"><span
+                        class="font20">{{ user_practice_score }}</span>{% trans 'x_score_s' %}</p>
+                    <p class="comment-clr">{% trans 'x_practice_scoring' %}</p></div>
+                <div class="mrg25L"><p class="orangeC"><span
+                        class="font20">{{ user_sort }}</span>{% trans 'x_rankings' %}</p>
+                    <p class="comment-clr">{% trans 'x_practice_ranking' %}</p></div>
+            </div>
+        </div>
+
+        {% if edition == 0 %}
+        <div class="row mrg20T">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div id='calendar'></div>
+            </div>
+        </div>
+        {% endif %}
+        {#我的提问#}
+        <div class="row mrg20T">
+            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+                <div class="default-bg">
+                    <div class="tabs title pad15L whiteC cursor">
+                        <div class="active pad5T pad5B pad5L pad5R">{% trans 'x_my_question' %}</div>
+                        <div class="mrg20L pad5T pad5B pad5L pad5R">{% trans 'x_my_reply' %}</div>
+                    </div>
+                    <div class="tabs-content comment-clr cursor posRelative">
+                        <div class="question pad10L pad10R pad5B default-bg active pad20T" style="min-height: 250px">
+
+                            <table class="table default-table-v2 table-hover" id="table"
+                                   data-toggle="table"
+                                   data-show-refresh="false"
+                                   data-search="false"
+                                   data-pagination="true"
+                                   data-side-pagination="server"
+                                   data-pagination-pre-text="<"
+                                   data-pagination-next-text=">"
+                                   data-page-size=5
+                                   data-url="{% url 'x_comment:api:comment-get-ask' %}?states=1"
+                            >
+                                <thead class="hidden">
+                                <tr>
+                                    <th data-field="title" data-escape="true" data-width="20%" data-formatter="titleFormatter"></th>
+                                    <th data-field="comment" data-escape="true"
+                                        data-formatter="commentFormatter"></th>
+                                    {#                                    <th data-field="last_update" data-escape="true">{% trans 'x_category' %}</th>#}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="answer pad10L pad10R pad5B default-bg pad20T" style="min-height: 250px">
+                            <table class="table default-table-v2 table-hover" id="table1"
+                                   data-toggle="table"
+                                   data-show-refresh="false"
+                                   data-search="false"
+                                   data-pagination="true"
+                                   data-side-pagination="server"
+                                   data-pagination-pre-text="<"
+                                   data-pagination-next-text=">"
+                                   data-page-size=5
+                                   data-url="{% url 'x_comment:api:comment-get-ask' %}?states=0"
+                            >
+                                <thead class="hidden">
+                                <tr>
+                                    <th data-field="title" data-escape="true" data-width="20%" data-formatter="titleFormatter"></th>
+                                    <th data-field="comment" data-escape="true" data-formatter="commentFormatter"></th>
+                                    {#                                    <th data-field="last_update" data-escape="true">{% trans 'x_category' %}</th>#}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 hidden-xs ">
+                <div class="default-bg">
+                    <div class="title pad15L whiteC cursor">
+                        <div class="pad5T pad5B pad5L pad5R">{% trans 'x_skills_six_dimensions' %}</div>
+                    </div>
+                    <div id='radar' style="min-height: 250px"></div>
+                </div>
+            </div>
+        </div>
+        {#学习/比赛记录#}
+        <div class="row mrg20T">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="default-bg">
+                    <div class="title pad15L whiteC cursor">
+                        <div class="pad5T pad5B pad5L pad5R">{% trans "x_learning_competition_records" %}</div>
+                    </div>
+                    <div class="default-bg ">
+                        <div id='bubble' style="height: 300px;"></div>
+                    </div>
+
+                </div>
+            </div>
+{#            <div class="col-lg-3 col-md-4 col-sm-4 hidden-xs ">#}
+{#                <div class="default-bg">#}
+{#                    <div class="title pad15L whiteC cursor">#}
+{#                        <div class="pad5T pad5B pad5L pad5R">{% trans 'x_task_schedule' %}</div>#}
+{#                    </div>#}
+{#                    <div class="default-bg ">#}
+{#                        <div id='circle' style="height: 300px;"></div>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+        </div>
+
+
+
+            {# 职业目标#}
+        <div class="mrg20T" id="line">
+            <div class="whiteC cursor">
+                <div class="profession-icon posRelative pad5T pad5B pad5L pad5R"><img
+                        src="{% static 'course_occupation/img/icon.png' %}">
+                    {% trans "x_current_career_goals" %}：<span class="font18 orangeC">{{ occupation_name }}</span>
+                    <span class="whiteC mainBg pad20L pad20R pad5T pad5B" data-toggle="modal"
+                          id="change-occupation"
+                          data-target="#index-modal">{% trans 'x_changing_career_goals' %}</span>
+                </div>
+            </div>
+            {# 线条#}
+            <div class="mrg40T">
+                <div class="level-line clearfix">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <div class="level-1">
+                            <div class="level-title">{% trans 'x_env_type_base' %}</div>
+                            <div class="dotstyle-1 centerDiv"><span></span></div>
+                            <ul class="dotstyle">
+                                <li v-for="data_jichu in data_list_jichu">
+                                    <a class="current" v-on:mouseenter="hover_a()" v-on:mouseleave="hover_a()"
+                                       v-show="data_jichu.lesson_count > 0">
+                                        <div class="whiteC pad10T pad10L pad10R">
+                                            <div class="justify"><p>{% trans 'x_course_name' %}：[[
+                                                data_jichu.course_name ]]</p>
+                                                <p class="required">[[data_jichu.obligatory|isobligatory]]</p></div>
+                                            <div><p>{% trans 'x_num_hour' %}：[[ data_jichu.lesson_count]]</p></div>
+                                            <div><span class="pull-left">{% trans 'x_curriculum_progress' %}：</span>
+                                                <div class="whiteC progress-warp posRelative">
+                                                    <div class="progress">
+                                                        <div class="progress-bar progress-bar-level-1"
+                                                             role="progressbar"
+                                                             aria-valuenow="20" aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             v-bind:style="{width: data_jichu.has_recde_percent+'%'}">
+                                                        </div>
+                                                    </div>
+                                                    <span class="percentage-tip">[[data_jichu.has_recde_percent]]%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pad0L">
+                        <div class="level-2">
+                            <div class="level-title">{% trans 'x_advanced' %}</div>
+                            <div class="dotstyle-1 centerDiv"><span></span></div>
+                            <ul class="dotstyle">
+                                <li v-for="data_jinjie in data_list_jinjie">
+                                    <a class="current" v-on:mouseenter="hover_a()" v-on:mouseleave="hover_a()"
+                                       v-show="data_jinjie.lesson_count > 0">
+                                        <div class="whiteC pad10T pad10L pad10R">
+                                            <div class="justify"><p>{% trans 'x_course_name' %}：[[
+                                                data_jinjie.course_name ]]</p>
+                                                <p class="required">[[data_jinjie.obligatory|isobligatory]]</p></div>
+                                            <div><p>{% trans 'x_num_hour' %}：[[ data_jinjie.lesson_count ]]</p></div>
+                                            <div><span class="pull-left">{% trans 'x_curriculum_progress' %}：</span>
+                                                <div class="whiteC progress-warp posRelative">
+                                                    <div class="progress">
+                                                        <div class="progress-bar progress-bar-level-2"
+                                                             role="progressbar"
+                                                             aria-valuenow="20" aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             v-bind:style="{width: data_jinjie.has_recde_percent+'%'}">
+                                                        </div>
+                                                    </div>
+                                                    <span class="percentage-tip">[[data_jinjie.has_recde_percent]]%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 pad0L">
+                        <div class="level-3">
+                            <div class="level-title">{% trans 'x_senior' %}</div>
+                            <div class="dotstyle-1 centerDiv"><span></span></div>
+                            <ul class="dotstyle">
+                                <li v-for="data_gaoji in data_list_gaoji">
+                                    <a class="current" v-on:mouseenter="hover_a()" v-on:mouseleave="hover_a()"
+                                       v-show="data_gaoji.lesson_count > 0">
+                                        <div class="whiteC pad10T pad10L pad10R">
+                                            <div class="justify"><p>{% trans 'x_course_name' %}：[[
+                                                data_gaoji.course_name ]]</p>
+                                                <p class="required">[[data_gaoji.obligatory|isobligatory]]</p></div>
+                                            <div><p>{% trans 'x_num_hour' %}：[[ data_gaoji.lesson_count ]]</p></div>
+                                            <div><span class="pull-left">{% trans 'x_curriculum_progress' %}：</span>
+                                                <div class="whiteC progress-warp posRelative">
+                                                    <div class="progress">
+                                                        <div class="progress-bar progress-bar-level-3"
+                                                             role="progressbar"
+                                                             aria-valuenow="20" aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             v-bind:style="{width: data_gaoji.has_recde_percent+'%'}">
+                                                        </div>
+                                                    </div>
+                                                    <span class="percentage-tip">[[data_gaoji.has_recde_percent]]%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {# 职业块#}
+            <div class="mrg40T row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div class="level-block">
+                        <div class="level-title pad10T pad10B font18">{% trans 'x_basics_nbsp' %}</div>
+                        <div class="pad20T pad15L pad10R pad20B">
+                            <template v-for="data_jichu in data_list_jichu">
+                                <div class="level-list mrg10B" v-show="data_jichu.lesson_count > 0">
+                                    <p class="required pull-left mrg10R mrg5T">
+                                        [[data_jichu.obligatory|isobligatory]]</p>
+                                    <div class="white-color progress-warp posRelative">
+                                        <a v-bind:href="data_jichu.course_id | perfectUrl">
+                                        <div>
+                                            <div>[[ data_jichu.course_name ]]</div>
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-level-1" role="progressbar"
+                                                     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                                                     v-bind:style="{width: data_jichu.has_recde_percent+'%'}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                            </a>
+{#                                        <span class="percentage">[[data_jichu.has_recde_percent]]%</span>#}
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div class="level-block">
+                        <div class="level-title pad10T pad10B font18">{% trans 'x_advanced_nbsp' %}</div>
+                        <div class="pad20T pad15L pad10R pad20B">
+                            <template v-for="data_jinjie in data_list_jinjie">
+                                <div class="level-list mrg10B" v-show="data_jinjie.lesson_count > 0">
+                                    <p class="required pull-left mrg10R mrg5T">
+                                        [[data_jinjie.obligatory|isobligatory]]</p>
+                                    <div class="white-color progress-warp posRelative">
+                                        <a v-bind:href="data_jinjie.course_id | perfectUrl">
+                                        <div>
+                                            <div>[[data_jinjie.course_name]]</div>
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-level-2" role="progressbar"
+                                                     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                                                     v-bind:style="{width: data_jinjie.has_recde_percent+'%'}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </a>
+{#                                        <span class="percentage">[[data_jinjie.has_recde_percent]]%</span>#}
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div class="level-block">
+                        <div class="level-title pad10T pad10B font18">{% trans 'x_senior_nbsp' %}</div>
+                        <div class="pad20T pad15L pad10R pad20B">
+                            <template v-for="data_gaoji in data_list_gaoji">
+                                <div class="level-list mrg10B" v-show="data_gaoji.lesson_count > 0">
+                                    <p class="required pull-left mrg10R mrg5T">
+                                        [[data_gaoji.obligatory|isobligatory]]</p>
+                                    <div class="white-color progress-warp posRelative">
+                                        <a v-bind:href="data_gaoji.course_id | perfectUrl">
+                                        <div>
+                                            <div>[[data_gaoji.course_name]]</div>
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-level-3" role="progressbar"
+                                                     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"
+                                                     v-bind:style="{width: data_gaoji.has_recde_percent+'%'}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </a>
+{#                                        <span class="percentage">[[data_gaoji.has_recde_percent]]%</span>#}
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+    <!-- container end-->
+    {% include './index_modal.html' %}
+{% endblock %}
+
+
+{% block document_ready %}
+    <script>
+        var edit_info_url = '{% url "x_person:info" %}';
+        var occupation_id = '{{ occupation_id }}'; //职业id
+        var occupation_ischoice_id = '{{ occupation_ischoice_id }}'; //用户选择职业
+        var course_detail_url = '{% url "course:detail" 0 %}';
+        var ClassRoomUrl = "{% url 'course:markdown_new' %}";
+        var edit_create_team_url = "{% url 'x_person:create_team' %}";
+        var edit_join_team_url = "{% url 'x_person:team' %}";
+    </script>
+    <script>
+        edit_info = function () {
+            var edit_url = edit_info_url + '?return=' + urlparser.getEncodedLocalPath();
+            window.location.href = edit_url;
+        }
+
+        edit_creat_team = function () {
+            var edit_url = edit_create_team_url + '?return=' + urlparser.getEncodedLocalPath();
+            window.location.href = edit_url;
+        };
+        edit_join_team = function () {
+            window.location.href = edit_join_team_url;
+        };
+
+    </script>
+    <script>
+        $('.tabs > div').on('click', function () {
+            var index = $(this).index();
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.tabs-content > div').eq(index).slideToggle(0).siblings().slideToggle(0);
+        });
+
+        $('#radar').height($('.question').height());
+        var radarEChart = echarts.init(document.getElementById('radar'));
+        var bubbleEchart = echarts.init(document.getElementById('bubble'));
+        {#var circleEchart = echarts.init(document.getElementById('circle'));#}
+        $(function () {
+            http.get("{% url 'practice:task_radar_data' %}", {}, function (res) {
+                //技能六维图
+                var radarOption = this.radarOption(res.response_data);
+                //启用设置
+                radarEChart.setOption(radarOption, true);
+            });
+            http.get("{% url 'course_occupation:line_chart' %}", {}, function (res) {
+                // console.log(res);
+                //学习/比赛记录
+                var bubbleOption = this.bubbleOption(res);
+                //启用设置
+                bubbleEchart.setOption(bubbleOption, true);
+            });
+{% comment %}
+            http.get("{% url 'teaching_management:recording' %}", {}, function (res) {
+                if (res["not_starte"]!=0 || res["processing"]!=0 || res["carry_out"]!=0){
+                    var circleOption = this.circleOption(res["not_starte"],res["processing"],res["carry_out"]);
+                    circleEchart.setOption(circleOption, true);
+                }
+            }){% endcomment %}
+        });
+
+        {% comment %}circleEchart.setOption(circleOption);
+        $(window).resize(function () {
+            radarEChart.resize();
+            bubbleEchart.resize();
+            circleEchart.resize();
+        });{% endcomment %}
+
+        //获取用户职业数据
+        $(function () {
+            if (occupation_id != "") {
+                InitOccupationData(occupation_id)
+            }
+        });
+
+        function InitOccupationData(occupation_id) {
+            http.get("{% url 'course_occupation:get_occuption_data' %}", {occupation_id: occupation_id}, function (res) {
+                app.data_list_jichu = app.data_list_jichu.concat(res[0] || []);
+                app.data_list_jinjie = app.data_list_jinjie.concat(res[1] || []);
+                app.data_list_gaoji = app.data_list_gaoji.concat(res[2] || []);
+
+            })
+        }
+
+        // 显示职业目标信息， 课程下的课时为0的时候不显示课程。
+        var app = new Vue({
+            el: '#line',
+            delimiters: ['[[', ']]'],
+            data: {
+                data_list_jichu: [],
+                data_list_jinjie: [],
+                data_list_gaoji: []
+
+            },
+            methods: {
+                hover_a: function () {
+                    $('ul.dotstyle li a').hover(function () {
+                        $(this).find('> div').stop().animate({
+                            top: '27px',
+                            opacity: '1'
+                        }, "slow")
+                    }, function () {
+                        $(this).find('> div').stop().animate({
+                            top: '-3000px',
+                            opacity: '0'
+                        }, "slow")
+                    });
+                }
+            },
+            filters: {
+                isobligatory: function (value) {
+                    return value ? '{% trans "x_required" %}' : '{% trans "x_elective" %}'
+                },
+                perfectUrl: function (value) {
+                    return course_detail_url.replace(0, value);
+                }
+            }
+        });
+
+
+        // 我的提问, 我的回复, 当页面加载时默认我的提问
+        function titleFormatter(value, row, index) {
+            //添加样式
+            return '<span class="orangeC font-bold mrg10R">[' + value + ']</span>'
+        }
+        function commentFormatter(value, row, index) {
+            //防止comment过长，限制长度
+            if (value.length > 85) {
+                return value.substr(0, 85) + '...'
+            }
+            return value
+        }
+
+        table = $('#table');
+        table1 = $('#table1');
+        table.on('load-success.bs.table', function (data) {
+            $('#radar').css('min-height', $('.tabs-content').height());
+            $(window).resize(function () {
+                    $('#radar').css('min-height', $('.tabs-content').height());
+                }
+            )
+        });
+        table1.on('load-success.bs.table', function (data) {
+            $('#radar').css('min-height', $('.tabs-content').height());
+            $(window).resize(function () {
+                    $('#radar').css('min-height', $('.tabs-content').height());
+                }
+            )
+        });
+
+        $('#table').bootstrapTable({
+            onClickRow: function (row) {
+                if (row.resource_url == '') {
+                    window.location.href = "#"
+                } else {
+                    window.location.href = row.resource_url + "#clicka";
+                }
+            }
+        });
+        $('#table1').bootstrapTable({
+            onClickRow: function (row) {
+                if (row.resource_url == '') {
+                    window.location.href = "#"
+                } else {
+                    window.location.href = row.resource_url + "#clicka";
+                }
+
+            }
+        });
+
+        var language = '{{ LANGUAGE_CODE }}';
+        var title = (language == 'en') ? "D MM YYYY":"YYYY年 第W周 M月D日";
+
+        $(document).ready(function() {
+            var course_screen = localStorage.course_screen || '';
+            var edition = {{ edition }}
+            if (edition == 0){
+                $('#calendar').fullCalendar({
+                header: {
+                        left: 'title',
+                        center: '',
+                        // right: 'month,agendaWeek,agendaDay'，
+                        right: 'prev,today,next',
+                    },
+
+                // weekends: true,
+                weekMode: 'liquid',
+                defaultView: 'agendaWeek',
+                allDaySlot: false,
+                height: 'auto',
+                minTime:"8:00",
+                maxTime:"21:00",
+                slotDuration: "00:60:01",
+                aspectRatio:1.1,
+                defaultEventMinutes: 60,
+                //slotLabelFormat:'h',
+                timeFormat:'H:mm',
+                titleFormat:title,
+                columnFormat: 'dddd',
+                //eventLimit: true,
+                selectable: false,//设置是否可被单击或者拖动选择
+                selectHelper: false,//点击或者拖动选择时，是否显示时间范围的提示信息，该属性只在agenda视图里可用
+                unselectAuto: false,//点击或者拖动选中之后，点击日历外的空白区域是否取消选中状态 true为取消 false为不取消，只有重新选择时才会取消
+                dayNames:[gettext('x_sun'), gettext('x_mon'), gettext('x_tues'),
+                        gettext('x_wed'), gettext('x_thurs'), gettext('x_fri'), gettext('x_sat')],
+                buttonText:{today:gettext("x_today")},
+                viewRender: function(view, element){ //切换日期区间回调
+                },
+                eventClick : function( event ){
+                    var course_id = event.course || 1;
+                    var lesson_id = event.lesson;
+                    {#var event_url=ClassRoomUrl.replace(0, lesson_id).replace(-1, classes_id);#}
+                    var event_url=ClassRoomUrl + "?course_id=" + course_id + "&lesson_id="+lesson_id+"&course_screen=" + course_screen;
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url "course:api:course-schedule-add-sign-in" 0 %}".replace(0, event.id),
+                        data: {'shudle': event.id},
+                        dataType: "json",
+                        success: function () {
+                            // 签到成功
+                            window.location.href='' + event_url +'';
+                        },
+                        error: function () {
+                            console.log('签到失败');
+                            return false
+                        }
+                    });
+                },
+                eventMouseover : function( event ) {
+                    $(".fc-title").attr('title',gettext('click_to_enter'));
+                },
+                eventMouseout : function(event) {
+
+                },
+                //Event是否可被拖动或者拖拽
+                editable: false,
+                //Event被拖动时的不透明度
+                dragOpacity: 0.5,
+
+                events: function (start, end, timezone, callback) {
+                    var event_list = [];
+                    $.ajax({
+                        type:"GET",
+                        url:"{% url 'course:api:course-schedule-list' %}",
+                        data:{},
+                        datatype:"json",
+                        success:function (data) {
+                            event_list = data.rows;
+                            callback(event_list);
+                        }
+                    });
+                },
+            });
+            }
+
+        });
+
+    </script>
+{% endblock %}

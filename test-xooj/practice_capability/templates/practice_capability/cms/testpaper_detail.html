@@ -1,0 +1,608 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'x_self_test_paper' %}
+{% endblock %}
+{% load staticfiles %}
+{% block other_css_js %}
+    <script src="{% static 'lib/vue.js' %}"></script>
+    <style>
+        .fixed-table-body {
+            height: auto;
+        }
+    </style>
+
+    <style>
+        .note-btn {
+            background-color: #fff;
+            border-color: #ccc;
+            color: #333;
+            height: 32px;
+        }
+
+        .quick-navigation {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 20px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message {
+            overflow: hidden;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            -o-border-radius: 4px;
+            border-radius: 4px;
+            -webkit-box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        ul, li {
+            list-style: none;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content clearfix">
+        <div style="width: 50%;float: left">
+            <div id="tableToolbar">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <select class="form-control m-b" id="type_list">
+                            <option value="0" selected="selected">{% trans "x_theory" %}</option>
+                            <option value="1">{% trans "x_real_vuln" %}</option>
+                            <option value="2">{% trans "x_exercise" %}</option>
+                            <option value="3">{% trans "x_man_machine" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control m-b" id="category_list">
+                            <option value="" selected="selected">{% trans "x_all_category" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control m-b" id="event_list">
+                            <option value="" selected="selected">{% trans "x_all_task_event" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-control m-b" id="difficulty_rating_list">
+                            <option value="" selected="selected">{% trans "x_all_difficulty" %}</option>
+                            <option value="1">{% trans "x_easy" %}</option>
+                            <option value="2">{% trans "x_normal" %}</option>
+                            <option value="3">{% trans "x_hard" %}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input class="form-control m-b" id="title_list" placeholder="{% trans 'x_task_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-primary" onclick="table.refresh();">
+                            <i class="fa fa-search"></i>{% trans 'x_search' %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <table id="table"
+                   data-toggle="table"
+                   data-toolbar="#tableToolbar"
+                   data-toolbar-align="center"
+                   data-show-refresh="false"
+                   data-search="false"
+                   data-pagination="true"
+                   data-checkbox="true"
+                   data-click-to-select="true"
+                   data-side-pagination="server"
+                   data-url="{% url 'cms_practice_theory:cms_api:choice-task-list' %}"
+            >
+                <thead>
+                <tr>
+                    <th class="bs-checkbox" data-checkbox="true" data-formatter="operatorFormatter"></th>
+                    <th data-field="title_dsc" data-formatter="titleFormatter">{% trans "x_name" %}</th>
+                    <th data-field="category_name">{% trans "x_type" %}</th>
+                    <th data-field="event_name">{% trans "x_owned_question" %}</th>
+                    <th data-field="score">{% trans "x_score" %}</th>
+                    <th data-field="is_dynamic_env" data-formatter="table.boolFormatter">{% trans "x_dynamic_scenes" %}</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div style="width: 48%;float: left;margin-left: 10px">
+            <div id="app_paper">
+                <div class="mail-content" id="mail-content">
+                    <div class="quick-navigation">
+                        <h3 id="show_info">
+                        </h3>
+                    </div>
+
+                    <div class="message" style="min-height: 500px">
+                        <div class="content" id="examcontent" tabindex="5002"
+                             style="overflow: hidden; outline: none;">
+                            <div class="form-group">
+
+                                <form id="examform" target="form-target">
+                                    <div class="clearfix">
+                                        <label class="col-sm-2 control-label">{% trans 'x_test_paper_name' %}</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="examname" name="examname" placeholder="{% trans 'x_enter_name_testpaper' %}"
+                                                value="{{ name }}"/>
+                                        </div>
+                                    </div>
+                                    {% verbatim %}
+
+                                    <ol id="examlist"
+                                        style="padding: 20px;text-align: left;max-height: 600px; overflow-y: auto;">
+                                        <li v-for="task,index in task_lists" :id="task.li_id"
+                                            :questioncode="task.item"
+                                            class="question"
+                                            v-bind:class="task.li_class"
+                                            style="position: relative;padding-right: 1em;">
+                                                        <span v-on:click="remove_question(index)"
+                                                              class="glyphicon glyphicon-remove"
+                                                              style="color: #ed5565;position: absolute; right: 0; top: 0; cursor: pointer;z-index: 1"
+                                                        ></span>
+                                            <p class="questiondesc" name="">
+                                            <div class="row">
+                                                <div class="col-md-7 col-lg-8" v-html="task.questiondesc"></div>
+                                                <div class="col-md-5 col-lg-4">（{{task.text.thisQuestion }}<input
+                                                        class="scoreinput" maxlength=4
+                                                        style="ime-mode:disabled;min-height:20px;width:60px;line-height:20px;height:20px;"
+                                                        type="text" :id="task.input_id"
+                                                        :placeholder="task.text.point"
+                                                        v-on:keyup="modify_score()"
+                                                        v-model="task.score"/>PT)
+                                                </div>
+                                            </div>
+                                            </p>
+                                            <p class="questionchoose" name="" v-html="task.questionchoose"></p>
+                                        </li>
+                                    </ol>
+
+
+                                    {% endverbatim %}
+
+                                    <div align="center">
+                                        <button id="submitbtn" type="button" v-on:click="submit_paper()"
+                                                class="btn btn-greensea">{% trans 'x_save' %}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_course:lesson' 0 %}";
+        var category_url = "{% url 'cms_course:practice_categories' 0 %}";
+        var event_url = "{% url 'practice:event_list' %}";
+        var theory_task_url = "{% url 'cms_practice_theory:cms_api:choice-task-list' %}";
+        var real_vuln_task_url = "{% url 'cms_practice_real_vuln:cms_api:real-vuln-task-list' %}";
+        var exercise_task_url = "{% url 'cms_practice_exercise:cms_api:practice-exercise-task-list' %}";
+        var mam_machine_task_url = "{% url 'cms_practice_man_machine:cms_api:man-machine-task-list' %}";
+
+        var task_list = new Array();
+
+        function show_info(number, allScore) {
+            tmp = gettext('x_test_paper_show_tip').format({number:number, allScore:allScore});
+            $("#show_info").html(tmp);
+        }
+
+        show_info({{ number}}, {{ allScore}});
+
+
+        function operatorFormatter(value, row, index) {
+            return '<input id="task' + index + '" name="checkTask" taskid=' + row.hash
+                + ' type="checkbox" value="0" hidden>';
+        }
+
+        function titleFormatter(value, row, index) {
+            hash = row.hash;
+            if (hash.endsWith("0") && !value){
+
+                content = row.content.replace(/<[^>]+>/g, "")
+                return content.substring(0, 15) + "...";
+            }
+            return value ? value : '';
+        };
+
+        var table = bsTableClass($('#table'));
+        $("#table").bootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.category = $("#category_list").val();
+                params.event = $("#event_list").val();
+                params.search = $("#title_list").val();
+                return params;
+            },
+            onLoadSuccess: function (data) {
+                for (task in task_list) {
+                    var task_hash = task_list[task].hash;
+                    var t = $("input[taskid='" + task_hash + "']:checkbox").prev()[0];
+                    if (t) t.checked = true
+                }
+                tasks = data.rows;
+                $("input[name='btSelectItem']:checkbox").change(function () {
+                    var tid = $(this).attr('data-index');
+                    if (this.checked) {
+                        $('#task' + tid + '')[0].checked = true;
+                    } else {
+                        $('#task' + tid + '')[0].checked = false;
+                    }
+                    checkClick($('#task' + tid + '').attr('taskid'));
+                })
+                $("input[name='btSelectAll']:checkbox").hide();
+            }
+
+        });
+
+        function init_model_select(category_url, event_url, type_id) {
+            $("#event_list").empty();
+            $("#category_list").empty();
+
+            $.ajax({
+                url: category_url.replace("0", type_id),
+                type: "get",
+                datatype: "json",
+                data: {"type_id": type_id},
+                success: function (data) {
+                    // console.info(data.data);
+                    var categorys = data.data;
+                    $("#category_list").append("<option value='' selected='selected'>{% trans "x_all_category" %}</option>");
+                    for (var i in categorys) {
+                        $("#category_list").append("<option value='" + categorys[i] + "'>" +codeUtil.htmlEncode(categorys[i].cn_name) + "</option>");
+                    }
+                }
+            });
+
+            $.ajax({
+                url: event_url,
+                type: "get",
+                datatype: "json",
+                data: {"type_id": type_id, "offset": 0, "limit": 30},
+                success: function (data) {
+                    // console.info(data);
+                    var event_list = data.rows;
+                    $("#event_list").append("<option value='' selected='selected'>{% trans "x_all_task_event" %}</option>");
+                    for (var i in event_list) {
+                        $("#event_list").append("<option value='" + event_list[i].id + "'>" + codeUtil.htmlEncode(event_list[i].name_dsc) + "</option>");
+                    }
+                }
+            });
+        }
+
+        function init_model_table(url) {
+            $("#table").bootstrapTable('refresh', {url: url});
+        }
+
+        $().ready(function () {
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            });
+
+
+            init_model_select(category_url, event_url, 0);
+
+            $("#type_list").change(function () {
+                var type_id = Number($(this).val());
+                init_model_select(category_url, event_url, type_id);
+
+                if (type_id == 0) {
+                    init_model_table(theory_task_url);
+                } else if (type_id == 1) {
+                    init_model_table(real_vuln_task_url);
+                } else if (type_id == 2) {
+                    init_model_table(exercise_task_url);
+                } else if (type_id == 3) {
+                    init_model_table(mam_machine_task_url);
+                }
+            });
+
+
+            var i = {{ mode }};
+            if (parseInt(i) == 1) {
+                var tasks = {{ tasks|safe}};
+                for (task in tasks) {
+                    questiontype = tasks[task].hash.indexOf(".0");
+                    if (questiontype > 0) {
+                        questiontype = true
+                        is_multiple_choice = tasks[task].multiple;
+                    } else {
+                        questiontype = false
+                    }
+
+
+                    if (questiontype) {
+                        questiondesc = tasks[task].content;
+                        questionchoose = $.parseJSON(tasks[task].options);
+                        questionchoose = getChooseHtml(questionchoose, (is_multiple_choice == 1), tasks[task]);
+                    } else {
+                        questiondesc = tasks[task].title;
+                        questionchoose = tasks[task].content;
+                    }
+
+                    var question = {
+                        li_id: "el_" + tasks[task].hash.toString(),
+                        input_id: "s_" + tasks[task].hash.toString(),
+                        li_class: "questiontype" + questiontype.toString(),
+                        item: tasks[task].hash,
+                        id: tasks[task].id,
+                        hash: tasks[task].hash,
+                        questiontype: questiontype.toString(),
+                        questiondesc: questiondesc,
+                        questionchoose: questionchoose,
+                        score: tasks[task].score,
+                        text: {
+                            thisQuestion: gettext("x_this_task"),
+                            point: gettext("x_score"),
+                        }
+                    };
+
+                    task_list.push(question);
+                }
+            }
+        });
+
+
+        function getTaskByHash(hash) {
+            for (idx in tasks) {
+                if (tasks[idx].hash == hash) {
+                    return tasks[idx];
+                }
+            }
+
+            return null;
+        }
+
+        function checkClick(item) {
+            if ($("[taskid='" + item + "']").get(0).checked) {
+                task = getTaskByHash(item);
+                questiontype = task.hash.indexOf(".0");
+                if (questiontype > 0) {
+                    questiontype = true
+                } else {
+                    questiontype = false
+                }
+
+                is_multiple_choice = task.multiple;
+
+                if (questiontype) {
+                    questiondesc = task.content;
+                    questionchoose = $.parseJSON(task.option);
+                    questionchoose = getChooseHtml(questionchoose, (is_multiple_choice == 1), task);
+                } else {
+                    questiondesc = task.title;
+                    questionchoose = task.content;
+                }
+
+                var question = {
+                    hash: task.hash,
+                    id: item.toString(),
+                    li_id: "el_" + item.toString(),
+                    input_id: "s_" + item.toString(),
+                    li_class: "questiontype" + questiontype.toString(),
+                    item: item,
+                    questiontype: questiontype.toString(),
+                    questiondesc: questiondesc,
+                    questionchoose: questionchoose,
+                    score: 10,
+                    text: {
+                        thisQuestion: gettext("x_this_task"),
+                        point: gettext("x_score"),
+                    }
+                };
+
+                task_list.push(question);
+
+                caculateQuestionCount();
+                caculateScoreSum();
+            }
+            else {
+                for (task in task_list) {
+                    if (task_list[task].item == item) {
+                        task_list.splice(task, 1)
+                    }
+                }
+                caculateQuestionCount();
+                caculateScoreSum();
+            }
+        }
+
+        function caculateQuestionCount() {
+            var count = 0;
+            count = task_list.length
+            $('#questioncount').html(count);
+        }
+
+        function caculateScoreSum() {
+            var scoresum = 0;
+            for (task in task_list) {
+                task_list[task].score = parseInt((task_list[task].score.toString()).replace(/\D|^0/g, ''));
+                if (isNaN(task_list[task].score)) {
+                    task_list[task].score = 0;
+                } else {
+                    task_list[task].score = Number(task_list[task].score);
+                }
+                scoresum += task_list[task].score
+            }
+            $('#scoresum').html(scoresum);
+        }
+
+
+        function getChooseHtml(chooses, ismulti, name) {
+            if (ismulti) {
+                itype = 'checkbox';
+            }
+            else {
+                itype = 'radio';
+            }
+            isright = $(this).attr('isright');
+            text = "<ol style='list-style-type:none'>";
+            cmdstr = "";
+
+            $.each(chooses, function (key, value) {
+                text = text + "<li><input disabled type='" + itype + "' value='" + "'>&nbsp;&nbsp;&nbsp;&nbsp;" + key + "．<label for='" + "'>" + value + "</label> </li>"
+            });
+
+            text = text + "</ol>";
+            return text;
+        }
+        var app = new Vue({
+            el: '#app_paper',
+            data: {
+                task_lists: task_list,
+            },
+            methods: {
+                modify_score: function () {
+                    caculateScoreSum()
+                },
+                submit_paper: function () {
+                    submitPaper()
+                },
+                remove_question: function (index) {
+                    var task_id = task_list[index].item;
+                    var t = document.getElementsByTagName('input');
+                    for(var i=0;i<t.length;i++)
+                    {
+                        if (t[i].getAttribute('taskid')==task_id && t[i].getAttribute('type')=='checkbox')
+                        {
+                            t[i].click();
+                            break;
+                        }
+                    }
+                    this.task_lists.splice(index, 1);
+                    caculateQuestionCount();
+                    caculateScoreSum();
+                },
+            },
+        });
+
+        function submitPaper() {
+            if ($('#examname').val() == '') {
+                alert(gettext('x_enter_name_testpaper'));
+                return false;
+            }
+            var is_existed = false;
+            if (is_existed) {
+                alert(gettext('x_name_already_exists'));
+                return false;
+            }
+            if ($('#questioncount').html() == '0') {
+                alert(gettext('x_choose_least_question'));
+                return false;
+            }
+            if ($('.scoreinput').val() == '') {
+                alert(gettext('x_enter_score'));
+                return false;
+            }
+            var newexamquestions = {}
+            for (task in task_list) {
+                var task_id = task_list[task].id
+                newexamquestions['taskid-' + task_id] = {};
+                newexamquestions['taskid-' + task_id]['taskid'] = task_id;
+                newexamquestions['taskid-' + task_id]['hash'] = task_list[task].hash;
+                newexamquestions['taskid-' + task_id]['qorder'] = task + 1;
+                newexamquestions['taskid-' + task_id]['score'] = task_list[task].score;
+            }
+            data = {
+                'examname': $('#examname').val(),
+                'questions': newexamquestions,
+                'teacher': $('#teacher').val(),
+            };
+            jsondata = JSON.stringify(data);
+
+            var listUrl = "{% url 'cms_practice_capability:testpaper' %}";
+            $.ajax({
+                type: "POST",
+                {% if mode == 0 %}
+                    url: '{% url "cms_practice_capability:ret_testpaper_detail" 0 %}',
+                {% else %}
+                    url: '{% url "cms_practice_capability:ret_testpaper_detail" testpaper_id %}',
+                {% endif %}
+                data: jsondata,
+                contentType: "application/json;charset=utf-8",
+                dataType: "json",
+                success: function (message) {
+                    setTimeout(function () {
+                        window.location.href = listUrl;
+                    }, ajaxDialog.defaultDelayTime);
+                },
+                error: function (message) {
+                    alert(('异常'));
+                }
+            });
+            return false;
+        }
+        var teacherUrl = "{% url 'cms_x_person:cms_api:user-list' %}";
+        $().ready(function () {
+            teacherlist = [];
+            {% for name in teacher %}
+                teacherlist.push("{{ name }}")
+            {% endfor %}
+            getTeacherList(teacherUrl);
+        });
+
+        var teacherIds = new Array();
+        var isexist;
+        function getTeacherList(url) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                data: {
+                    'is_teacher': 1
+                },
+                async: false,
+                success: function (data) {
+                    var arrary = data.rows;
+                    $.each(arrary, function (n, value) {
+                        isexist = false;
+                        for (var i = 0; i < teacherlist.length; i++) {
+                            if (value.username == teacherlist[i]) {
+                                isexist = true
+                            }
+                        }
+                        if (isexist) {
+                            if (value.username != "{{ event.creater_username }}") {
+                                $('#teacher').append("<option  selected value=" + value.id + ">" + value.username + "</option>");
+                                $('#teacher').selectpicker('refresh');
+                                teacherIds.push(value.id);
+                            }
+                        }
+                        else {
+                            if (value.username != "{{ event.creater_username }}") {
+                                $('#teacher').append("<option  value=" + value.id + ">" + value.username + "</option>");
+                                $('#teacher').selectpicker('refresh');
+                                teacherIds.push(value.id);
+                            }
+                        }
+                    });
+                },
+                error: function () {
+                }
+            })
+
+        }
+    </script>
+{% endblock %}

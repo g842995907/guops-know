@@ -1,0 +1,794 @@
+msgid "x_creating_snapshot"
+msgstr "Snapshot Creatting"
+
+msgid "x_create_snapshot"
+msgstr "Create Snapshot"
+
+msgid "x_has_create_snapshot"
+msgstr "Snapshot Created"
+
+msgid "x_create_snapshot_error"
+msgstr "Create Error"
+
+msgid "x_un_create"
+msgstr "Uncreate"
+
+msgid "x_create_error"
+msgstr "Create Error"
+
+msgid "x_env_type_base"
+msgstr "Simulation"
+
+msgid "x_env_type_ad"
+msgstr "AD"
+
+msgid "x_env_type_attack"
+msgstr "Attack"
+
+msgid "x_env_type_simulation"
+msgstr "Simulation"
+
+msgid "x_operator"
+msgstr "Operator"
+
+msgid "x_target"
+msgstr "Node"
+
+msgid "x_wingman"
+msgstr "Wingman"
+
+msgid "x_gateway"
+msgstr "Gateway"
+
+msgid "x_executer"
+msgstr "Executer"
+
+msgid "x_terminal"
+msgstr "Terminal"
+
+msgid "x_router"
+msgstr "Router"
+
+msgid "x_network"
+msgstr "Network"
+
+msgid "x_firewall"
+msgstr "Firewall"
+
+msgid "x_rule"
+msgstr "Rule"
+
+msgid "x_add_rule"
+msgstr "Add Rule"
+
+msgid "x_to_edit"
+msgstr "To be edited"
+
+msgid "x_img_creating"
+msgstr "Image Creating"
+
+msgid "x_saved"
+msgstr "Saved"
+
+msgid "x_create_img_error"
+msgstr "Create Error"
+
+msgid "x_img_saving"
+msgstr "Image Saving"
+
+msgid "x_img_has_saved"
+msgstr "Image has Saved"
+
+msgid "x_scene_vuln"
+msgstr "Correlation loopholes"
+
+msgid "x_scene_tool"
+msgstr "Associated tools"
+
+msgid "x_split_|"
+msgstr "Split whith |"
+
+msgid "x_label"
+msgstr "Label"
+
+msgid "x_no_std_device"
+msgstr "No Node"
+
+msgid "x_pre_page"
+msgstr "Pre Page"
+
+msgid "x_next_page"
+msgstr "Next Page"
+
+msgid "x_edit_node"
+msgstr "Edit Node"
+
+msgid "x_add_line"
+msgstr "New Line"
+
+msgid "x_node_id"
+msgstr "Node ID"
+
+msgid "x_node_type"
+msgstr "Node Category"
+
+msgid "x_std_search"
+msgstr "Node Search"
+
+msgid "x_server"
+msgstr "Server"
+
+msgid "x_node_role"
+msgstr "Node Role"
+
+msgid "x_img_name"
+msgstr "Image Name"
+
+msgid "x_img_type"
+msgstr "Image Category"
+
+msgid "x_img_size"
+msgstr "Image Size"
+
+msgid "x_sys_type"
+msgstr "System Type"
+
+msgid "x_access_mode"
+msgstr "Access Mode"
+
+msgid "x_protocol"
+msgstr "Protocol"
+
+msgid "x_port"
+msgstr "Port"
+
+msgid "x_authentication_mode"
+msgstr "Authentication Mode"
+
+msgid "x_sys_user"
+msgstr "System User"
+
+msgid "x_sys_user_passwd"
+msgstr "User Password"
+
+msgid "x_desc"
+msgstr "Description"
+
+msgid "x_add_sys_user"
+msgstr "New System User"
+
+msgid "x_install_cmd"
+msgstr "Install CMD"
+
+msgid "x_init_cmd"
+msgstr "Init CMD"
+
+msgid "x_deploy_cmd"
+msgstr "Deploy CMD"
+
+msgid "x_clear_cmd"
+msgstr "Clear CMD"
+
+msgid "x_push_flag_cmd"
+msgstr "Push Flag CMD"
+
+msgid "x_check_cmd"
+msgstr "Check CMD"
+
+msgid "x_attack_cmd"
+msgstr "Attack CMD"
+
+msgid "x_checker"
+msgstr "Check Executer"
+
+msgid "x_attacker"
+msgstr "Attack Executer"
+
+msgid "x_is_external"
+msgstr "Access Internet"
+
+msgid "x_tip_for_cmd"
+msgstr "Please fill in the resource file shell or cmd file path"
+
+msgid "x_tip_for_node_ref"
+msgstr "Execute Node Id"
+
+msgid "x_net_config"
+msgstr "Network Config"
+
+msgid "x_add_net_config"
+msgstr "Add Network Config"
+
+msgid "x_net_id"
+msgstr "Net Id"
+
+msgid "x_ip"
+msgstr "IP"
+
+msgid "x_netmask"
+msgstr "Netmask"
+
+msgid "x_egress"
+msgstr "Egress(Kb/s)"
+
+msgid "x_ingress"
+msgstr "Ingress(Kb/s)"
+
+msgid "x_firewall_egress"
+msgstr "Egress"
+
+msgid "x_firewall_ingress"
+msgstr "Ingress"
+
+msgid "x_firewall_both"
+msgstr "Both"
+
+msgid "x_get_online_scene"
+msgstr "Start Scene"
+
+msgid "x_delete_env"
+msgstr "Delete Scene"
+
+msgid "x_expect_time"
+msgstr "Expect Time"
+
+msgid "x_scene_create_progress"
+msgstr "Progress"
+
+msgid "x_confirm_delete_env"
+msgstr "Confirm Delete Scene?"
+
+msgid "x_set_name_replace"
+msgstr "This name will be overwrited by the name in the configuration files"
+
+msgid "x_img_machine_info"
+msgstr "Image Machine Info"
+
+msgid "x_web_connect"
+msgstr "WEB Connect"
+
+msgid "x_sys_visit"
+msgstr "System Visit"
+
+msgid "x_save_std_device_tip"
+msgstr "During the target save, the system will not be able to access and confirm to continue ?"
+
+msgid "x_default_passwrd_need_user"
+msgstr "Default access password requires default access to users"
+
+msgid "x_upload_success_server_handle"
+msgstr "Upload success, server processing..."
+
+msgid "x_uploading"
+msgstr "Uploading"
+
+msgid "x_please_donot_close"
+msgstr "Don't Close Window."
+
+msgid "x_edit_img"
+msgstr "Edit Image"
+
+msgid "x_img_machine_creating"
+msgstr "Image Machine Creating"
+
+msgid "x_img_machine_starting"
+msgstr "Image Machine Starting"
+
+msgid "x_save_img"
+msgstr "Save Image"
+
+msgid "x_resave_img"
+msgstr "Resave Image"
+
+msgid "x_float_ip"
+msgstr "Float IP"
+
+msgid "x_fixed_ip"
+msgstr "Fix IP"
+
+msgid "x_visit_env"
+msgstr "Visit Scene"
+
+msgid "x_login_type"
+msgstr "Login Category"
+
+msgid "x_more_time_than_expect"
+msgstr "Unexpected Time out"
+
+msgid "x_node_name"
+msgstr "Node Name"
+
+msgid "x_node_cidr"
+msgstr "Cidr"
+
+msgid "x_node_gateway"
+msgstr "Gateway"
+
+msgid "x_node_dns"
+msgstr "DNS"
+
+msgid "x_is_dhcp_on"
+msgstr "DHCP"
+
+msgid "x_sence_terminator_count_js"
+msgstr "This senario can only add up to %(count)d terminals"
+
+msgid "x_network_donot_connect_network"
+msgstr "The network can not be connected to the internet"
+
+msgid "x_route_only_network"
+msgstr "Routing can only connect with the network"
+
+msgid "x_firewall_only_network"
+msgstr "Firewall can only connect with the network"
+
+msgid "x_vm_only_network"
+msgstr "Virtual machines can only connect to the network"
+
+msgid "x_node_name_empty"
+msgstr "Node Name Empty"
+
+msgid "x_input_username"
+msgstr "UserName Require"
+
+msgid "x_exist_username"
+msgstr "Username Exist"
+
+msgid "x_input_protocol"
+msgstr "Protocol Require"
+
+msgid "x_exist_protocol"
+msgstr "Protocol Exist"
+
+msgid "x_exist_access_mode"
+msgstr "Access Mode Exist"
+
+msgid "x_exist_firewall"
+msgstr "Firewall Exist"
+
+msgid "x_exist_rule"
+msgstr "Rule Exist"
+
+msgid "x_exist_net_config"
+msgstr "Net Config Exist"
+
+msgid "x_env_name"
+msgstr "Scene Name"
+
+msgid "x_snapshot_status"
+msgstr "Snapshot Status"
+
+msgid "x_none_snapshot"
+msgstr "No Snapshot"
+
+msgid "x_other"
+msgstr "Other"
+
+msgid "x_online"
+msgstr "Online"
+
+msgid "x_not_select"
+msgstr "Not Select"
+
+msgid "x_add_access_mode"
+msgstr "Add Access Mode "
+
+msgid "x_default_router"
+msgstr "Default Router"
+
+msgid "x_default_firewall"
+msgstr "Default Firewall"
+
+msgid "x_terminal_router"
+msgstr "Terminal Router"
+
+msgid "x_terminal_firewall"
+msgstr "Terminal Firewall"
+
+msgid "x_waf"
+msgstr "WAF"
+
+msgid "x_ips"
+msgstr "IPS"
+
+msgid "x_ids"
+msgstr "IDS"
+
+msgid "x_web_server"
+msgstr "Web Server"
+
+msgid "x_database_server"
+msgstr "Database Server"
+
+msgid "x_file_server"
+msgstr "File Server"
+
+msgid "x_binary_server"
+msgstr "Binary Server"
+
+msgid "x_mail_server"
+msgstr "Mail Server"
+
+msgid "x_office_equipment"
+msgstr "Office Equipment"
+
+msgid "x_mobile_equipment"
+msgstr "Mobile Equipment"
+
+msgid "x_industrial_control_equipment"
+msgstr "Industrial Control Equipment"
+
+msgid "x_intelligent_equipment"
+msgstr "Intelligent Equipment"
+
+msgid "x_uav"
+msgstr "UAV"
+
+msgid "x_vm"
+msgstr "Virtual Machine"
+
+msgid "x_docker"
+msgstr "Docker"
+
+msgid "x_action"
+msgstr "Action"
+
+msgid "x_direction"
+msgstr "Direction"
+
+msgid "x_rule_source_ip"
+msgstr "Source ip(1.1.1.1) or subnet(1.1.1.0/24)"
+
+msgid "x_type"
+msgstr "Vulnerability Type"
+
+msgid "x_rule_source_port"
+msgstr "Source port(80) or port range(80:90)"
+
+msgid "x_rule_dest_ip"
+msgstr "Dest ip(1.1.1.1) or subnet(1.1.1.0/24)"
+
+msgid "x_rule_dest_port"
+msgstr "Dest port(80) or port range(80:90)"
+
+msgid "x_edit_attacker_server"
+msgstr "Edit"
+
+msgid "x_select_one_standard_device_limit"
+msgstr "Only can select one standard device"
+
+msgid "x_name"
+msgstr "Name"
+
+msgid "x_icon"
+msgstr "Icon"
+
+msgid "x_role"
+msgstr "Role"
+
+msgid "x_system_type"
+msgstr "System Type"
+
+msgid "x_size"
+msgstr "Size"
+
+msgid "x_img_status"
+msgstr "Image Status"
+
+msgid "x_attack_intensity"
+msgstr "Attack Intensity"
+
+msgid "x_bandwidth"
+msgstr "Bandwidth"
+
+msgid "x_low_intensity"
+msgstr "Low Intensity"
+
+msgid "x_middle_intensity"
+msgstr "Middle Intensity"
+
+msgid "x_high_intensity"
+msgstr "High Intensity"
+
+msgid "x_all_attacker_type"
+msgstr "All Attacker Type"
+
+msgid "x_static_routing"
+msgstr "Static Routing"
+
+msgid "x_routing_destination"
+msgstr "Destination"
+
+msgid "x_routing_next_jump"
+msgstr "Next Jump"
+
+msgid "x_exist_static_routing"
+msgstr "Static Routing Exists"
+
+msgid "x_obfuscation_flow"
+msgstr "Obfuscation flow"
+
+msgid "x_sniffing_deception"
+msgstr "Sniffing/deception"
+
+msgid "x_web_application_penetration"
+msgstr "Web application penetration"
+
+msgid "x_remote_service_attack"
+msgstr "Remote service attack"
+
+msgid "x_client_attack"
+msgstr "Client attack"
+
+msgid "x_password_cracking"
+msgstr "Password cracking"
+
+msgid "x_denial_of_service"
+msgstr "Denial of service"
+
+msgid "x_social_engineering"
+msgstr "Social engineering"
+
+msgid "x_wireless_attack"
+msgstr "Wireless attack"
+
+msgid "x_wan_number"
+msgstr "Wan Number"
+
+msgid "x_lan_number"
+msgstr "Lan Number"
+
+msgid "x_external_network"
+msgstr "Internet"
+
+msgid "x_shared_monitor"
+msgstr "monitoring"
+
+msgid "x_shared_assistance"
+msgstr "assistance"
+
+msgid "x_docker_address"
+msgstr "Docker address"
+
+msgid "x_attack_intensity_traffic"
+msgstr "Traffic"
+
+msgid "x_attack_intensity_scale"
+msgstr "Scale"
+
+msgid "x_input_optional"
+msgstr "Optional"
+
+msgid "x_input_required"
+msgstr "Required"
+
+msgid "x_attacker_type"
+msgstr "Attack Type"
+
+msgid "x_attacker_position"
+msgstr "Attack Position"
+
+msgid "x_attacker_target"
+msgstr "Target Params"
+
+msgid "x_attacker_intensity"
+msgstr "Attack Intensity"
+
+msgid "x_low"
+msgstr "low"
+
+msgid "x_middle"
+msgstr "middle"
+
+msgid "x_high"
+msgstr "high"
+
+msgid "x_start_attacker"
+msgstr "Start"
+
+msgid "x_prepare_attacker"
+msgstr "Preparing"
+
+msgid "x_continue_attacker"
+msgstr "Continue"
+
+msgid "x_pause_attacker"
+msgstr "Pause"
+
+msgid "x_stop_attacker"
+msgstr "Stop"
+
+msgid "x_flow_chart"
+msgstr "Flow chart"
+
+msgid "x_connect_external_net"
+msgstr "Connect External Network"
+
+msgid "x_auto_allocate_ip"
+msgstr "Automatic allocation of IP"
+
+msgid "x_exist_dns"
+msgstr "Exist DNS"
+
+msgid "x_all_node_role"
+msgstr "All Node Type"
+
+msgid "x_all_system"
+msgstr "All System"
+
+msgid "x_downstream"
+msgstr "Downstream"
+
+msgid "x_upstream"
+msgstr "Upstream"
+
+msgid "x_can_user_configure"
+msgstr "Can user configure"
+
+msgid "x_ad_terminal_number_limit"
+msgstr "Attack defense scene must have {target_limit} target and no more than {executer_limit} executer"
+
+msgid "x_no_checker"
+msgstr "No checker"
+
+msgid "x_user"
+msgstr "User"
+
+msgid "x_no_password"
+msgstr "No password"
+
+msgid "x_create_env_start"
+msgstr "Create scene start"
+
+msgid "x_create_env_error"
+msgstr "Create scene error"
+
+msgid "x_create_env_end"
+msgstr "Create scene end"
+
+msgid "x_create_network_start"
+msgstr "Create network [{name}] ..."
+
+msgid "x_create_network_error"
+msgstr "Create network [{name}] error"
+
+msgid "x_create_network_end"
+msgstr "Create network [{name}] end"
+
+msgid "x_create_router_start"
+msgstr "Create router [{name}] ..."
+
+msgid "x_create_router_error"
+msgstr "Create router [{name}] error"
+
+msgid "x_create_router_end"
+msgstr "Create router [{name}] end"
+
+msgid "x_create_firewall_start"
+msgstr "Create firewall [{name}] ..."
+
+msgid "x_create_firewall_error"
+msgstr "Create firewall [{name}] error"
+
+msgid "x_create_firewall_end"
+msgstr "Create firewall [{name}] end"
+
+msgid "x_create_qos_start"
+msgstr "Create qos for terminal[{terminal_name}] on network[{net_name}] ..."
+
+msgid "x_create_qos_error"
+msgstr "Create qos for terminal[{terminal_name}] on network[{net_name}] error"
+
+msgid "x_create_qos_end"
+msgstr "Create qos for terminal[{terminal_name}] on network[{net_name}] end"
+
+msgid "x_create_terminal_start"
+msgstr "Create terminal [{name}] ..."
+
+msgid "x_create_terminal_error"
+msgstr "Create terminal [{name}] error"
+
+msgid "x_create_terminal_end"
+msgstr "Create terminal [{name}] end"
+
+msgid "x_bind_floating_ip"
+msgstr "Bind floating ip for terminal [{name}] ..."
+
+msgid "x_all_image_type"
+msgstr "All Image Type"
+
+msgid "x_recreate"
+msgstr "Recreate"
+
+msgid "x_restart"
+msgstr "Restart"
+
+msgid "x_confirm_recreate"
+msgstr "Confirm Recreate"
+
+msgid "x_confirm_restart"
+msgstr "Confirm Restart"
+
+msgid "x_installers"
+msgstr "Tools"
+
+msgid "x_version"
+msgstr "Version"
+
+msgid "x_add_installer"
+msgstr "Add Installer"
+
+msgid "x_in_queue"
+msgstr "In queue"
+
+msgid "x_hatching"
+msgstr "Hatching"
+
+msgid "x_pause"
+msgstr "Pause"
+
+msgid "x_pause_env"
+msgstr "Pause"
+
+msgid "x_recover_env"
+msgstr "Recover"
+
+msgid "x_paused_recover_env"
+msgstr "Recover Scene"
+
+msgid "x_node_memory"
+msgstr "Node Memory"
+
+msgid "x_node_disk"
+msgstr "Node Disk"
+
+
+msgid "x_vm_status_no_state"
+msgstr "No State"
+
+msgid "x_vm_status_running"
+msgstr "Running"
+
+msgid "x_vm_status_blocked"
+msgstr "Blocked"
+
+msgid "x_vm_status_paused"
+msgstr "Paused"
+
+msgid "x_vm_status_shutdown"
+msgstr "Shutdown"
+
+msgid "x_vm_status_shutoff"
+msgstr "Shutoff"
+
+msgid "x_vm_status_crashed"
+msgstr "Crashed"
+
+msgid "x_vm_status_suspended"
+msgstr "Suspended"
+
+msgid "x_vm_status_failed"
+msgstr "Failed"
+
+msgid "x_vm_status_building"
+msgstr "Building"
+
+msgid "x_vm_status_abnormal"
+msgstr "Abnormal"
+
+
+msgid "x_please_try_again_later"
+msgstr "Please try again later"
+
+msgid "x_please_restart"
+msgstr "Please restart"
+
+msgid "x_please_recreate"
+msgstr "Please recreate"
+
+
+msgid "x_first_start_check_hint"
+msgstr "It takes a long time to start the scene for the first time. Please wait patiently."
+
+msgid "x_export_env_data"
+msgstr "Export Scene Data"

@@ -1,0 +1,41 @@
+msgid "x_num_new_user"
+msgstr "Total New User(s)"
+
+msgid "x_num_course_learning"
+msgstr "Total New Class(es)"
+
+msgid "x_num_practice_completed"
+msgstr "Total Practice Completed"
+
+msgid "x_num_new_team"
+msgstr "New Team"
+
+msgid "x_event_answered"
+msgstr "Event Answered"
+
+msgid "x_study"
+msgstr "Study"
+
+msgid "x_exam"
+msgstr "Exam"
+
+msgid "x_subject"
+msgstr "Subject"
+
+msgid "x_cpu_use_percent"
+msgstr "CPU Usage"
+
+msgid "x_ram_use_percent"
+msgstr "Memory Usage"
+
+msgid "x_disk_use_percent"
+msgstr "Disk Usage"
+
+msgid "x_switch_bar"
+msgstr "Switch to Bar Graph"
+
+msgid "x_switch_line"
+msgstr "Switch to Line Graph"
+
+msgid "x_restore"
+msgstr "Restore"

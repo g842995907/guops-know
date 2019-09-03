@@ -1,0 +1,158 @@
+msgid "x_all_vulnerability"
+msgstr "All Vulnerability"
+
+msgid "x_mobile_internet_vulnerability"
+msgstr "Mobile"
+
+msgid "x_internet_vulnerability"
+msgstr "Internet Of Things"
+
+msgid "x_industrial_control_vulnerability"
+msgstr "Industrial Control"
+
+msgid "x_big_data_vulnerability"
+msgstr "Big Data"
+
+msgid "x_search_options"
+msgstr "Search Options"
+
+msgid "x_release"
+msgstr "Release"
+
+msgid "x_updated"
+msgstr "Update"
+
+msgid "x_usability_implications"
+msgstr "Usability Implications"
+
+msgid "x_attack_vector"
+msgstr "Attack Vector"
+
+msgid "x_attack_complexity"
+msgstr "Attack Complexity"
+
+msgid "x_authentication"
+msgstr "Authentication"
+
+msgid "x_confidentiality_impact"
+msgstr "Confidentiality Impact"
+
+msgid "x_integrity_impact"
+msgstr "Integrity Impact"
+
+msgid "x_cvss_score"
+msgstr "CVSS Score"
+
+msgid "x_cvss_basis_points"
+msgstr "CVSS Basis Score"
+
+msgid "x_have_CH_data"
+msgstr "Chinese data: Yes"
+
+msgid "x_vulnerability_title"
+msgstr "Vulnerability Title"
+
+msgid "x_vulnerability_overview"
+msgstr "Vulnerability Overview"
+
+msgid "x_environmental_simulation"
+msgstr "Environmental Simulation"
+
+msgid "x_reference_link"
+msgstr "Reference link"
+
+msgid "x_mitigation_program"
+msgstr "Mitigation program"
+
+msgid "x_affected_products"
+msgstr "Affected products"
+
+msgid "x_numbering"
+msgstr "ID"
+
+msgid "x_resource_type"
+msgstr "Resource Category"
+
+msgid "x_author"
+msgstr "Author"
+
+msgid "x_verify_status"
+msgstr "Verify Status"
+
+msgid "x_resource_title"
+msgstr "Resource Title"
+
+msgid "x_code_content"
+msgstr "Code"
+
+msgid "x_AV"
+msgstr "path(AV)"
+
+msgid "x_AC"
+msgstr "complexity(AC)"
+
+msgid "x_AU"
+msgstr "Certification(AU)"
+
+msgid "x_C"
+msgstr "Confidentiality(C)"
+
+msgid "x_I"
+msgstr "Integrity(I)"
+
+msgid "x_A"
+msgstr "Usability(A)"
+
+msgid "x_risk_level"
+msgstr "Risk Level"
+
+msgid "x_risk"
+msgstr "Risk"
+
+msgid "x_type_statistics"
+msgstr "Category"
+
+msgid "x_quantity"
+msgstr "Quantity"
+
+msgid "x_time_distribution"
+msgstr "Time"
+
+msgid "x_time"
+msgstr "Time"
+
+msgid "x_low_risk"
+msgstr "Low"
+
+msgid "x_medium_risk"
+msgstr "Medium"
+
+msgid "x_high_risk"
+msgstr "High"
+
+msgid "x_no_chinese_data"
+msgstr "Chinese Data: No"
+
+msgid "x_have_xploit_code"
+msgstr "Vulnerability Utilization Code: Yes"
+
+msgid "x_no_xploit_code"
+msgstr "Vulnerability Utilization Code: NO"
+
+msgid "x_vulnerability_details"
+msgstr "Vulnerability details: Yes"
+
+msgid "x_no_vulnerability_details"
+msgstr "Vulnerability details: No"
+
+msgid "x_vulnerabilit_arrier"
+msgstr "Vulnerability Carrier: Yes"
+
+msgid "x_no_vulnerabilit_arrier"
+msgstr "Vulnerability Carrier: No"
+
+msgid "x_vulnerability_detection_script"
+msgstr "Vulnerability Detection Script: Yes"
+
+msgid "x_no_vulnerability_detection_script"
+msgstr "Vulnerability Detection Script: No"

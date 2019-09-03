@@ -1,0 +1,23 @@
+msgid "x_deploy_task"
+msgstr "部署题目"
+
+msgid "x_clean_task"
+msgstr "清除题目"
+
+msgid "x_push_flag"
+msgstr "推送flag"
+
+msgid "x_check_task"
+msgstr "检查题目"
+
+msgid "x_check_status_is"
+msgstr "检查状态为"
+
+msgid "x_execute_success"
+msgstr "执行成功"
+
+msgid "x_field_cannot_empty!"
+msgstr "该字段不能为空！"
+
+msgid "x_choose_environment"
+msgstr "请选择一个环境"

@@ -1,0 +1,311 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load static %}
+{% load i18n %}
+{% load static_v %}
+
+{% block title %}
+    {% trans 'x_update' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static_v 'cms/css/update.css' %}">
+    <style>
+        .update-img {
+            position: absolute;
+            left: -80px;
+            top: -80px;
+        }
+
+        .modal-header {
+            border-bottom: none;
+        }
+
+        .modal-footer {
+            border-top: none;
+            text-align: center;
+        }
+
+        .modal-footer > .btn-white {
+            margin-bottom: 0;
+        }
+
+        .modal-body ol li {
+            margin-bottom: 5px;
+        }
+
+        .caret-icon {
+            min-width: 100px;
+            text-align: right;
+            color: #666;
+            font-size: 18px;
+        }
+
+        .modal-body {
+            padding: 20px 60px 30px;
+            min-height: 320px;
+        }
+
+        .modal-body ol {
+            padding-left: 17px;
+        }
+
+        .font14 {
+            font-size: 14px;
+        }
+
+        .font18 {
+            font-size: 18px;
+        }
+
+        .connect-fail, .progress-wrap {
+            display: none;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress, .progress-bar {
+            border-radius: 10px;
+        }
+
+        .version {
+            display: none;
+        }
+
+        .btn-w-m {
+            border: 1px solid #1ab394;
+        }
+    </style>
+    <script>
+        //触发显示对话框
+        $(function () {
+            $('#check-update-modal').modal('show');
+        });
+        //配置model对话框
+        $(function () {
+            {% if need_update == 1 %}
+                $('#check-update-modal').modal({"backdrop": "static"}).on("shown.bs.modal", function () {
+                    var $modal_dialog = $(this).find('.modal-dialog');
+                    //获取可视窗口的高度
+                    var clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+                    //得到dialog的高度
+                    var dialogHeight = $modal_dialog.height();
+                    //计算出距离顶部的高度
+                    var m_top = (clientHeight - dialogHeight) / 2;
+                    $modal_dialog.animate({
+                        'marginTop': m_top
+                    }, 600)
+                });
+            {% endif %}
+        });
+    </script>
+
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="col-md-6 col-sm-6">
+                        {#                        <a class="btn btn-primary">#}
+                        {#                            <i class="fa fa-plus"></i>{% trans 'x_load_offline_update' %}#}
+                        {#                        </a>#}
+                        <input type="file" class="hidden" id="env_file" name="env_file"/>
+                        <span class="btn btn-primary file-upload-btn">{% if env.has_file %}
+                            {% trans 'x_reupload' %}{% else %}{% trans 'x_load_offline_update' %}{% endif %}</span>
+                        <span class="hint"></span>
+                        <input type="file" class="hidden">
+                    </div>
+                </div>
+
+                {#                <div class="clearfix" style="margin-top: 30px">#}
+                {#                    <div class="col-md-6 col-sm-6">#}
+                {#                        <a>{% trans 'x_current_version' %}{{ version }}</a>#}
+                {#                    </div>#}
+                {#                </div>#}
+
+                <div class="panel-body">
+                    <div class="panel-group" id="version">
+                        {% for ui in uis %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h5 class="panel-title">
+                                        <a data-toggle="collapse" data-parent="#version"
+                                           href="#{{ ui.id }}">v{{ ui.name }}</a>
+                                        <code class="pull-right">{{ ui.create_time }} </code>
+                                    </h5>
+                                </div>
+                                <div id="{{ ui.id }}" class="panel-collapse collapse in">
+                                    <div class="panel-body">
+                                        <ol>
+                                            {% for c in ui.change_log %}
+                                                <li>{{ c }}</li>
+                                            {% endfor %}
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="check-update-modal">
+        <div class="modal-dialog" role="document" style="margin-top: 260.5px">
+            <div class="modal-content">
+                <img class="update-img" style="" src="{% static_v 'cms/img/update.png' %}">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title">{% trans 'x_find_new_version' %}</h3>
+                </div>
+                {% if  not version_host_net %}
+                    <div class="load-wrap-wrap">
+                        <div class="load-wrap">
+                            <div class="load-container load5">
+                                <div class="loader">Loading...</div>
+                            </div>
+                            <div class="text-center font18"><strong>Loading...</strong></div>
+                        </div>
+                    </div>
+                    <div class="connect-fail text-center"><strong
+                            class="text-danger font18">服务器连接失败，请稍后再试...</strong></div>
+                {% else %}
+                    {% if current_update %}
+                        <div class="modal-body">
+                            <p><strong>{{ current_update.name }} {% trans 'x_version_update' %}</strong></p>
+                            <ol>
+                                {% for c in current_update.change_log %}
+                                    <li>{{ c }}</li>
+                                {% endfor %}
+                            </ol>
+                        </div>
+
+                        {% if current_update.auto_update %}
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-w-m btn-white" data-dismiss="modal">
+                                    {% trans 'x_cancel' %}
+                                </button>
+                                <button type="button" onclick="doUpdate()"
+                                        class="btn btn-w-m btn-primary">{% trans 'x_update_now' %}</button>
+                            </div>
+                        {% endif %}
+
+                        {% if not current_update.auto_update %}
+                            <div class="alert alert-warning text-center">
+                                版本改动较大无法在线/离线更新，请联系我们进行更新<br>
+                                电话：400-1234567<br>
+                                邮箱：cyberpeace@cyberpeace.cn
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center" style="padding-bottom: 20px;padding-top: 20px;"><strong
+                                class="text-danger font18">当前是最新版!</strong></div>
+                    {% endif %}
+                {% endif %}
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endblock %}
+
+{% block bottom_js %}
+    <script src="{% static 'lib/websocket/reconnecting-websocket.min.js' %}"></script>
+    <script type="text/javascript">
+        var currentVersion = "{{ version }}";
+
+        var update_tips = [
+            "<p class='update-backup'>{% trans 'x_update_backup' %}</p>",
+            "<p class='update-pip'>{% trans 'x_update_pip' %}</p>",
+            "<p class='update-remove'>{% trans 'x_update_remove' %}</p>",
+            "<p class='update-finish'>{% trans 'x_update_finish' %}</p>"
+        ].join('')
+
+        var info_dict = {
+            backupEnd: 'update-backup',
+            installEnd: 'update-pip',
+            backupRemoveEnd: 'update-remove',
+            finished: 'update-finish'
+        }
+        var tip_list = Object.keys(info_dict)
+        var loading = '<i class="fa fa-spin fa-spinner" style="font-size: 20px;"></i>'
+
+        $('.file-upload-btn').click(function () {
+            $(this).prev().click();
+        });
+        $('.file-upload-btn').siblings('[type=file]').change(function () {
+
+            var formData = new FormData();
+            formData.append('encrypt_file', this.files[0]);
+
+            var fileUploadUrl = "{% url 'cms_cloud_client:api:update-list' %}";
+            http.post(fileUploadUrl, formData, function (res) {
+                {#popUtil.confirm("{% trans 'x_version_update' %}");#}
+                var msg_list = new Set()
+
+                swal({
+                    title: "{% trans 'x_version_update' %}",
+                    text: update_tips,
+                    type: "info",
+                    html: true,
+                    showConfirmButton: true
+                });
+
+                socket = new WebSocket("ws://" + window.location.host + "/update/websocket/state/");
+                socket.onmessage = function (e) {
+                    console.log(e.data)
+                    showNewState(msg_list, e.data)
+                    if (e.data !== 'updateEnd') {
+                        setTimeout(function () {
+                            socket.send("hello")
+                        }, 50)
+                    }
+                }
+                socket.onclose = function () {
+                    showNewState(msg_list, 'finished')
+                }
+            }, function (xhr, ts, et) {
+                ajaxDialog.popError(xhr, ts, et);
+            }, {
+                cache: false,
+                processData: false,
+                contentType: false,
+            });
+        })
+        ;
+
+        function showNewState(set, state) {
+            var oldSize = set.size
+            set.add(state)
+            var newSize = set.size
+            if (newSize !== oldSize) {
+                var selector_tip = '.' + info_dict[tip_list[oldSize]]
+                var newInfo_tip = $(selector_tip).text()
+                $(selector_tip).html(newInfo_tip + loading)
+
+                if (Object.keys(info_dict).includes(state)) {
+                    var selector = '.' + info_dict[state]
+                    var newInfo = $(selector).text()
+                    $(selector).text(newInfo + " √")
+                }
+            }
+        }
+
+
+        function doUpdate() {
+            {% if need_update == 1 %}
+                var updateUrl = "{% url 'cms_cloud_client:api:update-update-online' %}";
+                http.post(updateUrl, {url: '{{ current_update.zip }}'}, function (res) {
+                    setTimeout(function () {
+                        popUtil.confirm("{% trans 'x_version_update' %}")
+                    }, 1000);
+                });
+            {% endif %}
+        }
+
+        setTimeout(function () {
+            $('.load-wrap').fadeOut(2);
+            $('.connect-fail').fadeIn(200);
+        }, 5000);
+    </script>
+{% endblock %}

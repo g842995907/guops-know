@@ -1,0 +1,203 @@
+msgid "x_all_grades"
+msgstr "All Grades"
+
+msgid "x_all_class"
+msgstr "All Classes"
+
+msgid "x_user_name_prompt"
+msgstr "Username length of 6 to 14, numbers, letters and underscores"
+
+msgid "x_email_prompt"
+msgstr "Email Format ： xx@xx.com"
+
+msgid "x_password_prompt"
+msgstr "Password length 8 ~ 20, and must contain uppercase and lowercase alphanumeric characters and special characters"
+
+msgid "x_select_class"
+msgstr "Select Class"
+
+msgid "x_select_department"
+msgstr "Select Department"
+
+msgid "x_select_grade"
+msgstr "Select Grade"
+
+msgid "x_select_character"
+msgstr "Select Role"
+
+msgid "x_enter_china_phone"
+msgstr "Please enter the mobile phone number or telephone number in mainland China"
+
+msgid "x_user_already_exists"
+msgstr "User Exists"
+
+msgid "x_team_name"
+msgstr "Team Name"
+
+msgid "x_team_logo"
+msgstr "Team Logo"
+
+msgid "x_organizational_structure_manage"
+msgstr "Organization Management"
+
+msgid "x_cannot_del_school"
+msgstr "School Can't Be Deleted"
+
+msgid "x_rename"
+msgstr "ReName"
+
+msgid "x_upload_file"
+msgstr "Upload File"
+
+msgid "x_file_must_excel"
+msgstr "File Format Excel"
+
+msgid "x_administrator"
+msgstr "Administrator"
+
+msgid "x_teacher"
+msgstr "Trainer"
+
+msgid "x_student"
+msgstr "Trainee"
+
+msgid "x_web_security"
+msgstr "Web"
+
+msgid "x_reverse_analysis"
+msgstr "Reverse"
+
+msgid "x_loophole_utilization"
+msgstr "Pwn"
+
+msgid "x_password_agreement"
+msgstr "Crypto"
+
+msgid "x_caves_index"
+msgstr "Brain Storm"
+
+msgid "x_mobile_security"
+msgstr "Mobile"
+
+msgid "x_E-mail_verification"
+msgstr "E-mail has been sent, please open the link in the browser to complete the mail verification"
+
+msgid "x_max_length_30"
+msgstr "Max Length is 30"
+
+msgid "x_invaild_symbol_admin"
+msgstr "invalid character 'admin | root | 管理员'"
+
+msgid "x_save_cannot_changed"
+msgstr "Organization structure after saving management, name, student number will not be changed"
+
+msgid "x_apply_admission"
+msgstr "Apply"
+
+msgid "x_apply_success"
+msgstr "Apply Successfully"
+
+msgid "x_have_applied"
+msgstr "Have Applied"
+
+msgid "x_already_invited"
+msgstr "Invited"
+
+msgid "x_page_num"
+msgstr "All {all} Page"
+
+msgid "x_click_logo_go"
+msgstr "Click Logo Go On"
+
+msgid "x_student_ID"
+msgstr "Trainee ID"
+
+msgid "x_max_120"
+msgstr "character too long(0~120)"
+
+msgid "x_members_name"
+msgstr "Member name"
+
+msgid "x_match"
+msgstr "Match"
+
+msgid "x_course"
+msgstr "Course"
+
+msgid "x_practice"
+msgstr "Practice"
+
+msgid "x_30_day"
+msgstr "30days"
+
+msgid "x_record"
+msgstr "Record"
+
+msgid "x_add_failure"
+msgstr "Add failure !"
+
+msgid "x_primary"
+msgstr "primary"
+
+msgid "x_intermediate"
+msgstr "intermediate"
+
+msgid "x_senior"
+msgstr "Senior"
+
+msgid "x_position_required"
+msgstr "Position: this field is required"
+
+msgid "x_difficlty_choose"
+msgstr "Difficulty level: please choose difficulty"
+
+msgid "x_date"
+msgstr "Date"
+
+msgid "x_match_score"
+msgstr "Match score"
+
+msgid "x_study_course_number"
+msgstr "Study course number"
+
+msgid "x_practice_scoring"
+msgstr "practice score"
+
+msgid "x_time"
+msgstr "Time"
+
+msgid "x_skills_six_dimensions"
+msgstr "Skills Six Dimensions"
+
+msgid "x_normal"
+msgstr "Normal"
+
+msgid "x_new_user"
+msgstr "New User"
+
+msgid "x_not_verify"
+msgstr "Not Verified"
+
+msgid "x_overdue"
+msgstr "Overdue"
+
+msgid "x_banned"
+msgstr "Banned"
+
+msgid "x_online"
+msgstr "Online"
+
+msgid "x_offline"
+msgstr "Offline"
+
+msgid "x_joined"
+msgstr "Joined"
+
+msgid "x_invitation"
+msgstr "Invitation"
+
+msgid "x_clear_member"
+msgstr "Clear Member"
+
+msgid "x_please_choose_format"
+msgstr "Please choose {info}"

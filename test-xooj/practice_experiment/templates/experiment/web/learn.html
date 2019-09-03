@@ -1,0 +1,154 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>{% trans "基础实验" %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'experiment/css/learn.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'experiment/css/video.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'web/css/default.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'web/css/common.css'%}">
+    <link rel="stylesheet" type="text/css" href="{% static 'experiment/css/bootstrap.min.css'%}">
+    <script src="{% static 'web/js/jquery-3.2.1.min.js'%}"></script>
+    <script src="{% static 'web/js/pdfobject.min.js' %}"></script>
+    <script src="{% static 'experiment/js/learn.js'%}"></script>
+    <script src="{% static 'experiment/js/tween.js'%}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.title-list li a').each(function(){
+            if($($(this))[0].href==String(window.location)){
+                $(this)[0].style.color='orange'
+                $(this).parent().parent()[0].style.display='block';
+                $(this).parent().parent().prev()[0].style.color='orange'
+                $(this).parent().parent().prev()[0].children[0].style.cssText='background:orange;border:none';
+                $(this).parent().parent().prev()[0].play=false;
+                }
+            });
+        })
+    </script>
+    <script type="text/javascript">
+        function setFocus() {
+            //alert('focus');
+            document.getElementById('iframeH').contentWindow.focus();
+        }
+    </script>
+</head>
+
+
+<body>
+    <div class='bg-wrap' style="background:url({% static 'course/img/bg.jpg' %})">
+    </div>
+    <div class='black-bg'>
+        <div class='learn-title clearfix'>
+            <div class='learn-label'>
+                <span class='dot'></span>
+                <a href="{% url 'common_web:home' %}"><span class='label-text'>{% trans "x_home" %}</span></a>
+                <span class='label-text'>&nbsp;&gt;&gt;&nbsp;</span>
+                <a href="{% url 'experiment:list' %}"><span class='label-text'>{% trans "基础实验" %}</span></a>
+                <span class='label-text'>&nbsp;&gt;&gt;&nbsp;</span>
+                <span class='label-text' name="experiment-name" style="color: #FF9900;"></span>
+            </div>
+            <ul class='action-btn'>
+                <li media-name="pdf" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "实验文档" %}</span>
+                </li>
+                <li media-name="video" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "教学视频" %}</span>
+                </li>
+{#                <li media-name="machine">#}
+{#                    <span class='video'></span>#}
+{#                    <span class='action-btn-text'>{% trans "实验机器" %}</span>#}
+{#                </li>#}
+                <li media-name="practice" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_lab_environment" %}</span>
+                </li>
+                <li media-name="note" hidden="hidden">
+                    <span class='video'></span>
+                    <span class='action-btn-text'>{% trans "x_my_note" %}</span>
+                </li>
+            </ul>
+        </div>
+        <div class='learn-content'>
+            <div class='inportant-main doc-hide frame-pdf'>
+                <div class='study-main'>
+                    <div class='gg' name="pdf" src="" frameborder='0' scrolling='auto'>
+                    </div>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-video'>
+                <div class='study-main'>
+                    <iframe class='gg' name="video" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+
+{#            <div class='inportant-main doc-hide'>#}
+{#                <div class='study-main'>#}
+{#                    <iframe class='gg' name="machine" src="http://58.213.63.28:9328/Z3VhY2Ftb2xl/#/client/Qmx1ZS1QQzEAYwBub2F1dGg=" frameborder='0' id='iframeH' onmouseover="setFocus();" onclick="setFocus();" scrolling='auto' ></iframe>#}
+{#                </div>#}
+{#            </div>#}
+
+            <div class='inportant-main doc-hide frame-practice'>
+                <div class='study-main'>
+                    <iframe class='gg' name="practice" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+            <div class='inportant-main doc-hide frame-note'>
+                <div class='study-main'>
+                    <iframe class='gg' name="note" src="" frameborder='0' scrolling='auto'>
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='course-detailed'>
+    </div>
+<script type="text/javascript">
+var experiment_id = {{ experiment_id }};
+
+function init_experiment(experiment) {
+    $("[name='experiment-name']").html(experiment.name);
+
+    if (experiment.pdf){
+        PDFObject.embed(experiment.pdf, $("div[name='pdf']"), {pdfOpenParams: { view: 'FitV', toolbar: '0' }});
+{#        $("iframe[name='pdf']").attr("src", experiment.pdf);#}
+        $("li[media-name='pdf']").show();
+    }
+
+    if (experiment.video){
+        $("iframe[name='video']").attr("src", "{% url 'experiment:video' %}"+ "?video_url=" +experiment.video);
+        $("li[media-name='video']").show();
+    }
+
+    if (experiment.practice){
+        $("iframe[name='practice']").attr("src", "{% url 'experiment:task' %}"+"?task_hash=" + experiment.practice);
+        $("li[media-name='practice']").show();
+    }
+
+    $("iframe[name='note']").attr("src", "{% url 'experiment:note' %}"+"?experiment_id={{ experiment_id }}");
+    $("li[media-name='note']").show();
+}
+
+$(function () {
+    $.ajax({
+        url: "{% url 'experiment:api:experiment-detail' experiment_id %}",
+        type: "get",
+        datatype: "json",
+        success: function (data) {
+            if (data){
+                init_experiment(data);
+            }
+        },
+        error: function () {
+            showPopMsg(gettext("无法获取实验内容。"));
+        }
+    });
+})
+</script>
+</body>
+</html>

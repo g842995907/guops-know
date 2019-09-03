@@ -1,0 +1,1125 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load static %}
+{% load static_v %}
+{% load i18n %}
+
+
+{% block title %}
+    {{ event.name }}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'web/css/media.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'event_exam/web/css/answer.css' %}"/>
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/sweetalert/sweetalert.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'practice/css/list.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_v 'event_exam/web/css/exam-new.css' %}">
+
+    <script src="{% static 'practice/js/radialIndicator.min.js' %}"></script>
+    <script src="{% static "event_exam/web/markdown/marked.js" %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/sweetalert/sweetalert.min.js" %}"></script>
+    <script type="text/javascript" src="{% static_v 'practice/widgets/task_env/js/network.js' %}"></script>
+    {#    <script src="{% static 'choice_task/web/js/tween.js' %}"></script>#}
+    {#    <script src="{% static 'choice_task/web/js/time.js' %}"></script>#}
+    <style>
+        header {
+            transform: translateY(0px) !important;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+
+        .head-show {
+            width: 120px;
+            height: 120px;
+        }
+    .ts_topic_tag_v1 {
+        border: 1px solid #101444;
+        color: #101444;
+        border-radius: 3px;
+        font-size: 20px;
+        line-height: 30px;
+        min-width: 65px;
+        height: 30px;
+        text-align: center;
+        padding: 0 5px;
+    }
+    .bread{
+        color: #fff;
+    }
+
+    #Election{
+        color: #fff;
+    }
+    .exam-description{
+        color: #1fa0fb;
+    }
+    .content-bgc{
+        background-color: #162D4C;
+    }
+    #radialIndicator{
+        margin-top:18px;
+    }
+    #task_answer{
+        width: calc(98% - 200px - 20px - 10px );
+    }
+    .done>div{
+        cursor: pointer;
+    }
+    .content > div:nth-of-type(1){
+        width:380px;
+    }
+    .number-list>div{
+    margin-left: 16px;
+    margin-bottom: 16px;
+    }
+    .content > div:nth-of-type(2){
+        width: calc(103% - 420px - 20px)
+    }
+
+   .Grade-box>div{
+       height:600px;
+       width:100%;
+       margin-top:30px;
+   }
+    .Grade-box>div>h2{
+        color: #FF9900;
+    }
+    .text-box{
+        width:50%;
+        display: flex;
+        display: -webkit-flex;
+        display: -moz-flex;
+        margin: 0 auto;
+        margin-bottom:20px;
+        margin-right:16%;
+    }
+    .text-box>span{
+        flex: 1;
+        -webkit-flex: 1;
+        -moz-flex: 1;
+        font-size:20px;
+        margin-right:20px;
+    }
+    .Grade-number{
+        font-size:20px;
+    }
+    .text-box a{
+        display: block;
+        margin-left:30%;
+        width: 80px;
+        height: 30px;
+        line-height:30px;
+        text-align: center;
+        border-radius: 5px;
+        background-color: #FF9900;
+        color: #fff;
+        text-align: center;
+    }
+    .markdown-img img{
+        width:100%;
+        height:100%;
+    }
+    .border-btm{
+        margin-bottom:2px;
+    }
+    .inform-box span{
+        margin-right:40px;
+    }
+    .border-btm-dashed{
+        font-size:16px;
+    }
+
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class='main container mrg93T' id="main">
+        {# 状态栏信息部分   #}
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a  href="{% url 'event:list' %}">{% trans 'x_contest' %}</a>
+            <span>&gt;&gt;</span>
+
+            <a  href="" class='active'>{{ event.name }}</a>
+            <a id="ExamCountdown" style="float:right"></a>
+            {% verbatim %}
+
+            <div class="common-title clearfix pull-right" id="count_time" v-cloak v-if="responses.is_over === 'false'">
+                <div style="font-size: 18px">
+                    <i class="fa fa-clock-o"></i>&nbsp;{{ "x_end_game" | trans }}：<span v-if="countDownTime.hour"><span
+                        class="time">{{ countDownTime.hour }}</span> : </span>
+                    <span v-if="countDownTime.minute"><span
+                            class="time">{{ countDownTime.minute }}</span> : </span>
+                    <span v-if="countDownTime.second"><span
+                            class="time">{{ countDownTime.second }}</span></span>
+                    <button v-on:click="finish_button()"
+                            style="font-size: 16px;width: 90px; height: 30px;line-height: 30px;background-color: #2E85C8;border: 1px solid #2E85C8;color: #fff;border-radius: 3px; margin-left: 10px;">
+                        {{ "x_hand_over" | trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="Election" v-cloak>
+            <div class="content-bgc clearfix" style="padding: 20px;margin-top: 20px" v-if="responses.is_over === 'false'">
+                {% endverbatim %}
+                <div class="pull-left inform-box">
+                    <div style="margin-bottom: 7px;">{% trans "x_name_exam" %}:<span
+                            class="orangeC">{{ event.name }}</span>
+                    </div>
+                    <span>{% trans 'x_name_surname' %}：{{ request.user.first_name }}</span>&nbsp;
+                    <span>{{ ORGANIZATION.Second_level }}：{{ request.user.faculty.name }}</span>
+                    <span>{{ ORGANIZATION.Third_level }}：{{ request.user.major.name }}</span>
+                    <span>{{ ORGANIZATION.Fourth_level }}：{{ request.user.classes.name }}</span>
+                </div>
+            </div>
+            {% verbatim %}
+            <div class="content font-defalut-color mrg20T clearfix" v-if="responses.is_over === 'false'">
+                <div class="pull-left white-bg ">
+                    <div class="inform border-btm content-bgc">
+                        <span>{{ "x_answered" | trans }}</span>
+                        <span>{{ "x_not_answered" | trans }}</span>
+                        <span>{{ "x_current" | trans }}</span>
+                    </div>
+                    <div class="classfication border-btm content-bgc"
+                         v-bind:class="responses.judgment_list.length == 0 ? 'hidden':''">
+
+                        <div class="title">
+                            <div class="border-btm-dashed">{{ "x_judgment_problem" | trans }}</div>
+                        </div>
+
+                        <div class="number-list clearfix">
+                            <div v-for="(value,key,index) in responses.judgment_list"
+                                 v-bind:class="value == 1? 'done': 'unfinished'"
+                                 v-on:click="get_data(key)">
+                                <div>{{ key+1 }}
+                                    <div v-bind:class="key + 1 == responses.num_done_task? 'current':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="classfication border-btm content-bgc"
+                         v-bind:class="responses.single_list.length == 0 ? 'hidden':''">
+
+                        <div class="title">
+                            <div class="border-btm-dashed">{{ "x_single_choice" | trans }}</div>
+                        </div>
+
+                        <div class="number-list clearfix">
+                            <div v-for="(value,key,index) in responses.single_list "
+                                 v-bind:class="value == 1? 'done': 'unfinished'"
+                                 v-on:click="get_data(judgment_length + key)">
+                                <div>{{ judgment_length + key + 1 }}
+                                    <div v-bind:class="key + judgment_length + 1 == responses.num_done_task? 'current':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="classfication border-btm content-bgc"
+                         v-bind:class="responses.multiple_list.length == 0 ? 'hidden':''">
+
+                        <div class="title">
+                            <div class="border-btm-dashed">{{ "x_multiple_choice" | trans }}</div>
+                        </div>
+
+                        <div class="number-list clearfix">
+                            <div v-for="(value,key,index) in responses.multiple_list "
+                                 v-bind:class="value == 1? 'done': 'unfinished'"
+                                 v-on:click="get_data(single_length + key)">
+                                <div>{{ single_length + key + 1 }}
+                                    <div v-bind:class="key + single_length + 1 == responses.num_done_task? 'current':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="classfication border-btm content-bgc"
+                            v-bind:class="responses.operational_list.length == 0 ? 'hidden':''">
+
+                        <div class="title">
+                            <div class="border-btm-dashed">{{ "x_operation_problem" | trans }}</div>
+                        </div>
+
+                        <div class="number-list clearfix">
+                            <div v-for="(value,key,index) in responses.operational_list "
+                                 v-bind:class="value == 1? 'done': 'unfinished'"
+                                 v-on:click="get_data(multiple_length + key)">
+                                <div>{{ multiple_length + key+1 }}
+                                    <div v-bind:class="key + multiple_length + 1 == responses.num_done_task? 'current':''"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right white-bg content-bgc">
+                    <div class="inform border-btm orangeC" v-if="responses.multiple==2">{{ "x_judgment_problem" | trans }}<div style="color:#b4b4b4">{{ "x_tips_next" | trans }}</div></div>
+                    <div class="inform border-btm orangeC" v-if="responses.multiple==0">{{ "x_single_choice" | trans }}<div style="color:#b4b4b4">{{ "x_tips_next" | trans }}</div></div>
+                    <div class="inform border-btm orangeC" v-if="responses.multiple==1">{{ "x_multiple_choice" | trans }}<div style="color:#b4b4b4">{{ "x_tips_next" | trans }}</div></div>
+                    <div class="inform border-btm orangeC" v-if="responses.multiple==4">{{ "x_operation_problem" | trans }}<div style="color:#b4b4b4">{{ "x_tips_next" | trans }}</div></div>
+                    <div class="exam-content">
+                        <div v-if="responses.multiple==4">
+                            <div class="exam-description ">{{ responses | marked_titile }}
+                                <div class="option_title_marked markdown-img"></div>
+                            </div>
+                            <div v-if="responses.content">{{ responses | marked_option }}
+                                <div class="option_marked markdown-img"></div>
+                            </div>
+
+                            <input type="hidden" class="operational_problem_id" v-bind:value="topic_id" v-bind:id="responses.num_done_task">
+                            <div class="mrg30T" v-bind:style="{'display': responses.file_url ? '' : 'none' }">
+                                <div class="row mrg20B pad30L "
+                                     v-bind:style="{'display': responses.file_url ? '' : 'none' }">
+                                    <a :href="responses.attach_url" class="download-file fa-download"
+                                       target="_blank"
+                                       id="task_content_url">{{ "x_download_attachment" | trans }}</a>
+                                </div>
+
+                                <div class="row mrg20B pad30L "
+                                     v-bind:style="{'display': responses.url ? '' : 'none' }">
+                                    <a :href="responses.url" class="download-file" target="_blank"
+                                       id="task_content_url">{{ "x_click_visit_URL" | trans }}</a>
+                                </div>
+                            </div>
+                            <div class="apply-env" id="task_env"
+                                 v-bind:class="responses.is_dynamic_env? '':'hidden'">
+                                <p class="mrg20B whiteC"></p>
+                                <div data-widget-id="common-env" v-bind:data-task-hash="responses.hash"></div>
+                            </div>
+
+                            <div class="clearfix" v-if="!responses.is_slove" name="submit_answer">
+                                <span class="col-lg-offset-6 "></span>
+                                <input type="text" id="task_answer" name="flag-submit"
+                                       :placeholder="responses.solving_mode ? gettext('x_multiple_flags') : gettext('x_input_answer')" >
+                                <div class="pull-right">
+                                    <div class="loading default-bg pull-left" id="loading"></div>
+                                    <span class="orangeC" style="vertical-align: middle;" id="answer-status"></span>
+                                    <div class="prg-cont rad-prg pull-left" id="radialIndicator"
+                                             style="display: none"></div>
+
+                                    <div class="btn-common" v-on:click="submit_option_answer(responses)">{{ "x_submit" | trans }}</div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <span class="col-lg-offset-6">{{ "x_problem_solved" | trans }}</span>
+                            </div>
+                            <div class=""><span
+                                    id="repeat_record"></span></div>
+                            <div class="btn-wrap text-right">
+                                <div class="btn-common" v-if="responses.num_done_task !== 1"
+                                     v-on:click="get_data(responses.num_done_task-2)">{{ "x_previous_question" | trans  }}
+                                </div>
+                                <div class="btn-common" v-if="responses.num_done_task !== responses.num_task"
+                                     v-on:click="get_data(responses.num_done_task)">{{ "x_next_question" | trans }}
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div v-if="responses.multiple==1">
+                                <div class="exam-description">{{ responses | marked }}
+                                    <div  class="multiple_marked markdown-img"></div>
+                                </div>
+                                <div class="multiple_template" v-for="(value,key,index) in shuffle(responses.option)">
+                                    <input :id="topic_id+key" class="mrg10T mrg10B mrg10R"
+                                           type="checkbox" name="multiple" v-bind:value="topic_id"
+                                           v-bind:data-key="key"
+                                           :checked="option_restore(key, topic_id) ? 'checked':''">
+                                    <label :for="topic_id+key" class="markdown-img">{{ value, topic_id, key | solution_mark }}</label>
+                                </div>
+
+                            </div>
+                            <div v-if="responses.multiple==0 ">
+                                <div class="exam-description" >{{ responses | marked }}
+                                    <div class="single_marked markdown-img"></div>
+                                </div>
+                                <div class="sigle_template" v-for="(value,key,index) in shuffle(responses.option)"  >
+                                    <input class="mrg10T mrg10B mrg10R" type="radio" :id="topic_id+key" name="radio"
+                                           v-bind:value="topic_id" v-bind:data-key="key"
+                                           :checked="option_restore(key, topic_id) ? 'checked':''">
+                                    <label :for="topic_id+key" class="markdown-img">{{ value, topic_id, key | solution_mark }}</label>
+
+                                </div>
+                            </div>
+                            <div v-if="responses.multiple==2">
+                                <div class="exam-description">{{ responses | marked }}
+                                    <div class="judgment_marked markdown-img"></div>
+                                </div>
+                                <div class="sigle_template1" v-for="(value,key,index) in serialization(responses.option)">
+                                    <div v-if="key ==='A'">
+                                        <input class="mrg10T mrg10B mrg10R" :id="topic_id+key" type="radio"
+                                               name="judgment" v-bind:value="topic_id" v-bind:data-key="key"
+                                               :checked="option_restore(key, topic_id) ? 'checked':''">
+                                        <label :for="topic_id+key">√</label>
+                                    </div>
+                                    <div v-if="key ==='B'">
+                                        <input class="mrg10T mrg10B mrg10R" :id="topic_id+key" type="radio"
+                                               name="judgment" v-bind:value="topic_id" v-bind:data-key="key"
+                                               :checked="option_restore(key, topic_id) ? 'checked':''">
+                                        <label :for="topic_id+key">×</label>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="btn-wrap text-right">
+                                <div class="btn-common" v-if="responses.num_done_task !== 1"
+                                     v-on:click="get_data(responses.num_done_task-2)">{{ "x_previous_question" | trans }}
+                                </div>
+                                <div class="btn-common" v-on:click="get_data(responses.num_done_task)"
+                                     v-if="responses.num_done_task !== responses.num_task">{{ "x_next_question" | trans }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Grade-box" v-else>
+                <div>
+                    {% endverbatim %}
+
+                    <h2 class="blue-clr text-center ">{{ event.name }} <h4 class="blue-clr text-center" style="display: none">{% trans "x_successful_delivery" %}</h4>
+                    </h2>
+                   <div class="text-box">
+                        <span>{% trans "x_name_surname" %}：{{ request.user.first_name }}</span>
+                        <span>{{ ORGANIZATION.Second_level }}：{{ request.user.faculty.name }}</span>
+                   </div>
+                    <div class="text-box">
+                             <span>{{ ORGANIZATION.Third_level }}：{{ request.user.major.name }}</span>
+                            <span>{{ ORGANIZATION.Fourth_level }}：{{ request.user.classes.name }}</span>
+                    </div>
+                    {% verbatim %}
+                    <div class="text-box" v-if="responses.show_score" >
+                        <span>{{ "x_get_score" | trans }}：<span class="blue-clr">{{ responses.get_score }}</span>span</span>
+                    </div>
+                    <div class="text-box">
+                        <a :href=" | detailUrl" class='font15 blue-clr fr'>{{ "x_see_detail" | trans }}</a>
+                    </div>
+                    {% endverbatim %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block document_ready %}
+    <script>
+    var radio_choice_vue = undefined;
+    var json_name = "{{ event.hash }}.json";
+    var event_datas = undefined;
+    var reviewUrl = '{% url "event_exam:review" pk %}';
+    var responses = undefined;
+
+    //提交判断、单选、多选题按钮
+    function gs_submit_answer() {
+        var select_arr = [];
+        var task_ids;
+
+        if ($("input[name='judgment']:checked").val() != undefined) {
+            task_ids = $("input[name='judgment']:checked").val();
+            select_arr[0] = $("input[name='judgment']:checked").attr('data-key');
+        }
+        else if ($("input[name='radio']:checked").val() != undefined) {
+            task_ids = $("input[name='radio']:checked").val();
+            select_arr[0] = $("input[name='radio']:checked").attr('data-key');
+        }
+        else if ($("input[name='multiple']:checked").val() != undefined) {
+            task_ids = $("input[name='multiple']:checked").val();
+            var obj = document.getElementsByName("multiple");
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i].checked){
+                    select_arr.push(obj[i].dataset["key"]);
+                }
+            }
+        }
+        if (task_ids != undefined) {
+            var submit_answer_str = '';
+            for(i=0; i<select_arr.length; i++ ){
+                submit_answer_str = submit_answer_str + select_arr[i]
+            }
+            submit_answer(task_ids, submit_answer_str)
+        }
+    }
+
+    //选择题提交接口
+    function submit_answer(taskids, answers) {
+        var key = {{ pk }} + "_" + {{ request.user.id }};
+        var is_do = key + "_is_do";
+
+        var answered = window.localStorage.getItem(key);
+        if (answered != null ){
+                var answer_obj = JSON.parse(answered);
+                answer_obj[taskids] = answers;
+                var submit_value = JSON.stringify(answer_obj);
+        }
+        else {
+            var answer_obj = {};
+            answer_obj[taskids] = answers;
+            var submit_value = JSON.stringify(answer_obj)
+        }
+        window.localStorage.setItem(key, submit_value);
+
+        var is_do_local = window.localStorage.getItem(is_do);
+        if (is_do_local != null ){
+            var is_do_list = is_do_local.split(",");
+            if($.inArray(taskids, is_do_list) == -1){
+                is_do_list.push(taskids);
+            }
+            window.localStorage.setItem(is_do, is_do_list.join(","));
+        }
+        else{
+            window.localStorage.setItem(is_do, taskids);
+        }
+    }
+
+    //操作题提交接口
+    function submit_option_answer(responses) {
+        var taskids = $("#" + responses.num_done_task).val();
+        var answers = $('#task_answer').val();
+        var task_hash = responses.hash;
+        $.ajax({
+            type: "POST",
+            url: '{% url "event_exam:api:event-submit-testpaper"  pk %}',
+            data: {
+                'taskhash': task_hash,
+                'answers': answers,
+                'topic_num': responses.num_done_task,
+                'topic_id': taskids
+            },
+            success: function (json) {
+                var key = {{ pk }} + "_" + {{ request.user.id }};
+
+                var schedule = key + "_schedule";
+                var answered = window.localStorage.getItem(key);
+                if (answered != null) {
+                    var answer_obj = JSON.parse(answered);
+                    if (answer_obj[taskids] != undefined){
+                        var answer_list = answer_obj[taskids].split(",");
+                        answer_list.push(answers);
+                        answer_obj[taskids] = answer_list.join(",");
+                    }
+                    else {
+                        answer_obj[taskids] = answers
+                    }
+                    var submit_value = JSON.stringify(answer_obj);
+                }
+                else {
+                    var answer_obj = {};
+                    answer_obj[taskids] = answers;
+                    var submit_value = JSON.stringify(answer_obj)
+                }
+                window.localStorage.setItem(key, submit_value);
+
+                if (json.error_code == 0) {
+                    if (json.response.error_code == 0) {
+                        if (json.response.is_solved) {
+                            $('#task_answer').val(""); //input框清空
+                            $("#repeat_record").html(""); //不为空，已做过提示清空
+                            $('#answer-status').removeClass('answer-wrong').addClass('answer-right').show().delay(2000).fadeOut();//对错提示
+                            $('#radialIndicator').delay(3000).fadeIn();
+                            if (responses.multiple == 4 && json.response.solving_mode){
+                                setTimeout(getRadialIndicator.animate(Math.round(json.response.score_per * 100)), 3000);
+                            }
+                            var is_do = key + "_is_do";
+                            var is_do_local = window.localStorage.getItem(is_do);
+                            if (is_do_local != null) {
+                                var is_do_list = is_do_local.split(",");
+                                if ($.inArray(taskids, is_do_list) == -1) {
+                                    is_do_list.push(taskids);
+                                }
+                                window.localStorage.setItem(is_do, is_do_list.join(","));
+                            }
+                            else {
+                                window.localStorage.setItem(is_do, taskids);
+                            }
+
+                            if (json.response.score == json.response.all_score) { //如果全部答完，那么提交按钮隐藏
+                                $("[name='submit_answer']").addClass("hidden");
+                                $('#hint-msg').html(gettext('x_problem_solved'));
+                                $("#hint-msg-warp").attr("data-backdrop", "static");
+                                $("#hint-msg-warp").modal();
+                                $("#hint-msg-warp").show();
+                            }
+                        }
+                        else {
+                            $("#repeat_record").html("");
+                            $('#answer-status').removeClass('answer-right').addClass('answer-wrong').show().delay(2000).fadeOut();
+                            if (responses.multiple == 4 && json.response.solving_mode){
+                                setTimeout(getRadialIndicator.animate(Math.round(json.response.score_per * 100)), 3000);
+                            }
+                            $('#radialIndicator').delay(3000).fadeIn()
+                        }
+                    }
+                    else {
+                        if (json.response.error_code == 1) {
+                            $("#repeat_record").html(gettext("x_flag_solved"));
+                            $('#answer-status').removeClass('answer-right').addClass('answer-wrong').show().delay(2000).fadeOut();
+                            $('#radialIndicator').delay(3000).fadeIn();
+                            if (responses.multiple == 4 && json.response.solving_mode){
+                                setTimeout(getRadialIndicator.animate(Math.round(json.response.score_per * 100)), 3000);
+                            }
+                        }
+                    }
+
+                    select_arr = [];
+                    task_ids = undefined
+
+                    var topic_chedule = window.localStorage.getItem(schedule);
+                    if (topic_chedule != null) {
+                        var topic_schedule = JSON.parse(topic_chedule);
+
+                        if (json.response.score_per) {
+                            topic_schedule[taskids] = json.response.score_per;
+                        }
+                        else {
+                            topic_schedule[taskids] = 0;
+                        }
+                        var schedule_val = JSON.stringify(topic_schedule);
+                        window.localStorage.setItem(schedule, schedule_val);
+                    }
+                    else {
+                        var topic_schedule = {};
+                        if (json.response.score_per) {
+                            topic_schedule[taskids] = json.response.score_per;
+                        }
+                        else {
+                            topic_schedule[taskids] = 0;
+                        }
+                        var schedule_val = JSON.stringify(topic_schedule);
+                        window.localStorage.setItem(schedule, schedule_val);
+                    }
+                }
+                else if (json.error_code == 2) {
+                    $("#repeat_record").html(gettext("x_answer_not_empty"))
+                }
+                else {
+                    showPopMsg("{% trans 'x_unknown_mistake' %}");
+                }
+
+            },
+            error: function (message) {
+                showPopMsg("{% trans 'x_unknown_mistake' %}");
+            }
+        });
+    }
+
+    //交卷
+    function finish_button() {
+        var judgment_list = radio_choice_vue.responses.judgment_list;
+        var single_length = radio_choice_vue.responses.single_list;
+        var multiple_length = radio_choice_vue.responses.multiple_list;
+        var operational_list = radio_choice_vue.responses.operational_list;
+        var undone_num = undone_total(judgment_list) + undone_total(single_length) + undone_total(multiple_length) + undone_total(operational_list);
+        if (undone_num != 0){
+            $('#hint-msg-confirm #confirm-msg').html('<span  style="color:red;">'+ gettext("x_whether_hand_over").format({"undone_num":undone_num}) +'</span>');
+        }
+        else{
+            $('#hint-msg-confirm #confirm-msg').html(gettext("x_submit_over"));
+        }
+        $('#hint-msg-confirm').modal('show');
+        var confirm_button = $('#hint-msg-confirm .btn-confirm')[0];
+        confirm_button.onclick = function () {
+            finish_up_job();
+        };
+        var refuse_button = $('#hint-msg-confirm  .btn-cancel')[0];
+        refuse_button.onclick = function () {
+
+        }
+    }
+
+    function undone_total(toplic_list) {
+        undone_num = 0;
+        for (i=0; i < toplic_list.length; i++) {
+            if (toplic_list[i] == 0){
+                undone_num = undone_num + 1
+            }
+        }
+        return undone_num
+    }
+
+    //交卷的请求接口
+    function finish_up_job() {
+        var key = {{ pk }} + "_" + {{ request.user.id }};
+
+        var answer = window.localStorage.getItem(key);
+        $.ajax({
+            type: "POST",
+            url: '{% url "event_exam:api:event-finish-up-job"  pk %}',
+            data: {"answer":answer},
+            success: function (json) {
+                 if (json.error_code == 1){
+                    showPopMsg("{% trans 'x_is_over_no_sub' %}");
+                }
+                $("#count_time").addClass("hidden");
+                var is_do = key + "_is_do";
+                window.localStorage.removeItem(key);
+                window.localStorage.removeItem(is_do);
+{#                get_task();#}
+                window.location.replace("{% url 'event_exam:review' pk %}")
+            },
+            error: function (message) {
+                showPopMsg("{% trans 'x_unknown_mistake' %}");
+            }
+        });
+    }
+
+    //小方框点击请求接口
+    function get_data(key) {
+        gs_submit_answer();
+        var data = event_datas;
+        if (key >= data.length) {
+            key = data.length - 1
+        }
+        responses = data[key];
+        var topic_id = responses.id;
+        var num_done_task = key + 1;
+        responses["num_done_task"] = num_done_task;
+        responses["num_task"] = data.length;
+        responses["is_over"] = "false";
+
+        var type = type_judgment(data);
+
+        if ($.inArray(responses.multiple, [0, 1, 2, 4]) != -1) {
+            var judgment_length = type[2].length;
+            var single_length = type[0].length + judgment_length;
+            var multiple_length = type[1].length + single_length;
+        }
+        responses['judgment_list'] = type[2];
+        responses['single_list'] = type[0];
+        responses['multiple_list'] = type[1];
+        responses['operational_list'] = type[4];
+
+        if (responses.hash != undefined) {
+            if (responses.hash.split(".")[-1] != 0) {
+                var schedule = {{ pk }} +"_" + {{ request.user.id }} +"_schedule";
+                var topic_chedule = window.localStorage.getItem(schedule);
+                if (topic_chedule != null) {
+                    if (JSON.parse(topic_chedule)[topic_id] != undefined) {
+                        var topic_schedule = JSON.parse(topic_chedule);
+                        responses["score_per"] = topic_schedule[topic_id];
+                        if (topic_schedule[topic_id] == 1) {
+                            responses["is_slove"] = true
+                        }
+                    }
+                    else {
+                        responses["score_per"] = 0
+                    }
+                }
+                else {
+                    responses["score_per"] = 0
+                }
+            }
+        }
+
+        $("#repeat_record").html("");
+        $("[name='submit_answer']").removeClass("hidden");
+        $("#task_answer").val('');
+
+        //数据加载
+        if (radio_choice_vue) {
+            radio_choice_vue.responses = responses;
+            radio_choice_vue.topic_id = topic_id;
+            if ($.inArray(radio_choice_vue.responses.multiple, [0, 1, 2, 4]) != -1) {
+                radio_choice_vue.judgment_length = judgment_length;
+                radio_choice_vue.single_length = single_length;
+                radio_choice_vue.multiple_length = multiple_length;
+            }
+        }
+    }
+
+    //加载场景
+    function dynamic_env(responses) {
+        if ($('[data-widget-id=common-env]').attr('a')) {
+            return;
+        }
+        $('[data-widget-id=common-env]').attr('a', 1);
+        if (responses.is_dynamic_env) {
+            $ENV(function () {
+                var $env = $('[data-widget-id=common-env]');
+                $env.registerEnvWidget({
+                    common: {
+                        lang: '{{ LANGUAGE_CODE }}',
+                    }
+                });
+                $env.getEnv();
+            });
+        }
+    }
+
+    //进度条
+    function operating_schedule(responses) {
+        if (responses.multiple == 4 && responses.solving_mode) {
+            $('#answer-status').empty();
+            $("#radialIndicator").empty();
+
+            getRadialIndicator = radialIndicator('#radialIndicator', {
+                radius: 18,
+                barWidth: 2,
+                barColor: '#FF9900',
+                barBgColor: "rgba(0, 24, 54, 0.35)",
+                fontWeight: 'normal',
+                fontSize: "14px",
+                percentage: true
+            });
+            getRadialIndicator.animate(Math.round(responses.score_per * 100));
+            $('#radialIndicator').show('slow');
+        }
+        else if (responses.multiple == 4) {
+            $("#radialIndicator").empty()
+        }
+    }
+
+    //获取数据
+    function get_task() {
+        http.get("{% url 'event_exam:api:event-get-tasks' pk %}", {}, function (res) {
+            if (res.error_code == 0) {
+                $.getJSON("/media/event_exam/json/0".replace('0', json_name), function (data, status) {
+                    if (status == "success") {
+                        data = sort(data);
+                        event_datas = data;
+                        var key = {{ pk }} +"_" + {{ request.user.id }};
+                        var answer = window.localStorage.getItem(key);
+                        if (answer != null) {
+                            var num_done_task = Object.keys(JSON.parse(answer)).length
+                            responses = data[num_done_task - 1];
+                        }
+                        else {
+                            responses = data[0];
+                            var num_done_task = 1;
+                        }
+                        responses["num_done_task"] = num_done_task;
+                        responses["num_task"] = data.length;
+                        var topic_id = responses.id;
+                        $("#repeat_record").html("");
+
+
+                        var is_over = res["response"].is_over;
+                        if (is_over == "true") {
+                            responses["rank_status"] = res["response"].rank_status;
+                            responses["show_score"] = res["response"].show_score;
+                            if (res["response"].show_score) {
+                                responses["get_score"] = res["response"].get_score;
+                            }
+
+
+                        } else {
+                            responses["count_time"] = res["response"].count_time
+                        }
+                        responses["is_over"] = is_over;
+
+                        var type = type_judgment(data);
+
+                        if ($.inArray(responses['multiple'], [0, 1, 2, 4]) != -1) {
+                            var judgment_length = type[2].length;
+                            var single_length = type[0].length + judgment_length;
+                            var multiple_length = type[1].length + single_length;
+                        }
+
+                        responses['judgment_list'] = type[2];
+                        responses['single_list'] = type[0];
+                        responses['multiple_list'] = type[1];
+                        responses['operational_list'] = type[4];
+
+                        if (responses.hash != undefined) {
+                            if (responses.hash.split(".")[-1] != 0) {
+                                var schedule = {{ pk }} +"_" + {{ request.user.id }} +"_schedule";
+                                var topic_chedule = window.localStorage.getItem(schedule);
+                                if (topic_chedule != null) {
+                                    if (JSON.parse(topic_chedule)[topic_id] != undefined) {
+                                        var topic_schedule = JSON.parse(topic_chedule);
+                                        responses["score_per"] = topic_schedule[topic_id];
+                                        if (topic_schedule[topic_id] == 1) {
+                                            responses["is_slove"] = true
+                                        }
+                                    }
+                                    else {
+                                        responses["score_per"] = 0
+                                    }
+                                }
+                                else {
+                                    responses["score_per"] = 0
+                                }
+                            }
+                        }
+
+                        //数据加载
+                        if (radio_choice_vue) {
+                            radio_choice_vue.responses = responses;
+                            radio_choice_vue.topic_id = topic_id;
+                            if ($.inArray(radio_choice_vue.responses.multiple, [0, 1, 2, 4]) != -1) {
+                                radio_choice_vue.judgment_length = judgment_length;
+                                radio_choice_vue.single_length = single_length;
+                                radio_choice_vue.multiple_length = multiple_length;
+                            }
+                        } else {
+                            radio_choice_vue = new Vue({
+                                el: '#Election',
+                                data: {
+                                    responses: responses,
+                                    topic_id: topic_id,
+                                    judgment_length: judgment_length,
+                                    single_length: single_length,
+                                    multiple_length: multiple_length,
+                                },
+                                methods: {
+                                    shuffle: function (obj) {
+                                        obj = JSON.parse(obj);
+                                        var arr_list = [];
+                                        var arr;
+                                        var options = new Object();
+                                        var objs = new Object();
+                                        for (var key in obj) {
+                                            objs[key] = obj[key];
+                                            arr_list.push(objs);
+                                            objs = {};
+                                        }
+
+                                        for (var i = 0; i < arr_list.length; i++) {
+                                            var rand = parseInt(Math.random() * arr_list.length);
+                                            arr = arr_list[rand];
+                                            arr_list[rand] = arr_list[i];
+                                            arr_list[i] = arr
+                                        }
+
+                                        for (var j = 0; j < arr_list.length; j++) {
+                                            for (var keys in arr_list[j]) {
+                                                options[keys] = arr_list[j][keys]
+                                            }
+                                        }
+                                        return options;
+                                    },
+                                    serialization: function (obj) {
+                                        obj = JSON.parse(obj);
+                                        return obj
+                                    },
+                                    option_restore: function (value, topic_id) {
+                                        var key = {{ pk }} +"_" + {{ request.user.id }};
+
+                                        var submit_answer = window.localStorage.getItem(key);
+                                        if (submit_answer != null && JSON.parse(submit_answer)[topic_id] != undefined) {
+                                            answer_obj = JSON.parse(submit_answer);
+                                            if ($.inArray(value, answer_obj[topic_id]) != -1) {
+                                                return true;
+                                            }
+                                            else {
+                                                return false;
+                                            }
+                                        }
+                                        else {
+                                            return false
+                                        }
+                                    },
+                                    dynamic_env: function (responses) {
+                                        dynamic_env(responses)
+                                    },
+                                    operating_schedule: function (responses) {
+                                        operating_schedule(responses)
+                                    }
+                                },
+                                filters: {
+                                    detailUrl: function () {
+                                        return reviewUrl;
+                                    },
+                                    marked: function (response) {
+
+                                        var html = '<li>' + marked(response['num_done_task'] + '.&nbsp;' + response.content + '<span class="orangeC">(' + (gettext("x_this_task")) + response.score + ' PT)</span>') + '</li>';
+                                        if (response['multiple'] == 0) {
+                                            setTimeout(function () {
+                                                $(".single_marked").html(html);
+                                            }, 1);
+                                        }
+                                        else if (response.multiple == 1) {
+                                            setTimeout(function () {
+                                                $(".multiple_marked").html(html);
+                                            }, 1);
+                                        }
+                                        else if (response.multiple == 2) {
+                                            setTimeout(function () {
+                                                $(".judgment_marked").html(html);
+                                            }, 1);
+                                        }
+
+                                    },
+                                    marked_option: function (response) {
+                                        var html = '<li>' + marked(gettext('x_subject_desc') + response.content) + '</li>';
+                                        setTimeout(function () {
+                                            $(".option_marked").html(html);
+                                        }, 1);
+                                    },
+                                    marked_titile: function(response) {
+                                        var html = '<li>' + marked(response['num_done_task'] + '.&nbsp;' + response.title + '<span class="orangeC">(' + (gettext("x_this_task")) + response.score + ' PT)</span>') + '</li>';
+                                        setTimeout(function () {
+                                            $(".option_title_marked").html(html);
+                                        }, 1);
+                                    },
+                                    solution_mark: function (value, id, key) {
+                                        setTimeout(function () {
+                                            $('[for="' + id + key + '"]').html(marked(value));
+                                        }, 1);
+                                    }
+                                },
+                                mounted: function () {
+                                    $('.sigle_template').unbind('click');
+                                    $('.gs_submit_answer').unbind('click');
+                                    count_times(responses);
+                                    dynamic_env(responses);
+                                    operating_schedule(responses)
+
+                                },
+                                updated: function () {
+                                    $('.sigle_template').unbind('click');
+                                    $('.gs_submit_answer').unbind('click');
+                                    dynamic_env(responses);
+                                    operating_schedule(responses)
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+
+        })
+    }
+
+    //对数据进行排序
+    function sort(data){
+        var judgment_list = [];
+        var single_list = [];
+        var multiple_list = [];
+        var operational_list = [];
+        var data_list = [];
+        for (i=0; i<data.length;i++){
+            if (data[i].multiple == 0){
+                single_list.push(data[i])
+            }
+            else if (data[i].multiple == 1){
+                multiple_list.push(data[i])
+            }
+            else if (data[i].multiple == 2){
+                judgment_list.push(data[i])
+            }
+            else {
+                operational_list.push(data[i])
+            }
+
+        }
+        {#judgment_list = topic_shuffle(judgment_list);#}
+        {#multiple_list = topic_shuffle(multiple_list);#}
+        {#single_list = topic_shuffle(single_list);#}
+        {#operational_list = topic_shuffle(operational_list);#}
+        data_list = judgment_list.concat(single_list).concat(multiple_list).concat(operational_list);
+        return data_list
+    }
+
+    //对数据进行乱序
+    function topic_shuffle(topic_list) {
+        var len = topic_list.length;
+        for (var i = 0; i < len - 1; i++) {
+            var index = parseInt(Math.random() * (len - i));
+            var temp = topic_list[index];
+            topic_list[index] = topic_list[len - i - 1];
+            topic_list[len - i - 1] = temp;
+        }
+        return topic_list
+    }
+
+    //计算不同类型的个数(list)
+    function type_judgment(data){
+        var judgment_list = [];
+        var single_list = [];
+        var multiple_list = [];
+        var operational_list = [];
+        var key = {{ pk }} + "_" + {{ request.user.id }} + "_is_do";
+        var submit_answer = window.localStorage.getItem(key);
+
+        var type ={
+            2:judgment_list,
+            0: single_list,
+            1: multiple_list,
+            4: operational_list
+        };
+
+        for (i=0; i<data.length;i++){
+            if (data[i].multiple != 4) {
+                if (submit_answer != null) {
+                    if ($.inArray(String(data[i].id), submit_answer.split(",")) != -1) {
+                        type[data[i].multiple].push(1)
+                    }
+                    else {
+                        type[data[i].multiple].push(0)
+                    }
+                } else {
+                    type[data[i].multiple].push(0)
+                }
+            }
+            else{
+                if (submit_answer != null) {
+                    if ($.inArray(String(data[i].id), submit_answer.split(",")) != -1) {
+                        operational_list.push(1)
+                    }
+                    else {
+                        operational_list.push(0)
+                    }
+                }
+                else {
+                    operational_list.push(0)
+                }
+
+            }
+        }
+        return type
+    }
+
+    //时间处理
+    function count_times(responses) {
+        count_time = new Vue({
+            el: "#count_time",
+            data: {
+                responses: responses
+            },
+            computed: {
+                countDownTime: function () {
+                    var hour = Math.floor(responses.count_time / (60 * 60));
+                    var minute = Math.floor(responses.count_time / 60) - (hour * 60);
+                    var second = Math.floor(responses.count_time) - (hour * 60 * 60) - (minute * 60);
+
+                    if (hour <= 9) hour = '0' + hour;
+                    if (minute <= 9) minute = '0' + minute;
+                    if (second <= 9) second = '0' + second;
+
+                    return {
+                        hour: hour,
+                        minute: minute,
+                        second: second
+                    };
+                }
+            }
+        });
+        setInterval(function () {
+            count_time.responses.count_time = count_time.responses.count_time - 1;
+            if (count_time.responses.count_time == 900) {
+                $('#hint-msg-warp #hint-msg').html(gettext("x_15min_over"));
+                $('#hint-msg-warp').modal('show');
+            } else if (count_time.responses.count_time == 0) {
+                $("#count_time").addClass("hidden");
+                var key = {{ pk }} + "_" + {{ request.user.id }};
+                var is_do = key + "_is_do";
+                $('#hint-msg-warp #hint-msg').html(gettext("x_exam_over")+"!");
+                $('#hint-msg-warp').modal('show');
+                setTimeout(function () {window.location.replace("{% url 'event_exam:review' pk %}");}, 1000);
+
+            }
+        }, 1000);
+    }
+
+    $(document).ready(function () { //双击下一题
+        $(document).dblclick(function () {
+            get_data(responses.num_done_task)
+        });
+    });
+
+    $(function () {
+        get_task();
+    });
+
+</script>
+{% endblock %}

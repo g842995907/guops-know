@@ -1,0 +1,326 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'x_vulns/css/list.css' %}">
+    <script src="{% static 'web/echarts/echarts.min.js' %}"></script>
+    <script src="{% static 'web/js/common.js' %}"></script>
+    <script src="{% static 'x_vulns/js/draw_echarts.js' %}"></script>
+    <script src="{% static 'x_vulns/js/shine.js' %}"></script>
+    <style>
+        input[type=checkbox] + label:before {
+            top: 3px;
+        }
+
+        input[type=checkbox] + label:after {
+            top: 3px;
+        }
+
+        input[type=checkbox] + label, label {
+            vertical-align: sub;
+        }
+
+        .top10 {
+            vertical-align: top;
+            padding: 11px 0 10px 0 !important;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .pull-left.pagination-detail {
+            display: none;
+        }
+
+        .fixed-table-pagination {
+            text-align: center;
+        }
+
+        .fixed-table-pagination div.pagination {
+            float: none !important;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <!-- container start-->
+    <div class='container mrg93T'>
+        <div class="bread">
+            <a href="{% url 'common_web:home' %}">{% trans 'x_home' %}</a>
+            <span>&gt;&gt;</span>
+            <a href="" class='active font15'>{% trans 'x_vulnerability' %}</a>
+            <ul id="myTab" class="exercise nav nav-tabs font16 fr cursor" style='position:relative;z-index:2000;'>
+                <li class="active" id="logBtn">
+                    <a href='#card' class='icon-icons-18 cursor font20 mrg10R exercise_type' data-toggle="tab"
+                       title="{% trans 'x_switch_Problem_set_mode' %}"></a>
+                </li>
+                <li id="eventBtn">
+                    <a href='#list' class='icon-icons-19 cursor font20 exercise_type' data-toggle="tab"
+                       title="{% trans 'x_switch_list_mode' %}"></a>
+                </li>
+            </ul>
+        </div>
+        <div class="content pad10T">
+            <div id="myTabContent" class="tab-content font14">
+                <div class="row tab-pane fade active in mrg0A " id="card">
+                    <table class="filtrate">
+                        <tr>
+                            <td width="50" class="top10">{% trans "x_category" %}&nbsp;&nbsp;:&nbsp;</td>
+                            <td width="60" class="top10">
+                        <span><a href="javaScript:void(0)" data-type="global" class="type_list activated"
+                                 onclick="change_echart_data(this)">{% trans "x_all_vulnerability" %}</a></span>
+                            </td>
+
+                            <td>
+                         <span><a href="javaScript:void(0)" data-type="mobile" class="type_list"
+                                  onclick="change_echart_data(this)">{% trans "x_mobile_internet_vulnerability" %}</a></span>
+
+
+                                <span><a href="javaScript:void(0)" data-type="iot" class="type_list"
+                                         onclick="change_echart_data(this)">{% trans "x_internet_vulnerability" %}</a></span>
+
+
+                                <span><a href="javaScript:void(0)" data-type="ics" class="type_list"
+                                         onclick="change_echart_data(this)">{% trans "x_industrial_control_vulnerability" %}</a></span>
+
+
+                                <span><a href="javaScript:void(0)" data-type="bigdata" class="type_list"
+                                         onclick="change_echart_data(this)">{% trans "x_big_data_vulnerability" %}</a></span>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <div class='container mrg10B mrg20T'>
+                        <div class="pull-left mrg15L">
+                            <h3 class="mrg0T " id="vuln_total"></h3>
+                        </div>
+                        <div class="fr mrg15R">
+                            <div class="pull-left ">
+                                <label>{% trans 'x_search_options' %}：</label>
+                                <input id="cn" type="checkbox" name="cn" value="on">
+                                <label style="margin-right: 30px" for="cn">{% trans 'x_chinese_data' %}</label>
+                                <input id="exploit" type="checkbox" name="exploit" value="on">
+                                <label for="exploit">{% trans 'Exp/PoC' %}</label>
+                            </div>
+                            <div class="search pull-left mrg10L">
+                                <input class="search-text pad10L fl sticky" placeholder="{% trans 'x_search' %}"
+                                       type="text"
+                                       name="search-text">
+                                <span class="search-bg mainBg fr font18 text-center cursor" onclick="vuln_list();">
+                        <i class="oj-icon search-btn whiteC oj-icon-E911"></i>
+                        </span>
+                            </div>
+                        </div>
+                    </div>
+                    <section class="container mrg30T">
+
+                        <div class="personal-info-box font16P mrg0A">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="default-bg pad20T">
+                                    <div id="risk_echart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="data-info col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                <div class="default-bg ">
+                                    <div class="row mrg0A pad20T">
+                                        <div id="type_echart" style="height: 300px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="personal-info-box font16P mrg50T ">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="default-bg pad20T">
+                                    <div id="time_echart" style="height: 300px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+
+                </div>
+                <div class="row tab-pane fade in pad40L pad40R table-warp" id="list">
+                    <div class='row mrg10B clearfix pull-right' style="margin-top: 15px">
+                        <div class="pull-left mrg10R">
+                            <label>{% trans 'x_search_options' %}：</label>
+                            <input id="list_cn" type="checkbox" name="list_cn" value="list_cn">
+                            <label style="margin-right: 30px" for="list_cn">{% trans 'x_chinese_data' %}</label>
+                            <input id="list_exploit" type="checkbox" name="list_exploit" value="on">
+                            <label for="list_exploit">{% trans 'Exp/PoC' %}</label>
+                        </div>
+                        <div class="search default-bg fr">
+                            <input class="search-text pad10L fl sticky" placeholder="{% trans 'x_search' %}" type="text"
+                                   id="search-text"
+                                   name="search-text" value="{{ search }}">
+                            <span class="search-bg mainBg fr font18 text-center cursor" onclick="table.reload();">
+                        <i class="oj-icon search-btn whiteC oj-icon-E911"></i>
+                    </span>
+                        </div>
+                    </div>
+                    <div class="row layout-color mrg100B oj_table">
+                        <table class="default-table-v2" id="table"
+                               data-toggle="table"
+                               data-show-refresh="false"
+                               data-search="false"
+                               data-pagination="true"
+                               data-side-pagination="server"
+                               data-url="{% url 'x_vulns:api_vuln_list' %}">
+                            <thead>
+                            <tr>
+                                <th data-field="_id">{% trans 'x_numbering' %}</th>
+                                <th data-field="title">{% trans 'x_title' %}</th>
+                                <th data-field="pub_datetime">{% trans 'x_publish_time' %}</th>
+                            </tr>
+                            </thead>
+
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <img class="vuln-logo" style="width: 80px; height: 80px;position: fixed;left: 10px;bottom: 10px;"
+         src="{% static 'x_vulns/img/logo.png' %}">
+    <!-- container end-->
+{% endblock %}
+
+
+{% block document_ready %}
+    <script>
+        var riskUrl = "{% url 'x_vulns:api_vuln_global_risk' %}";
+        var typeUrl = "{% url 'x_vulns:api_vuln_global_type' %}";
+        var timeUrl = "{% url 'x_vulns:api_vuln_global_time' %}";
+        var listUrl = "{% url 'x_vulns:vuln_list' %}";
+    </script>
+    <script>
+        var radius;
+        var allType = {
+            "global": gettext("x_all_vulnerability"),
+            "mobile": gettext("x_mobile_internet_vulnerability"),
+            "iot": gettext("x_internet_vulnerability"),
+            "ics": gettext("x_industrial_control_vulnerability"),
+            "bigdata": gettext("x_big_data_vulnerability"),
+        };
+        $(function () {
+            if ((screen.width <= 1024) && (screen.height == 768)) {
+                radius = 40;
+            } else if ((screen.width <= 1366)) {
+                radius = 50;
+            } else {
+                radius = 80;
+            }
+        });
+
+
+        var riskEchart = echarts.init(document.getElementById('risk_echart'));
+        var typeEchart = echarts.init(document.getElementById('type_echart'));
+        var timeEchart = echarts.init(document.getElementById('time_echart'));
+        $(function () {
+            drawTable('global');
+
+            window.addEventListener('resize', function () {
+                riskEchart.resize();
+                typeEchart.resize();
+                timeEchart.resize();
+            })
+        });
+
+        function vuln_list() {
+            var is_cn = '';
+            var is_exploit = '';
+            if ($("#cn").prop('checked')) {
+                is_cn = $("#cn").val();
+            }
+            if ($("#exploit").prop('checked')) {
+                is_exploit = $("#exploit").val();
+            }
+            window.location.href = listUrl + "?cn=" + is_cn + "&exploit=" + is_exploit + '&search=' + $("#search-text").val();
+        };
+
+        function change_echart_data(btn) {
+            $(".type_list").removeClass("activated");
+            $(btn).addClass('activated');
+            var category = $(btn).data('type');
+            drawTable(category)
+        };
+
+        function drawTable(type) {
+
+            http.get(riskUrl, {'type': type}, function (data) {
+                var option = circleOption(data);
+                var all_count = 0;
+                data.forEach(function (item, index) {
+                    all_count += item.number;
+                });
+                $("#vuln_total").html(allType[type] + "(" + all_count.toString() + ")");
+                riskEchart.setOption(option, true);
+            }, function (data) {
+                ierror(JSON.parse(data.responseText).detail.message)
+            });
+            http.get(typeUrl, {'type': type}, function (data) {
+                var option = barOption(data, 'bar');
+                typeEchart.setOption(option, true);
+            });
+            http.get(timeUrl, {'type': type}, function (data) {
+                var option = lineOption(data, 'line');
+                timeEchart.setOption(option, true);
+            });
+        }
+    </script>
+
+    <script src="{% static 'web/js/sticky.js' %}"></script>
+    <script type="text/javascript">
+        var pageSize = 10;
+
+        var $table = $('#table');
+
+        // 初始化
+        var searchText = get_params_from_ls("search-text");
+        var offset = get_params_from_ls("offset") || 0;
+        var initPageNumber = offset / pageSize + 1;
+        $('#search-text').val(searchText);
+
+
+        $table.bootstrapTable({
+            element: '#table',
+            ajaxOptions: {
+                traditional: true,
+            },
+            pageNumber: initPageNumber,
+            queryParams: function (params) {
+                params.search = $("#search-text").val();
+                params.cn = $("#list_cn").prop("checked") ? 'on' : "";
+                params.exploit = $("#list_exploit").prop("checked") ? 'on' : "";
+                return params;
+            },
+            onClickRow: function (row) {
+                window.location.href = '{% url "x_vulns:vuln_detail" 0 %}'.replace('0', row._id);
+            },
+        });
+
+        var table = (function (t) {
+            t.refresh = function () {
+                $table.bootstrapTable('refresh');
+            };
+
+            t.reload = function () {
+                $table.bootstrapTable('refreshOptions', {pageNumber: 1});
+                t.refresh();
+            };
+            return t;
+        }(window.table || {}));
+
+
+        $('.search-bg').enterClick();
+
+    </script>
+{% endblock %}

@@ -1,0 +1,310 @@
+.radius-all {
+    border-radius: 2px;
+}
+
+.network .network-top {
+    background-color: rgba(0, 15, 33, .65);
+}
+
+.network .top-wrap {
+    height: 45px;
+}
+
+.network .network-top .btn-group > div {
+    display: inline-block;
+    min-width: 105px;
+    height: 25px;
+    line-height: 25px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.network .network-top .icon-group {
+    color: #6692c1;
+}
+
+.network .network-top .icon-group > div {
+    display: inline-block;
+}
+
+.network .network-top .back-btn {
+    color: #6693c0;
+    background-color: #142842;
+
+}
+
+.network .shortcut-list {
+    position: absolute;
+    min-width: 120px;
+    top: 37px;
+    left: 0;
+    background-color: #284c7a;
+    border-radius: 2px;
+    font-size: 14px;
+    text-align: center;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, .175);
+    min-height: 70px;
+    z-index: 1000;
+    display: none;
+}
+
+.network .action-btn-wrapper {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transform-origin: 50% 50%;
+    z-index: 1500;
+}
+
+.network .action-btn li, .camera-icon {
+    width: 48px;
+    height: 52px;
+    position: relative;
+    transition: .4s linear;
+}
+
+.camera-icon {
+    line-height: 52px;
+    margin-top: -10px;
+}
+
+.network .action-btn li.active,
+.network .shortcut-list li.active,
+.network .tab-wrap .tab-content .catalog-list > li.active {
+    background-color: #fb9b11;
+    color: #fff;
+}
+
+.network .action-btn li .action-icon {
+    width: 100%;
+    height: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: block;
+}
+
+.network .action-btn li[media-name="pdf"] .action-icon {
+    background-image: url(../img/document.png);
+}
+
+.network .action-btn li[media-name="markdown"] .action-icon {
+    background-image: url(../img/document.png);
+}
+
+.network .action-btn li[media-name="video"] .action-icon {
+    background-image: url(../img/shiping.png);
+}
+
+.network .action-btn li[media-name="attachment"] .action-icon {
+    background-image: url(../img/fujian.png);
+}
+
+.network .action-btn li[media-name="QandA"] .action-icon {
+    background-image: url(../img/icon_exchange_big.png);
+}
+
+.network .action-btn li[media-name="env"] .action-icon {
+    background-image: url(../img/shiyan.png);
+}
+
+.network .action-btn li[media-name="note"] .action-icon {
+    background-image: url(../img/biji.png);
+}
+
+.network .action-btn li[media-name="report"] .action-icon {
+    background-image: url(../img/zuoye.png);
+}
+
+.network .action-btn li .action-btn-text {
+    position: absolute;
+    left: 80px;
+    top: 16px;
+    background: #001836;
+    min-width: 70px;
+    min-height: 25px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+    line-height: 25px;
+    padding: 0 5px;
+    white-space: nowrap;
+}
+
+.network .action-btn li .action-btn-text:after {
+    content: '';
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #001836;
+    position: absolute;
+    right: -5px;
+    top: 5px;
+}
+
+.network .tabs {
+    /*width: 100%;*/
+    /*height: 100%;*/
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.network .tab-wrap {
+    /*width: 350px;*/
+    color: #8bafdb;
+    background-color: #142842;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    cursor: move;
+}
+
+#drag {
+    position: fixed;
+    right: 20px;
+    top: 70px;
+    display: none;
+}
+
+.network .tab-head {
+    background-color: #3f6ea9;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+}
+
+.network .tab-head > div {
+    width: -webkit-calc(100% - 50px);
+}
+
+.network .tab-head .close-tab {
+    line-height: 30px;
+    display: inline-block;
+    width: 16px;
+}
+
+.network .tab-wrap .tab-title {
+    border-bottom: 1px solid #2a4668;
+    margin-bottom: 0;
+    background-color: #142842;
+}
+
+.network .tab-wrap .tab-title > li {
+    display: inline-block;
+    margin-right: 20px;
+    padding: 10px 3px 5px;
+}
+
+.network .tab-wrap .tab-title > li.active {
+    border-bottom: 1px solid #fb9b11;
+}
+
+.network .tab-wrap .drag-icon {
+    overflow: hidden;
+    cursor: se-resize;
+}
+
+.network .tab-wrap .tab-content {
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.network .tab-wrap .tab-content:not(:first-child) {
+    display: none;
+}
+
+.network .tab-wrap .tab-content .catalog-wrap {
+
+    width: 105px;
+}
+
+.network .tab-wrap .tab-content .catalog-wrap .catalog,
+.network .tab-wrap .tab-content .catalog-wrap .catalog-list {
+    background-color: #284c7a;
+    border-radius: 2px;
+}
+
+.network .tab-wrap .tab-content .catalog-list {
+    margin-top: 1px;
+    display: none;
+}
+
+.network .tab-wrap .tab-content .catalog-list > li:not(:first-child) {
+    margin-top: 5px;
+}
+
+.network .tab-wrap .tab-content .tab-block .title {
+    background-image: -webkit-linear-gradient(left, #3d6ba4, transparent 40%, transparent);
+}
+
+.network .tab-wrap .tab-content .tab-block p > span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background-color: #3f6ea9;
+    line-height: 8px;
+    border-radius: 50%;
+}
+
+.env {
+    position: fixed;
+    right: 0;
+    z-index: 1000;
+    border: 1px solid #2d5a92;
+    display: none;
+    width: 485px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+/* 滚动槽 */
+.tabs::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+}
+
+/* 滚动条滑块 */
+.tabs::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+/*滚动条样式*/
+.tabs::-webkit-scrollbar { /*滚动条整体样式*/
+    width: 15px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 15px;
+}
+
+/*相机特效*/
+.photo-mask {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .5);
+    z-index: 999;
+}
+
+.photo {
+    width: 100%;
+    height: 100%;
+}
+.report-comment div:nth-child(1){
+    width: calc(100% - 135px);
+}
+.report-comment div:nth-child(2){
+    min-width:125px;
+    font-size: 20px;
+}
+.report-comment div:nth-child(2) span{
+    display: inline-block;
+    border:1px solid #1d9ffd;
+    color: #1d9ffd;
+    border-radius: 5px;
+    padding: 2px 9px;
+    font-size: x-small;
+}
+.report-content{
+    background-color: #193153;
+    border-radius: 5px;
+}

@@ -1,0 +1,116 @@
+{% extends './iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+{% block title %}
+    {% trans '前端验证例子' %}
+{% endblock %}
+
+{% block other_css_js %}
+
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              enctype="multipart/form-data"
+              action="#"
+              method="post"
+              class="form-horizontal">
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name" />
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans '起止时间' %}</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control layer-date laydate-icon" id="start_time"
+                               name="start_time"
+                               placeholder="{% trans 'x_start_time' %}"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control layer-date laydate-icon" id="end_time"
+                               name="end_time"
+                               placeholder="{% trans 'x_end_time' %}"/>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_introduction' %}</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="description" name="description">{{ event.description }}</textarea>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                        <a class="btn btn-white"
+                           href="{% url 'cms_event_jeopardy:jeopardy_list' %}">{% trans 'x_cancel' %}</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type='text/javascript'>
+        $('#description').initSummernote();
+        $('.layer-date').initDatetime();
+
+        $(function () {
+            $("#validateForm").mvalidate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 100,
+                    },
+                    start_time: {
+                        required: true,
+                        date: true,
+                    },
+                    end_time: {
+                        required: true,
+                        date: true,
+                        gt: '#start_time'
+                    },
+                    description: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    name: {
+                        required: gettext('请输入名称'),
+                        maxlength: gettext('名称长度不能超过100'),
+                    },
+                    start_time: {
+                        required: gettext('请输入开始时间'),
+                        date: gettext('请输入合法的开始时间'),
+                    },
+                    end_time: {
+                        required: gettext('请输入结束时间'),
+                        date: gettext('请输入合法的结束时间'),
+                        gt: gettext('结束时间必须大于开始时间'),
+                    },
+                    description: {
+                        required: gettext('请输入简介'),
+                    }
+                },
+            });
+            $('#validateForm').ajaxFormDialog();
+        });
+    </script>
+{% endblock %}

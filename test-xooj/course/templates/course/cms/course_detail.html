@@ -1,0 +1,249 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    <a href="{% url 'cms_course:course' %}">{% trans "x_course" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_new_course' %}
+    {% else %}
+        {% trans 'x_edit_course' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'lib/hplus/css/plugins/blueimp/css/blueimp-gallery.min.css' %}"/>
+    <link href="{% static "lib/cropper/css/cropper.min.css" %}" rel="stylesheet">
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'lib/hplus/js/plugins/blueimp/jquery.blueimp-gallery.min.js' %}"></script>
+    <script src="{% static "lib/hplus/js/plugins/prettyfile/bootstrap-prettyfile.js" %}"></script>
+    <script src="{% static "lib/cropper/js/cropper.min.js" %}"></script>
+{% endblock %}
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+                {% if mode == 0 %}
+              action="{% url 'cms_course:api:course-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_course:api:course-detail' course.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_name' %}</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="name" name="name"
+                               value="{{ course.name }}"/>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_direction' %}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="direction" id="direction" data-form-fixed="1">
+                            <option value="">{% trans "x_choose_direction" %}</option>
+                            {% for pd in directions %}
+                                <option value="{{ pd.id }}"
+                                        {% if pd.id == course.direction.id %}selected{% endif %}>{% if LANGUAGE_CODE == 'zh-hans' %}{{ pd.cn_name }}{% else %}{{ pd.en_name }}{% endif %}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+{#                    <div class="col-sm-2">#}
+{#                        <select class="form-control m-b" name="sub_direction" id="sub_direction" data-form-fixed="1">#}
+{#                            <option value="">{% trans "   ----   " %}</option>#}
+{#                        </select>#}
+{#                    </div>#}
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_course_difficulty' %}</label>
+                    <div class="col-sm-2">
+                        <select class="form-control m-b" name="difficulty" id="difficulty" data-form-fixed="1">
+                            {% for k, v in difficulty.items %}
+                                <option value="{{ v }}"
+                                        {% if v == course.difficulty %}selected{% endif %}>{{ k }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="padding-top:1px;font-size:25px">
+                        <span class="text-danger">*</span>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_course_logo' %}</label>
+                    <div class="col-sm-4">
+                        <div class="image_upload_widget">
+                            <div>
+                                <div class="btn btn-primary btn_image_upload image_upload" id="logo">
+                                    {% trans "x_select_pic" %}
+                                    <input type="text" class="form-control image_upload hidden" name="logo"
+                                           accept="image/gif,image/jpeg,image/png,image/bmp"/>
+                                </div>
+                            </div>
+                            <a href="{% if course.logo %}{{ course.logo.url }} {% endif %}" class="image_show"
+                               name="logo" data-gallery="">
+                                <img {% if course.logo %}src="{{ course.logo.url }}"{% endif %}></a>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev"><</a>
+                                <a class="next">></a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_introduction' %}</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control"
+                                  id="introduction" name="introduction"
+                                  rows="5" maxlength="256">{% if course.introduction %}{{ course.introduction }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_course_outline' %}</label>
+                    <div class="col-sm-6">
+                            <textarea class="form-control" id="course_writeup"
+                                      name="course_writeup">{% if course.course_writeup %}{{ course.course_writeup }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">{% trans 'x_is_public' %}</label>
+                    <div class="col-sm-2">
+                        <input type="checkbox" class="form-control js-switch" data-form-fixed="1" id="public" name="public"
+                                {% if course.public != 0 %} checked="" {% endif %}>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-2">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                        <a class="btn btn-white"
+                           href="{% url 'cms_course:course' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block modal %}
+    {% include 'cms/crop_modal.html' %}
+{% endblock %}
+
+{% block bottom_js %}
+    <script type='text/javascript'>
+        $(".image_upload_widget").bindLocalCropImgUpload({aspectRatio: 7/4});
+        var listUrl = "{% url 'cms_course:course' %}";
+
+        $("#course_writeup").initMarkdown();
+
+        $(function () {
+            $("#validateForm").mvalidate({
+                rules: {
+                    name: {
+                        required: true,
+                    },
+                    direction: {
+                        required: true,
+                    },
+                    sub_direction: {
+                        required: true,
+                    },
+                    difficulty: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    name: {
+                        required: gettext("x_must_course_name"),
+                    },
+                    direction: {
+                        required: gettext("x_choose_course_orientation"),
+                    },
+                    sub_direction: {
+                        required: gettext("x_choose_sourse_sub_orientation"),
+                    },
+                    difficulty: {
+                        required: gettext("x_choose_course_difficulty")
+                    },
+                }
+            });
+
+            $("#validateForm").ajaxFormDialog(function () {
+                setTimeout(function () {
+                    window.location.href = listUrl;
+                }, ajaxDialog.defaultDelayTime);
+            });
+        });
+
+        function init_sub_direction(parent_id, selected_id) {
+            $("#sub_direction").empty();
+            $.ajax({
+                type: "GET",
+                url: "{% url 'cms_course:api:sub-direction-list' %}",
+                data: {"parent_id": parent_id},
+                datatype: "json",
+                success: function (json) {
+                    if(json.total == 0) {
+                        $("#sub_direction").append("<option value=''>{% trans "   ----   " %}</option>");
+                    }else{
+                        $("#sub_direction").append("<option value=''>{% trans "x_choose_sub_orientation" %}</option>");
+                        var c_directions = json.rows;
+                        for (var i in c_directions) {
+                            if (selected_id == c_directions[i].id){
+                                $("#sub_direction").append("<option value='"+c_directions[i].id+"' selected >"+codeUtil.htmlEncode({% if LANGUAGE_CODE == 'zh-hans' %}c_directions[i].cn_name{% else %}c_directions[i].en_name{% endif %})+"</option>");
+
+                            }else{
+                                $("#sub_direction").append("<option value='"+c_directions[i].id+"'>"+codeUtil.htmlEncode({% if LANGUAGE_CODE == 'zh-hans' %}c_directions[i].cn_name{% else %}c_directions[i].en_name{% endif %})+"</option>");
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        $().ready(function () {
+            var elems = Array.prototype.slice.call($('.js-switch'));
+
+            elems.forEach(function (html) {
+                var switchery = new Switchery(html, {color: "#1AB394"});
+            });
+
+            $("#direction").change(function () {
+                init_sub_direction($(this).val());
+            });
+
+            {% if mode == 1 and course.direction %}
+                init_sub_direction({{ course.direction.id }}, {{ course.sub_direction.id }});
+            {% endif %}
+
+
+        });
+    </script>
+{% endblock %}

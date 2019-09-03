@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <meta name="author" content="Hankaln">
+  <link rel="shortcut icon" href="../img/favicon.ico">
+  <title>攻防场景 - 场景引擎系统</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "\u653b\u9632\u573a\u666f";
+    var mkdocs_page_input_path = "adsense.md";
+    var mkdocs_page_url = "/adsense/";
+  </script>
+  
+  <script src="../js/jquery-2.1.1.min.js"></script>
+  <script src="../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href=".." class="icon icon-home"> 场景引擎系统</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="..">场景引擎系统</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../target/">标靶</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../upload-target/">自定义上传</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../sense/">基础场景</a>
+	    </li>
+          
+            <li class="toctree-l1 current">
+		
+    <a class="current" href="./">攻防场景</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l2"><a href="#_1">场景结构</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_2">变量</a></li>
+    
+
+    <li class="toctree-l2"><a href="#diy">DIY攻防场景</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_3">管理员模式</a></li>
+    
+
+    <li class="toctree-l2"><a href="#_4">注意项</a></li>
+    
+
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../make-scene/">场景创建</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../operation-guide/">虚拟机操作指南</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../qa/">QA</a>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="..">场景引擎系统</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="..">Docs</a> &raquo;</li>
+    
+      
+    
+    <li>攻防场景</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>&emsp;&emsp;在攻防模式CTF赛制中，参赛队伍在网络空间互相进行攻击和防守，挖掘网络服务漏洞并攻击对手服务来得分，修补自身服务漏洞进行防御来避免丢分。
+&emsp;&emsp;攻防场景即CTF攻防场景，实现了场景的快速部署、清除、检测、Flag推送等内容的描述的结构化数据。</p>
+<hr />
+<h3 id="_1"><span id='adsense-structure'>场景结构</span></h3>
+<p>场景由<strong>场景拓扑</strong>和<strong>资源文件</strong>组成，按照规定的格式打包成zip文件即可。该zip内文件结构如下：</p>
+<div class="codehilite"><pre><code><span></span>xxx.zip ---<span class="p">|</span>--- server1/ ---<span class="p">|</span>---install.sh
+                         ---<span class="p">|</span>---init.sh
+                         ---<span class="p">|</span>---clean.sh
+                         ---<span class="p">|</span>---flag.sh
+                         ---<span class="p">|</span>---checker.py
+                         ---<span class="p">|</span>---www/ 
+                         ---<span class="p">|</span>---db.sql
+</code></pre></div>
+
+
+<p><strong size=4 >资源文件</strong>
+- 运行场景需要的资源文件,如Web代码、二进制文件等
+- 场景安装脚本文件
+- 场景初始化脚本文件
+- 场景清除脚本
+- 场景Flag推送脚本
+- 场景检测脚本
+                                             |</p>
+<p>python的Scrip执行返回格式，{&ldquo;status&rdquo;:&rdquo;up&rdquo;,&rdquo;msg&rdquo;,&rdquo;xxxxx&rdquo;}或{&ldquo;status&rdquo;:&rdquo;down&rdquo;,&rdquo;msg&rdquo;,&rdquo;xxxxx&rdquo;}</p>
+<hr />
+<p><strong>镜像大小flavor 支持列表</strong></p>
+<div class="codehilite"><pre><code><span></span>m1.1c-0.5g-8g  / 1核/512M内存/8G硬盘 
+m1.1c-1g-8g    / 1核/1G内存/8G硬盘 
+m2.1c-0.5g-10g / 1核/512M内存/10G硬盘 
+m2.1c-1g-10g / 1核/1G内存/10G硬盘 
+m2.2c-2g-10g / 2核/2G内存/10G硬盘 
+m2.2c-4g-10g / 2核/3G内存/10G硬盘
+m3.1c-1g-20g / 1核/1G内存/20G硬盘 
+m3.1c-2g-20g / 1核/2G内存/20G硬盘 
+m3.2c-4g-20g / 2核/4G内存/20G硬盘 
+m3.4c-4g-20g / 4核/4G内存/20G硬盘 
+m4.1c-1g-40g / 1核/1G内存/40G硬盘 
+m4.2c-2g-40g / 2核/2G内存/40G硬盘 
+m4.4c-4g-40g / 4核/4G内存/40G硬盘 
+m4.4c-8g-40g / 4核/8G内存/40G硬盘 
+m5.4c-4g-80g / 4核/4G内存/80G硬盘 
+m5.4c-8g-80g / 4核/8G内存/80G硬盘 
+</code></pre></div>
+
+
+<hr />
+<h3 id="_2"><span id='adsense-variable'>变量</span></h3>
+<p>资源文件脚本可传递变量</p>
+<p><strong size=4 >变量调用形式</strong></p>
+<p>{我是变量名}</p>
+<p><strong size=4 >全局变量</strong></p>
+<ul>
+<li>PLATFORM_IP、PLATFORM_PORT
+    OJ平台地址ip和prot，作用范围： 初始化脚本</li>
+<li>FLAG[*]
+    平台发放给场景的动态flag  FLAG[0] 为第一个flag, 作用范围： 初始化脚本 </li>
+</ul>
+<p><strong size=4 >局部变量</strong></p>
+<ul>
+<li>网络元件id</li>
+<li>服务器ip
+    虚拟机在网络上分配的ip,预先分配的，调用初始化脚本时已获得 例vm-op.network-in.ip,作用范围： 初始化脚本</li>
+</ul>
+<hr />
+<h3 id="diy"><span id='adsense-selfdefine'>DIY攻防场景</span></h3>
+<ul>
+<li>页面DIY</li>
+</ul>
+<p><img alt="" src="../img/ad_edit_2.png" /></p>
+<p>新建场景时选择场景类型为攻防
+添加终端节点：选择左侧节点，拖入右侧。
+添加checker/attacker机器，编辑节点，选择节点角色为执行者</p>
+<p><strong>使用下面公钥，配置root免密码登录</strong></p>
+<div class="codehilite"><pre><code><span></span>ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzdxH+vGCGs0N0I00jLD5msaumnJLwfs9Tzo5vIv2+mDAjjM70nsJZUN0Dtl4Uw7PRAl7ZMYZa8Oi0J1dc6R1M8tGWodhm8esGr+3UsnEdPFC8B82XRKst7ocQVuxu4X8wGrzDh2KXBY3TU0YWUCtCWicICGb92BwS3Yk+rNiAD6sNaIBk1ZPXAbHzqHBEWLiRbcIAgFMA5S9ZZaXL2jAZLryvmkSYWCML9zrciY+2IppZ84XqNItj6Skfagy/7TVjBjd2yEPE2NKOY+3Ba4eqVO0rgOO2KFJRDtJ1Shu83BMP7vvTdvKHbGvMX7deVPHF66vOFnKI2aNUuYNdhqQP root@localhost.localdomain
+</code></pre></div>
+
+
+<p><strong>添加xctf用户</strong></p>
+<div class="codehilite"><pre><code><span></span>useradd xctf
+</code></pre></div>
+
+
+<h3 id="_3"><span id='adsense-admin-mode'>管理员模式</span></h3>
+<p>管理员在后台测试申请时，除场景配置的登录方式以外，新增提供管理员所有标靶默认的登录方式，提供测试方式。</p>
+<h3 id="_4">注意项</h3>
+<ul>
+<li>目前仅支持一个网卡，多网卡无法智能判断添加默认路由。</li>
+<li>目前仅支持一台虚拟终端的攻防场景。</li>
+</ul>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../make-scene/" class="btn btn-neutral float-right" title="场景创建">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../sense/" class="btn btn-neutral" title="基础场景"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+      <p>CyberPeace.cn</p>
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../sense/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../make-scene/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script>var base_url = '..';</script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/require.js"></script>
+      <script src="../search/search.js"></script>
+
+</body>
+</html>

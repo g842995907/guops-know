@@ -1,0 +1,5 @@
+msgid "x_input_name"
+msgstr "Name Require"
+
+msgid "x_must_input_description"
+msgstr "Update description Require"

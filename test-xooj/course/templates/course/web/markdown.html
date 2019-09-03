@@ -1,0 +1,137 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <linK rel="stylesheet" href="{% static 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/bootstrap-markdown.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'web/markdown/css/base.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/markdown/css/highlight.css' %}"/>
+
+    <script src="{% static 'web/js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'web/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'web/markdown/js/base.js' %}"></script>
+    <script src="{% static 'web/markdown/js/highlight.pack.js' %}"></script>
+
+    <link rel="stylesheet" href="{% static 'web/markdown/css/photoswipe.css' %}">
+    <script type="text/javascript" src="{% static 'web/markdown/js/klass.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'web/markdown/js/code.photoswipe-3.0.5.js' %}"></script>
+    <script type="text/javascript" src="{% static 'web/markdown/js/hammer.js' %}"></script>
+    <script type="text/javascript" src="{% static 'web/markdown/js/jquery.hammer.js' %}"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style type="text/css">
+        h2 center {
+            font-size: 28px;
+            color: #585858;
+        }
+
+        h3, ul {
+            background: #edf4fc;
+        }
+
+        h3 {
+            padding: 15px 0 15px 10px;
+            margin-bottom: 0;
+            border-top: 4px solid #3a4b83;
+            font-size: 18px;
+            color: #3a4b83;
+            font-weight: bold;
+        }
+
+        ul {
+            padding-bottom: 15px;
+            padding-left: 20px;
+        }
+
+        ul li {
+            list-style: none;
+            background: url("{% static 'web/markdown/img/dot.png' %}") no-repeat left center;
+            padding-left: 18px;
+        }
+
+        p, li {
+            font-size: 16px;
+            color: #6e7379;
+            line-height: 34px;
+        }
+
+        p {
+            background-image: url("{% static 'web/markdown/img/dot.png' %}");
+            background-repeat: no-repeat;
+            background-position: 20px 10px;
+            padding-left: 38px;
+            background-color: #edf4fc;
+            margin-bottom: 0;
+        }
+
+        img {
+            margin: 10px 0 25px 0;
+            width: 50%;
+            min-width: 700px;
+        }
+
+        .highlight, .table-warp {
+            background-color: #edf4fc;
+        }
+
+        pre {
+            margin: 0 20px 0px;
+            background-color: #002a36;
+            color: #93a1a1;
+        }
+        .kn,.nn,.n,code{
+          color: #93a1a1 !important;
+        }
+        .hljs-keyword {
+            color: #d14;
+        }
+
+        .table {
+            width: 99%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div style="background: white;padding-right: 20px;padding-left: 20px;margin-top:0">
+    {{ markdown | default_if_none:_('x_not_found_markdown') | safe }}
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('p').each(function () {
+            var l = $(this).children().first().find('img').length;
+            console.log(l)
+            if (l) {
+                $(this).css('background-image', 'none')
+            }
+        })
+    })
+    $("img").each(function (i) {
+        $(this).wrap("<a href=" + $(this).attr('src') + "></a>")
+    });
+    $('.table').each(function () {
+        $(this).warp('<div class="table-warp"></div>')
+    })
+    $(function (window, PhotoSwipe) {
+        var imgLength = [];
+        var photoa = window.document.querySelectorAll('a');
+        for (var i = 0; i < photoa.length; i++) {
+            var imgL = photoa[i].getElementsByTagName('img').length;
+            if (imgL) {
+                imgLength.push(photoa[i]);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            var
+                options = {},
+                instance = PhotoSwipe.attach(imgLength, options);
+        }, false);
+    }(window, window.Code.PhotoSwipe));
+</script>
+</body>
+</html>

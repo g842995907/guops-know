@@ -1,0 +1,255 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static_v static %}
+
+{% block title %}
+    <a href="{% url 'cms_course:class_statistics_list' %}">{% trans "x_learning_statistics" %}</a> >
+    {{ user.first_name }}
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static 'lib/jstree/css/style.css' %}"/>
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}"/>
+    <script src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <script src="{% static 'web/echarts/echarts.min.js' %}"></script>
+    <script src="{% static_v 'course_occupation/js/index.js' %}"></script>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content clearfix">
+        <div class="head-show" style="float: left; margin-left: 2%; margin-top: 2%">
+                {% if user.logo %}
+                    <img class="img-circle" src="/media/{{ user.logo }}" style="width: 150px; height: 150px">
+                {% else %}
+                    <img class="img-circle" src="/static/x_person/img/user_default.jpg" style="width: 150px; height: 150px">
+                {% endif %}
+            </div>
+        <div  style="margin: -6px auto auto 45px;float: left;margin-top: 2%; margin-left: 6%">
+            <div style="font-size: 18px">
+                <span>{% trans 'x_account_number' %}：</span>
+                <span id="faculty" >{{ user.username }}</span>
+            </div>
+            <br>
+            <div style="font-size: 18px">
+                <span>{% trans 'x_name_surname' %}：</span>
+                <span id="grade">{{ user.first_name }}</span>
+            </div>
+            <br>
+            <div style="font-size: 18px">
+                <span>{% trans 'x_class' %}：</span>
+                <span id="total_persons">{{ user.classes.name }}</span>
+            </div>
+            <br>
+            <div style="font-size: 18px">
+                <span>{% trans 'x_org' %}：</span>
+                <span id="org">{{ user.faculty.name }} / {{ user.major.name }} / {{ user.classes.name }}</span>
+            </div>
+        </div>
+        <div id='radar' style="height: 250px; width: 250px;float: left;margin-left: 30%;"></div>
+    </div>
+    <div id="user_statistics" v-cloak>
+        <div class="ibox-content">
+            <div style="margin: -6px auto auto 45px" v-if="course_direction_list.length != 0">
+                <h3>{% trans 'x_course_direction_statistics' %}</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{% trans 'x_name_surname' %}</th>
+                            {% verbatim %}
+                                <th v-for="direction_name in course_direction_list">
+                                    {{ direction_name }}
+                                </th>
+                            {% endverbatim %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ user.first_name }}</td>
+                            {% verbatim %}
+                                <td v-for="direction_count in course_direction_name_list">
+                                    {{ direction_count }}
+                                </td>
+                            {% endverbatim %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin: -6px auto auto 45px" v-else>
+                <h3>{% trans 'x_course_direction_statistics' %}</h3>
+                <p class="text-center">暂无学习记录</p>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div style="margin: -6px auto auto 45px">
+                <h3>{% trans 'x_number_of_hours_learned' %}</h3>
+                <table class="table table-bordered" name="lesson_count">
+                    <thead>
+                        <tr>
+                            <th>{% trans 'x_name_surname' %}</th>
+                            <th>{% trans 'x_org' %}</th>
+                            <th>{% trans 'x_role' %}</th>
+                            <th>{% trans 'x_complete_lessons' %}</th>
+                            <th>{% trans 'x_complete_experiment' %}</th>
+                            <th>{% trans 'x_complete_practice' %}</th>
+                            <th>{% trans 'x_experiment_average_score' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {% verbatim %}
+                                <td>{{ lesson_count_statistics.name }}</td>
+                                <td>{{ lesson_count_statistics.organization }}</td>
+                                <td>{{ getRole }}</td>
+                                <td>{{ lesson_count_statistics.complete_lessons }}</td>
+                                <td>{{ lesson_count_statistics.complete_notes }}</td>
+                                <td>{{ lesson_count_statistics.complete_exercises }}</td>
+                                <td>{{ lesson_count_statistics.average_score }}</td>
+                            {% endverbatim %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div style="margin: -6px auto auto 45px">
+                <h3>{% trans 'x_class_information_statistics' %}</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>{% trans 'x_class' %}</th>
+                            <th>{% trans 'x_org' %}</th>
+                            <th>{% trans 'x_class_user_count' %}</th>
+                            <th>{% trans 'x_complete_lessons' %}</th>
+                            <th>{% trans 'x_complete_experiment' %}</th>
+                            <th>{% trans 'x_complete_practice' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            {% verbatim %}
+                                <td>{{ class_info_statistics.class }}</td>
+                                <td>{{ class_info_statistics.organization }}</td>
+                                <td>{{ class_info_statistics.class_count }}</td>
+                                <td>{{ class_info_statistics.class_complete_lessons }}</td>
+                                <td>{{ class_info_statistics.class_complete_experiments }}</td>
+                                <td>{{ class_info_statistics.class_complete_exercises }}</td>
+                            {% endverbatim %}
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content">
+            <div style="margin: -6px auto auto 45px">
+                <h3>{% trans 'x_have_taken_test_statistics' %}</h3>
+                <table id="table"
+                       data-toggle="table"
+                       data-toolbar="#userTableToolbar"
+                       data-toolbar-align="center"
+                       data-show-refresh="false"
+                       data-search="false"
+                       data-pagination="true"
+                       data-side-pagination="server"
+                       data-url="{% url 'cms_course:exam_statistics' %}"
+                >
+                    <thead>
+                    <tr>
+                        <th data-field="username" data-escape="true">{% trans 'x_name_surname' %}</th>
+                        <th data-field="exam_type">{% trans 'x_exam_type' %}</th>
+                        <th data-field="exam_name">{% trans 'x_name_exam' %}</th>
+                        <th data-field="score" data-escape="true">{% trans 'x_exam_score' %}</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    <div class="ibox-content">
+            <div style="margin: -6px auto auto 45px">
+                <h3>{% trans 'x_timeline_learned' %}</h3>
+                <div class="default-bg ">
+                    <div id='bubble' style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block bottom_js %}
+    <script type="text/javascript">
+        var statisticsUrl = "{% url 'cms_course:get_user_statistics' %}"
+    </script>
+    <script type="text/javascript">
+        var user_id = {{ user.id }};
+
+        var app = new Vue(
+            {
+                el: '#user_statistics',
+                data: {
+                    course_direction_list: [],
+                    course_direction_name_list: [],
+                    course_direction_statistics: [],
+                    lesson_count_statistics: [],
+                    class_info_statistics: [],
+                },
+                computed: {
+                    getRole: function () {
+                        return gettext(this.lesson_count_statistics.role)
+                    }
+                },
+                method: {
+
+                }
+            }
+        );
+
+        $(function () {
+            http.get(statisticsUrl, {user: user_id}, function (res) {
+                app.course_direction_list = res.course_direction_list;
+                app.course_direction_name_list = res.course_direction_name_list;
+                app.lesson_count_statistics = res.lesson_count_statistics;
+                app.class_info_statistics = res.class_info_statistics;
+            })
+        });
+
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+
+            queryParams: function (params) {
+                params.user = user_id;
+                return params;
+            },
+            pageSize: 10
+        });
+
+    </script>
+    <script type="text/javascript">
+        $('.tabs > div').on('click', function () {
+            var index = $(this).index();
+            $(this).addClass('active').siblings().removeClass('active');
+            $('.tabs-content > div').eq(index).slideToggle(0).siblings().slideToggle(0);
+        });
+
+        $('#radar').height($('.question').height());
+        var radarEChart = echarts.init(document.getElementById('radar'));
+        var bubbleEchart = echarts.init(document.getElementById('bubble'));
+
+        $(function () {
+            http.get("{% url 'practice:task_radar_data' %}", {id: user_id}, function (res) {
+                //技能六维图
+                var radarOption = this.radarOption(res.response_data);
+                //启用设置
+                radarEChart.setOption(radarOption, true);
+            });
+            http.get("{% url 'course_occupation:line_chart' %}", {id: user_id}, function (res) {
+                // console.log(res);
+                //学习/比赛记录
+                var bubbleOption = this.bubbleOption(res);
+                //启用设置
+                bubbleEchart.setOption(bubbleOption, true);
+            });
+        });
+    </script>
+{% endblock %}

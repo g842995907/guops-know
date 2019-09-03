@@ -1,0 +1,679 @@
+{% extends 'common_env/cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static static_v %}
+
+{% block title %}
+    {% trans 'x_network_api_list' %}
+{% endblock %}
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" />
+    <script type="text/javascript" src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <style>
+        . button_api{
+          float: right;
+          height : 40px;
+          weight : 40px;
+           }
+        a{ display:block}
+        . test_a{
+            display: block;
+            color:#000079;
+        }
+        . detail_td{
+            width:600px;
+            height: 50px;
+            min-width: 100px;
+
+        }
+
+    </style>
+
+
+{% endblock %}
+
+{% block container %}
+    {% include "web/message_modal.html" %}
+    <div class="ibox-content">
+        <ul class="nav nav-tabs">
+            <li>
+                <a data-toggle="tab" href="#tab-1" aria-expanded="false">{% trans 'x_networks' %}</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#tab-2" aria-expanded="false">{% trans 'x_routers' %}</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#tab-3" aria-expanded="false">{% trans 'x_float_ip' %}</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#tab-4" aria-expanded="false">{% trans 'x_fire_groups' %}</a>
+            </li>
+        </ul>
+        <div class="clearfix tab-content">
+            <div id="tab-1" class="tab-pane">
+
+                <div class='ibox-content'>
+                     <div class="m-r pull-left">
+                             <button class="btn btn-danger"
+                                        data-url="{% url 'cms_common_scene:delete_network_by_id' %}"
+                                                    onclick="networkTable.batchDestroy(this);">
+                                    <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                                </button>
+                            </div>
+                    <div class='tableToolbar'>
+                    </div>
+                    <table id='networkTable'
+                           data-toggle='table'
+                           data-show-refresh='false'
+                           data-search='false'
+                           data-side-pagination='server'
+                           data-url="{% url 'cms_common_scene:get_network_list' %}"
+                           data-pagination="true"
+                           data-page-size="10"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field='name' data-formatter='networkTable.nameFormatter'>{% trans 'x_name' %}</th>
+                            <th data-field='net_network_type' data-formatter='networkTable.networkTypeFormatter'>{% trans 'x_type' %}</th>
+                            <th data-field='status' data-formatter='networkTable.statusFormatter'>{% trans 'x_status' %}</th>
+                            <th data-field='subnet' data-formatter='networkTable.subnetFormatter'>{% trans 'x_subnet' %}</th>
+                            <th data-field='created_at' data-formatter='networkTable.datetimeFormatter'>{% trans 'x_created' %}</th>
+                            {% comment %}<th data-field="id" data-formatter="networkTable.operatorFormatter">{% trans 'x_operation' %}</th>{% endcomment %}
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                   <div class='modal fade' id='subnetDetailModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+                     aria-hidden='true'>
+                    <div class='modal-dialog modal-lg' style='top: 200px;'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span
+                                        class='sr-only'>Close</span></button>
+                            </div>
+                            <div class='modal-body'>
+                                <table id="subnetDetailTable" class="table"
+                                >
+                                    <tbody>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_id' %}</td>
+
+                                        <td class="detail_td" id="subnet_id"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_name' %}</td>
+
+                                        <td id="subnet_name" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_enable_dhcp' %}</td>
+
+                                        <td id="subnet_enable_dhcp" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_created' %}</td>
+
+                                        <td class="detail_td" id="subnet_created_at"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_gateway_ip' %}</td>
+
+                                        <td id="subnet_gateway_ip" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_dns_nameserver' %}</td>
+
+                                        <td id="subnet_dns_nameservers" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_allocation_pools' %}</td>
+
+                                        <td id="subnet_allocation_pools" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_ip_version' %}</td>
+
+                                        <td id="subnet_ip_version" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_cidr' %}</td>
+
+                                        <td id="subnet_cidr" class="detail_td"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class='clearfix modal-footer'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-2" class="tab-pane">
+                <div class='ibox-content'>
+                     <div class="clearfix">
+                            <div class="m-r pull-left">
+                             <button class="btn btn-danger"
+                                        data-url="{% url 'cms_common_scene:delete_router_by_id' %}"
+                                                    onclick="routerTable.batchDestroy(this);">
+                                    <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                                </button>
+                            </div>
+                        </div>
+                    <div class='tableToolbar'>
+                    </div>
+                    <table id='routerTable'
+                           data-toggle='table'
+                           data-show-refresh='false'
+                           data-search='false'
+                           data-side-pagination='server'
+                           data-url="{% url 'cms_common_scene:get_router_list' %}"
+                           data-pagination="true"
+                           data-page-size="10"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field='name' data-formatter='routerTable.nameFormatter'>{% trans 'x_name' %}</th>
+                              <th data-field='created_at' data-formatter='routerTable.datetimeFormatter'>{% trans 'x_created' %}</th>
+                            <th data-field='status' data-formatter='routerTable.statusFormatter'>{% trans 'x_status' %}</th>
+                           {% comment %} <th data-field="id" data-formatter="routerTable.operatorFormatter">{% trans 'x_operation' %}</th>{% endcomment %}
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                 <div class='modal fade' id='routerDetailModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+                     aria-hidden='true'>
+                    <div class='modal-dialog modal-lg' style='top: 200px;'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span
+                                        class='sr-only'>Close</span></button>
+                            </div>
+                            <div class='modal-body'>
+                                <table id="routerDetailTable" class="table"
+                                >
+                                    <tbody>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_id' %}</td>
+
+                                        <td class="detail_td" id="router_id"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_name' %}</td>
+
+                                        <td id="router_name" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_status' %}</td>
+
+                                        <td id="router_status" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_description' %}</td>
+
+                                        <td id="router_description" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_created' %}</td>
+
+                                        <td id="router_created_at" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_admin_state_up' %}</td>
+
+                                        <td id="router_admin_state_up" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_router_external_gateway_info' %}</td>
+
+                                       {% comment %} <td id="router_ip_version" class="detail_td"></td>{% endcomment %}
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_network_id' %}</td>
+
+                                        <td id="router_network_id" class="detail_td"></td>
+                                    </tr>
+                                     <tr>
+                                        <td class="detail_td">{% trans 'x_enable_snat' %}</td>
+
+                                        <td id="router_enable_snat" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_external_fixed_ips' %}</td>
+
+                                        <td id="router_external_fixed_ips" class="detail_td"></td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class='clearfix modal-footer'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-3" class="tab-pane">
+                <div class='ibox-content'>
+                    <div class="clearfix">
+                        <div class="m-r pull-left">
+                         <button class="btn btn-danger"
+                                    data-url="{% url 'cms_common_scene:delete_floatip_by_id' %}"
+                                                onclick="floatIPTable.batchDestroy(this);">
+                                <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                         </button>
+                        </div>
+                    </div>
+                    <div class='tableToolbar'>
+                    </div>
+                    <table id='floatIPTable'
+                           data-toggle='table'
+                           data-show-refresh='false'
+                           data-search='false'
+                           data-side-pagination='server'
+                           data-url="{% url 'cms_common_scene:get_float_ip_list' %}"
+                           data-pagination="true"
+                           data-page-size="10"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field='float_ip' data-formatter='floatIPTable.floatIPFormatter'>{% trans 'x_float_ip' %}</th>
+                            <th data-field='fix_ip' data-formatter='floatIPTable.fixIPFormatter'>{% trans 'x_fix_ip' %}</th>
+                            <th data-field='status' data-formatter='floatIPTable.statusFormatter'>{% trans 'x_status' %}</th>
+                            <th data-field='float_created_at' data-formatter='floatIPTable.datetimeFormatter'>{% trans 'x_created' %}</th>
+                            {% comment %}<th data-field="id" data-formatter="floatIPTable.operatorFormatter">{% trans 'x_operation' %}</th>{% endcomment %}
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div id="tab-4" class="tab-pane">
+                <div class='ibox-content'>
+                        <div class="m-r pull-left">
+                             <button class="btn btn-danger"
+                                        data-url="{% url 'cms_common_scene:delete_fwaas_group_by_id' %}"
+                                                    onclick="fireGroupTable.batchDestroy(this);">
+                                    <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                                </button>
+                            </div>
+                    <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                    </div>
+                </div>
+            </div>
+        </div>
+                        <table id='fireGroupTable'
+                               data-toggle='table'
+                               data-show-refresh='false'
+                               data-search='false'
+                               data-side-pagination='server'
+                               data-url="{% url 'cms_common_scene:get_fwaas_group_list' %}"
+                               data-pagination="true"
+                               data-page-size="10"
+                        >
+                        <thead>
+                        <tr>
+                            <th data-field='name' data-formatter='fireGroupTable.nameFormatter'>{% trans 'x_name' %}</th>
+                            <th data-field='description' data-formatter='fireGroupTable.descriptionFormatter'>{% trans 'x_description' %}</th>
+                            <th data-field='ingress_id' data-formatter='fireGroupTable.ingressNameFormatter'>{% trans 'x_ingres' %}</th>
+                            <th data-field='engress_id' data-formatter='fireGroupTable.engressNameFormatter'>{% trans 'x_engress' %}</th>
+                            <th data-field='status' data-formatter='fireGroupTable.statusFormatter'>{% trans 'x_status' %}</th>
+
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                  <div class='modal fade' id='policyDetailModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+                     aria-hidden='true'>
+                    <div class='modal-dialog modal-lg' style='top: 200px;'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span
+                                        class='sr-only'>Close</span></button>
+                            </div>
+                            <div class='modal-body'>
+                                <table id='fireRuleTable'
+                                       data-toggle='table'
+                                       data-show-refresh='false'
+                                       data-search='false'
+                                       data-side-pagination='server'
+                                       data-url="{% url 'cms_common_scene:get_fwaas_rules_list' %}"
+                                       data-pagination="true"
+                                       data-page-size="10"
+                                >
+                                    <thead>
+                                    <tr>
+
+                                        <th data-field='name' data-formatter='fireRuleTable.nameFormatter'>{% trans 'x_name' %}</th>
+                                        <th data-field='type' data-formatter='fireRuleTable.typeFormatter'>{% trans 'x_rule' %}</th>
+                                        <th data-field='protocol' data-formatter='fireRuleTable.protocolFormatter'>{% trans 'x_protocol' %}</th>
+                                        <th data-field='action' data-formatter='fireRuleTable.actionFormatter'>{% trans 'x_action' %}</th>
+                                        <th data-field='source_ip' data-formatter='fireRuleTable.sourceIpFormatter'>{% trans 'x_source_ip' %}</th>
+                                        <th data-field='destination_ip' data-formatter='fireRuleTable.descIpFormatter'>{% trans 'x_dest_ip' %}</th>
+                                        <th data-field='source_port' data-formatter='fireRuleTable.sourcePortFormatter'>{% trans 'x_source_port' %}</th>
+                                        <th data-field='destination_port' data-formatter='fireRuleTable.descPortFormatter'>{% trans 'x_destination_port' %}</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class='clearfix modal-footer'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block bottom_js %}
+  {{ block.super }}
+        <script type="text/javascript">
+
+            (function(){
+                var myOptions = pageUtil.getOptions("myOptions");
+                var tab = myOptions.tab ? myOptions.tab : 'tab-1';
+                $('[href=#' + tab + ']').parent().addClass('active');
+                $('#' + tab).addClass('active');
+                $ONUNLOAD(function(){
+                    var activeTab = $('.tab-pane.active').attr('id');
+                    pageUtil.saveOptions("myOptions", {tab: activeTab});
+                });
+            }());
+        </script>
+        <script type="text/javascript">
+         pageWidgets.registerCheckTableRow($("#networkTable"));
+            var networkTable = bsTable.getTableModule($('#networkTable'), function(){
+
+                this.nameFormatter = function (value, row, index) {
+                      return row.net_name ? row.net_name : '-';
+                };
+                this.subnetFormatter = function (value, row, index) {
+                    //subnets可能会有多个
+                    if (row.net_subnets.length == 0){
+                        return '-'
+                    }else{
+                        str =''
+                        for (i in row.net_subnets){
+
+                           str= str+'<a id="thread" class="test_a" style="color:#337ab7;" onclick=showDetail("'+ "subnet" + '","' +row.net_subnets[i]['id'] + '")>' + row.net_subnets[i]['name'] + '</a>'
+
+                        }
+                         return [str].join('')
+                    }
+                 };
+                this.networkTypeFormatter = function (value, row, index) {
+                      return row.networkType ? row.networkType : '-';
+                };
+
+
+
+                this.statusFormatter = function (value, row, index) {
+                      return row.net_status ? row.net_status : '-';
+                };
+
+                 this.datetimeFormatter = function (value, row, index) {
+                      return row.created_at ? row.created_at.replace('T',' ').replace('Z',' ')  : '-';
+                };
+
+            });
+            function showDetail(type,id){
+                //alert(id)
+               if(type == 'subnet'){
+                   type =1;
+                   url = '../get_subnet_detail_by_id/';
+               }else if(type == 'router') {
+                   url = '../get_router_detail_by_id/';
+                   type =2;
+               }else if(type == 'firegroup'){
+                   url = '../get_fwaas_group_detail_by_id/';
+                   type =3;
+               }else if(type == 'firepolicyAndRule'){
+                   url = '../get_fwaas_policy_rule_detail_by_id/';
+                   type =2;
+               }
+                $.ajax({
+                                type: "get",
+                                url: url,
+                                contentType: "application/json",
+                                data: { id: id },
+                                success: function (data) {
+                                    if(type ==1){
+                                        document.getElementById('subnet_id').innerText=data['id'];
+                                        document.getElementById('subnet_name').innerText=data['name'];
+                                        document.getElementById('subnet_enable_dhcp').innerText=data['enable_dhcp'];
+                                        //document.getElementById('instance_locked').innerText=data['size'];
+                                        document.getElementById('subnet_created_at').innerText=data['created_at'].replace('T',' ').replace('Z',' ') ;
+                                        //document.getElementById('instance_flavor_name').innerText=data['disk_format'];
+                                        document.getElementById('subnet_gateway_ip').innerText=data['gateway_ip'];
+                                        document.getElementById('subnet_dns_nameservers').innerText=codeUtil.htmlDecode(data['dns_nameservers']);
+                                        document.getElementById('subnet_allocation_pools').innerText=codeUtil.htmlDecode(data['allocation_pools']);
+                                        document.getElementById('subnet_ip_version').innerText=data['ip_version'];
+                                        document.getElementById('subnet_cidr').innerText=data['cidr'];
+                                        $('#subnetDetailModal').modal('show');
+                                    }else if(type==2){ //如果是路由
+                                        document.getElementById('router_id').innerText=data['id'];
+                                        document.getElementById('router_name').innerText=data['name'];
+                                        document.getElementById('router_status').innerText=data['status'];
+                                        document.getElementById('router_description').innerText=data['description'];
+                                        document.getElementById('router_created_at').innerText=data['created_at'].replace('T',' ').replace('Z',' ') ;
+                                        document.getElementById('router_admin_state_up').innerText=data['admin_state_up'];
+                                        document.getElementById('router_network_id').innerText=data['network_id'];
+                                        document.getElementById('router_enable_snat').innerText=data['enable_snat'];
+                                        document.getElementById('router_external_fixed_ips').innerText=codeUtil.htmlDecode(data['external_fixed_ips']);
+                                        $('#routerDetailModal').modal('show');
+                                    }else if(type ==3){ //如果是查询防火墙策略
+                                         $("#fireRuleTable").bootstrapTable('refresh',{url:'../get_fwaas_group_detail_by_id/?id='+id})
+
+                                        $('#policyDetailModal').modal('show');
+                                    }else if(type==4){ //如果是查询防火墙规则
+                                        document.getElementById('rule_id').innerText=data['id'];
+                                        document.getElementById('rule_protocol').innerText=data['protocol'];
+                                        document.getElementById('rule_description').innerText=data['description'];
+                                        document.getElementById('rule_source_ip_address').innerText=data['source_ip_address'];
+                                        document.getElementById('rule_destination_ip_address').innerText=data['destination_ip_address'];
+                                        document.getElementById('rule_source_port').innerText=data['source_port'];
+                                        document.getElementById('rule_destination_port').innerText=data['destination_port'];
+                                        document.getElementById('rule_name').innerText=data['name'];
+                                        document.getElementById('rule_tenant_id').innerText=data['tenant_id'];
+                                        document.getElementById('rule_enabled').innerText=data['enabled'];
+                                        document.getElementById('rule_project_id').innerText=data['project_id'];
+                                        document.getElementById('rule_ip_version').innerText=data['ip_version'];
+                                        document.getElementById('rule_action').innerText=data['action'];
+                                        document.getElementById('rule_shared').innerText=data['shared'];
+                                        $('#ruleDetailModal').modal('show');
+                                    }
+
+                                },
+                                error: function (res){
+                                    swal({
+                                            title: "{% trans "x_get_detail_error" %}",
+                                            type: "warning",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        });
+
+                                }
+                });
+            }
+            function delete_item(url,id){
+               iconfirm(gettext('x_confirm_delete'), function () {
+                            $.ajax({
+                                type: "get",
+                                url: url,
+                                contentType: "application/json",
+                                data: { id: id },
+                                success: function (data, status) {
+                                    if (status == "success") {
+                                        swal({
+                                            title: "{% trans "x_deleted_successfully" %}",
+                                            type: "success",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        })
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 1500);
+                                    }else{
+                                        swal({
+                                            title: "{% trans "x_deleted_unsuccessfully" %}",
+                                            type: "warning",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        })
+                                    }
+                                },
+                                error: function (res){
+                                    var errorMessage=JSON.parse(res.responseText)
+
+                                    alert(errorMessage['detail']['message']+errorMessage['detail']['code'])
+                                    swal({
+                                            title: "{% trans "x_deleted_unsuccessfully" %}",
+                                            type: "warning",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        })
+
+                                }
+                            })
+                });
+
+            }
+             pageWidgets.registerCheckTableRow($("#routerTable"));
+            var routerTable = bsTable.getTableModule($('#routerTable'), function(){
+
+                this.statusFormatter = function (value, row, index) {
+                    return row.route_status ? row.route_status : '-';
+                };
+
+                this.datetimeFormatter = function (value, row, index) {
+                      return row.created_at ? row.created_at.replace('T',' ').replace('Z',' ')  : '-';
+                };
+
+                this.nameFormatter = function (value, row, index) {
+                      {% comment %}return row.route_name ? row.route_name : '-';{% endcomment %}
+                       return [
+                    '<a id="thread"  onclick=showDetail("'+ "router" + '","' +row.id + '")>' + row.route_name + '</a>',
+                ].join('');
+                };
+
+                {% comment %}this.operatorFormatter = function (value, row, index) {
+                    var btns = [
+
+                        {
+                            type: 'link',
+                            class: 'btn-success',
+                            icon: 'fa-bullhorn',
+                            text: '{% trans 'x_delete' %}',
+                            click: 'delete_item("' +'../delete_router_by_id/' +'","'+ row.id + '")',
+                        }
+                    ];
+
+                    return routerTable.getOperatorHtml(btns);
+                };
+{% endcomment %}
+
+
+            });
+            pageWidgets.registerCheckTableRow($("#floatIPTable"));
+            var floatIPTable = bsTable.getTableModule($('#floatIPTable'), function(){
+
+                this.statusFormatter = function (value, row, index) {
+                    return row.float_status ? row.float_status : '-';
+                };
+                this.fixIPFormatter = function (value, row, index) {
+                      return row.fixed_ip_address ? row.fixed_ip_address : '-';
+                };
+                this.floatIPFormatter = function (value, row, index) {
+                      return row.float_ip_address ? row.float_ip_address : '-';
+                };
+                this.datetimeFormatter = function (value, row, index) {
+                      return row.float_created_at ? row.float_created_at.replace('T',' ').replace('Z',' ')  : '-';
+                };
+
+
+
+
+            });
+
+
+            pageWidgets.registerCheckTableRow($("#fireGroupTable"));
+            var fireGroupTable = bsTable.getTableModule($('#fireGroupTable'), function(){
+
+
+                this.statusFormatter = function (value, row, index) {
+
+                    return row.status ? row.status : '-';
+                };
+                this.nameFormatter = function (value, row, index) {
+                     var ret_dict_str= row.ingress_id +'|'+ row.engress_id;
+
+                     return row.name == '-' ? '-'  : [
+                        '<a id="thread"  onclick=showDetail("'+ "firegroup" + '","' +ret_dict_str + '")>' + row.name + '</a>',
+                    ].join('') ;
+                };
+                this.descriptionFormatter = function (value, row, index) {
+                    return row.description ? row.description : '-';
+                };
+                this.ingressNameFormatter = function (value, row, index) {
+                      return row.ingress_name == '-' ? '-' :row.ingress_name;
+
+                };
+                this.engressNameFormatter = function (value, row, index) {
+                      return row.engress_name == '-' ?  '-' :row.engress_name;
+
+                };
+
+                this.operatorFormatter = function (value, row, index) {
+                    var btns = [
+
+                        {
+                            type: 'link',
+                            class: 'btn-success',
+                            icon: 'fa-bullhorn',
+                            text: '{% trans 'x_delete' %}',
+                            click: 'delete_item("' +'../delete_fwaas_group_by_id/' +'","'+ row.id + '")',
+                        }
+                    ];
+
+                    return fireGroupTable.getOperatorHtml(btns);
+                };
+
+
+
+            });
+            var fireRuleTable = bsTable.getTableModule($('#fireRuleTable'), function(){
+
+                this.statusFormatter = function (value, row, index) {
+                    return row.status ? row.status : '-';
+                };
+                this.nameFormatter = function (value, row, index) {
+                      return row.name ?  row.name  : '-';
+                };
+                this.protocolFormatter = function (value, row, index) {
+                      return row.protocol ? row.protocol : '-';
+                };
+                this.actionFormatter = function (value, row, index) {
+                      return row.action ? row.action : '-';
+                };
+                this.sourceIpFormatter = function (value, row, index) {
+                      return row.source_ip ? row.source_ip : '-';
+                };
+                this.descIpFormatter = function (value, row, index) {
+                      return row.destination_ip ? row.destination_ip : '-';
+                };
+                this.sourcePortFormatter = function (value, row, index) {
+                      return row.source_port ? row.source_port : '-';
+                };
+                this.descPortFormatter = function (value, row, index) {
+                      return row.destination_port ? row.destination_port : '-';
+                };
+                this.typeFormatter = function (value, row, index) {
+                      return row.type ? row.type : '-';
+                };
+
+
+
+            });
+        </script>
+
+{% endblock %}

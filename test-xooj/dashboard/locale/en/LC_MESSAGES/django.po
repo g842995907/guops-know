@@ -1,0 +1,390 @@
+msgid "x_data_statistics"
+msgstr "Data Statistics"
+
+msgid "x_class_hours"
+msgstr "Classes"
+
+msgid "x_target"
+msgstr "Node"
+
+msgid "x_scene"
+msgstr "Scene"
+
+msgid "x_platform_status"
+msgstr "Usage"
+
+msgid "x_course_type"
+msgstr "Course Type"
+
+msgid "x_object"
+msgstr "Object"
+
+msgid "X_online_user_monitor"
+msgstr "Online User Monitor"
+
+msgid "x_study_status"
+msgstr "Study Status"
+
+msgid "x_studying_course"
+msgstr "Studying Course"
+
+msgid "x_virtual_device_name"
+msgstr "Virtual Device Name"
+
+msgid "x_cumulative_learning_time"
+msgstr "Cumulative Learning Time"
+
+msgid "x_remote_assistance"
+msgstr "Remote Assistance"
+
+msgid "x_cluster_status"
+msgstr "Cluster Management"
+
+msgid "x_memory"
+msgstr "Memory"
+
+msgid "x_disk"
+msgstr "Disk"
+
+msgid "x_dynamic"
+msgstr "New Messages"
+
+msgid "x_create_scene"
+msgstr "Create Scene"
+
+msgid "x_ago"
+msgstr "ago"
+
+msgid "x_no_dynamic"
+msgstr "No Message"
+
+msgid "x_node_status"
+msgstr "Node Management"
+
+msgid "x_node_IP"
+msgstr "Node IP"
+
+msgid "x_service_status"
+msgstr "Service Status"
+
+msgid "x_CPU"
+msgstr "CPU"
+
+msgid "x_hard_disk"
+msgstr "Disk"
+
+msgid "x_dashboard"
+msgstr "Dashboard"
+
+msgid "x_subject"
+msgstr "Challenge"
+
+msgid "x_openstack_api"
+msgstr "Openstack Api"
+
+msgid "x_instance_api"
+msgstr "Instance Management "
+
+msgid "x_image_api"
+msgstr "Image Api"
+
+msgid "x_network_api"
+msgstr "Network Management"
+
+msgid "x_firewall_api"
+msgstr "Fwaas Api"
+
+msgid "x_instance_api_list"
+msgstr "Instance"
+
+msgid "x_image_api_list"
+msgstr "Images"
+
+msgid "x_network_api_list"
+msgstr "Network"
+
+msgid "x_fwaas_api_list"
+msgstr "Fwaas"
+
+msgid "x_instances"
+msgstr " Virtual Machine"
+
+msgid "x_images"
+msgstr "Images"
+
+msgid "x_docker_instances"
+msgstr "Container"
+
+msgid "x_docker_images"
+msgstr "Images"
+
+msgid "x_id"
+msgstr "id"
+
+msgid "x_keyname"
+msgstr "Key Name"
+
+msgid "x_instance_name"
+msgstr "Instance Name"
+
+msgid "x_ip"
+msgstr "IP"
+
+msgid "x_flavor"
+msgstr "Flavor"
+
+msgid "x_created"
+msgstr "Create Time"
+
+msgid "x_instance_id"
+msgstr "Instance Id"
+
+msgid "x_instance_flavor_name"
+msgstr "Flavor Name"
+
+msgid "x_instance_flavor_id"
+msgstr "Flavor Id"
+
+msgid "x_security_group"
+msgstr "Security Group"
+
+msgid "x_instance_metadata"
+msgstr "Metadata"
+
+msgid "x_instance_volume_attached"
+msgstr "Volume Attached"
+
+msgid "x_avail_zone"
+msgstr "Avaliable Zone"
+
+msgid "x_image_name"
+msgstr "Image Name"
+
+msgid "x_visable"
+msgstr "Visibility"
+
+msgid "x_protected"
+msgstr "Protected"
+
+msgid "x_image_disk_format"
+msgstr "Disk Format"
+
+msgid "x_image_container_format"
+msgstr "Container Format"
+
+msgid "x_updated_at"
+msgstr "Update At"
+
+msgid "x_image_file"
+msgstr "Image File"
+
+msgid "x_checksum"
+msgstr "Check Sum"
+
+msgid "x_schema"
+msgstr "Schema"
+
+msgid "x_owner"
+msgstr "Owner"
+
+msgid "x_docker_image_driver"
+msgstr "Image Driver"
+
+msgid "x_task_state"
+msgstr "Task State"
+
+msgid "x_uuid"
+msgstr "UUID"
+
+msgid "x_docker_disk"
+msgstr "Disk"
+
+msgid "x_image_pull_policy"
+msgstr "Image Pull Policy"
+
+msgid "x_docker_hostname"
+msgstr "Host"
+
+msgid "x_docker_memory"
+msgstr "Memory"
+
+msgid "x_docker_user_id"
+msgstr "User Id"
+
+msgid "x_project_id"
+msgstr "Project Id "
+
+msgid "x_docker_status_detail"
+msgstr "Status Detail"
+
+msgid "x_docker_status_reason"
+msgstr "Status Reason"
+
+msgid "x_docker_command"
+msgstr "Command "
+
+msgid "x_docker_runtime"
+msgstr "Runtime"
+
+msgid "x_docker_ports"
+msgstr "Port"
+
+msgid "x_docker_interactive"
+msgstr "Interactive"
+
+msgid "x_docker_image_tag"
+msgstr "Image Tag"
+
+
+msgid "x_docker_image_repo"
+msgstr "Image Repo "
+
+msgid "x_docker_image_size"
+msgstr "Image Size"
+
+
+msgid "x_deleted_successfully"
+msgstr "Delete Successfully"
+
+
+msgid "x_deleted_unsuccessfully"
+msgstr "Delete Unsuccessfully"
+
+msgid "x_delete"
+msgstr "Delete"
+
+msgid "x_pause"
+msgstr "Pause"
+
+msgid "x_unable_deleted_state"
+msgstr "Unable Delete"
+
+msgid "x_networks"
+msgstr "Networks"
+
+msgid "x_routers"
+msgstr "Routers"
+
+msgid "x_float_ip"
+msgstr "Floating  IP"
+
+msgid "x_is_external"
+msgstr "Is External"
+
+msgid "x_mtu"
+msgstr "MTU"
+
+msgid "x_admin_state_up"
+msgstr "Admin State"
+
+msgid "x_subnet"
+msgstr "Subnets Associated "
+
+msgid "x_share"
+msgstr "Shared"
+
+msgid "x_enable_dhcp"
+msgstr "Enable Dhcp"
+
+msgid "x_gateway_ip"
+msgstr "Gateway Ip"
+
+msgid "x_dns_nameserver"
+msgstr "DNS Server"
+
+msgid "x_allocation_pools"
+msgstr "Allocation Pool "
+
+msgid "x_ip_version"
+msgstr "Ip Version"
+
+msgid "x_cidr"
+msgstr "CIDR"
+
+msgid "x_tenant_id"
+msgstr "Tenant Id "
+
+
+msgid "x_router_external_gateway_info"
+msgstr "External Gateway"
+
+msgid "x_network_id"
+msgstr "Network Id"
+
+msgid "x_enable_snat"
+msgstr "Enable Snat"
+
+msgid "x_external_fixed_ips"
+msgstr "External Fixed IPs"
+
+msgid "x_fix_ip"
+msgstr "Mapped Fixed IP Address"
+
+msgid "x_fire_groups"
+msgstr "Firewall Groups"
+
+msgid "x_fire_rules"
+msgstr "Firewall Rules "
+
+msgid "x_fire_policy"
+msgstr "Firewall Policies"
+
+msgid "x_description"
+msgstr "Description"
+
+msgid "x_ingres"
+msgstr "Igress Policy "
+
+msgid "x_engress"
+msgstr "Egress Policy "
+
+msgid "x_audited"
+msgstr "Audited"
+
+msgid "x_firewall_rules"
+msgstr "Firewall Rules "
+
+msgid "x_protocol"
+msgstr "Protocol "
+
+msgid "x_enabled"
+msgstr "Enabled"
+
+msgid "x_action"
+msgstr "Action"
+
+msgid "x_source_ip"
+msgstr "Source IP"
+
+msgid "x_dest_ip"
+msgstr "Destination IP "
+
+msgid "x_source_port"
+msgstr "Source Port"
+
+msgid "x_destination_port"
+msgstr "Destination Port"
+
+msgid "x_policy_rules"
+msgstr "Policy Rules"
+
+msgid "x_confirm_delete"
+msgstr "Sure Delele"
+
+msgid "x_get_detail_error"
+msgstr "Get Detail Failed"
+
+msgid "x_download_sta_info"
+msgstr "Download Info"
+
+msgid "x_current_class_number"
+msgstr "Current Class Number："
+
+msgid "x_current_online_user"
+msgstr "Current Online Number："
+
+msgid "x_current_active_scene"
+msgstr "Current Activity Scene："
+
+msgid "x_save_data"
+msgstr "Save Statistics"

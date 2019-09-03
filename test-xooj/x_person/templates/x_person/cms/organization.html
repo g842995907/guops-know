@@ -1,0 +1,796 @@
+{% extends 'cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}
+    {% trans 'x_organizational_structure_manage' %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link href="{% static "lib/jstree/css/style.min.css" %}" rel="stylesheet">
+
+    <script src="{% static "lib/jstree/js/jstree.min.js" %}"></script>
+    <style>
+        .btn {
+            height: 30px;
+            margin-bottom: 1px !important;
+            line-height: 30px;
+            padding: 0px 12px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <div style="width: 100%;font-size: 12px;margin: 25px 0 0 20px;">
+        <span style="margin-right: 30px;">
+            <i class="jstree-icon jstree-themeicon glyphicon glyphicon-home jstree-themeicon-custom"
+               role="presentation"></i>
+                {% trans 'x_said' %}{{ ORGANIZATION.First_level }}
+        </span>
+            <span style="margin-right: 30px;">
+                    <i class="jstree-icon jstree-themeicon glyphicon glyphicon-grain jstree-themeicon-custom"
+                       role="presentation"></i>
+                    {% trans 'x_said' %}{{ ORGANIZATION.Second_level }}
+                </span>
+            <span style="margin-right: 30px;">
+                    <i class="jstree-icon jstree-themeicon glyphicon glyphicon-leaf jstree-themeicon-custom"
+                       role="presentation"></i>
+                    {% trans 'x_said' %}{{ ORGANIZATION.Third_level }}
+                </span>
+            <span style="margin-right: 30px;">
+                    <i class="jstree-icon jstree-themeicon glyphicon glyphicon-user jstree-themeicon-custom"
+                       role="presentation"></i>
+                    {% trans 'x_said' %}{{ ORGANIZATION.Fourth_level }}
+            </span>
+            {#            <span style="margin-right: 30px;">#}
+            {#                    <i class="jstree-icon jstree-themeicon glyphicon glyphicon-user jstree-themeicon-custom"#}
+            {#                       role="presentation"></i>#}
+            {#                    {% trans '表示' %}{% if product_type == 0 %}{% trans '学号' %}{% else %}#}
+            {#                        {% trans '工号' %}{% endif %}#}
+            {#            </span>#}
+        </div>
+        <div id="jstree">
+
+        </div>
+
+        <div class="btn-tpl-all hidden">
+            <div class="btn-group" style="margin-left:50px;">
+                <div class="btn btn-white" onclick="node_create()"><i
+                        class="glyphicon glyphicon-plus" style="color: green;"></i>&nbsp;{% trans "x_add" %}
+                </div>
+                <div class="btn btn-white" style="margin-left:5px;" onclick="node_delete()">
+                    <i class="glyphicon glyphicon-remove" style="color: red;"></i>&nbsp;{% trans "x_delete" %}
+                </div>
+                <div class="btn btn-white" style="margin-left: 5px;" onclick="node_rename()">
+                    <i class="glyphicon glyphicon-pencil" style="color: orange;"></i>&nbsp;{% trans "x_rename" %}
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-tpl-no-create hidden">
+            <div class="btn-group" style="margin-left: 50px;">
+                <div class="btn btn-white" style="" onclick="node_delete()">
+                    <i class="glyphicon glyphicon-remove" style="color: red;"></i>&nbsp;{% trans "x_delete" %}
+                </div>
+                <div class="btn btn-white" style="margin-left: 5px;" onclick="node_rename()">
+                    <i class="glyphicon glyphicon-pencil" style="color: orange;"></i>&nbsp;{% trans "x_rename" %}
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-tpl-no-delete hidden">
+            <div class="btn-group" style="margin-left: 50px;">
+                <div type="submit" class="btn btn-white" onclick="node_create()"><i
+                        class="glyphicon glyphicon-plus" style="color: green;"></i>&nbsp;{% trans "x_add" %}
+                </div>
+                <div class="btn btn-white" style="margin-left: 5px;" onclick="node_rename()">
+                    <i class="glyphicon glyphicon-pencil" style="color: orange;"></i>&nbsp;{% trans "x_rename" %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+{% block modal %}
+    {# 院系管理#}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width: 450px;">
+            <div class="modal-content">
+                <form id="faculty_form" action="" method="">{% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            {{ ORGANIZATION.Second_level }}{% trans 'x_management' %}</h4>
+                        <div class="wrapper wrapper-content">
+                            <div class="row animated fadeInRight">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="form-group">
+                                            <label style="line-height: 36px"
+                                                   class="col-sm-2 control-label">{% trans "x_name" %}</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control pull-left"
+                                                       style="width: 85% !important"
+                                                       id="name" name="name" data-organization-name="faculty_name">
+                                                <div style="padding-top:1px;font-size:25px">
+                                                    <span class="text-danger">*</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">{% trans 'x_cancel' %}</button>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_confirm' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {#年级管理#}
+    <div class="modal fade" id="majorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width: 450px">
+            <div class="modal-content">
+                <form id="major_form" action="" method="">{% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            {{ ORGANIZATION.Third_level }}{% trans 'x_management' %}</h4>
+                        <div class="wrapper wrapper-content">
+                            <div class="row animated fadeInRight">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="form-group">
+                                            <label style="line-height: 36px"
+                                                   class="col-sm-4 control-label">{% trans "x_name"　 %}</label>
+                                            <div class="col-sm-8">
+                                                <input type="hidden" id="faculty" name="faculty" data-form-fixed="1"
+                                                       value="">
+                                                <input type="text" class="form-control pull-left"
+                                                       style="width: 90% !important" id="name"
+                                                       name="name" data-organization-name="major_name">
+                                                <div style="padding-top:1px;font-size:25px">
+                                                    <span class="text-danger">*</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">{% trans 'x_cancel' %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans 'x_confirm' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {#班级管理#}
+    <div class="modal fade" id="classModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width: 450px;">
+            <div class="modal-content">
+                <form id="classes_form" action="" method="">{% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            {{ ORGANIZATION.Fourth_level }}{% trans 'x_management' %}</h4>
+                        <div class="wrapper wrapper-content">
+                            <div class="row animated fadeInRight">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="form-group">
+                                            <label style="line-height: 36px"
+                                                   class="col-sm-4 control-label">{% trans "x_name"　 %}</label>
+                                            <div class="col-sm-8">
+                                                <input type="hidden" id="major" name="major" data-form-fixed="1"
+                                                       value="">
+                                                <input type="text" class="form-control pull-left"
+                                                       style="width: 95% !important" id="name"
+                                                       name="name" data-organization-name="class_name">
+                                                <div style="padding-top:1px;font-size:25px">
+                                                    <span class="text-danger">*</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">{% trans 'x_cancel' %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans 'x_confirm' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {#学校管理#}
+    <div class="modal fade" id="organizationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width:450px">
+            <div class="modal-content">
+                <form id="organization_form" action="" method="">{% csrf_token %}
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span
+                                aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">{{ ORGANIZATION.First_level }}{% trans 'x_management' %}</h4>
+                        <div class="wrapper wrapper-content">
+                            <div class="row animated fadeInRight">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-content">
+                                        <div class="form-group">
+                                            <label style="line-height: 36px"
+                                                   class="col-sm-4 control-label">{% trans "x_name"　 %}</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control pull-left"
+                                                       style="width: 95% !important"
+                                                       name="organization" data-organization-name="organization_name"/>
+                                                <span class="text-danger"
+                                                      style="padding-top:1px;font-size:25px">*</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">{% trans 'x_cancel' %}</button>
+                        <button type="submit" class="btn btn-primary">{% trans 'x_confirm' %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {#错误提示#}
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{% trans 'x_error_message' %}</h4>
+                    <div class="wrapper wrapper-content">
+                        <div class="row animated fadeInRight">
+                            <div class="ibox float-e-margins">
+                                <div class="ibox-content">
+                                    <div class="form-group">
+                                        <h4 id="errinfo"></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">{% trans 'x_confirm' %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottom_js %}
+    <script>
+        var faculty_id;
+        var major_id;
+        var class_id;
+        var js_tree_data ={{ jstree| safe }};
+        var log = console.log.bind(console)
+    </script>
+    <script>
+        $(function () {
+            $("#faculty_form").mvalidate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 50
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "{% trans 'x_required_name' %}",
+                        maxlength: "{% trans 'x_max_length_50' %}"
+                    }
+                }
+            });
+            $("#major_form").mvalidate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 50
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "{% trans 'x_required_name' %}",
+                        maxlength: "{% trans 'x_max_length_50' %}"
+                    }
+                }
+            });
+            $("#classes_form").mvalidate({
+                rules: {
+                    name: {
+                        required: true,
+                        maxlength: 50
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "{% trans 'x_required_name' %}",
+                        maxlength: "{% trans 'x_max_length_50' %}"
+                    }
+                }
+            });
+            $("#organization_form").mvalidate({
+                rules: {
+                    organization: {
+                        required: true
+                    }
+                },
+                messages: {
+                    organization: {
+                        required: "{% trans 'x_required_name' %}"
+                    }
+                }
+            });
+
+        });
+        var CALLBACK = {
+            GetMenuTreeData: function () {
+                $('#jstree').data('jstree', false);
+
+                var length = js_tree_data.length;
+                for (var i = 0; i < length; i++) {
+                    js_tree_data[i].a_attr = {
+                        {#                        "title": gettext("x_right_click_switch"),#}
+                        "data_id": js_tree_data[i]['id'].replace(new RegExp(':', 'g'), '_') + '_anchor',
+                    }
+                }
+                var $jstree = $('#jstree').jstree({
+                    'core': {
+                        "themes": {
+                            "variant": "large",
+                        },
+                        'data': js_tree_data,
+                    },
+                    'plugins': ["wholerow", {# "contextmenu", #} "types", "themes"],
+                    "types": {
+                        "#": {
+                            "max_children": 1,
+                            "max_depth": 4,
+                            "valid_children": ["root"]
+                        },
+                        "root": {
+                            "icon": "glyphicon glyphicon-home",
+                            "valid_children": ["default"]
+                        },
+                        "faculty": {
+                            "icon": "glyphicon glyphicon-grain",
+                            "valid_children": ["default"]
+                        },
+                        "major": {
+                            "icon": "glyphicon glyphicon-leaf",
+                            "valid_children": ["default"]
+                        },
+                        "default": {
+                            "valid_children": ["default", "file"]
+                        },
+                        "class": {
+                            "icon": "glyphicon glyphicon-user",
+                            "valid_children": ["default"]
+                        },
+                        {#                        "studentID": {#}
+                        {#                            "icon": "glyphicon glyphicon-user",#}
+                        {#                            "valid_children": []#}
+                        {#                        },#}
+                    },
+                    {#                    "contextmenu": {#}
+                    {#                        "items": CALLBACK.customMenu#}
+                    {#                    }#}
+
+                });
+                $jstree.on("ready.jstree", function (e, data) {
+                    data.instance.open_all();
+                });
+                $jstree.on('hover_node.jstree', function (e, data) {
+                    //监听鼠标移上事件
+                    var node = data.node;
+                    var a_attr = node.a_attr;
+                    var a_attr_data_id = a_attr.data_id;
+                    if (node.type === 'class') {
+                        var btnTpl = $('.btn-tpl-no-create').clone().html();
+                        $("a[data_id =" + a_attr_data_id + "]").append(btnTpl)
+                    } else if (node.type === 'root') {
+                        var btnTpl = $('.btn-tpl-no-delete').clone().html();
+                        $("a[data_id =" + a_attr_data_id + "]").append(btnTpl)
+                    } else {
+                        var btnTpl = $('.btn-tpl-all').clone().html();
+                        $("a[data_id =" + a_attr_data_id + "]").append(btnTpl)
+                    }
+
+                })
+                $jstree.on('dehover_node.jstree', function (e, data) {
+                    //监听鼠标移出事件
+                    var node = data.node;
+                    var a_attr = node.a_attr;
+                    var a_attr_data_id = a_attr.data_id;
+                    $("a[data_id =" + a_attr_data_id + "]").find('.btn-group').remove();
+
+                })
+            },
+
+            common_delete: function (url, id) {
+                var data = {'id': id};
+                ajaxDialog.buttonClick(http.delete, url, {}, function () {
+                    window.location.reload()
+                });
+            },
+            faculty_submit: function () {
+                if (faculty_id.toString() == '0') {
+                    $("#faculty_form").attr("action", "{% url 'cms_x_person:cms_api:faculty-list' %}");
+                    $("#faculty_form").attr("method", "post");
+                } else {
+                    $("#faculty_form").attr("action", "{% url 'cms_x_person:cms_api:faculty-list' %}" + faculty_id + '/');
+                    $("#faculty_form").attr("method", "patch");
+                }
+
+            },
+            major_submit: function () {
+                $("#major_form").find('[id=faculty]').val(faculty_id);
+                if (major_id.toString() == '0') {
+                    $("#major_form").attr("action", "{% url 'cms_x_person:cms_api:major-list' %}");
+                    $("#major_form").attr("method", "post");
+                } else {
+                    $("#major_form").attr("action", "{% url 'cms_x_person:cms_api:major-list' %}" + major_id + '/');
+                    $("#major_form").attr("method", "patch");
+                }
+            },
+            classes_submit: function () {
+                $("#classes_form").find('[id=major]').val(major_id);
+                if (class_id.toString() == '0') {
+                    $("#classes_form").attr("action", "{% url 'cms_x_person:cms_api:classes-list' %}");
+                    $("#classes_form").attr("method", "post");
+                } else {
+                    $("#classes_form").attr("action", "{% url 'cms_x_person:cms_api:classes-list' %}" + class_id + '/');
+                    $("#classes_form").attr("method", "patch");
+                }
+            },
+            organization_submit: function () {
+                $("#organization_form").attr("action", "{% url 'cms_system_configuration:cms_api:system-configuration-batch-update' %}");
+                $("#organization_form").attr("method", "post");
+            },
+            {#            customMenu: function (node) {#}
+            {#                var items = {#}
+            {#                    "create": null,#}
+            {#                    "rename": null,#}
+            {#                    "remove": null,#}
+            {#                    "ccp": null,#}
+            {#                    "add": {#}
+            {#                        "label": gettext("x_add"),#}
+            {#                        "action": function (obj) {#}
+            {#                            console.log(obj)#}
+            {#                            var inst = jQuery.jstree.reference(obj.reference);#}
+            {#                            var clickedNode = inst.get_node(obj.reference);#}
+            {#                            if (clickedNode.id == "rootnode") {#}
+            {#                                faculty_id = '0';#}
+            {#                                CALLBACK.faculty_submit();#}
+            {#                                $("[data-organization-name=faculty_name]").val("");#}
+            {#                                $("#myModal").modal()#}
+            {#                            }#}
+            {#                            else if ((clickedNode.id).indexOf(":") > 0) {#}
+            {#                                if ((clickedNode.id).split(':').length == 2) {#}
+            {#                                    var idlist = []#}
+            {#                                    idlist = (clickedNode.id).split(':')#}
+            {#                                    major_id = idlist[1];#}
+            {#                                    class_id = '0';#}
+            {#                                    CALLBACK.classes_submit();#}
+            {#                                    $("[data-organization-name=class_name]").val("");#}
+            {#                                    $("#classModal").modal()#}
+            {#                                }#}
+            {#                                else {#}
+            {#                                    $("#errinfo").html(gettext('x_cannot_add_subnode'));#}
+            {#                                    $("#errorModal").modal()#}
+            {#                                }#}
+            {#                            } else {#}
+            {#                                faculty_id = clickedNode.id;#}
+            {#                                major_id = '0';#}
+            {#                                CALLBACK.major_submit();#}
+            {#                                $("[data-organization-name=major_name]").val("");#}
+            {#                                $("#majorModal").modal()#}
+            {#                            }#}
+            {##}
+            {#                        }#}
+            {#                    },#}
+            {#                    "rename": {#}
+            {#                        "label": gettext("x_rename"),#}
+            {#                        "action": function (obj) {#}
+            {#                            var inst = jQuery.jstree.reference(obj.reference);#}
+            {#                            var clickedNode = inst.get_node(obj.reference);#}
+            {#                            if (clickedNode.id == "rootnode") {#}
+            {#                                $("[data-organization-name=organization_name]").val(clickedNode.text);#}
+            {#                                CALLBACK.organization_submit();#}
+            {#                                $("#organizationModal").modal()#}
+            {#                                        $("#errinfo").html('学校名称无法修改')#}
+            {#                                        $("#errorModal").modal()#}
+            {#                            }#}
+            {#                            else if ((clickedNode.id).indexOf(":") > 0) {#}
+            {#                                var arr = (clickedNode.id).split(":")#}
+            {##}
+            {#                                if (arr.length == 2) {#}
+            {#                                    //专业修改#}
+            {#                                    faculty_id = arr[0]#}
+            {#                                    major_id = arr[1]#}
+            {#                                    $("[data-organization-name=major_name]").val(clickedNode.text);#}
+            {#                                    CALLBACK.major_submit();#}
+            {#                                    $("#majorModal").modal()#}
+            {#                                } else {#}
+            {#                                    //班级修改#}
+            {#                                    major_id = arr[1];#}
+            {#                                    class_id = arr[2];#}
+            {#                                    $("[data-organization-name=class_name]").val(clickedNode.text);#}
+            {#                                    CALLBACK.classes_submit();#}
+            {#                                    $("#classModal").modal()#}
+            {#                                }#}
+            {##}
+            {#                            } else {#}
+            {#                                //院系修改#}
+            {#                                faculty_id = clickedNode.id#}
+            {#                                CALLBACK.faculty_submit();#}
+            {#                                $("[data-organization-name=faculty_name]").val(clickedNode.text);#}
+            {#                                $("#myModal").modal()#}
+            {#                            }#}
+            {#                        }#}
+            {#                    },#}
+            {#                    "delete": {#}
+            {#                        "label": gettext('x_delete'),#}
+            {#                        "action": function (obj) {#}
+            {#                            var inst = jQuery.jstree.reference(obj.reference);#}
+            {#                            var clickedNode = inst.get_node(obj.reference);#}
+            {#                            if (clickedNode.id == "rootnode") {#}
+            {#                                $("#errinfo").html(gettext("x_cannot_del_school"))#}
+            {#                                $("#errorModal").modal()#}
+            {#                            }#}
+            {#                            else if ((clickedNode.id).indexOf(":") > 0) {#}
+            {#                                var arr = (clickedNode.id).split(":")#}
+            {#                                if (arr.length == 2) {#}
+            {#                                    major_id = arr[1];#}
+            {#                                    return CALLBACK.common_delete("{% url 'cms_x_person:cms_api:major-list' %}" + major_id + '/', major_id);#}
+            {#                                } else {#}
+            {#                                    class_id = arr [2];#}
+            {#                                    return CALLBACK.common_delete("{% url 'cms_x_person:cms_api:classes-list' %}" + class_id + '/', class_id);#}
+            {#                                }#}
+            {##}
+            {#                            } else {#}
+            {#                                faculty_id = clickedNode.id;#}
+            {#                                return CALLBACK.common_delete("{% url 'cms_x_person:cms_api:faculty-list' %}" + faculty_id + '/', faculty_id);#}
+            {#                            }#}
+            {#                        }#}
+            {#                    }#}
+            {#                };#}
+            {#                if (node.type === 'class') {#}
+            {#                    delete items.add;#}
+            {#                } else if (node.type === 'root') {#}
+            {#                    delete items.delete;#}
+            {#                }#}
+            {#                return items;#}
+            {#            }#}
+        };
+
+        $().ready(function () {
+                $('#jstree').on('loaded.jstree', function (e, data) {
+                    data.instance.open_all();//默认展开所有节点
+
+                });
+                CALLBACK.GetMenuTreeData();
+
+                $("#faculty_form").ajaxFormDialog(function () {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, ajaxDialog.defaultDelayTime);
+                }, null, {
+                    error: function (xhr, ts, et) {
+                        dialogErrorCallback(null, xhr, ts, et);
+                    },
+                });
+
+                $("#major_form").ajaxFormDialog(function () {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, ajaxDialog.defaultDelayTime);
+                }, null, {
+                    error: function (xhr, ts, et) {
+                        dialogErrorCallback(null, xhr, ts, et);
+                    },
+                });
+
+                $("#classes_form").ajaxFormDialog(function () {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, ajaxDialog.defaultDelayTime);
+                }, null, {
+                    error: function (xhr, ts, et) {
+                        dialogErrorCallback(null, xhr, ts, et);
+                    },
+                });
+
+                $("#organization_form").ajaxFormDialog(function () {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, ajaxDialog.defaultDelayTime);
+                }, null, {
+                    error: function (xhr, ts, et) {
+                        dialogErrorCallback(null, xhr, ts, et);
+                    },
+                });
+            }
+        )
+
+        function node_create() {
+            var ref = $("#jstree").jstree(true);
+            console.log(ref._data.core.focused);
+            var clickedNode = ref._data.core.focused;
+            if (clickedNode == "rootnode") {
+                faculty_id = '0';
+                CALLBACK.faculty_submit();
+                $("[data-organization-name=faculty_name]").val("");
+                $("#myModal").modal()
+            }
+            else if ((clickedNode).indexOf(":") > 0) {
+                if ((clickedNode).split(':').length == 2) {
+                    var idlist = []
+                    idlist = (clickedNode).split(':')
+                    major_id = idlist[1];
+                    class_id = '0';
+                    CALLBACK.classes_submit();
+                    $("[data-organization-name=class_name]").val("");
+                    $("#classModal").modal()
+                }
+                else {
+                    $("#errinfo").html(gettext('x_cannot_add_subnode'));
+                    $("#errorModal").modal()
+                }
+            } else {
+                faculty_id = clickedNode;
+                major_id = '0';
+                CALLBACK.major_submit();
+                $("[data-organization-name=major_name]").val("");
+                $("#majorModal").modal()
+            }
+        }
+        function node_rename() {
+            var ref = $("#jstree").jstree(true);
+            console.log(ref._data.core.focused);
+            var clickedNode = ref._data.core.focused;
+
+            if (clickedNode == "rootnode") {
+                $("[data-organization-name=organization_name]").val(clickedNode.text);
+                CALLBACK.organization_submit();
+                $("#organizationModal").modal()
+                {#                                        $("#errinfo").html('学校名称无法修改')#}
+                {#                                        $("#errorModal").modal()#}
+            }
+            else if ((clickedNode).indexOf(":") > 0) {
+                var arr = (clickedNode).split(":")
+
+                if (arr.length == 2) {
+                    //专业修改
+                    faculty_id = arr[0]
+                    major_id = arr[1]
+                    $("[data-organization-name=major_name]").val(clickedNode.text);
+                    CALLBACK.major_submit();
+                    $("#majorModal").modal()
+                } else {
+                    //班级修改
+                    major_id = arr[1];
+                    class_id = arr[2];
+                    $("[data-organization-name=class_name]").val(clickedNode.text);
+                    CALLBACK.classes_submit();
+                    $("#classModal").modal()
+                }
+
+            } else {
+                //院系修改
+                faculty_id = clickedNode
+                CALLBACK.faculty_submit();
+                $("[data-organization-name=faculty_name]").val(clickedNode.text);
+                $("#myModal").modal()
+            }
+        }
+        function node_delete() {
+            var ref = $("#jstree").jstree(true);
+            var clickedNode = ref._data.core.focused;
+            if (clickedNode == "rootnode") {
+                $("#errinfo").html(gettext("x_cannot_del_school"))
+                $("#errorModal").modal()
+            }
+            else if ((clickedNode).indexOf(":") > 0) {
+                var arr = (clickedNode).split(":")
+                if (arr.length == 2) {
+                    major_id = arr[1];
+                    return CALLBACK.common_delete("{% url 'cms_x_person:cms_api:major-list' %}" + major_id + '/', major_id);
+                } else {
+                    class_id = arr [2];
+                    return CALLBACK.common_delete("{% url 'cms_x_person:cms_api:classes-list' %}" + class_id + '/', class_id);
+                }
+
+            } else {
+                faculty_id = clickedNode;
+                return CALLBACK.common_delete("{% url 'cms_x_person:cms_api:faculty-list' %}" + faculty_id + '/', faculty_id);
+            }
+
+        }
+        {#==========================================#}
+        var dialogErrorCallback = function (errorCallback, xhr, ts, et) {
+            var res = xhr.responseJSON;
+            var errorHtml = '';
+            var $error = $('#server-error');
+            var hasErrorContainer = $error.length == 1 ? true : false;
+            if (xhr.status == 400) {
+                $.each(res, function (name, messages) {
+                    var labelName = $('[id=' + name + ']').parents('.form-group').find('.control-label').eq(0).text();
+                    if (Array.isArray(messages)) {
+                        $.each(messages, function (i, message) {
+                            if (typeof (message) == "object") {
+                                message = message.message
+                            }
+                            if (hasErrorContainer) {
+                                errorHtml = errorHtml + '<div class="error">' + labelName + ': ' + message + '<div>';
+                            } else {
+                                errorHtml = errorHtml + labelName + ': ' + message + '\n';
+                            }
+                        });
+                    } else if (typeof (messages) == "object") {
+                        errorHtml = errorHtml + messages.message
+                    } else {
+                        errorHtml = errorHtml + messages
+                    }
+                });
+            } else {
+                errorHtml = (!!res && !!res.detail) ? res.detail : gettext("x_server_error");
+            }
+
+            if (hasErrorContainer) {
+                $error.html(errorHtml);
+                $error.show();
+                $('.sweet-alert .cancel').click();
+            } else {
+                swal({
+                    title: errorHtml,
+                    type: 'error',
+                    confirmButtonText: gettext("x_confirm")
+                });
+            }
+            if (!!errorCallback) {
+                errorCallback(xhr, ts, et);
+            }
+        };
+    </script>
+{% endblock %}

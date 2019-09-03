@@ -1,0 +1,466 @@
+{% extends 'event/cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+{% block title %}
+    <a href="{% url 'cms_event_exam:exam_list' %}">{% trans 'x_exam' %}</a>>
+    <span> {{ event.name }}</span>
+
+    {% trans 'x_score_manage' %}
+{% endblock %}
+{% block other_css_js %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'event_exam/cms/css/list.css' %}">
+    <script src="{% static_v 'practice_theory/cms/js/constants.js' %}"></script>
+
+    <style>
+           .outresult {
+            height :30px;
+
+            float :right;
+
+
+           }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox-content">
+        <p class="text-center" style="font-size: 16px;">{% trans 'x_exam' %}: {{ event.name }} <span
+                style="font-size: 14px;">({{ all_count }} {% trans 'x_task' %}，{{ all_score }} pt)</span>
+
+        </p>
+       <div class="clearfix">
+                    <div class="pull-right">
+                            <button id='output-button' class="btn btn-primary glyphicon glyphicon-save" >
+                                             {% trans 'x_output_result' %}
+                            </button>
+                    </div>
+       </div>
+
+                    <div class="m-r pull-left" style="width:196px">
+                        <select class="form-control m-b" id="faculty"  >
+                            <option value="">{% trans 'x_all' %}{{ ORGANIZATION.Second_level }}</option>
+                            {% for d in facultys %}
+                                <option value="{{ d.id }}">{{ d.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r pull-left" style="width:196px">
+                        <select class="form-control m-b" id="major" >
+                            <option value="">{% trans 'x_all' %}{{ ORGANIZATION.Third_level }}</option>
+                                                        {% for d in majors %}
+                                                            <option value="{{ d.id }}" data-parent="{{ d.parent_id }}">{{ d.name }}</option>
+                                                        {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="m-r pull-left" style="width:196px">
+                        <select  class="form-control m-b" id="classes" name="classes" >
+                                                <option value=''>{% trans 'x_all' %}{{ ORGANIZATION.Fourth_level }}</option>
+                                                        {% for class in classes %}
+                                                            <option value="{{ class.id }}" data-grandparent="{{ classes.major.faculty_id}}" data-parent="{{ class.major_id }}">{{ class.name }}</option>
+                                                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r pull-left" style="width:196px">
+                        <select class="form-control m-b sticky select_search" id="process">
+                            <option value="">{% trans 'x_all_status' %}</option>
+                                {% for pro in process %}
+                                    <option value="{{ pro.id }}" >{{ pro.status }}</option>
+                                {% endfor %}
+                        </select>
+                    </div>
+                    <div class="m-r pull-left">
+                        <input class="form-control m-b" id="search" placeholder="{% trans 'x_user_or_name' %}"
+                               type="text"/>
+                    </div>
+                    <div class="m-r pull-left">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>
+            {% comment %}        <div class="m-r pull-left">
+                        <a class="btn btn-primary" id="table_refresh" onclick="table.refresh();">
+                            <i class="fa fa-search"></i> {% trans 'x_search' %}
+                        </a>
+                    </div>{% endcomment %}
+
+        <div id="tableToolbar">
+
+        </div>
+        <table id="table"
+               data-toggle="table"
+               data-toolbar="#tableToolbar"
+               data-show-refresh="false"
+               data-search="false"
+               data-pagination="true"
+               data-side-pagination="server"
+               data-url="{% url 'cms_event_exam:event_rank_list' %}"
+        >
+            <thead>
+            <tr>
+                <th data-field="obj_username" >{% trans "x_user_name" %}</th>
+                <th data-field="obj_name"  data-formatter="name_show">{% trans 'x_name_surname' %}</th>
+
+                <th data-field="sum_score" data-sortable="true">{% trans 'x_score' %}</th>
+{#                <th data-field="writeup_score">{% trans 'x_writeup_score' %}</th>#}
+                <th data-field="submit_time" data-sortable="true">{% trans 'x_submit_time' %}</th>
+                <th data-field="status" >{% trans 'x_status' %}</th>
+                <th data-field="obj_id" data-formatter="operatorFormatter">{% trans 'x_operation' %}</th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+{% endblock %}
+{% block modal %}
+    {#题目弹窗#}
+    <!-- Modal -->
+    <div class="modal fade" id="exam-detail-Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span
+                            class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">{{ i18n_task_list }}</h4>
+                </div>
+                <div class="modal-body" id="paper-result-body" style="max-height: 600px;overflow: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block bottom_js %}
+     {{ block.super }}
+   {% verbatim %}
+<script id="paper-result" type="text/html">
+    <div>
+        <h2 class="text-center" id="exam-name" style="position: relative;">
+            <span>{{name}}<span>
+            <span style="font-size: 14px;">({{text.all}} {{number}} {{text.question}} {{text.fullMark}}{{allScore}} PT)</span>
+            <i class="red pull-right" style="font-size: 42px;position: absolute;right: 20px;">{{userAllScore}}</i>
+        </h2>
+        <div class="form-group">
+            <form id="courseform" target="form-target">
+                <ol style="padding: 20px; list-style: none;" id="exam_list">
+                     {{if fillTasks.length > 0}}
+                        <p style="font-size: 16px;margin-top: 20px;">{{text.fillQuestion}}</p>
+                        {{each fillTasks as task i}}
+                        <li>
+                            <div style="border-radius: 4px;border: 1px solid #ccc; background-color: #f5f5f5;padding: 9.5px;margin-bottom: 10px;">
+                                <p class="clearfix">{{i + 1}}.{{task.title}}({{text.thisQuestion}}{{task.score}} PT)<span class="pull-right glyphicon {{if task.user_score > 0}}answer-right{{else}}answer-wrong{{/if}}"></span></p>
+                                <span class="titlecontents" style="font-weight:bold;">{{ task.content }}</span>
+                                <!--<div>{{task.content}}</div>-->
+                                {{if task.url}}
+                                <div><a target="_blank" href="{{task.url}}">{{task.url}}</a></div>
+                                {{/if}}
+                                {{if task.file_url}}
+                                <div><a href="{{task.file_url.url}}">{{text.attachmentDownload}}</a></div>
+                                {{/if}}
+                                <div>{{text.standardAnswer}}:{{ if task.answer && task.answer.length > 0 }}{{ if task.answer =="A" }}√{{ else }}×{{ /if }}{{ else }}{{ text.dynamicFlag }}{{ /if }}</div>
+                                <div>{{text.userAnswer}}:<span class="{{if task.score == 0}}red{{else}}green{{/if}}" >{{ if task.user_answer[0] =="A" }}√{{ else }}×{{ /if }}</span></div>
+                            </div>
+                        </li>
+                        {{/each}}
+                    {{/if}}
+
+                    {{if radioTasks.length > 0}}
+                        <p style="font-size: 16px;">{{text.singleChoiceQuestion}}</p>
+                        {{each radioTasks as task i}}
+                        <li>
+                            <div style="border-radius: 4px;border: 1px solid #ccc; background-color: #f5f5f5;padding: 9.5px;margin-bottom: 10px;">
+                                <p class="clearfix">{{i + 1}}.{{task.title}}({{text.thisQuestion}}{{task.score}} PT)<span class="pull-right glyphicon {{if task.user_score > 0}}answer-right{{else}}answer-wrong{{/if}}"></span></p>
+                                <ol style='list-style-type:none; padding-left: 5px;'>
+                                    <span class="titlecontents" >{{#task.content}}</span>
+                                    {{each task.options as option}}
+                                    <li>
+                                        <label><input disabled type='radio' value='' style='margin-right: 10px;'{{if option[0] == task.user_answer}} checked='checked'{{/if}}>{{option[0]}}．{{option[1]}}</label>
+                                    </li>
+                                    {{/each}}
+                                </ol>
+                                {{if task.user_score == 0}}
+                                <div>{{text.standardAnswer}}:{{task.answer}}</div>
+                                {{/if}}
+                            </div>
+                        </li>
+                        {{/each}}
+                    {{/if}}
+
+                    {{if checkboxTasks.length > 0}}
+                        <p style="font-size: 16px;margin-top: 20px;">{{text.multipleChoiceQuestion}}</p>
+                        {{each checkboxTasks as task i}}
+                        <li>
+                            <div style="border-radius: 4px;border: 1px solid #ccc; background-color: #f5f5f5;padding: 9.5px;margin-bottom: 10px;">
+                                <p class="clearfix">{{i + 1}}.{{task.title}}({{text.thisQuestion}}{{task.score}} PT)<span class="pull-right glyphicon {{if task.user_score > 0}}answer-right{{else}}answer-wrong{{/if}}"></span></p>
+                                <ol style='list-style-type:none; padding-left: 5px;'>
+                                    <span class="titlecontents" style="font-weight:bold;" >{{ #task.content }}</span>
+                                    {{each task.options as option}}
+                                    <li>
+                                        <label for=''><input disabled type='checkbox' value='' style='margin-right: 10px;'{{if task.user_answer.indexOf(option[0]) != -1}} checked='checked'{{/if}}>{{option[0]}}．{{option[1]}}</label>
+                                    </li>
+                                    {{/each}}
+                                </ol>
+                                {{if task.user_score == 0}}
+                                <div>{{text.standardAnswer}}:{{task.answer}}</div>
+                                {{/if}}
+                            </div>
+                        </li>
+                        {{/each}}
+                    {{/if}}
+
+                    <p style="font-size: 14px; float: right;" disabled="inline" class="hide">{{ text.scoreAnswerText }}: {{ scoreAnswer }}</p>
+                    <p style="font-size: 14px;" disabled="inline" class="hide">{{text.writeup}}</p>
+                    <li class="hide">
+                        <div style="border-radius: 4px;border: 1px solid #ccc; background-color: #f5f5f5;padding: 9.5px;margin-bottom: 10px;">
+                            <div>{{text.writeup}} ({{text.score}}{{writeup_score}} pt)</div>
+                            <p>{{#writeup}}</p>
+                            <div class="clearfix">
+                                <div class="pull-right">
+                                    <input type="hidden" name="writeup_score" value="{{writeup_score}}">
+                                    {% endverbatim %}
+                                    <input type="text" name="point" placeholder="{% trans 'x_input_score' %}" style="border-radius: 4px; height: 34px;border: 1px solid #ddd;padding: 4px;">
+                                    {% verbatim %}
+                                    <span class="btn btn-success" id="givePointScore" onclick="CALLBACK.setScore(this)">{{text.givePoint}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p style="font-size: 14px; float: right;">提示：解题报告得分<=试卷总分-答题得分</p>
+                    </li>
+                </ol>
+            </form>
+        </div>
+    </div>
+</script>
+{% endverbatim %}
+    <script>
+        var listUrl = "{% url 'cms_event_exam:api:event-list' %}";
+        var taskListUrl = "{% url 'cms_event_exam:event_achievement' 0 %}";
+    </script>
+    <script>
+        var table = bsTableClass($('#table'));
+        var checkUserId;
+
+        $('#table').stickyBootstrapTable({
+            ajaxOptions: {
+                traditional: true
+            },
+            queryParams: function (params) {
+                params.event ={{ event.id }};
+                params.process = $("#process").val();
+                params.faculty = $("#faculty").val();
+                params.major = $("#major").val();
+                params.classes = $("#classes").val();
+                params.search = $("#search").val();
+                return params;
+            },
+            pageSize: 10
+        });
+        function name_show(value, row, index){
+            return row.obj_name ? codeUtil.htmlEncode(row.obj_name) : '-';
+        }
+
+        function operatorFormatter(value, row, index) {
+            btns = [
+                {
+                    type: 'button',
+                    class: 'btn-primary',
+                    icon: 'fa fa-star-half',
+                    text: "{% trans 'x_review_jiancha' %}",
+{#                    url: taskListUrl.replace('0', {{ event.id }}),#}
+                    click: 'scoreManage("' + value + '")'
+                }
+            ];
+            return bsTable.getOperatorHtml(btns);
+        }
+
+        function scoreManage(pk) {
+            var score_url = "{% url 'cms_event_exam:event_achievement' 0 %}".replace('0', {{ event.id }});
+            window.open(score_url + "?num=" + pk)
+        }
+
+        var CALLBACK = {
+            examModal: function (id) {
+                CALLBACK.getExamDetail(listUrl + "{{ event.id }}" + "/exam_result_detail/", id);
+                $('#exam-detail-Modal').modal('toggle');
+            },
+            getExamDetail: function (url, user_id) {
+                checkUserId = user_id;
+                http.get(url, {'user': user_id}, function (json) {
+                    var data = json.response_data;
+                    if (json.error_code == 0) {
+
+                        $.each(data.tasks, function (i, task) {
+                            if (task.is_choice_question) {
+                                var taskOptions = $.parseJSON(data.tasks[i].option);
+                                var options = []
+                                $.each(taskOptions, function (key, value) {
+                                    options.push([key, value]);
+                                });
+                                task.options = options;
+                            }
+                        });
+                        radioTasks = data.tasks.filter(function (task) {
+                            return task.is_choice_question && (task.multiple == ModelConstant.ChoiceTask.Type.SINGLE)
+                        });
+                        checkboxTasks = data.tasks.filter(function (task) {
+                            return task.is_choice_question && (task.multiple == ModelConstant.ChoiceTask.Type.MULTPILE)
+                        });
+                        fillTasks = data.tasks.filter(function (task) {
+                            return task.is_choice_question && (task.multiple == ModelConstant.ChoiceTask.Type.JUDGMENT)
+                        });
+                        no_writeup_score = data.no_writeup_score;
+                        full_score = data.all_score;
+                        var writeup_score = data.writeup_score;
+                        if (!writeup_score){
+                            writeup_score = 0
+                        }
+                        //答题得分
+                        var scoreAnswer = data.user_all_score - writeup_score;
+{#                        template.config("escape", false);#}
+                        var html = template("paper-result", {
+                            name: data.name,
+                            number: data.number,
+                            allScore: data.all_score,
+                            userAllScore: data.user_all_score,
+                            scoreAnswer: scoreAnswer,
+                            writeup: marked(data.writeup),
+                            writeup_score: writeup_score,
+                            radioTasks: radioTasks,
+                            checkboxTasks: checkboxTasks,
+                            fillTasks: fillTasks,
+                            text: {
+                                all: gettext("x_all_have"),
+                                question: gettext("x_task"),
+                                fullMark: gettext("x_full_score"),
+                                score: gettext("x_score"),
+                                thisQuestion: gettext("x_this_task"),
+                                attachmentDownload: gettext("x_download_annex"),
+                                standardAnswer: "{% trans 'x_correct_answer' %}",
+                                userAnswer: gettext("x_user_answer"),
+                                writeup: gettext("x_exam_wp"),
+                                singleChoiceQuestion: gettext("x_single_choice"),
+                                multipleChoiceQuestion: gettext("x_multiple_choice"),
+                                fillQuestion: gettext("x_judgment_problem"),
+                                givePoint: gettext("x_exam_wp_score"),
+                                dynamicFlag: gettext("x_dynamic"),
+                                scoreAnswerText:gettext("x_score_answer"),
+                                noticeText: gettext('')
+                            }
+                        });
+                        $('#paper-result-body').html(html);
+                        $(".titlecontents").css({"font-weight": "bold"});
+
+                        $('input[name=point]').keydown(function (e) {
+                            if (e.keyCode == 13){
+                                $('#givePointScore').click();
+                                e.preventDefault();
+
+
+                            }
+                        });
+                    }
+                })
+            },
+            setScore: function (obj, flag) {
+                var point = $(obj).siblings("input[name=point]").val();
+                if (isNaN(point)) {
+                    return;
+                }
+                point = Number(point);
+{#                if (point + Number(no_writeup_score) < 0) {#}
+{#                    alert("得分不得小于0");#}
+{#                    return;#}
+{#                }#}
+                if (point + Number(no_writeup_score) > Number(full_score)) {
+                    alert("{% trans 'x_score_not_gt_all_score' %}");
+                    return
+                }
+
+                http.post("{% url 'cms_x_note:api:note-set-score' %}", {
+                    "score": point,
+                    "user_id": checkUserId,
+                    "hash": "{{ event.hash }}"
+                }, function () {
+                    CALLBACK.getExamDetail(listUrl + "{{ event.id }}" + "/exam_result_detail/", checkUserId);
+                    $('#table').bootstrapTable('refresh');
+                });
+                $('#exam-detail-Modal').modal('toggle');
+
+
+            },
+        }
+        $("#output-button").click(function () {
+
+            window.location.href = "{% url 'cms_event_exam:output' pk %}";
+        });
+
+        //delect select options  changes
+        var major_param = $("#major");
+        var classes_param = $("#classes");
+
+        $(function () {
+            function refresh_major(parent_id) {
+                if (parent_id != '') {
+                    major_param.children("option").show();
+                    major_param.children("option:not([data-parent='" + parent_id + "'])").hide();
+                    major_param.children("option[value='']").show();
+                }else{
+                    major_param.children("option").show();
+
+                    major_param.children("option[value='']").show();
+                }
+            }
+            function refresh_class_by_parent(parent_id) {
+                if (parent_id != ''){
+                    classes_param.children("option").show();
+                    classes_param.children("option:not([data-parent='"+parent_id+"'])").hide();
+                    classes_param.children("option[value='']").show();
+                }else{
+                    refresh_class_by_grandparent($("#faculty").val())
+                   {% comment %} classes_param.children("option").show();
+                    classes_param.children("option[value='']").show();{% endcomment %}
+                }
+            }
+
+            function refresh_class_by_grandparent(grand_parent_id) {
+                if (grand_parent_id != '') {
+                    classes_param.children("option").show();
+                    classes_param.children("option:not([data-grandparent='" + grand_parent_id + "'])").hide();
+                    classes_param.children("option[value='']").show();
+                } else {
+                    classes_param.children("option").show();
+                    classes_param.children("option[value='']").show();
+                }
+            }
+
+            $("#faculty").change(function () {
+                refresh_major($(this).val());
+                major_param.val("");
+                major_param.children("option[value='']").attr("selected",true);
+                refresh_class_by_grandparent($(this).val());
+                classes_param.val("");
+                classes_param.children("option[value='']").attr("selected",true);
+                table.refresh();
+            });
+            $("#major").change(function () {
+                refresh_class_by_parent($(this).val());
+                classes_param.val("");
+                classes_param.children("option[value='']").attr("selected", true);
+                table.refresh();
+            });
+
+            $("#classes").change(function () {
+                table.refresh();
+            });
+            $("#process").change(function () {
+                table.refresh();
+            });
+
+            refresh_major($("#faculty").val());
+            refresh_class_by_parent($("#major").val())
+        })
+    </script>
+{% endblock %}

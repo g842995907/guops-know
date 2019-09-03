@@ -1,0 +1,913 @@
+{% extends './iframe_layout.html' %}
+{% load i18n %}
+{% load static %}
+{% load static_v %}
+
+{% block title %}
+    <a href="{% url 'cms_common_env:env_list' %}">{% trans "x_scene_management" %}</a> >
+    {% if mode == 0 %}
+        {% trans 'x_add_env' %}
+    {% else %}
+        {% trans 'x_edit_env' %}
+    {% endif %}
+{% endblock %}
+
+{% block other_css_js %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/dragula/dragula.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'common_env/lib/vis/vis-network.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static_v 'common_env/css/edit_network.css' %}"/>
+
+    <script type="text/javascript" src="{% static 'lib/dragula/dragula.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'common_env/lib/vis/vis.min.js' %}"></script>
+    <script type="text/javascript" src="{% static_v 'common_env/widgets/select_env_attacker/js/select_env_attacker.js' %}"></script>
+
+    <style>
+        .attacker-list{
+            margin-top: 10px;
+        }
+        .attacker-list .attacker-item:last-of-type{
+            border-bottom: 1px dashed #ddd;
+        }
+        .attacker-item{
+            border-top: 1px dashed #ddd;
+            padding: 5px 0px;
+        }
+        .attacker-item .name{
+            width: 200px;
+            display: inline-block;
+        }
+        .attacker-item .edit-attacker{
+            cursor: pointer;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        .attacker-item .remove-attacker{
+            color: #ff0000;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+{% endblock %}
+
+{% block container %}
+    <div class="ibox float-e-margins">
+        <form id="validateForm"
+              enctype="multipart/form-data"
+                {% if mode == 0 %}
+              action="{% url 'cms_common_env:api:env-list' %}"
+              method="post"
+                {% else %}
+              action="{% url 'cms_common_env:api:env-detail' env.id %}"
+              method="patch"
+                {% endif %}
+              class="form-horizontal">
+            {% csrf_token %}
+            <div class="ibox-content">
+                <div class="hr-line-dashed"></div>
+                {% verbatim %}
+                <div id="scene" v-cloak>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">{{ 'x_name' | trans }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" name="name" class="form-control m-b" v-model="scene.name"
+                                   :placeholder="'x_set_name_replace' | trans"/>
+                        </div>
+                        <div style="padding-top:5px;font-size:20px">
+                            <span class="text-danger">*</span>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">{{ 'x_type' | trans }}</label>
+                        <div class="col-sm-2">
+                            <select class="form-control m-b" name="type" id="type" data-form-fixed="1" v-model="type">
+                                <option :value="option.value" v-for="option in typeOptions">{{ option.text }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed hidden"></div>
+                    <div class="form-group hidden">
+                        <label class="col-sm-1 control-label">{{ 'x_introduction' | trans }}</label>
+                        <div class="col-sm-6">
+                            <textarea class="form-control" v-model="scene.desc"></textarea>
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed hidden"></div>
+                    <div class="form-group hidden">
+                        <label class="col-sm-1 control-label">{{ 'x_scene_vuln' | trans }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control m-b" v-model="scene.vulns" :placeholder="'x_split_|' | trans" />
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed hidden"></div>
+                    <div class="form-group hidden">
+                        <label class="col-sm-1 control-label">{{ 'x_scene_tool' | trans }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control m-b" v-model="scene.tools" :placeholder="'x_split_|' | trans" />
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed hidden"></div>
+                    <div class="form-group hidden">
+                        <label class="col-sm-1 control-label">{{ 'x_label' | trans }}</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control m-b" v-model="scene.tag" :placeholder="'x_split_|' | trans" />
+                        </div>
+                    </div>
+                </div>
+                {% endverbatim %}
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">{% trans 'x_env_huizhi' %}</label>
+                    <div class="col-sm-10">
+                        {% verbatim %}
+                        <div class="edit-topology clearfix">
+                            <div class="select-device pull-left" id="selectDevice" v-cloak>
+                                <div class="device-filter search-device">
+                                    <input id="device-search" :placeholder="'x_std_search' | trans" @keydown="enterSearch" v-model="resource.search" />
+                                    <span class="glyphicon glyphicon-search" @click="refreshDevices"></span>
+                                </div>
+                                <select class="device-filter" id="deviceRole" @change="refreshDevices" v-model="resource.role">
+                                    <option value="">{{ 'x_all_node_role' | trans }}</option>
+                                    <option :value="option.value" v-for="option in roleOptions">{{ option.text }}</option>
+                                </select>
+                                <select class="device-filter" id="deviceOsType" @change="refreshDevices" v-model="resource.system_type">
+                                    <option value="all">{{ 'x_all_system' | trans }}</option>
+                                    <option value="linux">linux</option>
+                                    <option value="windows">windows</option>
+                                    <option value="other">{{ 'x_other' | trans }}</option>
+                                </select>
+                                <div class="device-list clearfix">
+                                    <div class="device-item pull-left" :data-id="device.id" :title="device.name" v-for="device in resource.devices">
+                                        <img :src="device.logo || resource.noImg" />
+                                        <marquee direction="left" scrolldelay="200" class="label" v-if="getByteLen(device.name) > 9">{{ device.name }}</marquee>
+                                        <span class="label" v-else>{{ device.name }}</span>
+                                    </div>
+                                </div>
+                                <div class="no-records" v-if="resource.devices.length == 0">{{ 'x_no_std_device' | trans }}</div>
+                                <div class="device-page clearfix">
+                                    <span class="btn btn-sm btn-primary pull-left" @click="pageDevices(-1)" v-if="showDevicePrevBtn">{{ 'x_pre_page' | trans }}</span>
+                                    <span class="btn btn-sm btn-primary pull-right" @click="pageDevices(1)" v-if="showDeviceNextBtn">{{ 'x_next_page' | trans }}</span>
+                                </div>
+                            </div>
+                            <div class="env-topology pull-left" id="envTopology">
+                                <div id="envTopologyPanel" oncontextmenu="javascript: return false;"></div>
+                                <div id="envTopologyHelper" v-cloak>
+                                    <input type="hidden" id="vis_config" name="vis_config">
+                                    <img :src="centerImg" class="center-btn" @click="centerTopology">
+                                    <ul class="list-group rightMenu"
+                                        oncontextmenu="javascript: return false;"
+                                        :style="'left: ' + rightMenuOption.left + 'px; top: ' + rightMenuOption.top + 'px;'"
+                                        v-if="rightMenuOption.show">
+                                        <a class="list-group-item" @click="startEditNode" v-if="canEditNode">{{ 'x_edit_node' | trans }}</a>
+                                        <a class="list-group-item" @click="startAddEdge(rightMenuOption.componentId)" v-if="canEdgeNode">{{ 'x_add_line' | trans }}</a>
+                                        <a class="list-group-item" @click="removeComponent" v-if="canRemoveComponent">{{ 'x_delete' | trans }}</a>
+                                    </ul>
+                                    <div class="edit-panel" id="nodeEditPanel" v-if="currentNode.id != null">
+                                        <div class="edit-network" v-if="currentNode.category == 'network'">
+                                            <h3 class="text-center">{{ 'x_edit_node' | trans }}</h3>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_id' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" v-model="currentNode.network.id" readonly />
+                                                </div>
+                                                <label class="col-sm-2 control-label">{{ 'x_node_type' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="'x_network' | trans" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_name' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.network.name" :placeholder="'x_input_required' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="!isInternet(currentNode.network.id)">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_cidr' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.network.cidr" :placeholder="'x_input_optional' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="!isInternet(currentNode.network.id)">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_gateway' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.network.gateway" :placeholder="'x_input_optional' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="!isInternet(currentNode.network.id)">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_dns' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <div class="tag-container dnses">
+                                                        <div class="tag-item dns" v-for="d in currentNode.network.dns">
+                                                            <span>{{ d }}</span>
+                                                            <span class="glyphicon glyphicon-remove" @click="removeDns(d)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tag-adder add-dns form-inline">
+                                                        <input type="text" class="form-control" :placeholder="'x_input_optional' | trans"
+                                                               v-model="currentNode.serverEditor.dns" />
+                                                        <span class="btn btn-warning tag-add-btn"
+                                                              :title="'x_add_dns' | trans"
+                                                              @click="addDns()">+</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="!isInternet(currentNode.network.id)">
+                                                <label class="col-sm-2 control-label">{{ 'x_is_dhcp_on' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <div class="checkbox checkbox-success">
+                                                        <input type="checkbox" id="check-dhcp" v-model="currentNode.network.dhcp" />
+                                                        <label for="check-dhcp"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="edit-router" v-if="currentNode.category == 'router'">
+                                            <h3 class="text-center">{{ 'x_edit_node' | trans }}</h3>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_id' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentNode.router.id" readonly />
+                                                </div>
+                                                <label class="col-sm-2 control-label">{{ 'x_node_type' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="'x_router' | trans" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_name' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.router.name" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_static_routing' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <div class="tag-container static-routings">
+                                                        <div class="tag-item static-routing" v-for="routing in currentNode.router.staticRouting">
+                                                            <span>{{ routing.destination }}</span> ->
+                                                            <span>{{ routing.gateway }}</span>
+                                                            <span class="glyphicon glyphicon-remove" @click="removeStaticRouting('router', routing)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tag-adder add-static-routing form-inline">
+                                                        <input type="text" class="form-control" :placeholder="'x_routing_destination' | trans"
+                                                               v-model="currentNode.serverEditor.staticRouting.destination" style="width: 240px;" />
+                                                        <input type="text" class="form-control" :placeholder="'x_routing_next_jump' | trans"
+                                                               v-model="currentNode.serverEditor.staticRouting.gateway" style="width: 180px;" />
+                                                        <span class="btn btn-warning tag-add-btn"
+                                                              :title="'x_add_rule' | trans"
+                                                              @click="addStaticRouting('router')">+</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_can_user_configure' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <div class="checkbox checkbox-success">
+                                                        <input type="checkbox" id="router-check-canUserConfigure" v-model="currentNode.router.canUserConfigure" />
+                                                        <label for="router-check-canUserConfigure"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="edit-firewall" v-if="currentNode.category == 'firewall'">
+                                            <h3 class="text-center">{{ 'x_edit_node' | trans }}</h3>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_id' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentNode.firewall.id" readonly />
+                                                </div>
+                                                <label class="col-sm-2 control-label">{{ 'x_node_type' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="'x_firewall' | trans" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_name' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.firewall.name" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_static_routing' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <div class="tag-container static-routings">
+                                                        <div class="tag-item static-routing" v-for="routing in currentNode.firewall.staticRouting">
+                                                            <span>{{ routing.destination }}</span> ->
+                                                            <span>{{ routing.gateway }}</span>
+                                                            <span class="glyphicon glyphicon-remove" @click="removeStaticRouting('firewall', routing)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tag-adder add-static-routing form-inline">
+                                                        <input type="text" class="form-control" :placeholder="'x_routing_destination' | trans"
+                                                               v-model="currentNode.serverEditor.staticRouting.destination" style="width: 240px;" />
+                                                        <input type="text" class="form-control" :placeholder="'x_routing_next_jump' | trans"
+                                                               v-model="currentNode.serverEditor.staticRouting.gateway" style="width: 180px;" />
+                                                        <span class="btn btn-warning tag-add-btn"
+                                                              :title="'x_add_rule' | trans"
+                                                              @click="addStaticRouting('firewall')">+</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_rule' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <div class="tag-container firewall-rules">
+                                                        <div class="tag-item firewall-rule" v-for="rule in currentNode.firewall.rule">
+                                                            <span>{{ rule.protocol }}</span>
+                                                            <span>/{{ rule.action }}</span>
+                                                            <span v-if="rule.direction">/{{ rule.direction }}</span>
+                                                            <span>({{ rule.sourceIP }}</span>
+                                                            <span>:{{ rule.sourcePort }}</span> <->
+                                                            <span>{{ rule.destIP }}</span>
+                                                            <span>:{{ rule.destPort }})</span>
+                                                            <span class="glyphicon glyphicon-remove" @click="removeFirewallRule(rule)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tag-adder add-firewall-rule form-inline">
+                                                        <select class="form-control" :title="'x_protocol' | trans"
+                                                                v-model="currentNode.serverEditor.firewallRule.protocol">
+                                                            <option :value="protocol.value" v-for="protocol in firewallRuleOption.protocols">{{ protocol.text }}</option>
+                                                        </select>
+                                                        <select class="form-control" :title="'x_action' | trans"
+                                                                v-model="currentNode.serverEditor.firewallRule.action">
+                                                            <option :value="action.value" v-for="action in firewallRuleOption.actions">{{ action.text }}</option>
+                                                        </select>
+                                                        <select class="form-control" :title="'x_direction' | trans"
+                                                                v-model="currentNode.serverEditor.firewallRule.direction">
+                                                            <option :value="direction.value" v-for="direction in firewallRuleOption.directions">{{ direction.text }}</option>
+                                                        </select>
+                                                        <input type="text" class="form-control" :placeholder="'x_rule_source_ip' | trans"
+                                                               v-model="currentNode.serverEditor.firewallRule.sourceIP" style="width: 240px;" />
+                                                        <input type="text" class="form-control" :placeholder="'x_rule_source_port' | trans"
+                                                               v-model="currentNode.serverEditor.firewallRule.sourcePort" style="width: 230px;" />
+                                                        <input type="text" class="form-control" :placeholder="'x_rule_dest_ip' | trans"
+                                                               v-model="currentNode.serverEditor.firewallRule.destIP" style="width: 240px;" />
+                                                        <input type="text" class="form-control" :placeholder="'x_rule_dest_port' | trans"
+                                                               v-model="currentNode.serverEditor.firewallRule.destPort" style="width: 230px;" />
+                                                        <span class="btn btn-warning tag-add-btn"
+                                                              :title="'x_add_rule' | trans"
+                                                              @click="addFirewallRule">+</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_can_user_configure' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <div class="checkbox checkbox-success">
+                                                        <input type="checkbox" id="firewall-check-canUserConfigure" v-model="currentNode.firewall.canUserConfigure" />
+                                                        <label for="firewall-check-canUserConfigure"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="edit-server" v-if="currentNode.category == 'server'">
+                                            <h3 class="text-center">{{ 'x_edit_node' | trans }}</h3>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_id' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentNode.server.id" readonly />
+                                                </div>
+                                                <label class="col-sm-2 control-label">{{ 'x_node_type' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="'x_server' | trans" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group server-role">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_role' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" v-model="currentNode.server.role">
+                                                        <option value="operator">{{ 'x_operator' | trans }}</option>
+                                                        <option value="target">{{ 'x_target' | trans }}</option>
+                                                        <option value="wingman">{{ 'x_wingman' | trans }}</option>
+                                                        <option value="gateway">{{ 'x_gateway' | trans }}</option>
+                                                        <option value="executer" v-if="showRoleExecuter()">{{ 'x_executer' | trans }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_node_name' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.server.name" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="currentNode.server.role == 'gateway'">
+                                                <label class="col-sm-2 control-label">{{ 'x_wan_number' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentNode.server.wan_number" readonly />
+                                                </div>
+                                                <label class="col-sm-2 control-label">{{ 'x_lan_number' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentNode.server.lan_number" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_img_name' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="currentNode.server.image" readonly />
+                                                </div>
+                                                <label class="col-sm-2 control-label">{{ 'x_sys_type' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <input type="text" class="form-control" :value="imageTypeDisp(currentNode.server)" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_img_size' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" v-model="currentNode.server.flavor">
+                                                        <option :value="option.value" v-for="option in flavorOptions">{{ option.text }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_is_external' | trans }}</label>
+                                                <div class="col-sm-4">
+                                                    <div class="checkbox checkbox-success">
+                                                        <input type="checkbox" id="check-external" v-model="currentNode.server.external" />
+                                                        <label for="check-external"></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_access_mode' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <div class="tag-container access-modes">
+                                                        <div class="tag-item access-mode" v-for="mode in currentNode.server.accessMode">
+                                                            <span v-if="mode.protocol == 'rdp' && mode.mode">[{{ mode.mode }}]</span>
+                                                            <span>{{ mode.protocol }}</span>
+                                                            <span>{{ mode.port }}</span>
+                                                            <span v-if="mode.username">{{ mode.username }}</span>
+                                                            <span v-if="mode.username">{{ mode.password }}</span>
+                                                            <span class="glyphicon glyphicon-remove" @click="removeAccessMode(mode)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tag-adder add-access-mode form-inline">
+                                                        <input type="text" class="form-control" :placeholder="'x_protocol' | trans" list="accessModeList"
+                                                               v-model="currentNode.serverEditor.accessMode.protocol">
+                                                        <datalist id="accessModeList">
+                                                            <option :value="option.value" v-for="option in accessModeOptions">
+                                                        </datalist>
+                                                        <input type="number" class="form-control" :placeholder="'x_port' | trans"
+                                                               v-model.number="currentNode.serverEditor.accessMode.port"
+                                                               v-if="currentNode.serverEditor.accessMode.protocol != 'console'">
+                                                        <select class="form-control" :title="'x_authentication_mode' | trans"
+                                                                v-model="currentNode.serverEditor.accessMode.mode"
+                                                                v-if="currentNode.serverEditor.accessMode.protocol == 'rdp'">
+                                                            <option value="rdp">rdp</option>
+                                                            <option value="nla">nla</option>
+                                                        </select>
+                                                        <input type="text" class="form-control" :placeholder="'x_user_name' | trans"
+                                                               v-model="currentNode.serverEditor.accessMode.username">
+                                                        <input type="text" class="form-control" :placeholder="'x_password' | trans"
+                                                               v-model="currentNode.serverEditor.accessMode.password">
+                                                        <input type="text" class="form-control" :placeholder="'x_desc' | trans"
+                                                               v-model="currentNode.serverEditor.accessMode.desc">
+                                                        <span class="btn btn-warning tag-add-btn"
+                                                              :title="'x_add_access_mode' | trans"
+                                                              @click="addAccessMode">+</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label">{{ 'x_installers' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <div class="tag-container installers">
+                                                        <div class="tag-item installer" v-for="installer in currentNode.server.installers">
+                                                            <span>{{ installer.name }}</span>
+                                                            <span> {{ installer.version }}</span>
+                                                            <span class="glyphicon glyphicon-remove" @click="removeInstaller(installer)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tag-adder add-installer form-inline">
+                                                        <input type="text" class="form-control"
+                                                               list="installerList"
+                                                               :placeholder="'x_name' | trans"
+                                                               @focus="getInstallers"
+                                                               v-model="currentNode.serverEditor.installer.name">
+                                                        <datalist id="installerList">
+                                                            <option :value="installer.name" v-for="installer in installerOptions">
+                                                        </datalist>
+                                                        <select class="form-control"
+                                                                :class="{'hidden': installerVersions.length == 0}"
+                                                                :title="'x_version' | trans"
+                                                                v-model="currentNode.serverEditor.installer.version">
+                                                            <option :value="version" v-for="version in installerVersions">{{ version }}</option>
+                                                        </select>
+                                                        <span class="btn btn-warning tag-add-btn"
+                                                              :title="'x_add_installer' | trans"
+                                                              @click="addInstaller">+</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="showInitScript()">
+                                                <label class="col-sm-2 control-label">{{ 'x_init_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.server.initScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="showInstallScript()">
+                                                <label class="col-sm-2 control-label">{{ 'x_install_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.server.installScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="showDeployScript()">
+                                                <label class="col-sm-2 control-label">{{ 'x_deploy_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.server.deployScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="showCleanScript()">
+                                                <label class="col-sm-2 control-label">{{ 'x_clear_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.server.cleanScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="showPushFlagScript()">
+                                                <label class="col-sm-2 control-label">{{ 'x_push_flag_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.server.pushFlagScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="showCheckScript()">
+                                                <label class="col-sm-2 control-label">{{ 'x_check_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.server.checkScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="showAttackScript()">
+                                                <label class="col-sm-2 control-label">{{ 'x_attack_cmd' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" v-model="currentNode.server.attackScript"
+                                                           :placeholder="'x_tip_for_cmd' | trans" />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-sm-2 control-label" v-if="showChecker()">{{ 'x_checker' | trans }}</label>
+                                                <div class="col-sm-4" v-if="showChecker()">
+                                                    <select class="form-control" v-model="currentNode.server.checker">
+                                                        <option value="">-</option>
+                                                        <option :value="executer.id" v-for="executer in executers">{{ executer.name }}</option>
+                                                    </select>
+                                                </div>
+                                                <label class="col-sm-2 control-label" v-if="showAttacker()">{{ 'x_attacker' | trans }}</label>
+                                                <div class="col-sm-4" v-if="showAttacker()">
+                                                    <select class="form-control" v-model="currentNode.server.attacker">
+                                                        <option value="">-</option>
+                                                        <option :value="executer.id" v-for="executer in executers">{{ executer.name }}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" v-if="currentNode.serverEditor.networks.length > 0">
+                                                <label class="col-sm-2 control-label">{{ 'x_net_config' | trans }}</label>
+                                                <div class="col-sm-10">
+                                                    <div class="tag-container nets">
+                                                        <div class="tag-item net" v-for="config in currentNode.server.netConfigs">
+                                                            <span>{{ config.id }}</span>
+                                                            <span>{{ config.ip }}</span>
+                                                            <span class="glyphicon glyphicon-remove" @click="removeNetConfig(config)"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tag-adder add-net-config form-inline">
+                                                        <select class="form-control" v-model="currentNode.serverEditor.netConfig.id">
+                                                            <option :value="network.id" v-for="network in currentNode.serverEditor.networks">{{ network.name }}</option>
+                                                        </select>
+                                                        <input type="text" class="form-control" :placeholder="netConfigIpPlaceholder"
+                                                               v-model="currentNode.serverEditor.netConfig.ip"
+                                                               :disabled="!canAllocateNetConfigIp">
+                                                        <input type="text" class="form-control hidden" :placeholder="'x_netmask' | trans"
+                                                               v-model="currentNode.serverEditor.netConfig.netmask">
+                                                        <input type="text" class="form-control hidden" :placeholder="'x_gateway' | trans"
+                                                               v-model="currentNode.serverEditor.netConfig.gateway">
+                                                        <input type="number" class="form-control" :placeholder="'x_egress' | trans"
+                                                               v-model.number="currentNode.serverEditor.netConfig.egress">
+                                                        <input type="number" class="form-control" :placeholder="'x_ingress' | trans"
+                                                               v-model.number="currentNode.serverEditor.netConfig.ingress">
+                                                        <span class="btn btn-warning tag-add-btn" :title="'x_add_net_config' | trans"
+                                                              @click="addNetConfig">+</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12 text-center">
+                                                <span class="btn btn-default" @click="cancelEdit">{{ 'x_cancel' | trans }}</span>
+                                                <span class="btn btn-primary" @click="saveNodeData">{{ 'x_save' | trans }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="checker-panel" v-if="showCheckerPanel()" oncontextmenu="javascript: return false;">
+                                        <div class="checker-item" v-if="adChecker">
+                                            <img :src="adChecker.image"
+                                                 :alt="adChecker.label"
+                                                 :title="adChecker.label"
+                                                 @dblclick="editNodeMode(adChecker.id)"
+                                                 @contextmenu="checkerMenu($event, adChecker.id)"/>
+                                            <div>{{ 'x_checker' | trans }}</div>
+                                        </div>
+                                        <div class="no-checker" v-else>{{ 'x_no_checker' | trans }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endverbatim %}
+                    </div>
+
+                    {% verbatim %}
+                    <div class="col-sm-10 col-sm-offset-1 text-right"
+                         id="serverNumberLimit"
+                         v-if="show()"
+                         style="margin-top: 5px;color: #f00;">
+                        {{ serverNumberLimitText }}
+                    </div>
+                    {% endverbatim %}
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-sm-1 control-label">{% trans 'x_resource_file' %}</label>
+                    <div class="col-sm-6">
+                        <input type="file" class="hidden" id="env_file" name="env_file" />
+                        <span class="btn btn-primary file-upload-btn">{% if env.has_file %}{% trans 'x_reupload' %}{% else %}{% trans 'x_upload' %}{% endif %}</span>
+                        <span class="hint"></span>
+                        {% if env.env_file %}
+                            <a class="btn btn-success m-l" href="{{ env.env_file }}" download="{{ env.name }}.zip">{% trans 'x_download_file' %}</a>
+                            <span class="btn btn-danger m-l" id="deleteFile">{% trans 'x_del_file' %}</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-10 col-sm-offset-1" style="color: #f00;">
+                        {% trans 'x_resource_zip' %}，<a href="/help/" target="_blank">[{% trans 'x_click_doc' %}]</a>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed hidden"></div>
+                <div class="form-group hidden">
+                    <label class="col-sm-1 control-label">攻击事件</label>
+                    <div class="col-sm-6">
+                        <input type="hidden" id="attackerList" value="{{ dumped_attacker_list }}">
+                        <input type="hidden" id="attackers" name="attackers" value="{{ env.attackers }}">
+                        {% verbatim %}
+                        <div id="attackerVue">
+                            <span class="btn btn-primary" @click="addAttacker()">添加攻击事件</span>
+                            <div class="checkbox checkbox-success text-center hidden">
+                                <input type="checkbox" id="check-auto-attack" name="auto_attack" />
+                                <label for="check-auto-attack">场景初始化时自动启动攻击</label>
+                            </div>
+                            <div class="attacker-list">
+                                <div class="attacker-item clearfix" v-for="attacker in attackers">
+                                    <span class="name">{{ attacker.name }}</span>
+                                    <span class="pull-right">
+                                        <a class="fa fa-edit edit-attacker" target="_blank" :href="attacker | editUrl"></a>
+                                        <span class="fa fa-remove remove-attacker" @click="removeAttacker(attacker)"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endverbatim %}
+                    </div>
+                </div>
+
+                {% if DEBUG %}
+                <div class="hr-line-dashed hidden"></div>
+                <div class="form-group hidden">
+                    <label class="col-sm-1 control-label">{% trans 'x_setting' %}</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" id="json_config" name="json_config" placeholder="{% trans 'x_manual_set' %}"></textarea>
+                    </div>
+                </div>
+                <script>
+                (function () {
+                    var jsonConfigStr = '{{ env.json_config }}'; //去除safe，防止js注入
+                    var minHeight = 100;
+                    if (jsonConfigStr) {
+                        var formatJsonConfig = JSON.stringify(JSON.parse(codeUtil.htmlDecode(jsonConfigStr)), null, 4);
+                        $('#json_config').val(formatJsonConfig);
+                        var lineHeight = Number($('#json_config').css('line-height').replace('px', ''));
+                        var paddingHeight = Number($('#json_config').css('padding-top').replace('px', '')) + Number($('#json_config').css('padding-bottom').replace('px', ''));
+                        var lineCount = formatJsonConfig.split('\n').length;
+                        minHeight = lineHeight * lineCount + paddingHeight;
+                    }
+                    $('#json_config').css('min-height', minHeight + 'px');
+                }());
+                </script>
+                {% endif %}
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group upload-progress" style="display: none;">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-6">
+                        <div class="progress">
+                          <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                            <span class="percent"></span>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-8 col-sm-offset-1">
+                        <div class="alert alert-danger server-error" id="server-error">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-1">
+                        <a class="btn btn-white" href="{% url 'cms_common_env:env_list' %}">{% trans 'x_cancel' %}</a>
+                        <button class="btn btn-primary" type="submit">{% trans 'x_save' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 选择攻击事件 -->
+    <div class='modal fade' id='selectEnvAttacker' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+         aria-hidden='true'>
+        <div class='modal-dialog modal-lg' style='top: 200px;'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'><span
+                            aria-hidden='true'>&times;</span><span
+                            class='sr-only'>Close</span></button>
+                    <h4 class='modal-title' id='myModalLabel'>{% trans 'x_select_env_attacker' %}</h4>
+                </div>
+                <div class='modal-body'>
+                    <div data-widget-id='select-env-attacker' data-instance-id='t1'></div>
+                </div>
+                <div class='clearfix modal-footer'>
+                    <span class="btn btn-success" onclick="selectEnvAttacker();">{% trans 'x_confirm' %}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+    {{ block.super }}
+    <script type="text/javascript">
+    var PAGE_MODE = {{ mode }};
+    var DEBUG = {% if DEBUG %}true{% else %}false{% endif %};
+    var serverNumberLimit = {{ server_number_limit }};
+    var visConfigStr = '{% if env.vis_config %}{{ env.vis_config }}{% endif %}';
+    var visConfig = visConfigStr ? JSON.parse(codeUtil.htmlDecode(visConfigStr)) : null;
+    var sceneType = {% if env %}{{ env.type }}{% else %}ModelConstant.Env.Type.BASE.value{% endif %};
+    </script>
+    <script type="text/javascript" src="{% static_v 'common_env/js/edit_network.js' %}"></script>
+    <script type='text/javascript'>
+        var listUrl = "{% url 'cms_common_env:env_list' %}";
+
+
+        $('.file-upload-btn').click(function () {
+            $(this).prev().click();
+        });
+        $('.file-upload-btn').siblings('[type=file]').change(function () {
+            $(this).siblings('.hint').text(this.files[0].name);
+        });
+
+        {% if env.env_file %}
+        $('#deleteFile').click(function () {
+            ajaxDialog.buttonClick(http.delete, "{% url 'cms_common_env:api:env-delete-file' env.id %}", {}, function(res){
+                window.location.reload();
+            });
+        });
+        {% endif %}
+
+        $(function () {
+            $('#validateForm').mvalidate({
+                rules: {
+                    name:{
+                        required: true
+                    }
+                },
+                messages: {
+                    name: {
+                        required: gettext("x_input_name")
+                    }
+                }
+            });
+        });
+
+        $('#validateForm').ajaxFormProgressDialog(function () {
+            setTimeout(function () {
+                window.location.href = listUrl;
+            }, ajaxDialog.defaultDelayTime);
+        }, null, {
+            beforeHandle: function () {
+                editorVue.refreshVisConfig();
+                attackerVue.serializeAttackers();
+            },
+            beforeSerialize: function ($form) {
+                var hasFile = Boolean($('#env_file').val());
+                if (hasFile) {
+                    return true;
+                }
+                var scene = editorVue.visConfig.scene;
+                var nodes = editorVue.visConfig.nodes;
+
+                if (!scene.name) {
+{#                    popUtil.warningHint(gettext('请填写场景名称'));#}
+{#                    return false;#}
+                }
+
+                var serverCount = 0;
+                $.each(nodes, function (i, node) {
+                    if (node.category == 'server') {
+                        serverCount = serverCount + 1;
+                    }
+                });
+                if (serverCount == 0) {
+{#                    popUtil.warningHint(gettext('请至少添加一个服务器'));#}
+{#                    return false;#}
+                }
+
+                return true;
+            }
+        }, "env_file");
+
+        
+        var attackerVue = new Vue({
+            el: '#attackerVue',
+            data: {
+                attackers: [],
+                listUrl: "{% url 'cms_common_env:env_attacker_list' %}",
+            },
+            filters: {
+                editUrl: function (attacker) {
+                    return attackerVue.listUrl + attacker.id;
+                }
+            },
+            methods: {
+                addAttacker: function(){
+                    showSelectEnvAttacker();
+                },
+                removeAttacker: function (thisAttacker) {
+                    var index = null;
+                    $.each(this.attackers, function (i, attacker) {
+                        if (attacker.id == thisAttacker.id) {
+                            index = i;
+                            return false;
+                        }
+                    });
+                    if (index != null) {
+                        this.attackers.splice(index, 1);
+                    }
+                },
+                addAttackerArray: function (attackers) {
+                    var rawIds = [];
+                    $.each(this.attackers, function (i, attacker) {
+                        rawIds.push(attacker.id);
+                    });
+                    $.each(attackers, function (i, attacker) {
+                        if (!arrayUtil.in(attacker.id, rawIds)) {
+                            attackerVue.attackers.push(attacker)
+                        }
+                    });
+                },
+                serializeAttackers: function () {
+                    var attackers = [];
+                    $.each(this.attackers, function (i, attacker) {
+                        attackers.push(attacker.id);
+                    });
+                    $('#attackers').val(JSON.stringify(attackers));
+                }
+            },
+            mounted: function () {
+                var loadedAttackers = $('#attackerList').val();
+                if (loadedAttackers) {
+                    loadedAttackers = JSON.parse(loadedAttackers);
+                    this.attackers = loadedAttackers || [];
+                }
+            }
+        });
+        // 选择攻击事件
+        var selectEnvAttackerWidgetBindFlag = false;
+
+        function showSelectEnvAttacker() {
+            $SELECT_ENV_ATTACKER(function () {
+                if (!selectEnvAttackerWidgetBindFlag) {
+                    $('[data-widget-id=select-env-attacker]').bindEnvAttackerSelectWidget();
+                    selectEnvAttackerWidgetBindFlag = true;
+                }
+                $('#selectEnvAttacker').modal();
+            });
+        }
+
+        function selectEnvAttacker() {
+            var table = envAttackerSelectWidgetInstance.t1.table;
+            var ids = table.getCheckedValues();
+
+            var attackers = [];
+            $.each(ids, function (i, id) {
+                attackers.push(table.getData(id));
+            });
+            attackerVue.addAttackerArray(attackers);
+
+            $('#selectEnvAttacker').modal('hide');
+        }
+
+    </script>
+{% endblock %}

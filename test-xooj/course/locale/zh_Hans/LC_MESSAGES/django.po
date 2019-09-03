@@ -1,0 +1,662 @@
+msgid "x_all_sub_direction"
+msgstr "全部子方向"
+
+msgid "x_first_type_management"
+msgstr "一级类型管理"
+
+msgid "x_second_type_management"
+msgstr "二级类型管理"
+
+msgid "x_sub_direction"
+msgstr "子方向"
+
+msgid "x_num_hour"
+msgstr "课时数"
+
+msgid "x_study_num"
+msgstr "学习人数"
+
+msgid "x_submit_report_num"
+msgstr "提交报告人数"
+
+msgid "x_guidance"
+msgstr "指导"
+
+msgid "x_class_management"
+msgstr "课时管理"
+
+msgid "x_expand"
+msgstr "展开"
+
+msgid "x_collapse"
+msgstr "收起"
+
+msgid "x_infiltration"
+msgstr "渗透解题"
+
+msgid "x_theory_exam"
+msgstr "理论考试"
+
+msgid "x_new_course"
+msgstr "新建课程"
+
+msgid "x_sign_users"
+msgstr "签到人数"
+
+msgid "x_complete_users"
+msgstr "完成人数"
+
+msgid "x_edit_course"
+msgstr "编辑课程"
+
+msgid "x_choose_direction"
+msgstr "选择方向"
+
+msgid "x_course_difficulty"
+msgstr "课程难度"
+
+msgid "x_course_logo"
+msgstr "课程logo"
+
+msgid "x_belong_type"
+msgstr "所属类型"
+
+msgid "x_selection_type"
+msgstr "选择类型"
+
+msgid "x_heoretical_lesson"
+msgstr "理论课"
+
+msgid "x_not_configured"
+msgstr "未配置"
+
+msgid "x_elective"
+msgstr "选修"
+
+msgid "x_compulsory"
+msgstr "必修"
+
+msgid "x_study_type"
+msgstr "学习类型"
+
+msgid "x_course_outline"
+msgstr "课程大纲"
+
+msgid "x_no_course_outline"
+msgstr "暂无课程大纲"
+
+msgid "x_course_handouts"
+msgstr "课程讲义"
+
+msgid "x_re-upload_makrdown_handouts"
+msgstr "提示：已上传markdown格式讲义，如需修改请重新上传！"
+
+msgid "x_learning_time"
+msgstr "学习时长"
+
+msgid "x_choose_duration"
+msgstr "选择时长"
+
+msgid "x_minute"
+msgstr "分钟"
+
+msgid "x_required_lab_environment"
+msgstr "实验场景：该字段必填"
+
+msgid "x_guidance_manual"
+msgstr "指导手册"
+
+msgid "x_class_sorting"
+msgstr "课时排序"
+
+msgid "x_sorting"
+msgstr "编排"
+
+msgid "x_belong_course"
+msgstr "课程"
+
+msgid "x_test_experimental_environment"
+msgstr "测试实验场景"
+
+msgid "x_directional_type"
+msgstr "方向类型"
+
+msgid "x_pdf_MK_zip"
+msgstr "支持pdf文件以及markdown压缩成的zip包"
+
+msgid "x_new_courseware"
+msgstr "新建课件"
+
+msgid "x_edit_courseware"
+msgstr "编辑课件"
+
+msgid "x_handouts"
+msgstr "讲义"
+
+msgid "x_preview_PDF"
+msgstr "预览PDF"
+
+msgid "x_delete_PDF"
+msgstr "删除PDF"
+
+msgid "x_video"
+msgstr "视频"
+
+msgid "x_preview_video"
+msgstr "预览视频"
+
+msgid "x_remove_video"
+msgstr "删除视频"
+
+msgid "x_choose_sub_orientation"
+msgstr "选择子方向"
+
+msgid "x_unable_get_course"
+msgstr "无法获取课程列表。"
+
+msgid "x_click_download_attachments"
+msgstr "点击下载附件"
+
+#msgid "x_category"
+#msgstr "课程类别"
+
+msgid "x_introduction"
+msgstr "课程简介"
+
+msgid "x_curriculum_catalogues"
+msgstr "课程目录"
+
+msgid "x_related_good_lesson"
+msgstr "相关好课"
+
+msgid "x_class_not_in_course"
+msgstr "该课程没有课时。"
+
+msgid "x_unable_get_details"
+msgstr "无法获取课程详情。"
+
+msgid "x_experiment"
+msgstr "实验"
+
+msgid "x_learned"
+msgstr "已学习"
+
+msgid "x_learning"
+msgstr "学习中"
+
+msgid "x_unlearned"
+msgstr "未学习"
+
+msgid "x_course_directory"
+msgstr "无法获取课程目录。"
+
+msgid "x_unable_get_courses"
+msgstr "无法获取相关课程。"
+
+msgid "x_learning_course"
+msgstr "学习课程"
+
+msgid "x_return"
+msgstr "返回"
+
+msgid "x_experimental_guidance"
+msgstr "实验指导"
+
+msgid "x_table_contents"
+msgstr "目录"
+
+msgid "x_experiment_course"
+msgstr "实验课"
+
+msgid "x_be_used_notdeleted"
+msgstr "课程类型正在被使用,无法删除。"
+
+msgid "x_subtype_below_current_type"
+msgstr "当前类型下面存在子类型。"
+
+msgid "x_missing_scene_information"
+msgstr "缺少场景信息"
+
+msgid "x_course_already_exists"
+msgstr "该课程已存在"
+
+msgid "x_only_zip_pdf"
+msgstr "讲义：只接受zip,或者pdf的文件格式"
+
+msgid "x_video_is_transcoding"
+msgstr "视频转码中"
+
+msgid "x_view_topology"
+msgstr "查看拓扑"
+
+msgid "x_use_ctrl_shift_alt_to_copy"
+msgstr "使用Ctrl+Shift+Alt进行复制"
+
+msgid "x_minutes"
+msgstr "分"
+
+msgid "x_guide_lecture"
+msgstr "实验指导"
+
+msgid "x_note"
+msgstr "我的笔记"
+
+msgid "x_Q_A"
+msgstr "留言"
+
+msgid "x_no_writeup"
+msgstr "暂无题解"
+
+msgid "x_application_environment"
+msgstr "申请环境"
+
+msgid "x_view_the_environment"
+msgstr "查看环境"
+
+msgid "x_last_section"
+msgstr "上一节"
+
+msgid "x_next_section"
+msgstr "下一节"
+
+msgid "x_seconds"
+msgstr "秒"
+
+msgid "x_remaining_time"
+msgstr "剩余时间"
+
+msgid "x_return_to_course"
+msgstr "返回课程"
+
+msgid "download_markdown"
+msgstr "下载 markdown"
+
+msgid "x_only_allow_mp4"
+msgstr "只允许上传.mp4格式"
+
+msgid "x_no_parent_node_found"
+msgstr "没有找到父节点"
+
+msgid "x_exam_lesson"
+msgstr "考试课"
+
+msgid "x_practice_lesson"
+msgstr "练习课"
+
+msgid "x_jstree_data_is_empty"
+msgstr "jstree数据为空"
+
+msgid "x_no_order_rule"
+msgstr "没有排序"
+
+msgid "x_lesson_type_wrong"
+msgstr "课时类型不匹配"
+
+msgid "x_video_monitor"
+msgstr "学习监控"
+
+msgid "x_used_lesson_env_not_exist"
+msgstr "没有正在使用的场景"
+
+msgid "x_no_connect_ids"
+msgstr "没有链接id"
+
+msgid "x_no_connect_users"
+msgstr "没有链接的用户"
+
+msgid "x_automatic_monitor"
+msgstr "自动监控"
+
+msgid "x_manual_monitor"
+msgstr "手动监控"
+
+msgid "x_show_the_nearest_n"
+msgstr "显示最近的N个"
+
+msgid "x_from_user_selection"
+msgstr "从用户选择"
+
+msgid "x_refresh_time"
+msgstr "刷新时间"
+
+msgid "x_refresh"
+msgstr "刷新"
+
+msgid "x_one_minute"
+msgstr "一分钟"
+
+msgid "x_three_minutes"
+msgstr "三分钟"
+
+msgid "x_ten_minutes"
+msgstr "十分钟"
+
+msgid "x_not_refresh"
+msgstr "不刷新"
+
+msgid "x_experiment_scene"
+msgstr "实验场景"
+
+msgid "x_study_video"
+msgstr "学习视频"
+
+msgid "x_shared_environment"
+msgstr "共享环境"
+
+msgid "x_private_environment"
+msgstr "私有环境"
+
+msgid "x_upload_zip_wrong_format"
+msgstr "上传zip格式错误"
+
+msgid "x_learning_statistics"
+msgstr "学习统计"
+
+msgid "x_organization"
+msgstr "组织"
+
+msgid "x_student_nums"
+msgstr "人数"
+
+msgid "x_complete_lessons"
+msgstr "完成课时"
+
+msgid "x_complete_experiment"
+msgstr "完成实验"
+
+msgid "x_complete_practice"
+msgstr "完成练习"
+
+msgid "x_experiment_mark_score"
+msgstr "实验评分"
+
+msgid "x_experiment_average_score"
+msgstr "实验平均得分"
+
+msgid "x_class_user_count"
+msgstr "班级人数"
+
+msgid "x_exam_type"
+msgstr "考试类型"
+
+msgid "x_exam_score"
+msgstr "考试分数"
+
+msgid "x_course_direction_statistics"
+msgstr "已学习课程方向统计"
+
+msgid "x_number_of_hours_learned"
+msgstr "已学习课时数量统计"
+
+msgid "x_class_information_statistics"
+msgstr "所属班级信息统计"
+
+msgid "x_have_taken_test_statistics"
+msgstr "已参加考试统计"
+
+msgid "x_timeline_learned"
+msgstr "已参加考试统计"
+
+msgid "x_class_statistics"
+msgstr "班级统计"
+
+msgid "x_person_statistics"
+msgstr "个人统计"
+
+msgid "x_course_statistics"
+msgstr "课程统计"
+
+msgid "x_mark_score_teacher"
+msgstr "评分教员"
+
+msgid "x_lesson_name"
+msgstr "课时名称"
+
+msgid "x_please_select_lessons"
+msgstr "请选择课时"
+
+msgid "x_view_report"
+msgstr "查看报告"
+
+msgid "x_mark_score"
+msgstr "评分"
+
+msgid "x_mark_comment"
+msgstr "评语"
+
+msgid "x_is_pass"
+msgstr "是否通过"
+
+msgid "x_please_enter_your_comment"
+msgstr "请输入您的评语"
+
+msgid "x_custom_add"
+msgstr "自定义新增"
+
+msgid "x_other_lesson_import"
+msgstr "从它课导入"
+
+msgid "x_lesson"
+msgstr "课时"
+
+msgid "x_select_model_add"
+msgstr "选择新增模式"
+
+msgid "x_please_select_lesson"
+msgstr "请选择课时"
+
+msgid "x_no_lesson_selected"
+msgstr "没有选择课程"
+
+msgid "x_lesson_exercises"
+msgstr "课后练习"
+
+msgid "x_no_lesson_questions"
+msgstr "没有练习题目"
+
+msgid "x_exercise_has_done"
+msgstr "课后习题已被使用"
+
+msgid "x_lesson_manager"
+msgstr "课堂管理"
+
+msgid "x_my_lesson_schedule"
+msgstr "我的课表"
+
+msgid "x_lesson_monitor"
+msgstr "课堂监控"
+
+msgid "x_environment_distribution"
+msgstr "环境分配"
+
+msgid "x_unit"
+msgstr "单位"
+
+msgid "x_shared_monitor"
+msgstr "监控"
+
+msgid "x_sign_status"
+msgstr "签到状态"
+
+msgid "x_sign"
+msgstr "签到"
+
+msgid "x_not_sign"
+msgstr "未签到"
+
+msgid "x_how_to_upload_files"
+msgstr "如何上传文件"
+
+msgid "x_help_assistance"
+msgstr "请求协助"
+
+msgid "x_course_info_wrong"
+msgstr "课表信息错误"
+
+msgid "x_operation_description"
+msgstr "操作说明"
+
+msgid "x_screen_capture"
+msgstr "截屏"
+
+msgid "x_single_screen_display"
+msgstr "单屏显示"
+
+msgid "x_more_operations"
+msgstr "更多操作"
+
+msgid "x_double_screen_display"
+msgstr "双屏显示"
+
+msgid "x_not_found_markdown"
+msgstr "没有找到markdown"
+
+msgid "x_total_people"
+msgstr "总人数"
+
+msgid "x_all_teacher"
+msgstr "全部教员"
+
+msgid "x_checked_teacher"
+msgstr "查看教员"
+
+msgid "x_checked_classes"
+msgstr "查看班级"
+
+msgid "x_schedule_time_outside"
+msgstr "时间超出范围"
+
+msgid "x_recommended_learning"
+msgstr "推荐学习"
+
+msgid "x_learning_content"
+msgstr "学习内容"
+
+msgid "x_my_course"
+msgstr "我的课程"
+
+msgid "x_system_course"
+msgstr "系统课程"
+
+msgid "x_sharing_course"
+msgstr "共享课程"
+
+msgid "x_pagination_info_left"
+msgstr "每页显示 "
+
+msgid "x_pagination_info_right"
+msgstr " 条记录"
+
+msgid "x_course_compression_package"
+msgstr "课程压缩包"
+
+msgid "x_full_screen"
+msgstr "全屏"
+
+msgid "x_builtin_not_edit"
+msgstr "内置资源不可编辑"
+
+msgid "x_copy_paste"
+msgstr "复制粘贴"
+
+msgid "x_open_textarea"
+msgstr "按住Ctrl+Shitf+Alt打开文本框"
+
+msgid "x_close_textarea"
+msgstr "粘贴文本(Ctrl+c)到弹出的文本框，再次使用Ctrl+Shitf+Alt关闭弹出框"
+
+msgid "x_copy_paste_vir"
+msgstr "在虚拟机中使用Ctrl+v进行文本粘贴(SSH方式使用右键粘贴)"
+
+msgid "x_file_copy"
+msgstr "文件拷贝"
+
+msgid "x_first_way"
+msgstr "方式1：文件直接从Web页面拖入，拖入的文件，Windows系统在虚拟盘符Gucamole(G)盘中，Linux在登录用户所在目录下；如root用户(/root)"
+
+msgid "x_second_way"
+msgstr "方式2：使用远程桌面、Remmina、Xshell等工具请使用工具自带传输方式；"
+
+msgid "x_file_download"
+msgstr "文件下载"
+
+msgid "x_trans_move"
+msgstr "将文件移动到虚拟盘符Gucamole盘中Download文件夹中(G:Download)，浏览器自动下载(如有弹出提示，请点击允许)"
+
+msgid "x_trans_ssh"
+msgstr "使用远程桌面、Remmina、Xshell等工具请使用工具自带传输方式或SSH传输"
+
+msgid "x_cautions"
+msgstr "注意项"
+
+msgid "x_cautions_win"
+msgstr "Windows系统上传的文件请从Gucamole盘中移走，否则会占用服务器空间；"
+
+msgid "x_cautions_linux"
+msgstr "Linux系统上传文件需要靶机开启SSH服务(SSH用户名密码需要和RDP用户一致)"
+
+msgid "x_caps_and_input"
+msgstr "大小写及输入法切换方法："
+
+msgid "x_kali_caps"
+msgstr "Kali&Ubuntu（未安装输入法，以下切换大小写方法任选其一）:"
+
+msgid "x_kali_caps_first_method"
+msgstr "先按shift，再按capslock"
+
+msgid "x_kali_caps_second_method"
+msgstr "长按capslock至少三秒"
+
+msgid "x_kali_caps_third_method"
+msgstr "先按capslock，然后刷新当前远程页面"
+
+msgid "x_kali_caps_fourth_method"
+msgstr "使用shift+字母键输入大写字母"
+
+msgid "x_kali_caps_fifth_method"
+msgstr "在客户端系统的其他输入焦点按capslock，再回到远程页面输入焦点"
+
+msgid "x_win_caps"
+msgstr "使用capslock切换大小写,Windows7使用Ctrl+Shift切换中英文输入,Windows10使用Shift切换中英文输入"
+
+msgid "x_file_limit"
+msgstr "windows上传文件，最大限制2G，超过2G的文件请分段上传，然后合并。linux无限制"
+
+msgid "x_please_select_course"
+msgstr "请选择课程"
+
+msgid "x_all_course"
+msgstr "所有课程"
+
+msgid "x_not_found_team"
+msgstr "没有找到队伍"
+
+msgid "x_end_gt_start_time"
+msgstr "结束时间必须大于开始时间"
+
+msgid "x_sign_time"
+msgstr "签到时间"
+
+msgid "x_lost_course"
+msgstr "提示：请选择课程"
+
+msgid "x_lost_lesson"
+msgstr "提示：请选择课时"
+
+msgid "x_lost_classes"
+msgstr "提示：请选择组织结构"
+
+msgid "x_lost_start"
+msgstr "提示：请选择开始时间"
+
+msgid "x_lost_end"
+msgstr "提示：请选择结束时间"
+
+msgid "x_class_in_schedules"
+msgstr "提示：该班级在该时间段内已有课程安排"
+
+msgid "x_please_select_time"
+msgstr "提示: 请选择时间"
+
+msgid "x_learning_type"
+msgstr "学习类型"

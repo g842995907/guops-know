@@ -1,0 +1,321 @@
+{% extends 'common_env/cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static static_v %}
+
+{% block title %}
+    {% trans 'x_fwaas_api_list' %}
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" />
+    <script type="text/javascript" src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <style>
+        . button_api{
+          float: right;
+          height : 40px;
+          weight : 40px;
+           }
+        . detail_td{
+            width:600px;
+            height: 50px;
+
+        }
+    </style>
+
+
+{% endblock %}
+{% block container %}
+    {% include "web/message_modal.html" %}
+     <div class="ibox-content">
+        <ul class="nav nav-tabs">
+            <li>
+                <a data-toggle="tab" href="#tab-1" aria-expanded="false">{% trans 'x_fire_groups' %}</a>
+            </li>
+
+        </ul>
+        <div class="clearfix tab-content">
+            <div id="tab-1" class="tab-pane">
+                <div class='ibox-content'>
+                        <div class="m-r pull-left">
+                             <button class="btn btn-danger"
+                                        data-url="{% url 'cms_common_scene:delete_fwaas_group_by_id' %}"
+                                                    onclick="fireGroupTable.batchDestroy(this);">
+                                    <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                                </button>
+                            </div>
+                    <div id="tableToolbar">
+            <div class="form-group">
+                <div class="clearfix">
+                    <div class="m-r pull-left">
+                    </div>
+                </div>
+            </div>
+        </div>
+                        <table id='fireGroupTable'
+                               data-toggle='table'
+                               data-show-refresh='false'
+                               data-search='false'
+                               data-side-pagination='server'
+                               data-url="{% url 'cms_common_scene:get_fwaas_group_list' %}"
+                               data-pagination="true"
+                               data-page-size="10"
+                        >
+                        <thead>
+                        <tr>
+                            <th data-field='name' data-formatter='fireGroupTable.nameFormatter'>{% trans 'x_name' %}</th>
+                            <th data-field='description' data-formatter='fireGroupTable.descriptionFormatter'>{% trans 'x_description' %}</th>
+                            <th data-field='ingress_id' data-formatter='fireGroupTable.ingressNameFormatter'>{% trans 'x_ingres' %}</th>
+                            <th data-field='engress_id' data-formatter='fireGroupTable.engressNameFormatter'>{% trans 'x_engress' %}</th>
+                            <th data-field='status' data-formatter='fireGroupTable.statusFormatter'>{% trans 'x_status' %}</th>
+
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                  <div class='modal fade' id='policyDetailModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+                     aria-hidden='true'>
+                    <div class='modal-dialog modal-lg' style='top: 200px;'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span
+                                        class='sr-only'>Close</span></button>
+                            </div>
+                            <div class='modal-body'>
+                                <table id='fireRuleTable'
+                                       data-toggle='table'
+                                       data-show-refresh='false'
+                                       data-search='false'
+                                       data-side-pagination='server'
+                                       data-url="{% url 'cms_common_scene:get_fwaas_rules_list' %}"
+                                       data-pagination="true"
+                                       data-page-size="10"
+                                >
+                                    <thead>
+                                    <tr>
+
+                                        <th data-field='name' data-formatter='fireRuleTable.nameFormatter'>{% trans 'x_name' %}</th>
+                                        <th data-field='type' data-formatter='fireRuleTable.typeFormatter'>{% trans 'x_rule' %}</th>
+                                        <th data-field='protocol' data-formatter='fireRuleTable.protocolFormatter'>{% trans 'x_protocol' %}</th>
+                                        <th data-field='action' data-formatter='fireRuleTable.actionFormatter'>{% trans 'x_action' %}</th>
+                                        <th data-field='source_ip' data-formatter='fireRuleTable.sourceIpFormatter'>{% trans 'x_source_ip' %}</th>
+                                        <th data-field='destination_ip' data-formatter='fireRuleTable.descIpFormatter'>{% trans 'x_dest_ip' %}</th>
+                                        <th data-field='source_port' data-formatter='fireRuleTable.sourcePortFormatter'>{% trans 'x_source_port' %}</th>
+                                        <th data-field='destination_port' data-formatter='fireRuleTable.descPortFormatter'>{% trans 'x_destination_port' %}</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class='clearfix modal-footer'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+    </div>
+{% endblock %}
+
+{% block bottom_js %}
+        {{ block.super }}
+        <script type="text/javascript">
+
+            (function(){
+                var myOptions = pageUtil.getOptions("myOptions");
+                var tab = myOptions.tab ? myOptions.tab : 'tab-1';
+                $('[href=#' + tab + ']').parent().addClass('active');
+                $('#' + tab).addClass('active');
+                $ONUNLOAD(function(){
+                    var activeTab = $('.tab-pane.active').attr('id');
+                    pageUtil.saveOptions("myOptions", {tab: activeTab});
+                });
+            }());
+        </script>
+        <script type="text/javascript">
+         pageWidgets.registerCheckTableRow($("#fireGroupTable"));
+            var fireGroupTable = bsTable.getTableModule($('#fireGroupTable'), function(){
+
+
+                this.statusFormatter = function (value, row, index) {
+
+                    return row.status ? row.status : '-';
+                };
+                this.nameFormatter = function (value, row, index) {
+                     var ret_dict_str= row.ingress_id +'|'+ row.engress_id;
+
+                     return row.name == '-' ? '-'  : [
+                        '<a id="thread"  onclick=showDetail("'+ "firegroup" + '","' +ret_dict_str + '")>' + row.name + '</a>',
+                    ].join('') ;
+                };
+                this.descriptionFormatter = function (value, row, index) {
+                    return row.description ? row.description : '-';
+                };
+                this.ingressNameFormatter = function (value, row, index) {
+                      return row.ingress_name == '-' ? '-' :row.ingress_name;
+
+                };
+                this.engressNameFormatter = function (value, row, index) {
+                      return row.engress_name == '-' ?  '-' :row.engress_name;
+
+                };
+
+                this.operatorFormatter = function (value, row, index) {
+                    var btns = [
+
+                        {
+                            type: 'link',
+                            class: 'btn-success',
+                            icon: 'fa-bullhorn',
+                            text: '{% trans 'x_delete' %}',
+                            click: 'delete_item("' +'../delete_fwaas_group_by_id/' +'","'+ row.id + '")',
+                        }
+                    ];
+
+                    return fireGroupTable.getOperatorHtml(btns);
+                };
+
+
+
+            });
+            var fireRuleTable = bsTable.getTableModule($('#fireRuleTable'), function(){
+
+                this.statusFormatter = function (value, row, index) {
+                    return row.status ? row.status : '-';
+                };
+                this.nameFormatter = function (value, row, index) {
+                      return row.name ?  row.name  : '-';
+                };
+                this.protocolFormatter = function (value, row, index) {
+                      return row.protocol ? row.protocol : '-';
+                };
+                this.actionFormatter = function (value, row, index) {
+                      return row.action ? row.action : '-';
+                };
+                this.sourceIpFormatter = function (value, row, index) {
+                      return row.source_ip ? row.source_ip : '-';
+                };
+                this.descIpFormatter = function (value, row, index) {
+                      return row.destination_ip ? row.destination_ip : '-';
+                };
+                this.sourcePortFormatter = function (value, row, index) {
+                      return row.source_port ? row.source_port : '-';
+                };
+                this.descPortFormatter = function (value, row, index) {
+                      return row.destination_port ? row.destination_port : '-';
+                };
+                this.typeFormatter = function (value, row, index) {
+                      return row.type ? row.type : '-';
+                };
+
+
+
+            });
+            function showDetail(type,id){
+               if(type == 'firegroup'){
+                   type =1;
+                   url = '../get_fwaas_group_detail_by_id/';
+               }else if (type == 'firepolicyAndRule'){
+                   url = '../get_fwaas_policy_rule_detail_by_id/';
+                   type =2;
+               }
+                $.ajax({
+                                type: "get",
+                                url: url,
+                                contentType: "application/json",
+                                data: {'id':id},
+                                success: function (data) {
+                                    if(type ==1){ //如果是查询防火墙策略
+                                         $("#fireRuleTable").bootstrapTable('refresh',{url:'../get_fwaas_group_detail_by_id/?id='+id})
+                                       {% comment %} document.getElementById('policy_id').innerText=data['id'];
+                                        document.getElementById('policy_description').innerText=data['description'];
+                                        document.getElementById('policy_tenant_id').innerText=data['tenant_id'];
+                                        document.getElementById('policy_shared').innerText=data['shared'];
+                                        document.getElementById('policy_project_id').innerText=data['project_id'];
+                                        document.getElementById('policy_audited').innerText=data['audited'];
+                                        document.getElementById('policy_name').innerText=data['name'];
+                                        if (data['firewall_rules'].length ==0) {
+
+                                        }else{
+                                            for (i in data['firewall_rules']){
+                                               data['firewall_rules'][i]
+                                            }
+                                        }{% endcomment %}
+
+                                        $('#policyDetailModal').modal('show');
+                                    }else if(type==2){ //如果是查询防火墙规则
+                                        document.getElementById('rule_id').innerText=data['id'];
+                                        document.getElementById('rule_protocol').innerText=data['protocol'];
+                                        document.getElementById('rule_description').innerText=data['description'];
+                                        document.getElementById('rule_source_ip_address').innerText=data['source_ip_address'];
+                                        document.getElementById('rule_destination_ip_address').innerText=data['destination_ip_address'];
+                                        document.getElementById('rule_source_port').innerText=data['source_port'];
+                                        document.getElementById('rule_destination_port').innerText=data['destination_port'];
+                                        document.getElementById('rule_name').innerText=data['name'];
+                                        document.getElementById('rule_tenant_id').innerText=data['tenant_id'];
+                                        document.getElementById('rule_enabled').innerText=data['enabled'];
+                                        document.getElementById('rule_project_id').innerText=data['project_id'];
+                                        document.getElementById('rule_ip_version').innerText=data['ip_version'];
+                                        document.getElementById('rule_action').innerText=data['action'];
+                                        document.getElementById('rule_shared').innerText=data['shared'];
+                                        $('#ruleDetailModal').modal('show');
+                                    }
+
+                                },
+                                error: function (res){
+                                    {% comment %}var errorMessage=JSON.parse(res.responseText);
+
+                                    alert(errorMessage['detail']['message']+errorMessage['detail']['code']);
+                                    alert(errorMessage['detail']['message']+errorMessage['detail']['code']);{% endcomment %}
+                                    swal({
+                                            title: "{% trans "x_get_detail_error" %}",
+                                            type: "warning",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        });
+
+                                }
+                });
+            }
+            function delete_item(url,id){
+               iconfirm(gettext('x_confirm_delete'), function () {
+                            $.ajax({
+                                type: "get",
+                                url: url,
+                                contentType: "application/json",
+                                data: { id: id },
+                                success: function (data, status) {
+                                    if (status == "success") {
+                                        swal({
+                                            title: "{% trans "x_deleted_successfully" %}",
+                                            type: "success",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        })
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 1500);
+                                    }else{
+                                        swal({
+                                            title: "{% trans "x_deleted_unsuccessfully" %}",
+                                            type: "warning",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        })
+                                    }
+                                },
+                                error: function (res){
+                                    {% comment %}var errorMessage=JSON.parse(res.responseText)
+
+                                    alert(errorMessage['detail']['message']+errorMessage['detail']['code']){% endcomment %}
+                                    swal({
+                                            title: "{% trans "x_deleted_unsuccessfully" %}",
+                                            type: "warning",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        })
+
+                                }
+                            })
+                });
+
+            }
+
+        </script>
+{% endblock %}

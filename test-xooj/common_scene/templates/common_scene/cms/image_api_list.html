@@ -1,0 +1,438 @@
+{% extends 'common_env/cms/iframe_layout.html' %}
+{% load i18n %}
+{% load static static_v %}
+
+{% block title %}
+    {% trans 'x_image_api_list' %}
+{% endblock %}
+
+
+{% block other_css_js %}
+    <link rel="stylesheet" href="{% static "lib/hplus/css/plugins/switchery/switchery.css" %}" />
+    <script type="text/javascript" src="{% static "lib/hplus/js/plugins/switchery/switchery.js" %}"></script>
+    <style>
+        . button_api{
+          float: right;
+          height : 40px;
+          weight : 40px;
+           }
+        . detail_td{
+            width:600px;
+            height: 50px;
+
+        }
+    </style>
+
+
+{% endblock %}
+
+{% block container %}
+    {% include "web/message_modal.html" %}
+    <div class="ibox-content">
+        <ul class="nav nav-tabs">
+            <li>
+                <a data-toggle="tab" href="#tab-1" aria-expanded="false">{% trans 'x_images' %}</a>
+            </li>
+
+        </ul>
+        <div class="clearfix tab-content">
+             <div id="tab-1" class="tab-pane">
+                <div class='ibox-content'>
+                    <div class='tableToolbar'>
+                    </div>
+                     <div class="form-group">
+                        <div class="clearfix">
+
+
+                        </div>
+                        <div class="clearfix">
+                            <div class="m-r pull-left">
+                             <button class="btn btn-danger"
+                                        data-url="{% url 'cms_common_scene:delete_image_by_id' %}"
+                                                    onclick="imageTable.batchDestroy(this);">
+                                    <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <table id='imageTable'
+                           data-toggle='table'
+                           data-show-refresh='false'
+                           data-search='false'
+                           data-side-pagination='server'
+                           data-url="{% url 'cms_common_scene:get_image_list' %}"
+                           data-pagination="true"
+                           data-page-size="10"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field='name' data-formatter='imageTable.nameFormatter'>{% trans 'x_image_name' %}</th>
+                            <th data-field='format' data-formatter='imageTable.formatFormatter'>{% trans 'x_image_disk_format' %}</th>
+                            <th data-field='size' data-formatter='imageTable.sizeFormatter'>{% trans 'x_size' %}</th>
+                            <th data-field='status' data-formatter='imageTable.statusFormatter'>{% trans 'x_status' %}</th>
+                            <th data-field='type' data-formatter='imageTable.typeFormatter'>{% trans 'x_type' %}</th>
+                            <th data-field='create_time' data-formatter='imageTable.datetimeFormatter'>{% trans 'x_created' %}</th>
+
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                  <div class='modal fade' id='imageDetailModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+                     aria-hidden='true'>
+                    <div class='modal-dialog modal-lg' style='top: 200px;'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span
+                                        class='sr-only'>Close</span></button>
+                            </div>
+                            <div class='modal-body'>
+                                <table id="imageDetailTable"
+                                >
+                                    <tbody>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_id' %}</td>
+
+                                        <td class="detail_td" id="image_id"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_name' %}</td>
+
+                                        <td id="image_name" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_status' %}</td>
+
+                                        <td id="image_status" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_size' %}</td>
+
+                                        <td id="image_size" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_image_container_format' %}</td>
+
+                                        <td class="detail_td" id="image_container_format"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_image_disk_format' %}</td>
+
+                                        <td id="image_disk_format" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_created' %}</td>
+
+                                        <td id="image_created_at" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_updated_at' %}</td>
+
+                                        <td id="image_updated_at" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_protected' %}</td>
+
+                                        <td id="image_protected" class="detail_td"></td>
+                                    </tr>
+                                     <tr>
+                                        <td class="detail_td">{% trans 'x_visable' %}</td>
+
+                                        <td id="image_visibility" class="detail_td"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class='clearfix modal-footer'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% comment %}
+            <div id="tab-1" class="tab-pane">
+                <div class='ibox-content'>
+                     <div class="clearfix">
+                            <div class="m-r pull-left">
+                             <button class="btn btn-danger"
+                                        data-url="{% url 'cms_common_scene:delete_docker_by_id' %}"
+                                                    onclick="dockerTable.batchDestroy(this);">
+                                    <i class="fa fa-remove"></i> {% trans 'x_delete' %}
+                                </button>
+                            </div>
+                     </div>
+
+                    <div class='tableToolbar'>
+                    </div>
+                    <table id='dockerTable'
+                           data-toggle='table'
+                           data-show-refresh='false'
+                           data-search='false'
+                           data-side-pagination='server'
+                           data-url="{% url 'cms_common_scene:get_docker_server_list' %}"
+                           data-pagination="true"
+                           data-page-size="10"
+                    >
+                        <thead>
+                        <tr>
+                            <th data-field='name' data-formatter='dockerTable.nameFormatter'>{% trans 'x_name' %}</th>
+                            <th data-field='image_driver' data-formatter='dockerTable.imageDriverFormatter'>{% trans 'x_docker_image_driver' %}</th>
+                            <th data-field='image' data-formatter='dockerTable.imageFormatter'>{% trans 'x_image_name' %}</th>
+                            <th data-field='status' data-formatter='dockerTable.statusFormatter'>{% trans 'x_status' %}</th>
+                            <th data-field="id" data-formatter="dockerTable.operatorFormatter">{% trans 'x_operation' %}</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class='modal fade' id='dockerDetailModal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel'
+                     aria-hidden='true'>
+                    <div class='modal-dialog modal-lg' style='top: 200px;'>
+                        <div class='modal-content'>
+                            <div class='modal-header'>
+                                <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>&times;</span><span
+                                        class='sr-only'>Close</span></button>
+                            </div>
+                            <div class='modal-body'>
+                                <table id="dockerDetailTable"
+                                >
+                                    <tbody>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_uuid' %}</td>
+
+                                        <td class="detail_td" id="docker_uuid"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_image_name' %}</td>
+
+                                        <td id="docker_image" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_docker_disk' %}</td>
+
+                                        <td id="docker_disk" class="detail_td"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_docker_hostname' %}</td>
+
+                                        <td id="docker_image_driver" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_docker_memory' %}</td>
+
+                                        <td id="docker_memory" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_status' %}</td>
+
+                                        <td id="docker_status" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_docker_status_detail' %}</td>
+
+                                        <td id="docker_status_detail" class="detail_td"></td>
+                                    </tr>
+
+                                     <tr>
+                                        <td class="detail_td">{% trans 'x_docker_status_reason' %}</td>
+
+                                        <td id="docker_status_reason" class="detail_td"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_name' %}</td>
+
+                                        <td id="docker_name" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_CPU' %}</td>
+
+                                        <td id="docker_cpu" class="detail_td"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="detail_td">{% trans 'x_docker_command' %}</td>
+
+                                        <td id="docker_command" class="detail_td"></td>
+                                    </tr>
+                                     <tr>
+                                        <td class="detail_td">{% trans 'x_docker_ports' %}</td>
+
+                                        <td id="docker_ports" class="detail_td"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class='clearfix modal-footer'>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endcomment %}
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block bottom_js %}
+        {{ block.super }}
+        <script type="text/javascript">
+            (function(){
+                var myOptions = pageUtil.getOptions("myOptions");
+                var tab = myOptions.tab ? myOptions.tab : 'tab-1';
+                $('[href=#' + tab + ']').parent().addClass('active');
+                $('#' + tab).addClass('active');
+                $ONUNLOAD(function(){
+                    var activeTab = $('.tab-pane.active').attr('id');
+                    pageUtil.saveOptions("myOptions", {tab: activeTab});
+                });
+            }());
+        </script>
+
+        <script type='text/javascript'>
+         pageWidgets.registerCheckTableRow($("#dockerTable"));
+          {% comment %}  var dockerTable = bsTable.getTableModule($('#dockerTable'), function(){
+
+                this.nameFormatter = function (value, row, index) {
+                      //return row.doc_name ? row.doc_name : '-';
+                      return [
+                    '<a id="thread"  onclick=showDetail("'+ "docker" + '","' +row.id + '")>' + row.doc_name + '</a>',
+                ].join('');
+                };
+                this.imageFormatter = function (value, row, index) {
+                      return row.doc_image ? row.doc_image : '-';
+                };
+                this.statusFormatter = function (value, row, index) {
+                      return row.doc_status ? row.doc_status : '-';
+                };
+                this.operatorFormatter = function (value, row, index) {
+                    var btns = [
+                        {
+                            type: 'link',
+                            class: 'btn-success',
+                            icon: 'fa-bullhorn',
+                            text: '{% trans 'x_delete' %}',
+                            click: 'delete_item("' +'../stop_delete_docker_by_id/' +'","' + row.id +'","'+row.doc_status+ '")',
+                        }
+                    ];
+
+                    return dockerTable.getOperatorHtml(btns);
+                };
+             });{% endcomment %}
+            pageWidgets.registerCheckTableRow($("#imageTable"));
+            var imageTable = bsTable.getTableModule($('#imageTable'), function(){
+
+                this.nameFormatter = function (value, row, index) {
+                     return [
+                    '<a id="thread"  onclick=showDetail("'+ "image" + '","' + row.id + '")>' + row.image_name + '</a>',
+                ].join('');
+                };
+                this.sizeFormatter = function (value, row, index) {
+                      return row.image_size ? row.image_size : '-';
+                };
+
+                this.statusFormatter = function (value, row, index) {
+                      return row.image_status ? row.image_status : '-';
+                };
+                this.formatFormatter = function (value, row, index) {
+                      return row.image_format ? row.image_format : '-';
+                };
+                this.datetimeFormatter = function (value, row, index) {
+                      return row.image_create ? row.image_create.replace('T',' ').replace('Z',' ')  : '-';
+                };
+                this.typeFormatter = function (value, row, index) {
+                      return row.image_type ? row.image_type  : '-';
+                };
+            });
+            function showDetail(type,id){
+                //alert(id)
+               if(type == 'image'){
+                   url = '../get_image_detail_by_id/';
+                   type =1;
+               }
+                $.ajax({
+                                type: "get",
+                                url: url,
+                                contentType: "application/json",
+                                data: { id: id },
+                                success: function (data) {
+                                    if(type ==1){
+                                        document.getElementById('image_id').innerText=data['id'];
+                                        document.getElementById('image_status').innerText=data['status'];
+                                        document.getElementById('image_name').innerText=data['name'];
+                                        document.getElementById('image_size').innerText=data['size'];
+                                        document.getElementById('image_container_format').innerText=data['container_format'];
+                                        document.getElementById('image_disk_format').innerText=data['disk_format'];
+                                        document.getElementById('image_created_at').innerText=data['created_at'].replace('T',' ').replace('Z',' ') ;
+                                        document.getElementById('image_updated_at').innerText=data['updated_at'].replace('T',' ').replace('Z',' ') ;
+                                        document.getElementById('image_protected').innerText=data['protected'];
+                                        document.getElementById('image_visibility').innerText=data['visibility'];
+                                        $('#imageDetailModal').modal('show');
+                                    }
+
+                                },
+                                error: function (res){
+                                    swal({
+                                            title: "{% trans "x_get_detail_error" %}",
+                                            type: "warning",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        });
+
+                                }
+                });
+            }
+           {% comment %} function delete_item(url,id,state){
+               iconfirm(gettext('x_confirm_delete'), function () {
+                   if (state == 'Paused'||state == 'Stopped'||state == 'Running' || state == 'Error'){
+                       if(state == 'Paused'||state == 'Stopped' || state == 'Error'){
+                           url='../delete_docker_by_id/'
+                       }
+
+                            $.ajax({
+                                type: "get",
+                                url: url,
+                                contentType: "application/json",
+                                data: { id: id },
+                                success: function (data, status) {
+                                    if (status == "success") {
+                                        swal({
+                                            title: "{% trans "x_deleted_successfully" %}",
+                                            type: "success",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        })
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 1500);
+                                    }
+                                },
+                                error: function (res){
+                                    var errorMessage=JSON.parse(res.responseText)
+
+                                    alert(errorMessage['detail']['message']+errorMessage['detail']['code'])
+                                    swal({
+                                            title: "{% trans "x_deleted_unsuccessfully" %}",
+                                            type: "warning",
+                                            confirmButtonText: "{% trans "x_confirm" %}"
+                                        })
+
+                                }
+                            })
+                   }else{
+                       swal({
+                           title: "{% trans "x_unable_deleted_state" %}",
+                           type: "success",
+                           confirmButtonText: "{% trans "x_confirm" %}"
+                       })
+
+                   }
+                });
+
+            }{% endcomment %}
+
+
+
+        </script>
+
+
+{% endblock %}
+

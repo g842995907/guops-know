@@ -1,0 +1,293 @@
+msgid "x_is_show_rank"
+msgstr "是否显示排名"
+
+msgid "x_theme"
+msgstr "主题"
+
+msgid "x_game_mode"
+msgstr "参赛方式"
+
+msgid "x_integral_mode"
+msgstr "积分方式"
+
+msgid "x_exam"
+msgstr "考试"
+
+msgid "x_ad_game"
+msgstr "攻防赛"
+
+msgid "x_game_trend"
+msgstr "比赛趋势"
+
+msgid "x_jeopardy"
+msgstr "解题赛"
+
+msgid "x_trial_game"
+msgstr "闯关赛"
+
+msgid "x_all_progress"
+msgstr "全部进程"
+
+msgid "x_all_game_mode"
+msgstr "全部参赛方式"
+
+msgid "x_all_score_mode"
+msgstr "全部积分方式"
+
+msgid "x_all_reward_mode"
+msgstr "全部奖励方式"
+
+msgid "x_game_setting"
+msgstr "比赛配置"
+
+msgid "x_game_operation"
+msgstr "比赛运维"
+
+msgid "x_game_task"
+msgstr "比赛题目"
+
+msgid "x_game_player"
+msgstr "比赛选手"
+
+msgid "x_game_team"
+msgstr "比赛队伍"
+
+msgid "x_player_name"
+msgstr "选手名称"
+
+msgid "x_team_name"
+msgstr "队伍名称"
+
+msgid "x_rank"
+msgstr "名次"
+
+msgid "x_test"
+msgstr "测试"
+
+msgid "x_game_notice"
+msgstr "比赛公告"
+
+msgid "x_task_tip"
+msgstr "题目提示"
+
+msgid "x_is_top"
+msgstr "是否置顶"
+
+msgid "x_to_top"
+msgstr "置顶"
+
+msgid "x_cancel_top"
+msgstr "取消置顶"
+
+msgid "x_publish_time"
+msgstr "发布时间"
+
+msgid "x_show_rank"
+msgstr "显示排名"
+
+msgid "x_no_show_rank"
+msgstr "不显示排名"
+
+msgid "x_task_deploy"
+msgstr "部署环境"
+
+msgid "x_task_manage"
+msgstr "题目管理"
+
+msgid "x_team_manage"
+msgstr "队伍管理"
+
+msgid "x_all_task"
+msgstr "全部题目"
+
+msgid "x_tip_for_rank"
+msgstr "提示:开启后选手能看到排行榜, 关闭后选手看不到排行榜"
+
+msgid "x_contest"
+msgstr "竞赛"
+
+msgid "x_reward_mode"
+msgstr "奖励方式"
+
+msgid "x_add_task"
+msgstr "添加题目"
+
+msgid "x_scoreboard"
+msgstr "排行榜"
+
+msgid "x_score_trend"
+msgstr "积分曲线"
+
+msgid "x_vis"
+msgstr "态势展示"
+
+msgid "x_score_manage"
+msgstr "成绩管理"
+
+msgid "x_game_status"
+msgstr "比赛状态"
+
+msgid "x_start_game"
+msgstr "开始比赛"
+
+msgid "x_pause_game"
+msgstr "暂停比赛"
+
+msgid "x_resume_game"
+msgstr "继续比赛"
+
+msgid "x_stop_game"
+msgstr "结束比赛"
+
+msgid "x_show"
+msgstr "查看"
+
+msgid "x_answer_report"
+msgstr "答题报告"
+
+msgid "x_multiple_choice"
+msgstr "多选题"
+
+msgid "x_questions_answers"
+msgstr "问答题"
+
+msgid "x_click_visit_URL"
+msgstr "点击访问题目网址"
+
+msgid "x_fraction_score"
+msgstr "分"
+
+msgid "x_unknown"
+msgstr "宕机"
+
+msgid "x_event_name_length_lt_100"
+msgstr "名称：该字段长度不得超过100"
+
+msgid "x_start_time_require"
+msgstr "开始时间：该字段必填"
+
+msgid "x_end_time_require"
+msgstr "结束时间：该字段必填"
+
+msgid "x_1_blood"
+msgstr "{who}拿到了赛题[{task}]的一血"
+
+msgid "x_2_blood"
+msgstr "{who}拿到了赛题[{task}]的二血"
+
+msgid "x_3_blood"
+msgstr "{who}拿到了赛题[{task}]的三血"
+
+msgid "x_game_over"
+msgstr "比赛已结束"
+
+msgid "x_vis_ctrl"
+msgstr "态势控制"
+
+msgid "x_output_result"
+msgstr "导出报告"
+
+msgid "x_see_detail"
+msgstr "查看详情"
+
+msgid "x_game_result"
+msgstr "比赛结果"
+
+msgid "x_exam_result"
+msgstr "考试结果"
+
+msgid "x_defense_score"
+msgstr "防守得分"
+
+msgid "x_attack_score"
+msgstr "进攻得分"
+
+msgid "x_attack_times"
+msgstr "进攻次数"
+
+msgid "x_round_times"
+msgstr "轮数"
+
+msgid "x_defense_times"
+msgstr "防守次数"
+
+msgid "x_attack_time"
+msgstr "进攻时间"
+
+msgid "x_input_content"
+msgstr "提交答案"
+
+msgid "x_right_answer"
+msgstr "正确答案"
+
+msgid "x_download_all_wp"
+msgstr "下载全部WP"
+
+msgid "x_invalidity_question"
+msgstr "赛题导入后，将生成独立题目，与原题无关"
+
+msgid "x_no_right"
+msgstr "无权进行该操作"
+
+msgid "x_game_not_start"
+msgstr "比赛未开始"
+
+msgid "x_not_join_team"
+msgstr "你还未加入队伍, 无法参加比赛"
+
+msgid "x_team_not_registered"
+msgstr "你的队伍还未报名"
+
+msgid "x_not_register"
+msgstr "你还未报名"
+
+msgid "x_registered"
+msgstr "已报名"
+
+msgid "x_submit_fast"
+msgstr "提交太快"
+
+msgid "x_not_open_submit_writeup"
+msgstr "比赛未开放提交题解"
+
+msgid "x_writeup_cannot_empty"
+msgstr "题解不能为空"
+
+msgid "x_submitted"
+msgstr "你已提交过"
+
+msgid "x_team_submitted"
+msgstr "你的队伍已提交过"
+
+msgid "x_unpublished"
+msgstr "题目未公开"
+
+msgid "x_subject_abnomal"
+msgstr "题目异常"
+
+msgid "x_situation"
+msgstr "态势"
+
+msgid "x_event_infiltration"
+msgstr "渗透赛"
+
+msgid "x_operation_problem"
+msgstr "操作题"
+
+msgid "x_judgment_problem"
+msgstr "判断题"
+
+msgid "x_name_exam"
+msgstr "考试名称"
+
+msgid "x_account_number"
+msgstr "账号"
+
+msgid "x_shared_monitor"
+msgstr "监控"
+
+msgid "x_all_teams"
+msgstr "全部队伍"
+
+msgid "x_all_players"
+msgstr "全部选手"

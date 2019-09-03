@@ -1,0 +1,31 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{% trans 'x_saining_training_platform' %}</title>
+    <linK rel="stylesheet" href="{% static 'web/bootstrap-3.3.7/css/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/common.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/default.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/font-awesome-4.7.0/css/font-awesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'course/css/task.css'%}">
+</head>
+<body>
+    <div class='container'>
+        <div class="mrg93T">
+        <a class="download-file fa fa-download" href="{{ attachment_url }}" name="attachment"
+           download="" id="task_attach">{% trans 'x_click_download_attachments' %}</a>
+        </div>
+    </div>
+
+<script src="{% static 'course/js/jquery-3.2.1.min.js'%}"></script>
+<script>
+    $(function () {
+        var a_elem = $("a[name='attachment']");
+        var url_array = a_elem.attr("href").split("/");
+        var attach_name = url_array[url_array.length-1];
+        a_elem.attr("download", attach_name);
+{#        a_elem.html(attach_name);#}
+    });
+</script>
+</body>
+</html>

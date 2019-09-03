@@ -1,0 +1,35 @@
+msgid "x_all_vulnerability"
+msgstr "All Vulnerability"
+
+msgid "x_mobile_internet_vulnerability"
+msgstr "Mobile"
+
+msgid "x_internet_vulnerability"
+msgstr "Internet Of Things"
+
+msgid "x_industrial_control_vulnerability"
+msgstr "Industrial Control"
+
+msgid "x_big_data_vulnerability"
+msgstr "Big Data"
+
+msgid "x_search_options"
+msgstr "Search Options"
+
+msgid "x_chinese_data"
+msgstr "Chinese Data"
+
+msgid "x_numbering"
+msgstr "ID"
+
+msgid "x_low_risk"
+msgstr "Low"
+
+msgid "x_medium_risk"
+msgstr "Medium"
+
+msgid "x_high_risk"
+msgstr "High"
+
+msgid "x_vuln_connected_failed"
+msgstr "Vulnerability Connected Failed"

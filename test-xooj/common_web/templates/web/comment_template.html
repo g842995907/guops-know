@@ -1,0 +1,410 @@
+{% load static i18n %}
+
+
+<script src="{% static 'web/js/jquery.form.js' %}"></script>
+<script>
+    {#$(function () {#}
+    {#    $('#comment-btn').on('click', function () {#}
+    {#        $(this).slideUp(200);#}
+    {#        $('form[name="comment-form"]').slideDown(500)#}
+    {#    })#}
+    {# });#}
+    $(function () {
+        $('#cancel-comment').on('click', function () {
+            {#$('form[name="comment-form"]').slideToggle();#}
+            {#$('#comment-btn').slideDown(200);#}
+            $('form[name="comment-form"]').find('[name="content"]').val("")
+        })
+     })
+</script>
+{#<div class="clearfix">#}
+{#    <button class="pull-right btn-common cursor" id="comment-btn"><div class="left-right-line">{% trans 'x_post_question' %}</div></button>#}
+{#</div>#}
+<form name="comment-form">
+    <div class="form-group row">
+        <div class="col-sm-12">
+            <input type="text" name="hash" value="" hidden="hidden" readonly/>
+            <textarea rows="5" class="form-control default-bg reply-area"
+                      placeholder="{% trans 'x_cloud_exchange_250' %}" name="content" id="comment-content"
+                      style='resize:none;color: #dddddd;overflow:hidden;'></textarea>
+        </div>
+    </div>
+    <div class="form-group text-right">
+        {#        <div class="text-right">#}
+        <input type="button" class="mainBg whiteC no-radius submit-comment-btn borderNone" id="submit-comment"
+               value="{% trans 'x_comment' %}">
+{#        <input type="button" class="comment-btn-bg no-radius submit-comment-btn comment-clr borderNone"#}
+{#               id="cancel-comment"#}
+{#               value="{% trans 'x_clear' %}">#}
+        {#        </div>#}
+    </div>
+</form>
+
+<div class="comment-list" id="comment-list-div">
+</div>
+
+<div id="comment-template-div" style="display: none;">
+    <div class="comment-li border-top mrg20B mrg20T">
+        <div class="commentContent clearfix posRelative mrg20T">
+            <a href="javascript:void(0);" class="fl humanIco mrg20L">
+                <img name="avatar" class="width100 img-circle" data-bd-imgshare-binded="1">
+            </a>
+            <div class="fl commentText">
+                <div class="mrg15B" name="reply-warp">
+                    <div class="mrg15L">
+{#                        <span class="font28 moreColor">[{% trans "x_nickname" %}]</span>#}
+                        <span class="font28 moreColor" name="comment-username"></span>
+                        <span class="font28 moreColor">{% trans "x_published" %}</span>
+                        <span class="font12 grayF" name="comment-udtime"></span>
+                    </div>
+                    <div class="font14 pad15L lineH30" name="comment-comment" style="word-wrap: break-word;">
+                    </div>
+                    <div class="clearfix" name="intermediate">
+                        <span class="fr cursor posRelative mrg10B">
+                            <span class="font14 moreColor mrg5R hf fa fa-reply comment-btn-bg comment-clr pad5T pad5B pad10L pad10R comment-radius"
+                                  name="reply-btn"></span>
+                            <span class="talkNum comment-btn-bg cursor comment-clr fa  pad5T pad5B pad10L pad10R comment-radius"
+                                  name="comment-thumbs_up"></span>
+                            <input hidden="hidden" name="get-self-id">
+                        </span>
+                    </div>
+                    <div class="follow-up-comment-warp goComment posRelative">
+                        <textarea rows="4" class="reply-area follow-up-comment default-bg " name="replytext"
+                                  placeholder=""></textarea>
+                        <div class="mrg10T text-right">
+                            {#                            <div class="text-right">#}
+                            <input type="button"
+                                   class="mainBg whiteC no-radius submit-comment-btn borderNone"
+                                   name="submit-sun-comment"
+                                   value="{% trans 'x_reply' %}">
+                            <input type="button"
+                                   class="comment-btn-bg no-radius submit-comment-btn comment-clr borderNone"
+                                   name="reply-refuse"
+                                   value="{% trans 'x_cancel' %}">
+                            <input hidden="hidden" name="get-parent-id">
+                            {#                            </div>#}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="comment-list col-md-12 pad0A goComment posRelative default-bg" name="comment_reply_list">
+                </div>
+                <div class="reply clearfix" name="reply">
+
+                    <form class="comment-sun-form">
+                        {#                          action="/api/sub_comments/">#}
+                        <div class="col-md-12 pad0A goComment posRelative default-bg" id="thread">
+
+                            <div class="pad20A clearfix">
+                                <input name="info" value="05c8ae4e3d857fd49646"
+                                       type="hidden">
+                                <input class="form-control" name="comment"
+                                       value="18a95d87abb86ed80d8d6df0500231a2d30d4465"
+                                       type="hidden">
+                                <div class="pull-left follow-up-img mrg10R">
+                                    <img name="avatar-reply" class="width100 img-circle">
+                                </div>
+                                <div class="pull-left comment-clr follow-up">
+                                    <div class="follow-up-box">
+                                        <div class="follow-up-info">
+                                            <span class="font28 moreColor"
+                                                  name="comment-usernames-reply"></span>
+                                            <span class="">{% trans "x_reply" %}</span>
+                                            <span class="font-bold " name="comment_parent"></span>
+                                            <span class=" font12"
+                                                  name="comment-udtime-reply"></span>
+                                        </div>
+                                        <div class="follow-up-content" name="comment-comment-reply">
+
+                                        </div>
+                                        <div class="follow-up-btn mrg10T mrg10B" name="intermediate">
+                                            <span>
+                                            <span class="follow-reply font14 moreColor mrg5R hf fa fa-reply comment-btn-bg comment-clr pad5T pad5B pad10L pad10R comment-radius"
+                                                  name="reply_box"></span>
+                                            <span class="talkNum comment-btn-bg cursor comment-clr fa pad5T pad5B pad10L pad10R comment-radius"
+                                                  name="comment-thumbs_up"></span>
+                                            <input hidden="hidden" name="get-self-id">
+                                            </span>
+                                        </div>
+                                        <div class="follow-up-comment-warp">
+                                        <textarea rows="4" class="reply-area follow-up-comment" name="replytext"
+                                                  placeholder=""></textarea>
+                                            <div class="mrg10T text-right">
+                                                <input type="button"
+                                                       class="mainBg whiteC no-radius submit-comment-btn borderNone"
+                                                       name="submit-sun-comment"
+                                                       value="{% trans 'x_reply' %}">
+                                                <input type="button"
+                                                       class="comment-btn-bg no-radius submit-comment-btn comment-clr borderNone"
+                                                       name="reply-refuse"
+                                                       value="{% trans 'x_cancel' %}">
+                                                <input hidden="hidden" name="get-parent-id">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input class="form-control" name="to_user"
+                                   value="449" type="hidden">
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    var comment_list_div = $("#comment-list-div");
+
+    var hash_id;
+
+    //生成评论列表
+    function init_comment_list(resource_id) {
+        $('#comment-list-div').empty();
+        hash_id = resource_id;
+        $("form[name='comment-form'] input[name='hash']").val(resource_id);
+        $.ajax({
+            url: "{% url "common_web:cloud:comment:list" %}",
+            type: "get",
+            data: {"search_resource": resource_id},
+            datatype: "json",
+            success: function (data) {
+                var comment_list = data;
+
+                //父子评论页面实现
+                for (var i in comment_list) {
+                    var comment_tpl = $("#comment-template-div").clone();
+
+                    //父评论页面渲染函数
+                    parent_commment(comment_tpl, comment_list[i][0])
+
+                    var comment_reply_list = comment_tpl.find('[name="comment_reply_list"]');
+                    comment_reply_list.empty();
+                    if (comment_list[i][1]) {
+                        for (var j in comment_list[i][1]) {
+                            if (comment_list[i][0].id == comment_list[i][1][j].parent) {
+                                var comment_reply = $("#thread").clone();
+
+                                //子评论页面渲染函数
+                                sun_comment(comment_reply, comment_list[i][1][j], comment_list[i][0])
+
+                                comment_reply_list.append(comment_reply.html());
+                            }
+                        }
+                        comment_list_div.append(comment_tpl.html());
+
+                    }
+                    else {
+                        comment_reply_list.addClass("hidden")
+                        comment_list_div.append(comment_tpl.html());
+                    }
+                }
+
+                //父评论渲染函数
+                function parent_commment(comment_tpl, parent_data) {
+
+                    comment_tpl.find("img[name='avatar']").attr("src", parent_data.avatar);
+                    comment_tpl.find("input[name='get-self-id']").attr("value", parent_data.id);
+                    comment_tpl.find("input[name='get-parent-id']").attr("value", parent_data.id);
+                    comment_tpl.find('div[name="comment_reply_list"]').attr("reply-parent-id", parent_data.id);
+                    comment_tpl.find("img[name='avatar']").attr("onerror", "javascript:this.src='{% static "x_person/img/user_default.jpg" %}'");
+                    comment_tpl.find("span[name='comment-username']").html(codeUtil.htmlEncode(parent_data.username));
+                    comment_tpl.find("span[name='comment-udtime']").html(dateUtil.formatYMDHMS(parent_data.update_time));
+                    comment_tpl.find("div[name='comment-comment']").html(parent_data.comment);
+                    if (parent_data.thumbs_up > 999) {
+                        like_num = "999+"
+                    }
+                    else {
+                        like_num = parent_data.thumbs_up
+                    }
+                    comment_tpl.find("span[name='comment-thumbs_up']").html(" " + like_num);
+                }
+
+                //子评论渲染函数
+                function sun_comment(comment_reply, son_data, comment_parent) {
+                    comment_reply.find("img[name='avatar-reply']").attr("src", son_data.avatar);
+                    comment_reply.find("input[name='get-self-id']").attr("value", son_data.id);
+                    comment_reply.find("input[name='get-parent-id']").attr("value", comment_parent.id);
+                    comment_reply.find("img[name='avatar-reply']").attr("onerror", "javascript:this.src='{% static "x_person/img/user_default.jpg" %}'");
+                    comment_reply.find("span[name='comment-usernames-reply']").html(son_data.username);
+                    comment_reply.find("span[name='comment_parent']").html(son_data.nickname);
+                    comment_reply.find("span[name='comment-udtime-reply']").html(dateUtil.formatYMDHMS(son_data.update_time));
+                    comment_reply.find("div[name='comment-comment-reply']").html(son_data.comment);
+                    if (son_data.thumbs_up > 999) {
+                        like_num = "999+"
+                    }
+                    else {
+                        like_num = son_data.thumbs_up
+                    }
+                    comment_reply.find("span[name='comment-thumbs_up']").html(" " + like_num);
+                }
+
+                //父评论的回复按钮
+                $('span[name="reply-btn"]').on('click', function () {
+                    $(this).parent().parent().next().slideToggle(500)
+                });
+
+                //子评论的取消按钮，关闭回复框
+                $('[name="reply-refuse"]').on('click', function () {
+                    $(this).parents().find('[name="replytext"]').val("")
+                    $(this).parents('.follow-up-comment-warp').slideToggle();
+                });
+
+                //点赞功能
+                $('span[name="comment-thumbs_up"]').on('click', function () {
+                    comment_id = $(this).parent().find("input[name='get-self-id']").val();
+                    $.ajax({
+                        url: '{% url "common_web:cloud:comment:likes" %}',
+                        type: "POST",
+                        datatype: "json",
+                        data: {'comment_id': comment_id, 'resource': resource_id},
+                        success: function (data) {
+                            if (data.status == 0) {     //取消点赞
+                                cancel_like(data)
+                            }
+                            else {  //点赞
+                                like(data)
+                            }
+                        }
+                    });
+                });
+
+                //取消点赞
+                function cancel_like(data) {
+                    $('span[name="comment-thumbs_up"]').each(function () {
+                        parent_id = parseInt($(this).parent().find("input[name='get-self-id']").val())
+                        request_id = data.comment;
+                        if (parent_id == request_id) {
+                            $(this).removeClass("fa-thumbs-up")
+                            $(this).addClass("fa-thumbs-o-up")
+                            $(this).html(" " + data.msg)  //显示取消后的赞数
+                        }
+                    })
+                }
+
+                //点赞
+                function like(data) {
+                    $('span[name="comment-thumbs_up"]').each(function () {
+                        parent_id = parseInt($(this).parent().find("input[name='get-self-id']").val())
+                        request_id = data.comment;
+                        if (parent_id == request_id) {
+                            $(this).removeClass("fa-thumbs-o-up")
+                            $(this).addClass("fa-thumbs-up")
+                            $(this).html(" " + data.msg)  // 显示点赞后的赞数
+                        }
+                    })
+                }
+
+                //子回复框功能
+                $('[name="reply_box"]').on('click', function () {
+                    $(this).parent().parent().next().slideToggle(500)
+                });
+
+                //显示当前状态下是否点赞过
+                $.ajax({
+                    url: "{% url "common_web:cloud:comment:status" %}",
+                    type: "get",
+                    data: {"resource": resource_id},
+                    datatype: "json",
+                    success: function (data) {
+                        if(data.rows == ""){
+                            $("input[name='get-self-id']").each(function () {
+                                    $(this).parent().find('[name="comment-thumbs_up"]').addClass("fa-thumbs-o-up")
+                            })
+                        }
+                        else {
+                            for (nums in data.rows){
+                                var likes_id = data.rows[nums]["comment"]
+                                $("input[name='get-self-id']").each(function () {
+                                    if ($(this).val() == likes_id) {
+                                        $(this).parent().find('[name="comment-thumbs_up"]').addClass("fa-thumbs-up")
+                                    }
+                                    else {
+                                        $(this).parent().find('[name="comment-thumbs_up"]').addClass("fa-thumbs-o-up")
+                                    }
+                                })
+
+                            }
+                        }
+                    }
+                });
+
+                //实现子回复
+                $('[name="submit-sun-comment"]').on("click", function () {
+                    reply_comment = $.trim($(this).parent().siblings('[name="replytext"]').val());
+                    respondent = $(this).parent().parent().parent().find('[name="comment-usernames-reply"]').html()
+                    if (reply_comment == "") {
+                        showPopMsg("{% trans "x_comments_cannot_empty" %}");
+                        return false;
+                    }
+                    if (reply_comment.length > 250) {
+                        showPopMsg("{% trans "x_comment_too_long" %}");
+                        return false;
+                    }
+                    if ($(this).parents('div[name="comment_reply_list"]').attr("reply-parent-id") != undefined) {
+                        parent_id = $(this).parents('div[name="comment_reply_list"]').attr("reply-parent-id")
+                    }
+                    else {
+                        parent_id = $(this).parent().find('[name="get-parent-id"]').val()
+                    }
+                    $.ajax({
+                        url: "{% url "common_web:cloud:comment:create" %}",
+                        type: "POST",
+                        datatype: "json",
+                        data: {'hash': resource_id, "content": reply_comment, "parent": parent_id, "respondent":respondent},
+                        success: function (data) {
+                            init_comment_list(hash_id);
+                        }
+                    });
+                    showHintMsg("{% trans "x_reply_successfully" %}", 50000);
+
+                    $(this).parents('.follow-up-comment-warp').slideToggle();
+
+                })
+            },
+            error: function (event, jqxhr, settings, thrownError) {
+                showPopMsg(gettext("x_unable_get_comment_list"));
+            }
+        });
+    }
+
+    $(function () {     //提交留言功能
+        $("#submit-comment").click(function () {
+            if ($.trim($("#comment-content").val()) == "") {
+                showPopMsg("{% trans "x_comments_cannot_empty" %}");
+                return false;
+            }
+            if ($.trim($("#comment-content").val()).length > 250) {
+                showPopMsg("{% trans "x_comment_too_long" %}");
+                return false;
+            }
+            var comment_btn = $("#submit-comment");
+            comment_btn.attr("disabled", true);
+
+            var $form = $("form[name='comment-form']");
+            $form.ajaxSubmit({
+                url: "{% url "common_web:cloud:comment:create" %}",
+                type: "post",
+                traditional: true,
+                beforeSubmit: function () {
+                },
+                success: function (data) {
+
+                    $form.find("textarea[name='content']").val("");
+                    comment_btn.attr("disabled", false);
+                    showHintMsg("{% trans "x_post_successfully" %}", 50000);
+
+                    init_comment_list(hash_id);
+                },
+                error: function (event, jqxhr, settings, thrownError) {
+                    showPopMsg(gettext("x_unable_comment"));
+                    comment_btn.attr("disabled", false);
+                }
+            });
+            return false;
+        });
+    });
+</script>
